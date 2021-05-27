@@ -13,6 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('test/login', function () {
+    $login    = 'test_email@gmail.com';
+    $password = md5(md5('qwer'));
+
+    return response()->json(test_api('http://upost.test/api/login', "$login:$password"));
+});
+
+Route::get('test/register', function () {
+    $post_data = [
+        'user_phone'    => '+380680091088',
+        'user_email'    => 'test_email5@gmail.com',
+        'user_password' => 'qwerty',
+    ];
+
+    return response()->json(test_api('http://upost.test/api/register', '', $post_data));
 });

@@ -1,78 +1,154 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# Тестове завдання по API. Проста система авторизації
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## Загальні вимоги
+- Безпечність. Дані для авторизації передаються в headers з допомогою authorization basic .
+- Роутинг. Відобразити назву методу в url. Наприклад:
+- **https://api/login для авторизації**
+- **https://api/register для реєстрації**
+- Систематизованість. Всі запити мають мати схожу структуру, містити статус відповіді, масив помилок, масив результатів виконання. Всі змінні повинні використовувати _ замість -. Всі назви змінних мають бути англійською мовою, в нижньому регістрі, зрозумілі і без зайвих скорочень. Наприклад result замість res.
+- JSON. Масив повинен повертати валідний json.
+- Mobile friendly API. Відсутність будь-яких null результатів в видачі, відсутність будь-яких cookie і session змінних в роботі api
+- Класи, об’єкти, додаткові бібліотеки і тд розбити на окремі файлі і папки. Важлива ієрархія каталогів.
+- Реалізувати окремий конфіг файл (захищений від прямого відкриття) в якому буде підключатись база даних, будуть зберігатись якісь статичні змінні і константи. 
 
-## About Laravel
+## Завдання
+### _Авторизація_
+Метод передачі даних - `POST`
+Логін передавати в незашифрованому виді.
+Пароль передавати в подвійному md5 шифруванні `md5(md5($password)`
+Дані для авторизації передаються в headers з допомогою authorization basic .
+Для входу користувач використовує логін (номер телефону або емейл), і пароль.
+Так як логіном може бути або телефон або емейл, в апі передбачити пошук по логіну. Типу
+```sql
+SELECT * FROM users WHERE user_phone=$phone OR user_emai=$email AND password=$password
+```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+При успішній авторизації в результаті треба вивести код статусу виконання. 
+```json
+{
+    "status": "200"
+}
+```
+Наприклад при успіху - 200, при помилці 404, або інший відповідний код. Помилки вивести масивом, якщо їх декілька, або простою змінною якщо помилка одна. 
+Назва помилки повинна бути одним словом, без пробілів, і містити в собі значення помилки. Наприклад якщо невірний пароль то password_wrong, або auth_fail і тд...
+```json
+{
+    "status": "404",
+    "errors": "password_wrong"
+}
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Якщо помилки відсутні, то не виводити масив помилок і ні в якому разі не повертати в масиві null
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### _Тестові дані для входу:_
+```javascript
+email: test_email@gmail.com
+phone: +380680091000
+password: qwer
+```
 
-## Learning Laravel
+[Таблиця users](https://drive.google.com/file/d/1X6PSCxiG8WR4tlzVRSu757jb8cPPbYO5/view?usp=sharing)
+> Приймаються коментарі по структурі бази даних
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+# Решение
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### _Созданные файлы и их описание_
+Файл | Описание
+--- | ---
+`app/User.php` | модель "Пользователи"
+`app/Http/Middleware/BasicAuthenticate.php` | посредник для авторизации **auth.basic**
+`app/Http/Kernel.php` | регистрация посредника **auth.basic**
+`app/Http/Controllers/API/Auth/RegisterController.php` | контроллер для регистрации нового пользователя
+`config/user.php` | дефолтные настройки для нового пользователя
+`routes/api.php` | API POST-роуты **login** и **register**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+### _Файлы для тестирования_
+Файл | Описание
+--- | ---
+`app/Libs/helpers.php` | набор хелпер-функций, в частности функция `test_api` для тестирования авторизации и регистрации пользователя
+`app/Providers/AppServiceProvider.php` | регистрация хелпера
+`routes/web.php` | веб-роуты **test/login** и **test/register** для тестирования API
 
-## Contributing
+### Тестирорование
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### _Авторизация_
+Отправляем POST-запрос на `api/login` существующий логин:пароль ```test_email@gmail.com:4e40beaf133b47b8b0020881b20ad713```
+Ответ
+```json
+{
+    "status": 200,
+    "message": "successfully_logged_in"
+}
+```
+Отправляем POST-запрос на `api/login` не существующий логин:пароль ```test@gmail.com:45454```
+Ответ
+```json
+{
+    "status": 404,
+    "errors": "auth_fail"
+}
+```
+Отправляем POST-запрос на `api/login` без логина и пароля
+Ответ
+```json
+{
+    "status": 404,
+    "errors": {
+        "login":["login_is_empty"],
+        "password":["password_is_empty"]
+    }
+}
+```
 
-## Code of Conduct
+### _Регистрация_
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Отправляем POST-запрос на `api/register` c данными:
+```json
+{
+    "user_phone": "+380680091088",
+    "user_email": "test_email5@gmail.com",
+    "user_password": "qwerty"
+}
+```
 
-## Security Vulnerabilities
+Ответ
+```json
+{
+    "status": 200,
+    "message": "successfully_registered"
+}
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Повторно отправляем POST-запрос на `api/register` c такими же данными, получаем ответ:
+```json
+{
+    "status": 404,
+    "errors": {
+        "user_phone":["already_used"],
+        "user_email":["already_used"]
+    }
+}
+```
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Отправляем POST-запрос на `api/register` c данными:
+```json
+{
+    "user_email": "test_email",
+    "user_password": "qwer"
+}
+```
+Ответ
+```json
+{
+    "status": 404,
+    "errors": {
+        "user_phone":["required_field"],
+        "user_email":["not_valid"],
+        "user_password":["too_short"]
+    }
+}
+```
