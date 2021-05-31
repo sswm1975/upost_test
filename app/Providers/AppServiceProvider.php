@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        /**
+         * Валидация: Проверка международного телефонного номера.
+         * Начинается с 00 или +, далее 12 и более цифр
+         */
+        Validator::extend('phone', function($attribute, $value, $parameters){
+            return preg_match('/^(00|\+)(\d{12,})$/', $value) === 1;
+        });
     }
 }

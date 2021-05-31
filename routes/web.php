@@ -22,9 +22,10 @@ Route::get('test/login', function () {
 
 Route::get('test/register', function () {
     $post_data = [
-        'user_phone'    => '+380680091088',
-        'user_email'    => 'test_email5@gmail.com',
-        'user_password' => 'qwerty',
+        'user_phone'                 => '+380680091088',
+        'user_email'                 => 'test_email5@gmail.com',
+        'user_password'              => 'qwerty',
+        'user_password_confirmation' => 'qwerty',
     ];
 
     return response()->json(test_api('http://upost.test/api/register', '', $post_data));

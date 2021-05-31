@@ -20,16 +20,18 @@ class RegisterController extends Controller
     {
         return Validator::make($data, 
             [
-                'user_phone'    => ['required', 'max:30', 'unique:users'],
+                'user_phone'    => ['required', 'phone', 'unique:users'],
                 'user_email'    => ['required', 'email', 'max:30', 'unique:users'],
-                'user_password' => ['required', 'min:6'],
+                'user_password' => ['required', 'min:6', 'confirmed'],
             ],
             [           
-                'required' => 'required_field',
-                'unique'   => 'already_used',
-                'max'      => 'too_long',
-                'min'      => 'too_short',
-                'email'    => 'not_valid',
+                'required'      => 'required_field',
+                'unique'        => 'already_used',
+                'max'           => 'too_long',
+                'min'           => 'too_short',
+                'email'         => 'not_valid',
+                'phone'         => 'invalid_phone_number',
+                'confirmed'     => 'password_confirmation_does_not_match',
             ]
         );
     }
