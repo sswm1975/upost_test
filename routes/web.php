@@ -17,7 +17,7 @@ Route::get('test/login', function () {
     $login    = 'test_email@gmail.com';
     $password = md5(md5('qwer'));
 
-    return response()->json(test_api('http://upost.test/api/login', "$login:$password"));
+    return response()->json(test_api_post('http://upost.test/api/login', "$login:$password"));
 });
 
 Route::get('test/register', function () {
@@ -28,5 +28,9 @@ Route::get('test/register', function () {
         'user_password_confirmation' => 'qwerty',
     ];
 
-    return response()->json(test_api('http://upost.test/api/register', '', $post_data));
+    return response()->json(test_api_post('http://upost.test/api/register', '', $post_data));
+});
+
+Route::get('test/profile', function () {
+    return response()->json(test_api_get('http://upost.test/api/profile/1'));
 });

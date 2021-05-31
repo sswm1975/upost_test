@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', function (Request $request) {
+Route::post('login', function () {
     return response()->json([
         'status'  => 200,
         'message' => 'successfully_logged_in',
@@ -22,3 +22,5 @@ Route::post('login', function (Request $request) {
 })->middleware('auth.basic');
 
 Route::post('register', 'API\Auth\RegisterController@register');
+
+Route::get('profile/{id}', 'API\ProfilePublicController');
