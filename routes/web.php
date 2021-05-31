@@ -34,3 +34,9 @@ Route::get('test/register', function () {
 Route::get('test/profile', function () {
     return response()->json(test_api_get('http://upost.test/api/profile/1'));
 });
+
+Route::get('test/profile_private', function () {
+    $login    = 'test_email@gmail.com';
+    $password = md5(md5('qwer'));
+    return response()->json(test_api_get('http://upost.test/api/profile', "$login:$password"));
+});

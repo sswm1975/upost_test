@@ -20,10 +20,14 @@ function test_api_post($url, $credentials = '', $post_data = [])
     return $response;
 }
 
-function test_api_get($url)
+function test_api_get($url, $credentials = '')
 {
     $curl = curl_init($url);
 
+    if ($credentials) {
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD, $credentials);
+    }
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 

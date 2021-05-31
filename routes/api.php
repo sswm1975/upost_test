@@ -24,3 +24,5 @@ Route::post('login', function () {
 Route::post('register', 'API\Auth\RegisterController@register');
 
 Route::get('profile/{id}', 'API\ProfilePublicController');
+
+Route::get('profile', 'API\ProfileController')->middleware('auth.basic');
