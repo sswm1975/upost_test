@@ -38,7 +38,7 @@ class BasicAuthenticate
             return false;
         }
 
-        $GLOBALS['user'] = null_to_blank($user->toArray());
+        $GLOBALS['user'] = $user;
 
         return true;
     }

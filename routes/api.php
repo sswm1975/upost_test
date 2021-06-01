@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+# Авторизація
 Route::post('login', function () {
     return response()->json([
         'status'  => 200,
@@ -21,8 +22,14 @@ Route::post('login', function () {
     ]);
 })->middleware('auth.basic');
 
+# Реєстрація
 Route::post('register', 'API\Auth\RegisterController@register');
 
-Route::get('profile/{id}', 'API\ProfileController@getPublicProfile');
+# Отримання інформації про користувача (тільки публічні дані)
+Route::get('profile/{id}', 'API\ProfileController@getPublicData');
 
-Route::get('profile', 'API\ProfileController@getPrivateProfile')->middleware('auth.basic');
+# Отримання інформації про користувача (всі дані)
+Route::get('profile', 'API\ProfileController@getPrivateData')->middleware('auth.basic');
+
+# Зміна даних профілю (тільки публічні дані)
+Route::post('profile', 'API\ProfileController@updatePublicData')->middleware('auth.basic');
