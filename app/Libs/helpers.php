@@ -191,3 +191,57 @@ function calculatePixelsForAlign($imageSize, $cropSize, $align): array
         default: return [0, $imageSize];
     }
 }
+
+/**
+ * Удаление html-тегов и "опасных" атрибутов.
+ *
+ *
+ * @param string $content
+ * @return string
+ */
+function strip_unsafe(string $content): string
+{
+    $unsafe = [
+        '/<iframe(.*?)<\/iframe>/is',
+        '/<title(.*?)<\/title>/is',
+        '/<pre(.*?)<\/pre>/is',
+        '/<frame(.*?)<\/frame>/is',
+        '/<frameset(.*?)<\/frameset>/is',
+        '/<object(.*?)<\/object>/is',
+        '/<script(.*?)<\/script>/is',
+        '/<embed(.*?)<\/embed>/is',
+        '/<applet(.*?)<\/applet>/is',
+        '/<meta(.*?)>/is',
+        '/<!doctype(.*?)>/is',
+        '/<link(.*?)>/is',
+        '/<body(.*?)>/is',
+        '/<\/body>/is',
+        '/<head(.*?)>/is',
+        '/<\/head>/is',
+        '/onload="(.*?)"/is',
+        '/onunload="(.*?)"/is',
+        '/onchange=["\'](.*?)["\']/is',
+        '/onselect=["\'](.*?)["\']/is',
+        '/onclick=["\'](.*?)["\']/is',
+        '/ondblclick=["\'](.*?)["\']/is',
+        '/onkeyup=["\'](.*?)["\']/is',
+        '/onkeydown=["\'](.*?)["\']/is',
+        '/onkeypress=["\'](.*?)["\']/is',
+        '/onmouseover=["\'](.*?)["\']/is',
+        '/onmouseenter=["\'](.*?)["\']/is',
+        '/onmouseleave=["\'](.*?)["\']/is',
+        '/onmousemove=["\'](.*?)["\']/is',
+        '/onmousedown=["\'](.*?)["\']/is',
+        '/onmouseup=["\'](.*?)["\']/is',
+        '/onmouseout=["\'](.*?)["\']/is',
+        '/onfocus=["\'](.*?)["\']/is',
+        '/onblur=["\'](.*?)["\']/is',
+        '/style=["\'](.*?)["\']/is',
+        '/<html(.*?)>/is',
+        '/<\/html>/is',
+        '/<img(.*?)>/is',
+        '/<script(.*?)<\/script>/is',
+    ];
+
+    return preg_replace($unsafe, "", $content);
+}

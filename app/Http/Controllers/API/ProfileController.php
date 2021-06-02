@@ -116,7 +116,7 @@ class ProfileController extends Controller
                 'user_birthday' => 'date',
                 'user_gender'   => 'in:Мужской,Женский',
                 'user_photo'    => 'nullable|base64_image',
-                'user_resume'   => 'string',
+                'user_resume'   => 'nullable|string',
             ],
             [
                 'base64_image' => 'not_valid_image',
@@ -146,7 +146,7 @@ class ProfileController extends Controller
 
         $user = $GLOBALS['user'];
 
-        if ($request->exists('remove_photo')) {
+        if ($request->has('remove_photo')) {
             $data['user_photo'] = null;
         }
 
@@ -154,12 +154,16 @@ class ProfileController extends Controller
             $data['user_photo'] = $this->saveImage($data['user_photo'], $user->user_id);
         }
 
+        if ($request->filled('user_resume')) {
+            $data['user_resume'] = $this->processResume($data['user_resume']);
+        }
+
         $user->update($data);
 
         return response()->json([
             'status'  => 200,
             'message' => 'profile_updated_successfully',
-            'result'  => $data,
+            'result'  => null_to_blank($data),
         ]);
     }
 
@@ -226,5 +230,16 @@ class ProfileController extends Controller
 
         imagejpeg($img, $full_filename);
         imagedestroy($img);
+    }
+
+    /**
+     * Обработка биографии пользователя: Удаление всех тегов и атрибутов, кроме разрешенных.
+     *
+     * @param string $content
+     * @return string
+     */
+    protected function processResume(string $content): string
+    {
+        return strip_tags(strip_unsafe($content), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
     }
 }
