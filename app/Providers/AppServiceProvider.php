@@ -31,5 +31,12 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('phone', function($attribute, $value, $parameters){
             return preg_match('/^(00|\+)(\d{12,})$/', $value) === 1;
         });
+
+        /**
+         * Валидация: Проверка base64 image-контента.
+         */
+        Validator::extend('base64_image', function ($attribute, $value, $parameters, $validator) {
+            return validate_base64($value, ['jpg', 'jpeg']);
+        });
     }
 }

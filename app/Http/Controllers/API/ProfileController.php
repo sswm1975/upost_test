@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\User;
@@ -114,8 +115,11 @@ class ProfileController extends Controller
                 'user_status'   => 'in:working,new',
                 'user_birthday' => 'date',
                 'user_gender'   => 'in:Мужской,Женский',
-                'user_photo'    => 'string',
+                'user_photo'    => 'nullable|base64_image',
                 'user_resume'   => 'string',
+            ],
+            [
+                'base64_image' => 'not_valid_image',
             ]
         );
     }
@@ -138,13 +142,89 @@ class ProfileController extends Controller
             ]);
         }
 
+        $data = $validator->validated();
+
         $user = $GLOBALS['user'];
-        $result = $user->update($validator->validated());
+
+        if ($request->exists('remove_photo')) {
+            $data['user_photo'] = null;
+        }
+
+        if (!empty($data['user_photo'])) {
+            $data['user_photo'] = $this->saveImage($data['user_photo'], $user->user_id);
+        }
+
+        $user->update($data);
 
         return response()->json([
             'status'  => 200,
             'message' => 'profile_updated_successfully',
-            'result'  => $result,
+            'result'  => $data,
         ]);
+    }
+
+    /**
+     * Сохранить фотографию.
+     *
+     * @param string $base64_image
+     * @param int    $user_id
+     * @return string
+     */
+    protected function saveImage(string $base64_image, int $user_id): string
+    {
+        $path = 'users/' . $user_id . '/';
+        $image_original_name = 'user_photo-original.jpg';
+        $image_main_name     = 'user_photo.jpg';
+        $image_thumb_name    = 'user_photo-thumb.jpg';
+
+        $data = substr($base64_image, strpos($base64_image, ',') + 1);
+        $image_file = base64_decode($data);
+
+        Storage::disk('local')->put($path . $image_original_name, $image_file);
+        $storage_path = Storage::disk('local')->path($path);
+
+        $src = imagecreatefromstring($image_file);
+        if ($src === false) {
+            return '';
+        }
+
+//        $this->createResizedImage($src, 200, $storage_path . $image_main_name);
+//        $this->createResizedImage($src, 100, $storage_path . $image_thumb_name);
+
+        imagejpeg(cropAlign($src, 200, 200), $storage_path . $image_main_name);
+        imagejpeg(cropAlign($src, 100, 100), $storage_path . $image_thumb_name);
+
+        imagedestroy($src);
+
+        return $path . $image_main_name;
+    }
+
+    /**
+     * Создать рисунок c пропорциональным измененнем сторон.
+     *
+     * @param GdImage $src
+     * @param int     $size
+     * @param string  $full_filename
+     * @return void
+     */
+    protected function createResizedImage($src, int $size, string $full_filename)
+    {
+        $width = imagesx($src);
+        $height = imagesy($src);
+        $aspect_ratio = $height/$width;
+
+        if ($width <= $size) {
+            $new_w = $width;
+            $new_h = $height;
+        } else {
+            $new_w = $size;
+            $new_h = abs($new_w * $aspect_ratio);
+        }
+
+        $img = imagecreatetruecolor($new_w, $new_h);
+        imagecopyresized($img, $src,0,0,0,0,$new_w,$new_h,$width, $height);
+
+        imagejpeg($img, $full_filename);
+        imagedestroy($img);
     }
 }
