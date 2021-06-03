@@ -1,43 +1,5 @@
 <?php
 
-function test_api_post($url, $credentials = '', $post_data = [])
-{
-    $curl = curl_init($url);
-
-    if ($credentials) {
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, $credentials);
-    }
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-    $curl_response = curl_exec($curl);
-    $response = json_decode($curl_response);
-    curl_close($curl);
-
-    return $response;
-}
-
-function test_api_get($url, $credentials = '')
-{
-    $curl = curl_init($url);
-
-    if ($credentials) {
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, $credentials);
-    }
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-    $curl_response = curl_exec($curl);
-    $response = json_decode($curl_response);
-    curl_close($curl);
-
-    return $response;
-}
-
 /**
  * Convert Null to Blank string.
  *
@@ -58,7 +20,7 @@ function null_to_blank(array $data = []): array
  *
  * @author Sean Cannon, LitmusBox.com | seanc@litmusbox.com
  * @param  array $array The multi-dimensional array.
- * @return array
+ * @return array|bool
  */
 function array_flatten(array $array) {
     if (!is_array($array)) {
@@ -194,7 +156,6 @@ function calculatePixelsForAlign($imageSize, $cropSize, $align): array
 
 /**
  * Удаление html-тегов и "опасных" атрибутов.
- *
  *
  * @param string $content
  * @return string
