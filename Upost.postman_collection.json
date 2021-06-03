@@ -272,7 +272,7 @@
 				"header": [
 					{
 						"key": "PHP-AUTH-USER",
-						"value": "test_email@gmail.com",
+						"value": "{{email}}",
 						"type": "text",
 						"description": "Логин (емейл или телефон)"
 					},
@@ -679,6 +679,307 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"status\": 200,\n    \"message\": \"profile_updated_successfully\",\n    \"result\": {\n        \"user_name\": \"Vasya\",\n        \"user_surname\": \"Pupkin\",\n        \"user_city\": \"5\",\n        \"user_location\": \"45,23\",\n        \"user_status\": \"working\",\n        \"user_birthday\": \"2000-05-13\",\n        \"user_gender\": \"Мужской\",\n        \"user_photo\": \"users/18/user_photo.jpg\",\n        \"user_resume\": \"\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Обновить язык и валюту (GET)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "lang",
+							"value": "uk",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "currency",
+							"value": "usd",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/language?lang=ru&currency=rub",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"language"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "ru"
+						},
+						{
+							"key": "currency",
+							"value": "rub"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "success_response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "currency",
+									"value": "usd",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/language?lang=ru&currency=rub",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"language"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "ru"
+								},
+								{
+									"key": "currency",
+									"value": "rub"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 03 Jun 2021 10:49:44 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/7.4.16"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "X-RateLimit-Limit",
+							"value": "60"
+						},
+						{
+							"key": "X-RateLimit-Remaining",
+							"value": "59"
+						},
+						{
+							"key": "Content-Length",
+							"value": "14"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100"
+						},
+						{
+							"key": "Connection",
+							"value": "Keep-Alive"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": 200\n}"
+				}
+			]
+		},
+		{
+			"name": "Обновить язык и валюту (POST)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "lang",
+							"value": "uk",
+							"type": "text"
+						},
+						{
+							"key": "currency",
+							"value": "usd",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/language",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"language"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "success_response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"type": "text"
+								},
+								{
+									"key": "currency",
+									"value": "usd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/language",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"language"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 03 Jun 2021 10:49:51 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/7.4.16"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "X-RateLimit-Limit",
+							"value": "60"
+						},
+						{
+							"key": "X-RateLimit-Remaining",
+							"value": "58"
+						},
+						{
+							"key": "Content-Length",
+							"value": "14"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100"
+						},
+						{
+							"key": "Connection",
+							"value": "Keep-Alive"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": 200\n}"
 				}
 			]
 		}

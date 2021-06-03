@@ -33,3 +33,5 @@ Route::get('profile', 'API\ProfileController@getPrivateData')->middleware('auth.
 
 # Зміна даних профілю (тільки публічні дані)
 Route::post('profile', 'API\ProfileController@updatePublicData')->middleware('auth.basic');
+
+Route::match(['GET', 'POST'], 'language', API\LanguageController::class)->middleware('auth.basic');
