@@ -5,8 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\Country;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Country;
+use App\Models\City;
 
 class CountryController extends Controller
 {
@@ -86,6 +87,46 @@ class CountryController extends Controller
         return response()->json([
             'status' => 200,
             'result' => $countries,
+        ]);
+    }
+
+    /**
+     * Получить наименование города по его коду.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getCity(Request $request): JsonResponse
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'city_id'    => 'required|numeric|exists:city,city_id',
+                'lang'       => 'sometimes|in:' . implode(',', config('app.languages')),
+            ],
+            [
+                'required'   => 'required_field',
+                'numeric'    => 'field_must_be_a_number',
+                'exists'     => 'city_not_found',
+                'in'         => ':attribute_not_exist',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 404,
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        $city = City::query()
+            ->where('city_id', $request->get('city_id'))
+            ->language($request->get('lang', self::DEFAULT_LANG))
+            ->first();
+
+        return response()->json([
+            'status' => 200,
+            'result' => $city->city_name,
         ]);
     }
 }

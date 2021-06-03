@@ -42,3 +42,6 @@ Route::match(['GET', 'POST'], 'get_country', 'API\CountryController@getCountry')
 
 # Отримання даних країни або міста: Отримати список всіх країн
 Route::match(['GET', 'POST'], 'get_countries', 'API\CountryController@getCountries');
+
+# Отримання даних країни або міста: Отримати назву конкретного міста за його ідентифікатором
+Route::match(['GET', 'POST'], 'get_city', 'API\CountryController@getCity');

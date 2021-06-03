@@ -490,6 +490,95 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Получить название города по его коду (GET)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)",
+						"disabled": true
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{host}}{{endpoint}}/get_country?country_id=2&lang=ru",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"get_country"
+					],
+					"query": [
+						{
+							"key": "country_id",
+							"value": "2"
+						},
+						{
+							"key": "lang",
+							"value": "ru"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получить название города по его коду (POST)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)",
+						"disabled": true
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "city_id",
+							"value": "8",
+							"type": "text"
+						},
+						{
+							"key": "lang",
+							"value": "uk",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/get_city",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"get_city"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
