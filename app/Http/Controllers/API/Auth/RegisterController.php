@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\User;
-use DB;
+use App\Models\User;
 
 class RegisterController extends Controller
 {
@@ -16,15 +16,15 @@ class RegisterController extends Controller
      * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
     {
-        return Validator::make($data, 
+        return Validator::make($data,
             [
                 'user_phone'    => ['required', 'phone', 'unique:users'],
                 'user_email'    => ['required', 'email', 'max:30', 'unique:users'],
                 'user_password' => ['required', 'min:6', 'confirmed'],
             ],
-            [           
+            [
                 'required'      => 'required_field',
                 'unique'        => 'already_used',
                 'max'           => 'too_long',
@@ -40,9 +40,9 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return User
      */
-    protected function create(array $data)
+    protected function create(array $data): User
     {
         return User::create([
             'user_phone'       => $data['user_phone'],
@@ -63,9 +63,9 @@ class RegisterController extends Controller
      * API Register user.
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
         $validator = $this->validator($request->all());
 
@@ -73,8 +73,8 @@ class RegisterController extends Controller
             return response()->json([
                 'status' => 404,
                 'errors' => $validator->errors()
-            ]);            
-        }       
+            ]);
+        }
 
         $user = $this->create($request->all());
 
@@ -83,5 +83,4 @@ class RegisterController extends Controller
             'message' => 'successfully_registered',
         ]);
     }
-
 }
