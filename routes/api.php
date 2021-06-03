@@ -34,4 +34,8 @@ Route::get('profile', 'API\ProfileController@getPrivateData')->middleware('auth.
 # Зміна даних профілю (тільки публічні дані)
 Route::post('profile', 'API\ProfileController@updatePublicData')->middleware('auth.basic');
 
+# Дані мов та валют
 Route::match(['GET', 'POST'], 'language', API\LanguageController::class)->middleware('auth.basic');
+
+# Отримання даних країни або міста: Отримувати назву країни по її ідентифікатору
+Route::match(['GET', 'POST'], 'get_country', 'API\CountryController@getCountry')->middleware('auth.basic');

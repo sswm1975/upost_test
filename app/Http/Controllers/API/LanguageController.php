@@ -11,25 +11,6 @@ use Illuminate\Validation\ValidationException;
 class LanguageController extends Controller
 {
     /**
-     * Список языков.
-     *
-     * @var array
-     */
-    const LANGUAGES = ['uk', 'ru', 'en'];
-
-    /**
-     * Список валют.
-     *
-     * @var array
-     */
-    const CURRENCIES = [
-        'uah' => '₴',
-        'rub' => '₽',
-        'usd' => '$',
-        'eur' => '€',
-    ];
-
-    /**
      * Обновления языка и валюты в профиле пользователя.
      *
      * @param Request $request
@@ -54,7 +35,7 @@ class LanguageController extends Controller
         }
 
         if ($request->filled('currency')) {
-            $user->user_currency = self::CURRENCIES[$request->get('currency')];
+            $user->user_currency = config('app.currencies')[$request->get('currency')];
         }
 
         $user->save();
@@ -74,8 +55,8 @@ class LanguageController extends Controller
     {
         return Validator::make($data,
             [
-                'lang'     => 'required_without:currency|in:' . implode(',', self::LANGUAGES),
-                'currency' => 'required_without:lang|in:' . implode(',', array_keys(self::CURRENCIES)),
+                'lang'     => 'required_without:currency|in:' . implode(',', config('app.languages')),
+                'currency' => 'required_without:lang|in:' . implode(',', array_keys(config('app.currencies'))),
             ],
             [
                 'required_without' => 'field_is_empty',
