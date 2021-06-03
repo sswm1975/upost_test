@@ -12,15 +12,29 @@
 				"header": [
 					{
 						"key": "PHP-AUTH-USER",
-						"value": "test_email@gmail.com",
-						"description": "Логин (емейл или телефон)",
+						"value": "{{email}}",
+						"description": "Логин емейл",
 						"type": "text"
+					},
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{phone}}",
+						"description": "Логин телефон",
+						"type": "text",
+						"disabled": true
 					},
 					{
 						"key": "PHP-AUTH-PW",
 						"value": "{{password_hash}}",
 						"description": "Хеш пароля, результат выполнения md5(md5(password))",
 						"type": "text"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "test_password",
+						"description": "Пароль для тестирования",
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"url": {
@@ -122,25 +136,25 @@
 					"formdata": [
 						{
 							"key": "user_phone",
-							"value": "+380680091088",
+							"value": "{{phone}}",
 							"description": "Телефон",
 							"type": "text"
 						},
 						{
 							"key": "user_email",
-							"value": "test_email5@gmail.com",
+							"value": "{{email}}",
 							"description": "Емейл",
 							"type": "text"
 						},
 						{
 							"key": "user_password",
-							"value": "qwerty",
+							"value": "{{password}}",
 							"description": "Пароль",
 							"type": "text"
 						},
 						{
 							"key": "user_password_confirmation",
-							"value": "qwerty",
+							"value": "{{password}}",
 							"description": "Повтор пароля",
 							"type": "text"
 						}
@@ -448,7 +462,7 @@
 				"header": [
 					{
 						"key": "PHP-AUTH-USER",
-						"value": "test_email5@gmail.com",
+						"value": "{{email}}",
 						"type": "text",
 						"description": "Логин (емейл или телефон)"
 					},
@@ -512,12 +526,6 @@
 						{
 							"key": "user_resume",
 							"value": "<h1>Залогловок</h1>\n<p class=\"foo\" onclick=\"bar()\">Тестовый текст <em>жирный текст</em>, <i>курсив</i>\n<a href=\"http://www.google.es\" onmouseover=\"mover()\" onmouseout=\"mout()\" title=\"Google\">Это ссылка</a></p>\n<div>Запрещенный тег div</div>\n<p style=\"color:red;\">Style attribut</p>\n<p onclick='click()' onfocus=\"focus()\">Тег с JS-атрибутом</p>\n<script>alarm(\"Скриптом запущен\")</script>",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "user_resume",
-							"value": "",
 							"type": "text"
 						}
 					]
@@ -708,8 +716,16 @@
 			"value": "/api"
 		},
 		{
+			"key": "phone",
+			"value": "+380971122333"
+		},
+		{
+			"key": "email",
+			"value": "test_email@gmail.com"
+		},
+		{
 			"key": "password",
-			"value": "qwer"
+			"value": "qwerty"
 		}
 	]
 }
