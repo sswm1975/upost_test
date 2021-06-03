@@ -39,7 +39,7 @@ class User extends Model
         'user_resume',
         'user_messages_viewed',
         'user_wallet',
-        'user_creator_rating',
+        'user_creater_rating',
         'user_freelancer_rating',
     ];
 

@@ -30,7 +30,7 @@ class ProfileController extends Controller
         'user_photo',                # фото
         'user_resume',               # біографія
         'user_freelancer_rating',    # рейтинг фрілансера
-        'user_creator_rating',       # рейтинг виконавця
+        'user_creater_rating',       # рейтинг виконавця
     ];
 
     /**
