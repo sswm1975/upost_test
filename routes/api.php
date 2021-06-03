@@ -38,4 +38,7 @@ Route::post('profile', 'API\ProfileController@updatePublicData')->middleware('au
 Route::match(['GET', 'POST'], 'language', API\LanguageController::class)->middleware('auth.basic');
 
 # Отримання даних країни або міста: Отримувати назву країни по її ідентифікатору
-Route::match(['GET', 'POST'], 'get_country', 'API\CountryController@getCountry')->middleware('auth.basic');
+Route::match(['GET', 'POST'], 'get_country', 'API\CountryController@getCountry');
+
+# Отримання даних країни або міста: Отримати список всіх країн
+Route::match(['GET', 'POST'], 'get_countries', 'API\CountryController@getCountries');

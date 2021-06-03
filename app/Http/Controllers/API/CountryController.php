@@ -48,7 +48,44 @@ class CountryController extends Controller
 
         return response()->json([
             'status' => 200,
-            'result' => $country->name,
+            'result' => $country->country_name,
+        ]);
+    }
+
+    /**
+     * Получить список всех стран.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getCountries(Request $request): JsonResponse
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
+            ],
+            [
+                'in'   => ':attribute_not_exist',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 404,
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        $countries = Country::query()
+            ->language($request->get('lang', self::DEFAULT_LANG))
+            ->addSelect('country_id')
+            ->oldest('country_id')
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'result' => $countries,
         ]);
     }
 }
