@@ -757,6 +757,161 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Сохранить заказ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "order_name",
+							"value": "Монитор 27\" Dell S2721DS",
+							"type": "text"
+						},
+						{
+							"key": "order_category",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "order_price",
+							"value": "1456.23",
+							"type": "text"
+						},
+						{
+							"key": "order_price_usd",
+							"value": "250",
+							"type": "text"
+						},
+						{
+							"key": "order_currency",
+							"value": "usd",
+							"type": "text"
+						},
+						{
+							"key": "order_count",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "order_size",
+							"value": "45см",
+							"type": "text"
+						},
+						{
+							"key": "order_weight",
+							"value": "5кг",
+							"type": "text"
+						},
+						{
+							"key": "order_product_link",
+							"value": "https://hard.rozetka.com.ua/dell_210_axkw/p295768083/",
+							"type": "text"
+						},
+						{
+							"key": "order_text",
+							"value": "Крутой монитор",
+							"type": "text"
+						},
+						{
+							"key": "order_from_country",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "order_from_city",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "order_from_address",
+							"value": "ул.Киевская, 34",
+							"type": "text"
+						},
+						{
+							"key": "order_to_country",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "order_to_city",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "order_to_address",
+							"value": "ул.Березовая, 67",
+							"type": "text"
+						},
+						{
+							"key": "order_start",
+							"value": "2021-06-01",
+							"type": "text"
+						},
+						{
+							"key": "order_deadline",
+							"value": "2021-07-01",
+							"type": "text"
+						},
+						{
+							"key": "order_personal_price",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "order_user_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "order_user_currency",
+							"value": "usd",
+							"type": "text"
+						},
+						{
+							"key": "order_not_more_price",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "order_images[]",
+							"value": "monitor-27-dell-s2721ds-1.jpg",
+							"type": "text"
+						},
+						{
+							"key": "order_images[]",
+							"value": "monitor-27-dell-s2721ds-2.jpg",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/save_order",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"save_order"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
