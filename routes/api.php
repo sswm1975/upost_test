@@ -56,5 +56,8 @@ Route::match(['GET', 'POST'], 'get_сategories', 'API\CategoryController@getCate
 # Створення замовлення
 Route::post('save_order', 'API\OrderController@saveOrder')->middleware('auth.basic');
 
+# Видалення замовлення
+Route::match(['GET', 'POST'], 'delete_order', 'API\OrderController@deleteOrder')->middleware('auth.basic');
+
 # Лічильник переглядів
 Route::match(['GET', 'POST'], 'update_counter', API\CounterController::class);

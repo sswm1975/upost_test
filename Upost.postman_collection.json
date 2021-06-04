@@ -1013,6 +1013,98 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Удалить заказ (POST)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user_id",
+							"value": "15",
+							"type": "text"
+						},
+						{
+							"key": "order_id",
+							"value": "21",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/delete_order",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"delete_order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Удалить заказ (GET)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/delete_order?user_id=15&order_id=21",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"delete_order"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "15"
+						},
+						{
+							"key": "order_id",
+							"value": "21"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

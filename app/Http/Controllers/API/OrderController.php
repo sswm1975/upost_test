@@ -94,4 +94,51 @@ class OrderController extends Controller
             ]
         );
     }
+
+    /**
+     * Удалить заказ.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteOrder(Request $request): JsonResponse
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'user_id'   => 'required|integer',
+                'order_id'  => 'required|integer',
+            ],
+            [
+                'required'   => 'required_field',
+                'integer'    => 'field_must_be_a_number',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 404,
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        $order = Order::query()
+            ->where('order_id', $request->get('order_id'))
+            ->where('user_id', $request->get('user_id'))
+            ->whereIn('order_status', ['active', 'ban', 'closed'])
+            ->first();
+
+        if (empty($order)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'order_not_found',
+            ]);
+        }
+
+        $order->delete();
+
+        return response()->json([
+            'status' => 200,
+        ]);
+    }
 }
