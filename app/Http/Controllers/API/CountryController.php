@@ -22,12 +22,12 @@ class CountryController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'country_id' => 'required|numeric|exists:country,country_id',
+                'country_id' => 'required|integer|exists:country,country_id',
                 'lang'       => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
             [
                 'required'   => 'required_field',
-                'numeric'    => 'field_must_be_a_number',
+                'integer'    => 'field_must_be_a_number',
                 'exists'     => 'country_not_found',
                 'in'         => ':attribute_not_exist',
             ]
@@ -99,12 +99,12 @@ class CountryController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'city_id'    => 'required|numeric|exists:city,city_id',
+                'city_id'    => 'required|integer|exists:city,city_id',
                 'lang'       => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
             [
                 'required'   => 'required_field',
-                'numeric'    => 'field_must_be_a_number',
+                'integer'    => 'field_must_be_a_number',
                 'exists'     => 'city_not_found',
                 'in'         => ':attribute_not_exist',
             ]
@@ -139,11 +139,11 @@ class CountryController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'country_id' => 'sometimes|numeric|exists:country,country_id',
+                'country_id' => 'sometimes|integer|exists:country,country_id',
                 'lang'       => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
             [
-                'numeric'    => 'field_must_be_a_number',
+                'integer'    => 'field_must_be_a_number',
                 'exists'     => 'country_not_found',
                 'in'         => ':attribute_not_exist',
             ]

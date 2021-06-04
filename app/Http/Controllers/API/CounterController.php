@@ -71,7 +71,7 @@ class CounterController extends Controller
         return Validator::make($data,
             [
                 'post_type' => 'required|in:order,route',
-                'user_id'   => 'required|exists:users,user_id',
+                'user_id'   => 'required|integer|exists:users,user_id',
                 'id'        => 'required',
             ],
             [

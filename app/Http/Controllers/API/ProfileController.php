@@ -108,9 +108,9 @@ class ProfileController extends Controller
     {
         return Validator::make($data,
             [
-                'user_name'     => 'sometimes|string|between:3,100',
-                'user_surname'  => 'sometimes|string|between:3,100',
-                'user_city'     => 'numeric',
+                'user_name'     => 'sometimes|string|max:100',
+                'user_surname'  => 'sometimes|string|max:100',
+                'user_city'     => 'integer',
                 'user_location' => 'string',
                 'user_status'   => 'in:working,new',
                 'user_birthday' => 'date',
@@ -119,7 +119,11 @@ class ProfileController extends Controller
                 'user_resume'   => 'nullable|string',
             ],
             [
+                'max'          => 'length_filed_greater_than_:max_characters',
                 'base64_image' => 'not_valid_image',
+                'integer'      => 'field_must_be_a_number',
+                'in'           => 'value_not_exist',
+                'date'         => 'is_not_valid_date',
             ]
         );
     }

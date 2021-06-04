@@ -21,11 +21,11 @@ class CategoryController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'category_id' => 'sometimes|numeric|exists:categories,category_id',
+                'category_id' => 'sometimes|integer|exists:categories,category_id',
                 'lang'        => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
             [
-                'numeric'     => 'field_must_be_a_number',
+                'integer'     => 'field_must_be_a_number',
                 'exists'      => 'category_not_found',
                 'in'          => ':attribute_not_exist',
             ]
