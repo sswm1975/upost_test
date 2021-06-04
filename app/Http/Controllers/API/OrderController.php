@@ -5,11 +5,20 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Order;
 
 class OrderController extends Controller
 {
+    const DEFAULT_PER_PAGE = 5;
+    const DEFAULT_SORT_BY = 'order_register_date';
+    const DEFAULT_SORTING = 'desc';
+    const SORT_FIELDS = [
+        'date'  => 'order_register_date',
+        'price' => 'order_price_usd',
+    ];
+
     /**
      * Сохранить заказ.
      *
@@ -139,6 +148,64 @@ class OrderController extends Controller
 
         return response()->json([
             'status' => 200,
+        ]);
+    }
+
+    /**
+     * Вывод заказов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function showOrders(Request $request): JsonResponse
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'user_id'      => 'sometimes|required|integer',
+                'status'       => 'sometimes|required|in:active,ban',
+                'sorting'      => 'sometimes|required|in:asc,desc',
+                'sort_by'      => 'sometimes|required|in:date,price',
+                'show'         => 'sometimes|required|integer|min:1',
+                'page'         => 'sometimes|required|integer|min:1',
+                'date_from'    => 'sometimes|required|date',
+                'date_to'      => 'sometimes|required|date',
+                'city_from'    => 'sometimes|required|integer',
+                'city_to'      => 'sometimes|required|integer',
+                'country_from' => 'sometimes|required|integer',
+                'country_to'   => 'sometimes|required|integer',
+                'price_from'   => 'sometimes|required|number',
+                'price_to'     => 'sometimes|required|number',
+                'currency'     => 'sometimes|required|in:' . implode(',', array_keys(config('app.currencies'))),
+            ]
+        );
+
+        $data = $validator->validated();
+
+        $orders = Order::query()
+            ->when($request->filled('user_id'), function ($query) use ($data) {
+                return $query->where('user_id', $data['user_id']);
+            })
+            ->when($request->filled('status'), function ($query) use ($data) {
+                return $query->where('order_status', $data['status']);
+            })
+            ->when($request->filled('date_from'), function ($query) use ($data) {
+                return $query->where('order_start', '>=', $data['date_from']);
+            })
+            ->orderBy(self::SORT_FIELDS[$data['sort_by'] ?? 'date'], $data['sorting'] ?? self::DEFAULT_SORTING)
+            ->paginate($data['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page'] ?? 1)
+            ->toArray();
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 404,
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'orders' => null_to_blank($orders),
         ]);
     }
 }
