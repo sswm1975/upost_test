@@ -11,8 +11,6 @@ use App\Models\City;
 
 class CountryController extends Controller
 {
-    const DEFAULT_LANG = 'en';
-
     /**
      * Получить наименование страниы по её коду.
      *
@@ -44,7 +42,7 @@ class CountryController extends Controller
 
         $country = Country::query()
             ->where('country_id', $request->get('country_id'))
-            ->language($request->get('lang', self::DEFAULT_LANG))
+            ->language($request->get('lang', config('app.default_language')))
             ->first();
 
         return response()->json([
@@ -79,7 +77,7 @@ class CountryController extends Controller
         }
 
         $countries = Country::query()
-            ->language($request->get('lang', self::DEFAULT_LANG))
+            ->language($request->get('lang', config('app.default_language')))
             ->addSelect('country_id')
             ->oldest('country_id')
             ->get();
@@ -121,7 +119,7 @@ class CountryController extends Controller
 
         $city = City::query()
             ->where('city_id', $request->get('city_id'))
-            ->language($request->get('lang', self::DEFAULT_LANG))
+            ->language($request->get('lang', config('app.default_language')))
             ->first();
 
         return response()->json([
@@ -142,12 +140,12 @@ class CountryController extends Controller
             $request->all(),
             [
                 'country_id' => 'sometimes|numeric|exists:country,country_id',
-                'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
+                'lang'       => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
             [
                 'numeric'    => 'field_must_be_a_number',
                 'exists'     => 'country_not_found',
-                'in'   => ':attribute_not_exist',
+                'in'         => ':attribute_not_exist',
             ]
         );
 
@@ -159,11 +157,11 @@ class CountryController extends Controller
         }
 
         $countries = Country::query()
-            ->with('cities:country_id,city_id,city_name_' . $request->get('lang', self::DEFAULT_LANG) . ' as city_name' )
+            ->with('cities:country_id,city_id,city_name_' . $request->get('lang', config('app.default_language')) . ' as city_name' )
             ->when($request->filled('country_id'), function ($query) use ($request) {
                 return $query->where('country_id', $request->get('country_id'));
             })
-            ->language($request->get('lang', self::DEFAULT_LANG))
+            ->language($request->get('lang', config('app.default_language')))
             ->addSelect('country_id')
             ->oldest('country_id')
             ->get()
