@@ -10,13 +10,11 @@ use App\Models\Order;
 
 class OrderController extends Controller
 {
-
     /**
      * Сохранить заказ.
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function saveOrder(Request $request): JsonResponse
     {
@@ -49,7 +47,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Валидатор для сохранения заказа.
+     * Валидатор запроса с данными заказа.
      *
      * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
