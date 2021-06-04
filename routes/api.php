@@ -50,3 +50,5 @@ Route::match(['GET', 'POST'], 'get_city', 'API\CountryController@getCity');
 # Отримання даних країни або міста: Отримати список всіх країн включно зі списком всіх міст конкретної країни
 Route::match(['GET', 'POST'], 'get_cities', 'API\CountryController@getCities');
 
+# Отримання категорій: всіх або конкретної категорії
+Route::match(['GET', 'POST'], 'get_сategories', 'API\CategoryController@getCategories');

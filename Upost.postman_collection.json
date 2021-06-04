@@ -6,50 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "Авторизация",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"description": "Логин емейл",
-						"type": "text"
-					},
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{phone}}",
-						"description": "Логин телефон",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))",
-						"type": "text"
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "test_password",
-						"description": "Пароль для тестирования",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"url": {
-					"raw": "{{host}}{{endpoint}}/login",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Регистрация",
 			"request": {
 				"method": "POST",
@@ -90,6 +46,50 @@
 					],
 					"path": [
 						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Авторизация",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"description": "Логин емейл",
+						"type": "text"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))",
+						"type": "text"
+					},
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{phone}}",
+						"description": "Логин телефон",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "test_password",
+						"description": "Пароль для тестирования",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{host}}{{endpoint}}/login",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"login"
 					]
 				}
 			},
@@ -323,7 +323,7 @@
 			"response": []
 		},
 		{
-			"name": "Получить название страны по ее коду (GET) Copy",
+			"name": "Получить название страны по ее коду (GET)",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -664,6 +664,95 @@
 					],
 					"path": [
 						"get_cities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получить список всех категорий или выбранной категории (GET)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)",
+						"disabled": true
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{host}}{{endpoint}}/get_сategories?category_id=2&lang=ru",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"get_сategories"
+					],
+					"query": [
+						{
+							"key": "category_id",
+							"value": "2"
+						},
+						{
+							"key": "lang",
+							"value": "ru"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получить список всех категорий или выбранной категории (POST)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)",
+						"disabled": true
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "category_id",
+							"value": "12",
+							"type": "text"
+						},
+						{
+							"key": "lang",
+							"value": "uk",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/get_сategories",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"get_сategories"
 					]
 				}
 			},
