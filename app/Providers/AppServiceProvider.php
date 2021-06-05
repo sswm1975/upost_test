@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
          * Валидация: Проверка base64 image-контента.
          */
         Validator::extend('base64_image', function ($attribute, $value, $parameters, $validator) {
-            return validate_base64($value, ['jpg', 'jpeg']);
+            return validate_base64($value, ['jpg', 'jpeg'], 3000000, 2000, 2000);
         });
     }
 }

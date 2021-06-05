@@ -196,44 +196,12 @@ class ProfileController extends Controller
             return '';
         }
 
-//        $this->createResizedImage($src, 200, $storage_path . $image_main_name);
-//        $this->createResizedImage($src, 100, $storage_path . $image_thumb_name);
-
         imagejpeg(cropAlign($src, 200, 200), $storage_path . $image_main_name);
         imagejpeg(cropAlign($src, 100, 100), $storage_path . $image_thumb_name);
 
         imagedestroy($src);
 
         return $path . $image_main_name;
-    }
-
-    /**
-     * Создать рисунок c пропорциональным измененнем сторон.
-     *
-     * @param GdImage $src
-     * @param int     $size
-     * @param string  $full_filename
-     * @return void
-     */
-    protected function createResizedImage($src, int $size, string $full_filename)
-    {
-        $width = imagesx($src);
-        $height = imagesy($src);
-        $aspect_ratio = $height/$width;
-
-        if ($width <= $size) {
-            $new_w = $width;
-            $new_h = $height;
-        } else {
-            $new_w = $size;
-            $new_h = abs($new_w * $aspect_ratio);
-        }
-
-        $img = imagecreatetruecolor($new_w, $new_h);
-        imagecopyresized($img, $src,0,0,0,0,$new_w,$new_h,$width, $height);
-
-        imagejpeg($img, $full_filename);
-        imagedestroy($img);
     }
 
     /**

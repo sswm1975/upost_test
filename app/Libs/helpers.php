@@ -16,36 +16,15 @@ function null_to_blank(array $data = []): array
 }
 
 /**
- * Convert a multi-dimensional array into a single-dimensional array.
- *
- * @author Sean Cannon, LitmusBox.com | seanc@litmusbox.com
- * @param  array $array The multi-dimensional array.
- * @return array|bool
- */
-function array_flatten(array $array) {
-    if (!is_array($array)) {
-        return false;
-    }
-    $result = array();
-    foreach ($array as $key => $value) {
-        if (is_array($value)) {
-            $result = array_merge($result, array_flatten($value));
-        } else {
-            $result = array_merge($result, array($key => $value));
-        }
-    }
-    return $result;
-}
-
-/**
  * Validate a base64 content.
  *
  * @author Ahmed Fathy, https://stackoverflow.com/questions/51419310/validating-base64-image-laravel/52914093#52914093
  * @param string $base64data
  * @param array $allowedMime example ['png', 'jpg', 'jpeg']
+ * @param int $maxSize
  * @return bool
  */
-function validate_base64(string $base64data, array $allowedMime): bool
+function validate_base64(string $base64data, array $allowedMime, int $maxSize, int $maxWidth, int $maxHeight): bool
 {
     # strip out data uri scheme information (see RFC 2397)
     if (strpos($base64data, ';base64') !== false) {
@@ -64,13 +43,20 @@ function validate_base64(string $base64data, array $allowedMime): bool
     }
 
     $binaryData = base64_decode($base64data);
-
     # temporarily store the decoded data on the filesystem to be able to pass it to the fileAdder
     $tmpFile = tempnam(sys_get_temp_dir(), 'medialibrary');
     file_put_contents($tmpFile, $binaryData);
 
-    # guard Against Invalid MimeType
-    $allowedMime = array_flatten($allowedMime);
+    if (strlen($binaryData) > $maxSize) {
+        return false;
+    }
+    $src = imagecreatefromstring($binaryData);
+    $width = imagesx($src);
+    $height = imagesy($src);
+
+    if ($width > $maxWidth || $height > $maxHeight) {
+        return false;
+    }
 
     # no allowedMimeTypes, then any type would be ok
     if (empty($allowedMime)) {
@@ -152,6 +138,35 @@ function calculatePixelsForAlign($imageSize, $cropSize, $align): array
             ];
         default: return [0, $imageSize];
     }
+}
+
+/**
+ * Создать рисунок c пропорциональным измененнем сторон.
+ *
+ * @param GdImage $src
+ * @param int     $size
+ * @param string  $full_filename
+ * @return void
+ */
+function createResizedImage($src, int $size, string $full_filename)
+{
+    $width = imagesx($src);
+    $height = imagesy($src);
+    $aspect_ratio = $height/$width;
+
+    if ($width <= $size) {
+        $new_w = $width;
+        $new_h = $height;
+    } else {
+        $new_w = $size;
+        $new_h = abs($new_w * $aspect_ratio);
+    }
+
+    $img = imagecreatetruecolor($new_w, $new_h);
+    imagecopyresized($img, $src,0,0,0,0,$new_w,$new_h,$width, $height);
+
+    imagejpeg($img, $full_filename);
+    imagedestroy($img);
 }
 
 /**

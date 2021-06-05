@@ -64,3 +64,6 @@ Route::match(['GET', 'POST'], 'delete_order', 'API\OrderController@deleteOrder')
 
 # Лічильник переглядів
 Route::match(['GET', 'POST'], 'update_counter', API\CounterController::class);
+
+# Загрузка фото і створення мініатюр
+Route::post('upload_photo', 'API\PhotoLoaderController@uploadPhoto')->middleware('auth.basic');
