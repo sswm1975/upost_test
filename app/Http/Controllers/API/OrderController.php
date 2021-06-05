@@ -43,7 +43,7 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 
@@ -89,18 +89,8 @@ class OrderController extends Controller
                 'order_user_currency'  => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
                 'order_not_more_price' => 'required|boolean',
             ],
-            [
-                'required'             => 'required_field',
-                'max'                  => 'length_filed_greater_than_:max_characters',
-                'numeric'              => 'field_must_be_a_number',
-                'integer'              => 'field_must_be_a_number',
-                'in'                   => 'value_not_exist',
-                'exists'               => 'value_not_found',
-                'url'                  => 'link_format_is_invalid',
-                'date'                 => 'is_not_valid_date',
-                'boolean'              => 'field_must_be_1_or_0',
-                'required_if'          => 'required_field',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
     }
 
@@ -118,16 +108,14 @@ class OrderController extends Controller
                 'user_id'   => 'required|integer',
                 'order_id'  => 'required|integer',
             ],
-            [
-                'required'   => 'required_field',
-                'integer'    => 'field_must_be_a_number',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 
@@ -181,13 +169,15 @@ class OrderController extends Controller
                 'price_from'     => 'sometimes|required|numeric',
                 'price_to'       => 'sometimes|required|numeric',
                 'currency'       => 'sometimes|required|in:' . implode(',', array_keys(config('app.currencies'))),
-            ]
+            ],
+            config('validation.messages'),
+            config('validation.attributes')
         );
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors()->all()
             ]);
         }
 

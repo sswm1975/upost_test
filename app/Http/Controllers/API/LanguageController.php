@@ -24,7 +24,7 @@ class LanguageController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 
@@ -58,10 +58,8 @@ class LanguageController extends Controller
                 'lang'     => 'required_without:currency|in:' . implode(',', config('app.languages')),
                 'currency' => 'required_without:lang|in:' . implode(',', array_keys(config('app.currencies'))),
             ],
-            [
-                'required_without' => 'field_is_empty',
-                'in'               => ':attribute_not_exist',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
     }
 }

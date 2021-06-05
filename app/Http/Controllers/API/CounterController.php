@@ -24,7 +24,7 @@ class CounterController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 
@@ -74,11 +74,8 @@ class CounterController extends Controller
                 'user_id'   => 'required|integer|exists:users,user_id',
                 'id'        => 'required',
             ],
-            [
-                'required'  => 'required_field',
-                'in'        => 'value_not_exist',
-                'exists'    => 'value_not_found',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
     }
 }

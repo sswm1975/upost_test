@@ -23,7 +23,7 @@ Route::post('login', function () {
 })->middleware('auth.basic');
 
 # Реєстрація
-Route::post('register', 'API\Auth\RegisterController@register');
+Route::post('register', 'API\RegisterController@register');
 
 # Отримання інформації про користувача (тільки публічні дані)
 Route::get('profile/{id}', 'API\ProfileController@getPublicData');

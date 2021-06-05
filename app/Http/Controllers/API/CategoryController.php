@@ -24,17 +24,14 @@ class CategoryController extends Controller
                 'category_id' => 'sometimes|integer|exists:categories,category_id',
                 'lang'        => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
-            [
-                'integer'     => 'field_must_be_a_number',
-                'exists'      => 'category_not_found',
-                'in'          => ':attribute_not_exist',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 

@@ -9,6 +9,11 @@
 
 define('LARAVEL_START', microtime(true));
 
+# [Shkoda Sergey] Пофиксил ошибку "Notice: Undefined index: PHP_AUTH_PW in C:\laragon\www\upost\vendor\symfony\http-foundation\ServerBag.php on line 92"
+if (isset($_SERVER['HTTP_PHP_AUTH_USER']) && empty($_SERVER['HTTP_PHP_AUTH_PW'])) {
+    $_SERVER['HTTP_PHP_AUTH_PW'] = null;
+}
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader

@@ -36,7 +36,7 @@ class CountryController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 
@@ -72,7 +72,7 @@ class CountryController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 
@@ -102,18 +102,14 @@ class CountryController extends Controller
                 'city_id'    => 'required|integer|exists:city,city_id',
                 'lang'       => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
-            [
-                'required'   => 'required_field',
-                'integer'    => 'field_must_be_a_number',
-                'exists'     => 'city_not_found',
-                'in'         => ':attribute_not_exist',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 
@@ -142,17 +138,14 @@ class CountryController extends Controller
                 'country_id' => 'sometimes|integer|exists:country,country_id',
                 'lang'       => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
-            [
-                'integer'    => 'field_must_be_a_number',
-                'exists'     => 'country_not_found',
-                'in'         => ':attribute_not_exist',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 

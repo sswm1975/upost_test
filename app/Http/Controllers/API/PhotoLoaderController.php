@@ -23,13 +23,15 @@ class PhotoLoaderController extends Controller
             [
                 'photo_type' => 'required|in:user,order',
                 'photo'      => 'required|base64_image',
-            ]
+            ],
+            config('validation.messages'),
+            config('validation.attributes')
         );
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 

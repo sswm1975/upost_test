@@ -82,8 +82,7 @@ class ProfileController extends Controller
     {
         $user = User::query()
             ->where('user_id', $id)
-            ->first(self::FIELDS_FOR_SHOW)
-            ->toArray();
+            ->first(self::FIELDS_FOR_SHOW);
 
         if (empty($user)) {
             return response()->json([
@@ -94,7 +93,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'status' => 200,
-            'result' => null_to_blank($user),
+            'result' => null_to_blank($user->toArray()),
         ]);
     }
 
@@ -118,13 +117,8 @@ class ProfileController extends Controller
                 'user_photo'    => 'nullable|base64_image',
                 'user_resume'   => 'nullable|string',
             ],
-            [
-                'max'          => 'length_filed_greater_than_:max_characters',
-                'base64_image' => 'not_valid_image',
-                'integer'      => 'field_must_be_a_number',
-                'in'           => 'value_not_exist',
-                'date'         => 'is_not_valid_date',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
     }
 
@@ -142,7 +136,7 @@ class ProfileController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 

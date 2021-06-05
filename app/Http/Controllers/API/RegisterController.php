@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Auth;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -10,6 +10,31 @@ use App\Models\User;
 
 class RegisterController extends Controller
 {
+    /**
+     * API Register user.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function register(Request $request): JsonResponse
+    {
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 404,
+                'errors' => $validator->errors()->all()
+            ]);
+        }
+
+        $user = $this->create($request->all());
+
+        return response()->json([
+            'status'  => 200,
+            'message' => 'successfully_registered',
+        ]);
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -24,15 +49,8 @@ class RegisterController extends Controller
                 'user_email'    => ['required', 'email', 'max:30', 'unique:users'],
                 'user_password' => ['required', 'min:6', 'confirmed'],
             ],
-            [
-                'required'      => 'required_field',
-                'unique'        => 'already_used',
-                'max'           => 'too_long',
-                'min'           => 'too_short',
-                'email'         => 'not_valid',
-                'phone'         => 'invalid_phone_number',
-                'confirmed'     => 'password_confirmation_does_not_match',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
     }
 
@@ -56,31 +74,6 @@ class RegisterController extends Controller
             'user_currency'    => $data['user_currency'] ?? config('user.default.currency'),
             'user_role'        => $data['user_role'] ?? config('user.default.role'),
             'user_validation'  => 'no_valid',
-        ]);
-    }
-
-    /**
-     * API Register user.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function register(Request $request): JsonResponse
-    {
-        $validator = $this->validator($request->all());
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 404,
-                'errors' => $validator->errors()
-            ]);
-        }
-
-        $user = $this->create($request->all());
-
-        return response()->json([
-            'status'  => 200,
-            'message' => 'successfully_registered',
         ]);
     }
 }
