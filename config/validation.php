@@ -187,5 +187,13 @@ return [
         'order_user_price'     => 'order_user_price',
         'order_user_currency'  => 'order_user_currency',
         'order_not_more_price' => 'order_not_more_price',
+
+        'route_from_country'   => 'route_from_country',
+        'route_from_city'      => 'route_from_city',
+        'route_to_country'     => 'route_to_country',
+        'route_to_city'        => 'route_to_city',
+        'route_start'          => 'route_start',
+        'route_end'            => 'route_end',
+        'route_transport'      => 'route_transport',
     ],
 ];

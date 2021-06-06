@@ -10,13 +10,38 @@ class Route extends Model
     protected $primaryKey = 'route_id';
     protected $guarded = ['route_id'];
     public $timestamps = false;
+    protected $casts = [
+        'route_points' => 'object',
+    ];
 
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-            $model->route_register_date = $model->freshTimestamp();
+            $model->route_parent = 0;
+            $model->route_type = 'route';
+            $model->route_status = 'active';
+            $model->route_look = 0;
+            $model->route_register_date = date('Y-m-d');
         });
     }
+
+    public function setRouteFromCityAttribute($value)
+    {
+        $this->attributes['route_from_city'] = is_null($value) ? 0 : $value;
+    }
+
+    public function setRouteToCityAttribute($value)
+    {
+        $this->attributes['route_to_city'] = is_null($value) ? 0 : $value;
+    }
+
+    public function getRoutePointsAttribute($json)
+    {
+        if (is_array($json)) return $json;
+
+        return json_decode($json, true);
+    }
+
 }

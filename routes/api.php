@@ -67,3 +67,6 @@ Route::match(['GET', 'POST'], 'update_counter', API\CounterController::class);
 
 # Загрузка фото і створення мініатюр
 Route::post('upload_photo', 'API\PhotoLoaderController@uploadPhoto')->middleware('auth.basic');
+
+# Створення маршруту
+Route::post('save_route', 'API\RouteController@saveRoute')->middleware('auth.basic');

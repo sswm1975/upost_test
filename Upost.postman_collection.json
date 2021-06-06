@@ -1354,6 +1354,111 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Сохранить маршрут",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "route_from_country",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "route_from_city",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "route_to_country",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "route_to_city",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "route_start",
+							"value": "2021-06-01",
+							"type": "text"
+						},
+						{
+							"key": "route_end",
+							"value": "2021-07-01",
+							"type": "text"
+						},
+						{
+							"key": "route_transport",
+							"value": "bus",
+							"type": "text"
+						},
+						{
+							"key": "route_points[0][country]",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "route_points[0][city]",
+							"value": "14",
+							"type": "text"
+						},
+						{
+							"key": "route_points[0][date]",
+							"value": "2021-08-21",
+							"type": "text"
+						},
+						{
+							"key": "route_points[1][country]",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "route_points[1][city]",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "route_points[1][date]",
+							"value": "2021-08-22",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/save_route",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"save_route"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
