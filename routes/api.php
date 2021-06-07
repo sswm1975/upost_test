@@ -76,3 +76,6 @@ Route::post('show_routes', 'API\RouteController@showRoutes')->middleware('auth.b
 
 # Редагування маршруту
 Route::post('update_route/{id}', 'API\RouteController@updateRoute')->middleware('auth.basic');
+
+# Видалення маршруту
+Route::delete('delete_route/{id}', 'API\RouteController@deleteRoute')->middleware('auth.basic');

@@ -219,4 +219,43 @@ class RouteController extends Controller
             'result'  => null_to_blank($route->toArray()),
         ]);
     }
+
+    /**
+     * Удалить маршрут.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function deleteRoute(int $id): JsonResponse
+    {
+        $user = $GLOBALS['user'];
+
+        # Якшо ім'я, прізвище, дата народження не заповнені - то не давати створити маршрут.
+        if (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'in_profile_not_fill_name_or_surname_or_birthday',
+            ]);
+        }
+
+        # Ищем маршрут по его коду, он должен принадлежать авторизированному пользователю и быть в одном из разрешенных статусов
+        $route = Route::query()
+            ->where('route_id', $id)
+            ->where('user_id', $user->user_id)
+            ->whereIn('route_status', ['active', 'ban', 'close'])
+            ->first();
+
+        if (empty($route)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'route_not_found',
+            ]);
+        }
+
+        $route->delete();
+
+        return response()->json([
+            'status' => 200,
+        ]);
+    }
 }
