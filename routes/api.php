@@ -70,3 +70,6 @@ Route::post('upload_photo', 'API\PhotoLoaderController@uploadPhoto')->middleware
 
 # Створення маршруту
 Route::post('save_route', 'API\RouteController@saveRoute')->middleware('auth.basic');
+
+# Виведення маршруту
+Route::post('show_routes', 'API\RouteController@showRoutes')->middleware('auth.basic');

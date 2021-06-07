@@ -1441,12 +1441,7 @@
 							"value": "2021-08-22",
 							"type": "text"
 						}
-					],
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					]
 				},
 				"url": {
 					"raw": "{{host}}{{endpoint}}/save_route",
@@ -1455,6 +1450,111 @@
 					],
 					"path": [
 						"save_route"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Виведення маршруту",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "route_id[]",
+							"value": "60",
+							"type": "text"
+						},
+						{
+							"key": "route_id[]",
+							"value": "64",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "15",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "active",
+							"type": "text"
+						},
+						{
+							"key": "date_from",
+							"value": "2021-06-01",
+							"type": "text"
+						},
+						{
+							"key": "date_to",
+							"value": "2021-07-01",
+							"type": "text"
+						},
+						{
+							"key": "country_from[]",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "city_from[]",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "city_from[]",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "country_to[]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "city_to[]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "city_to[]",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "show",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/show_routes",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"show_routes"
 					]
 				}
 			},

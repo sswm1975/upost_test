@@ -8,9 +8,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class RouteController extends Controller
 {
+    const DEFAULT_PER_PAGE = 5;
+
     /**
      * Сохранить маршрут.
      *
@@ -77,5 +80,92 @@ class RouteController extends Controller
         }
 
         return Validator::make($data, $rules, config('validation.messages'), $attributes);
+    }
+
+    /**
+     * Вывод маршрутов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function showRoutes(Request $request): JsonResponse
+    {
+        $validator = Validator::make(request()->all(),
+            [
+                'route_id'       => 'sometimes|required|array',
+                'route_id.*'     => 'required|integer',
+                'user_id'        => 'sometimes|required|integer',
+                'status'         => 'sometimes|required|in:active,ban,close',
+                'date_from'      => 'sometimes|required|date',
+                'date_to'        => 'sometimes|required|date|after_or_equal:date_from',
+                'country_from'   => 'sometimes|required|array',
+                'country_from.*' => 'required|integer',
+                'city_from'      => 'sometimes|required|array',
+                'city_from.*'    => 'required|integer',
+                'country_to'     => 'sometimes|required|array',
+                'country_to.*'   => 'required|integer',
+                'city_to'        => 'sometimes|required|array',
+                'city_to.*'      => 'required|integer',
+                'show'           => 'sometimes|required|integer|min:1',
+                'page'           => 'sometimes|required|integer|min:1',
+            ],
+            config('validation.messages'),
+            config('validation.attributes')
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 404,
+                'errors' => $validator->errors()->all()
+            ]);
+        }
+
+        $data = $validator->validated();
+
+//        DB::enableQueryLog();
+
+        $routes = Route::query()
+            ->where('route_status', $request->get('status', 'active'))
+            ->when($request->filled('route_id'), function ($query) use ($data) {
+                return $query->whereIn('route_id', $data['route_id']);
+            })
+            ->when($request->filled('user_id'), function ($query) use ($data) {
+                return $query->where('user_id', $data['user_id']);
+            })
+            ->when($request->filled('date_from'), function ($query) use ($data) {
+                return $query->where('route_start', '>=', $data['date_from']);
+            })
+            ->when($request->filled('date_to'), function ($query) use ($data) {
+                return $query->where('route_end', '<=', $data['date_to']);
+            })
+            ->when($request->filled('country_from'), function ($query) use ($data) {
+                return $query->whereIn('route_from_country', $data['country_from']);
+            })
+            ->when($request->filled('city_from'), function ($query) use ($data) {
+                return $query->whereIn('route_from_city', $data['city_from']);
+            })
+            ->when($request->filled('country_to'), function ($query) use ($data) {
+                return $query->whereIn('route_to_country', $data['country_to']);
+            })
+            ->when($request->filled('city_to'), function ($query) use ($data) {
+                return $query->whereIn('route_to_city', $data['city_to']);
+            })
+            ->paginate($data['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page'] ?? 1)
+            ->toArray();
+
+//        return response()->json([
+//            'data'   => $data,
+//            'query'  => DB::getQueryLog(),
+//            'orders' => null_to_blank($routes),
+//        ]);
+
+        return response()->json([
+            'status' => 200,
+            'count'  => $routes['total'],
+            'page'   => $routes['current_page'],
+            'pages'  => $routes['last_page'],
+            'result' => null_to_blank($routes['data']),
+        ]);
     }
 }
