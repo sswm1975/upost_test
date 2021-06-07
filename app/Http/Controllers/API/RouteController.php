@@ -65,7 +65,7 @@ class RouteController extends Controller
             'route_start'        => 'required|date',
             'route_end'          => 'required|date|after_or_equal:route_start',
             'route_transport'    => 'required|in:car,bus,walk,train,plane',
-            'route_points'       => 'sometimes|required|array',
+            'route_points'       => 'sometimes|nullable|array',
         ];
 
         $attributes = config('validation.attributes');
@@ -166,6 +166,57 @@ class RouteController extends Controller
             'page'   => $routes['current_page'],
             'pages'  => $routes['last_page'],
             'result' => null_to_blank($routes['data']),
+        ]);
+    }
+
+    /**
+     * Редактирование маршрута.
+     *
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function updateRoute(int $id, Request $request): JsonResponse
+    {
+        $user = $GLOBALS['user'];
+
+        # Якшо ім'я, прізвище, дата народження не заповнені - то не давати створити маршрут.
+        if (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'in_profile_not_fill_name_or_surname_or_birthday',
+            ]);
+        }
+
+        # Ищем маршрут по его коду, он должен принадлежать авторизированному пользователю и быть активным
+        $route = Route::query()
+            ->where('route_id', $id)
+            ->where('user_id', $user->user_id)
+            ->where('route_status', 'active')
+            ->first();
+
+        if (empty($route)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'route_not_found',
+            ]);
+        }
+
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 404,
+                'errors' => $validator->errors()->all()
+            ]);
+        }
+
+        $route->update($validator->validated());
+
+        return response()->json([
+            'status'  => 200,
+            'result'  => null_to_blank($route->toArray()),
         ]);
     }
 }

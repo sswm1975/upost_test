@@ -73,3 +73,6 @@ Route::post('save_route', 'API\RouteController@saveRoute')->middleware('auth.bas
 
 # Виведення маршруту
 Route::post('show_routes', 'API\RouteController@showRoutes')->middleware('auth.basic');
+
+# Редагування маршруту
+Route::post('update_route/{id}', 'API\RouteController@updateRoute')->middleware('auth.basic');
