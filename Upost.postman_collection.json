@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "Регистрация",
+			"name": "Реєстрація",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -34,7 +34,7 @@
 						{
 							"key": "user_password_confirmation",
 							"value": "{{password}}",
-							"description": "Повтор пароля",
+							"description": "Підтвердження паролю",
 							"type": "text"
 						}
 					]
@@ -52,9 +52,9 @@
 			"response": []
 		},
 		{
-			"name": "Авторизация",
+			"name": "Авторизація",
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [
 					{
 						"key": "PHP-AUTH-USER",
@@ -96,7 +96,25 @@
 			"response": []
 		},
 		{
-			"name": "Приватный профиль",
+			"name": "Отримання інформації про користувача (тільки публічні дані)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}{{endpoint}}/profile/1",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"profile",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Отримання інформації про користувача (всі дані)",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -126,25 +144,7 @@
 			"response": []
 		},
 		{
-			"name": "Публичный профиль",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{host}}{{endpoint}}/profile/1",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"profile",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Обновить профиль",
+			"name": "Зміна даних профілю (тільки публічні дані)",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -231,54 +231,7 @@
 			"response": []
 		},
 		{
-			"name": "Обновить язык и валюту (GET)",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)"
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/language?lang=ru&currency=rub",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"language"
-					],
-					"query": [
-						{
-							"key": "lang",
-							"value": "ru"
-						},
-						{
-							"key": "currency",
-							"value": "rub"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Обновить язык и валюту (POST)",
+			"name": "Зміна даних мов та валют",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -323,7 +276,7 @@
 			"response": []
 		},
 		{
-			"name": "Получить название страны по ее коду (GET)",
+			"name": "Отримувати назву країни по її ідентифікатору",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -343,18 +296,15 @@
 					}
 				],
 				"url": {
-					"raw": "{{host}}{{endpoint}}/get_country?country_id=2&lang=ru",
+					"raw": "{{host}}{{endpoint}}/get_country/2?lang=ru",
 					"host": [
 						"{{host}}{{endpoint}}"
 					],
 					"path": [
-						"get_country"
+						"get_country",
+						"2"
 					],
 					"query": [
-						{
-							"key": "country_id",
-							"value": "2"
-						},
 						{
 							"key": "lang",
 							"value": "ru"
@@ -365,54 +315,7 @@
 			"response": []
 		},
 		{
-			"name": "Получить название страны по ее коду (POST)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)",
-						"disabled": true
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "country_id",
-							"value": "3",
-							"type": "text"
-						},
-						{
-							"key": "lang",
-							"value": "uk",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/get_country",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"get_country"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Получить список всех стран (GET)",
+			"name": "Отримати список всіх країн",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -450,49 +353,7 @@
 			"response": []
 		},
 		{
-			"name": "Получить список всех стран (POST)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)",
-						"disabled": true
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "lang",
-							"value": "uk",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/get_countries",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"get_countries"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Получить название города по его коду (GET)",
+			"name": "Отримати назву міста за його ідентифікатором",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -512,18 +373,15 @@
 					}
 				],
 				"url": {
-					"raw": "{{host}}{{endpoint}}/get_city?city_id=2&lang=ru",
+					"raw": "{{host}}{{endpoint}}/get_city/2?lang=ru",
 					"host": [
 						"{{host}}{{endpoint}}"
 					],
 					"path": [
-						"get_city"
+						"get_city",
+						"2"
 					],
 					"query": [
-						{
-							"key": "city_id",
-							"value": "2"
-						},
 						{
 							"key": "lang",
 							"value": "ru"
@@ -534,54 +392,7 @@
 			"response": []
 		},
 		{
-			"name": "Получить название города по его коду (POST)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)",
-						"disabled": true
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "city_id",
-							"value": "8",
-							"type": "text"
-						},
-						{
-							"key": "lang",
-							"value": "uk",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/get_city",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"get_city"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Получить список городов по всем странам или выбранной страны (GET)",
+			"name": "Отримати список міст по всім країнам або конкретної країни",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -601,18 +412,15 @@
 					}
 				],
 				"url": {
-					"raw": "{{host}}{{endpoint}}/get_cities?country_id=8&lang=ru",
+					"raw": "{{host}}{{endpoint}}/get_cities/8?lang=ru",
 					"host": [
 						"{{host}}{{endpoint}}"
 					],
 					"path": [
-						"get_cities"
+						"get_cities",
+						"8"
 					],
 					"query": [
-						{
-							"key": "country_id",
-							"value": "8"
-						},
 						{
 							"key": "lang",
 							"value": "ru"
@@ -623,54 +431,7 @@
 			"response": []
 		},
 		{
-			"name": "Получить список городов по всем странам или выбранной страны (POST)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)",
-						"disabled": true
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "country_id",
-							"value": "3",
-							"type": "text"
-						},
-						{
-							"key": "lang",
-							"value": "uk",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/get_cities",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"get_cities"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Получить список всех категорий или выбранной категории (GET)",
+			"name": "Отримання всіх або конкретної категорії",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -690,18 +451,15 @@
 					}
 				],
 				"url": {
-					"raw": "{{host}}{{endpoint}}/get_сategories?category_id=2&lang=ru",
+					"raw": "{{host}}{{endpoint}}/get_сategories/2?lang=ru",
 					"host": [
 						"{{host}}{{endpoint}}"
 					],
 					"path": [
-						"get_сategories"
+						"get_сategories",
+						"2"
 					],
 					"query": [
-						{
-							"key": "category_id",
-							"value": "2"
-						},
 						{
 							"key": "lang",
 							"value": "ru"
@@ -712,54 +470,7 @@
 			"response": []
 		},
 		{
-			"name": "Получить список всех категорий или выбранной категории (POST)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)",
-						"disabled": true
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "category_id",
-							"value": "12",
-							"type": "text"
-						},
-						{
-							"key": "lang",
-							"value": "uk",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/get_сategories",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"get_сategories"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Сохранить заказ",
+			"name": "Створення замовлення",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -914,311 +625,7 @@
 			"response": []
 		},
 		{
-			"name": "Счетчик просмотров для заказов и маршрутов (POST)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)"
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "post_type",
-							"value": "route",
-							"type": "text"
-						},
-						{
-							"key": "user_id",
-							"value": "2",
-							"type": "text"
-						},
-						{
-							"key": "id",
-							"value": "21",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/update_counter",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"update_counter"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Счетчик просмотров для заказов и маршрутов (GET)",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)"
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/update_counter?post_type=order&user_id=2&id=1",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"update_counter"
-					],
-					"query": [
-						{
-							"key": "post_type",
-							"value": "order"
-						},
-						{
-							"key": "user_id",
-							"value": "2"
-						},
-						{
-							"key": "id",
-							"value": "1"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Удалить заказ (POST)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)"
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "user_id",
-							"value": "15",
-							"type": "text"
-						},
-						{
-							"key": "order_id",
-							"value": "21",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/delete_order",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"delete_order"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Удалить заказ (GET)",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)"
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/delete_order?user_id=15&order_id=21",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"delete_order"
-					],
-					"query": [
-						{
-							"key": "user_id",
-							"value": "15"
-						},
-						{
-							"key": "order_id",
-							"value": "21"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Вывод заказов (POST)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"type": "text",
-						"description": "Логин (емейл или телефон)"
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"type": "text",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "user_id",
-							"value": "15",
-							"type": "text"
-						},
-						{
-							"key": "show",
-							"value": "4",
-							"type": "text"
-						},
-						{
-							"key": "status",
-							"value": "active",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "page",
-							"value": "1",
-							"type": "text"
-						},
-						{
-							"key": "date_from",
-							"value": "2021-06-01",
-							"type": "text"
-						},
-						{
-							"key": "date_to",
-							"value": "2021-06-05",
-							"type": "text"
-						},
-						{
-							"key": "city_from[]",
-							"value": "4",
-							"type": "text"
-						},
-						{
-							"key": "city_from[]",
-							"value": "3",
-							"type": "text"
-						},
-						{
-							"key": "city_to[]",
-							"value": "2",
-							"type": "text"
-						},
-						{
-							"key": "city_to[]",
-							"value": "3",
-							"type": "text"
-						},
-						{
-							"key": "country_from[]",
-							"value": "3",
-							"type": "text"
-						},
-						{
-							"key": "country_to[]",
-							"value": "2",
-							"type": "text"
-						},
-						{
-							"key": "price_from",
-							"value": "100",
-							"type": "text"
-						},
-						{
-							"key": "price_to",
-							"value": "250",
-							"type": "text"
-						},
-						{
-							"key": "currency",
-							"value": "usd",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{host}}{{endpoint}}/show_orders",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"show_orders"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Вывод заказов (GET)",
+			"name": "Вивід замовлень",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -1311,6 +718,91 @@
 			"response": []
 		},
 		{
+			"name": "Видалення замовлення",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/delete_order/13",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"delete_order",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Лічильник переглядів",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "post_type",
+							"value": "route",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "21",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "15",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/update_counter",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"update_counter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Загрузка фото",
 			"request": {
 				"method": "POST",
@@ -1356,7 +848,7 @@
 			"response": []
 		},
 		{
-			"name": "Сохранить маршрут",
+			"name": "Створення маршруту",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1458,7 +950,7 @@
 		{
 			"name": "Виведення маршруту",
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [
 					{
 						"key": "PHP-AUTH-USER",
@@ -1473,88 +965,71 @@
 						"description": "Хеш пароля, результат выполнения md5(md5(password))"
 					}
 				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "route_id[]",
-							"value": "60",
-							"type": "text"
-						},
-						{
-							"key": "route_id[]",
-							"value": "64",
-							"type": "text"
-						},
-						{
-							"key": "user_id",
-							"value": "15",
-							"type": "text"
-						},
-						{
-							"key": "status",
-							"value": "active",
-							"type": "text"
-						},
-						{
-							"key": "date_from",
-							"value": "2021-06-01",
-							"type": "text"
-						},
-						{
-							"key": "date_to",
-							"value": "2021-07-01",
-							"type": "text"
-						},
-						{
-							"key": "country_from[]",
-							"value": "3",
-							"type": "text"
-						},
-						{
-							"key": "city_from[]",
-							"value": "4",
-							"type": "text"
-						},
-						{
-							"key": "city_from[]",
-							"value": "3",
-							"type": "text"
-						},
-						{
-							"key": "country_to[]",
-							"value": "2",
-							"type": "text"
-						},
-						{
-							"key": "city_to[]",
-							"value": "2",
-							"type": "text"
-						},
-						{
-							"key": "city_to[]",
-							"value": "3",
-							"type": "text"
-						},
-						{
-							"key": "show",
-							"value": "4",
-							"type": "text"
-						},
-						{
-							"key": "page",
-							"value": "1",
-							"type": "text"
-						}
-					]
-				},
 				"url": {
-					"raw": "{{host}}{{endpoint}}/show_routes",
+					"raw": "{{host}}{{endpoint}}/show_routes?route_id[]=60&route_id[]=64&user_id=15&status=active&date_from=2021-06-01&date_to=2021-07-01&country_from[]=3&city_from[]=4&city_from[]=3&country_to[]=2&city_to[]=2&city_to[]=3&show=4&page=1",
 					"host": [
 						"{{host}}{{endpoint}}"
 					],
 					"path": [
 						"show_routes"
+					],
+					"query": [
+						{
+							"key": "route_id[]",
+							"value": "60"
+						},
+						{
+							"key": "route_id[]",
+							"value": "64"
+						},
+						{
+							"key": "user_id",
+							"value": "15"
+						},
+						{
+							"key": "status",
+							"value": "active"
+						},
+						{
+							"key": "date_from",
+							"value": "2021-06-01"
+						},
+						{
+							"key": "date_to",
+							"value": "2021-07-01"
+						},
+						{
+							"key": "country_from[]",
+							"value": "3"
+						},
+						{
+							"key": "city_from[]",
+							"value": "4"
+						},
+						{
+							"key": "city_from[]",
+							"value": "3"
+						},
+						{
+							"key": "country_to[]",
+							"value": "2"
+						},
+						{
+							"key": "city_to[]",
+							"value": "2"
+						},
+						{
+							"key": "city_to[]",
+							"value": "3"
+						},
+						{
+							"key": "show",
+							"value": "4"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -1706,7 +1181,7 @@
 			"response": []
 		},
 		{
-			"name": "Підбір маршруту",
+			"name": "Підбір маршруту для замовлення",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -1744,7 +1219,7 @@
 			"response": []
 		},
 		{
-			"name": "Підбір замовлення",
+			"name": "Підбір замовлення для маршруту",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},

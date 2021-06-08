@@ -14,23 +14,19 @@ class CountryController extends Controller
     /**
      * Получить наименование страниы по её коду.
      *
+     * @param int $country_id
      * @param Request $request
      * @return JsonResponse
      */
-    public function getCountry(Request $request): JsonResponse
+    public function getCountry(int $country_id, Request $request): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),
             [
-                'country_id' => 'required|integer|exists:country,country_id',
-                'lang'       => 'sometimes|in:' . implode(',', config('app.languages')),
+                'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
-            [
-                'required'   => 'required_field',
-                'integer'    => 'field_must_be_a_number',
-                'exists'     => 'country_not_found',
-                'in'         => ':attribute_not_exist',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
 
         if ($validator->fails()) {
@@ -41,9 +37,16 @@ class CountryController extends Controller
         }
 
         $country = Country::query()
-            ->where('country_id', $request->get('country_id'))
+            ->where('country_id', $country_id)
             ->language($request->get('lang', config('app.default_language')))
             ->first();
+
+        if (empty($country)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'country_not_found',
+            ]);
+        }
 
         return response()->json([
             'status' => 200,
@@ -64,9 +67,8 @@ class CountryController extends Controller
             [
                 'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
-            [
-                'in'   => ':attribute_not_exist',
-            ]
+            config('validation.messages'),
+            config('validation.attributes')
         );
 
         if ($validator->fails()) {
@@ -91,16 +93,16 @@ class CountryController extends Controller
     /**
      * Получить наименование города по его коду.
      *
+     * @param int $city_id
      * @param Request $request
      * @return JsonResponse
      */
-    public function getCity(Request $request): JsonResponse
+    public function getCity(int $city_id, Request $request): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),
             [
-                'city_id'    => 'required|integer|exists:city,city_id',
-                'lang'       => 'sometimes|in:' . implode(',', config('app.languages')),
+                'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
             config('validation.messages'),
             config('validation.attributes')
@@ -114,9 +116,16 @@ class CountryController extends Controller
         }
 
         $city = City::query()
-            ->where('city_id', $request->get('city_id'))
+            ->where('city_id', $city_id)
             ->language($request->get('lang', config('app.default_language')))
             ->first();
+
+        if (empty($city)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'city_not_found',
+            ]);
+        }
 
         return response()->json([
             'status' => 200,
@@ -127,16 +136,16 @@ class CountryController extends Controller
     /**
      * Получить список всех городов по всем странам или выбранной страны.
      *
+     * @param int|null $country_id
      * @param Request $request
      * @return JsonResponse
      */
-    public function getCities(Request $request): JsonResponse
+    public function getCities($country_id = null, Request $request): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),
             [
-                'country_id' => 'sometimes|integer|exists:country,country_id',
-                'lang'       => 'sometimes|in:' . implode(',', config('app.languages')),
+                'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
             config('validation.messages'),
             config('validation.attributes')
@@ -151,8 +160,8 @@ class CountryController extends Controller
 
         $countries = Country::query()
             ->with('cities:country_id,city_id,city_name_' . $request->get('lang', config('app.default_language')) . ' as city_name' )
-            ->when($request->filled('country_id'), function ($query) use ($request) {
-                return $query->where('country_id', $request->get('country_id'));
+            ->when(!empty($country_id), function ($query) use ($country_id) {
+                return $query->where('country_id', $country_id);
             })
             ->language($request->get('lang', config('app.default_language')))
             ->addSelect('country_id')

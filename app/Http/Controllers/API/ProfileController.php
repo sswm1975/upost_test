@@ -74,14 +74,14 @@ class ProfileController extends Controller
     /**
      * Получить публичные данные пользователя.
      *
-     * @param  int     $id
+     * @param  int     $user_id
      * @param  Request $request
      * @return JsonResponse
      */
-    public function getPublicData(int $id, Request $request): JsonResponse
+    public function getPublicData(int $user_id, Request $request): JsonResponse
     {
         $user = User::query()
-            ->where('user_id', $id)
+            ->where('user_id', $user_id)
             ->first(self::FIELDS_FOR_SHOW);
 
         if (empty($user)) {

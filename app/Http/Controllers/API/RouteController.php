@@ -173,12 +173,12 @@ class RouteController extends Controller
     /**
      * Редактирование маршрута.
      *
-     * @param int $id
+     * @param int route_id
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function updateRoute(int $id, Request $request): JsonResponse
+    public function updateRoute(int $route_id, Request $request): JsonResponse
     {
         $user = $GLOBALS['user'];
 
@@ -192,7 +192,7 @@ class RouteController extends Controller
 
         # Ищем маршрут по его коду, он должен принадлежать авторизированному пользователю и быть активным
         $route = Route::query()
-            ->where('route_id', $id)
+            ->where('route_id', $route_id)
             ->where('user_id', $user->user_id)
             ->where('route_status', 'active')
             ->first();
@@ -224,10 +224,10 @@ class RouteController extends Controller
     /**
      * Удалить маршрут.
      *
-     * @param int $id
+     * @param int $route_id
      * @return JsonResponse
      */
-    public function deleteRoute(int $id): JsonResponse
+    public function deleteRoute(int $route_id): JsonResponse
     {
         $user = $GLOBALS['user'];
 
@@ -241,7 +241,7 @@ class RouteController extends Controller
 
         # Ищем маршрут по его коду, он должен принадлежать авторизированному пользователю и быть в одном из разрешенных статусов
         $route = Route::query()
-            ->where('route_id', $id)
+            ->where('route_id', $route_id)
             ->where('user_id', $user->user_id)
             ->whereIn('route_status', ['active', 'ban', 'close'])
             ->first();

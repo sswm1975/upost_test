@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 # Авторизація
-Route::post('login', function () {
+Route::get('login', function () {
     return response()->json([
         'status'  => 200,
         'message' => 'successfully_logged_in',
@@ -26,7 +26,7 @@ Route::post('login', function () {
 Route::post('register', 'API\RegisterController@register');
 
 # Отримання інформації про користувача (тільки публічні дані)
-Route::get('profile/{id}', 'API\ProfileController@getPublicData');
+Route::get('profile/{user_id}', 'API\ProfileController@getPublicData');
 
 # Отримання інформації про користувача (всі дані)
 Route::get('profile', 'API\ProfileController@getPrivateData')->middleware('auth.basic');
@@ -34,39 +34,38 @@ Route::get('profile', 'API\ProfileController@getPrivateData')->middleware('auth.
 # Зміна даних профілю (тільки публічні дані)
 Route::post('profile', 'API\ProfileController@updatePublicData')->middleware('auth.basic');
 
-# Дані мов та валют
-Route::match(['GET', 'POST'], 'language', API\LanguageController::class)->middleware('auth.basic');
+# Зміна даних мов та валют
+Route::post('language', API\LanguageController::class)->middleware('auth.basic');
 
-# Отримання даних країни або міста: Отримувати назву країни по її ідентифікатору
-Route::match(['GET', 'POST'], 'get_country', 'API\CountryController@getCountry');
+# Отримувати назву країни по її ідентифікатору
+Route::get('get_country/{country_id}', 'API\CountryController@getCountry');
 
-# Отримання даних країни або міста: Отримати список всіх країн
-Route::match(['GET', 'POST'], 'get_countries', 'API\CountryController@getCountries');
+# Отримати список всіх країн
+Route::get('get_countries', 'API\CountryController@getCountries');
 
-# Отримання даних країни або міста: Отримати назву конкретного міста за його ідентифікатором
-Route::match(['GET', 'POST'], 'get_city', 'API\CountryController@getCity');
+# Отримати назву міста за його ідентифікатором
+Route::get('get_city/{city_id}', 'API\CountryController@getCity');
 
-# Отримання даних країни або міста: Отримати список міст конкретної країни
-# Отримання даних країни або міста: Отримати список всіх країн включно зі списком всіх міст конкретної країни
-Route::match(['GET', 'POST'], 'get_cities', 'API\CountryController@getCities');
+# Отримати список міст по всім країнам або конкретної країни
+Route::get('get_cities/{country_id?}', 'API\CountryController@getCities');
 
-# Отримання категорій: всіх або конкретної категорії
-Route::match(['GET', 'POST'], 'get_сategories', 'API\CategoryController@getCategories');
+# Отримання всіх або конкретної категорії
+Route::get('get_сategories/{category_id?}', 'API\CategoryController@getCategories');
 
 # Створення замовлення
 Route::post('save_order', 'API\OrderController@saveOrder')->middleware('auth.basic');
 
 # Вивід замовлень
-Route::match(['GET', 'POST'], 'show_orders', 'API\OrderController@showOrders')/*->middleware('auth.basic')*/;
+Route::get('show_orders', 'API\OrderController@showOrders')/*->middleware('auth.basic')*/;
 
 # Видалення замовлення
-Route::match(['GET', 'POST'], 'delete_order', 'API\OrderController@deleteOrder')->middleware('auth.basic');
+Route::delete('delete_order/{order_id}', 'API\OrderController@deleteOrder')->middleware('auth.basic');
 
-# Підбір замовлення
+# Підбір замовлення для маршруту
 Route::get('selection_order/{route_id}', 'API\OrderController@selectionOrder')->middleware('auth.basic');
 
 # Лічильник переглядів
-Route::match(['GET', 'POST'], 'update_counter', API\CounterController::class);
+Route::post('update_counter', API\CounterController::class);
 
 # Загрузка фото і створення мініатюр
 Route::post('upload_photo', 'API\PhotoLoaderController@uploadPhoto')->middleware('auth.basic');
@@ -75,13 +74,13 @@ Route::post('upload_photo', 'API\PhotoLoaderController@uploadPhoto')->middleware
 Route::post('save_route', 'API\RouteController@saveRoute')->middleware('auth.basic');
 
 # Виведення маршруту
-Route::post('show_routes', 'API\RouteController@showRoutes')->middleware('auth.basic');
+Route::get('show_routes', 'API\RouteController@showRoutes')->middleware('auth.basic');
 
 # Редагування маршруту
-Route::post('update_route/{id}', 'API\RouteController@updateRoute')->middleware('auth.basic');
+Route::post('update_route/{route_id}', 'API\RouteController@updateRoute')->middleware('auth.basic');
 
 # Видалення маршруту
-Route::delete('delete_route/{id}', 'API\RouteController@deleteRoute')->middleware('auth.basic');
+Route::delete('delete_route/{route_id}', 'API\RouteController@deleteRoute')->middleware('auth.basic');
 
-# Підбір маршруту
+# Підбір маршруту для замовлення
 Route::get('selection_route/{order_id}', 'API\RouteController@selectionRoute')->middleware('auth.basic');

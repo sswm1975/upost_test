@@ -13,16 +13,16 @@ class CategoryController extends Controller
     /**
      * Получить список всех категорий или выбранной категории.
      *
+     * @param int|null $category_id
      * @param Request $request
      * @return JsonResponse
      */
-    public function getCategories(Request $request): JsonResponse
+    public function getCategories(int $category_id = null, Request $request): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),
             [
-                'category_id' => 'sometimes|integer|exists:categories,category_id',
-                'lang'        => 'sometimes|in:' . implode(',', config('app.languages')),
+                'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
             ],
             config('validation.messages'),
             config('validation.attributes')
@@ -36,13 +36,20 @@ class CategoryController extends Controller
         }
 
         $categories = Category::query()
-            ->when($request->filled('category_id'), function ($query) use ($request) {
-                return $query->where('category_id', $request->get('category_id'));
+            ->when(!empty($category_id), function ($query) use ($category_id) {
+                return $query->where('category_id', $category_id);
             })
             ->language($request->get('lang', config('app.default_language')))
             ->addSelect('category_id')
             ->oldest('category_id')
             ->get();
+
+        if (empty($categories)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'category_not_found',
+            ]);
+        }
 
         return response()->json([
             'status' => 200,

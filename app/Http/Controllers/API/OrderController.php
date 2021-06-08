@@ -98,31 +98,16 @@ class OrderController extends Controller
     /**
      * Удалить заказ.
      *
-     * @param Request $request
+     * @param int $order_id
      * @return JsonResponse
      */
-    public function deleteOrder(Request $request): JsonResponse
+    public function deleteOrder(int $order_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'user_id'   => 'required|integer',
-                'order_id'  => 'required|integer',
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
-        );
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 404,
-                'errors' => $validator->errors()->all(),
-            ]);
-        }
+        $user = $GLOBALS['user'];
 
         $order = Order::query()
-            ->where('order_id', $request->get('order_id'))
-            ->where('user_id', $request->get('user_id'))
+            ->where('order_id', $order_id)
+            ->where('user_id', $user->user_id)
             ->whereIn('order_status', ['active', 'ban', 'closed'])
             ->first();
 
