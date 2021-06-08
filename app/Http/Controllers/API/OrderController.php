@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -237,6 +238,41 @@ class OrderController extends Controller
             'page'   => $orders['current_page'],
             'pages'  => $orders['last_page'],
             'result' => null_to_blank($orders['data']),
+        ]);
+    }
+
+    /**
+     * Подобрать заказ.
+     *
+     * @param int $route_id
+     * @return JsonResponse
+     */
+    public function selectionOrder(int $route_id):JsonResponse
+    {
+        $user = $GLOBALS['user'];
+
+        $route = Route::find($route_id);
+
+        if (empty($route)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'route_not_found',
+            ]);
+        }
+
+        $orders = Order::query()
+            ->where('user_id', $user->user_id)
+            ->where('order_status', 'active')
+            ->where('order_from_country', $route->route_from_country)
+            ->where('order_start', '>=', $route->route_start)
+            ->where('order_deadline', '<=', $route->route_end)
+            ->get()
+            ->toArray();
+
+        return response()->json([
+            'status' => 200,
+            'count'  => count($orders),
+            'result' => null_to_blank($orders),
         ]);
     }
 }
