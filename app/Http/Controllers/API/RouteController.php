@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Route;
+use App\Models\Order;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -256,6 +257,42 @@ class RouteController extends Controller
 
         return response()->json([
             'status' => 200,
+        ]);
+    }
+
+    /**
+     * Подобрать маршрут.
+     *
+     * @param int $order_id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function selectionRoute(int $order_id, Request $request):JsonResponse
+    {
+        $user = $GLOBALS['user'];
+
+        $order = Order::find($order_id);
+
+        if (empty($order)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'order_not_found',
+            ]);
+        }
+
+        $routes = Route::query()
+            ->where('user_id', $user->user_id)
+            ->where('route_status', 'active')
+            ->where('route_from_country', $order->order_from_country)
+            ->where('route_start', '>=', $order->order_start)
+            ->where('route_end', '<=', $order->order_deadline)
+            ->get()
+            ->toArray();
+
+        return response()->json([
+            'status' => 200,
+            'count'  => count($routes),
+            'result' => null_to_blank($routes),
         ]);
     }
 }
