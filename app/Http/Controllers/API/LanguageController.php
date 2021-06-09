@@ -28,7 +28,7 @@ class LanguageController extends Controller
             ]);
         }
 
-        $user = $GLOBALS['user'];
+        $user = $request->user();
 
         if ($request->filled('lang')) {
             $user->user_lang = $request->get('lang');

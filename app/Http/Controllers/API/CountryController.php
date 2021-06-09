@@ -136,11 +136,11 @@ class CountryController extends Controller
     /**
      * Получить список всех городов по всем странам или выбранной страны.
      *
-     * @param int|null $country_id
+     * @param int $country_id
      * @param Request $request
      * @return JsonResponse
      */
-    public function getCities($country_id = null, Request $request): JsonResponse
+    public function getCities(int $country_id, Request $request): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),

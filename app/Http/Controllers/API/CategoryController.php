@@ -13,11 +13,11 @@ class CategoryController extends Controller
     /**
      * Получить список всех категорий или выбранной категории.
      *
-     * @param int|null $category_id
+     * @param int $category_id
      * @param Request $request
      * @return JsonResponse
      */
-    public function getCategories(int $category_id = null, Request $request): JsonResponse
+    public function getCategories(int $category_id, Request $request): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),

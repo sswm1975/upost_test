@@ -58,16 +58,9 @@ class ProfileController extends Controller
      */
     public function getPrivateData(Request $request): JsonResponse
     {
-        if (empty($GLOBALS['user'])) {
-            return response()->json([
-                'status' => 404,
-                'errors' => 'user_not_found',
-            ]);
-        }
-
         return response()->json([
             'status' => 200,
-            'result' => null_to_blank($GLOBALS['user']->toArray()),
+            'result' => null_to_blank($request->user()->toArray()),
         ]);
     }
 
@@ -142,7 +135,7 @@ class ProfileController extends Controller
 
         $data = $validator->validated();
 
-        $user = $GLOBALS['user'];
+        $user = $request->user();
 
         if ($request->has('remove_photo')) {
             $data['user_photo'] = null;

@@ -28,7 +28,7 @@ class OrderController extends Controller
      */
     public function saveOrder(Request $request): JsonResponse
     {
-        $user = $GLOBALS['user'];
+        $user = $request->user();
         $request->merge(['user_id' => $user->user_id]);
 
         # Якшо не заповнені ім’я, прізвищі, дата народження – то заказ розмістити неможливо.
@@ -99,11 +99,12 @@ class OrderController extends Controller
      * Удалить заказ.
      *
      * @param int $order_id
+     * @param Request $request
      * @return JsonResponse
      */
-    public function deleteOrder(int $order_id): JsonResponse
+    public function deleteOrder(int $order_id, Request $request): JsonResponse
     {
-        $user = $GLOBALS['user'];
+        $user = $request->user();
 
         $order = Order::query()
             ->where('order_id', $order_id)
@@ -230,12 +231,11 @@ class OrderController extends Controller
      * Подобрать заказ.
      *
      * @param int $route_id
+     * @param Request $request
      * @return JsonResponse
      */
-    public function selectionOrder(int $route_id):JsonResponse
+    public function selectionOrder(int $route_id, Request $request):JsonResponse
     {
-        $user = $GLOBALS['user'];
-
         $route = Route::find($route_id);
 
         if (empty($route)) {
@@ -246,7 +246,7 @@ class OrderController extends Controller
         }
 
         $orders = Order::query()
-            ->where('user_id', $user->user_id)
+            ->where('user_id',  $request->user()->user_id)
             ->where('order_status', 'active')
             ->where('order_from_country', $route->route_from_country)
             ->where('order_start', '>=', $route->route_start)

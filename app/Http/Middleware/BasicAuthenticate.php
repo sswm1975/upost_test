@@ -33,12 +33,18 @@ class BasicAuthenticate
             ]);
         }
 
-        if (!$this->attempt($credentials)) {
+        $user = $this->login($credentials);
+
+        if (empty($user)) {
             return response()->json([
                 'status' => 404,
                 'errors' => 'auth_fail'
             ]);
         }
+
+        $request->setUserResolver(function() use ($user) {
+            return $user;
+        });
 
         return $next($request);
     }
@@ -62,19 +68,19 @@ class BasicAuthenticate
     }
 
     /**
-     * Attempt to authenticate a user using the given credentials.
+     * Login a user using the given credentials.
      *
-     * @param  array $credentials
-     * @return bool
+     * @param array $credentials
+     * @return User|null
      */
-    protected function attempt(array $credentials): bool
+    protected function login(array $credentials)
     {
         $login = $credentials['login'] ?? '';
         $password = $credentials['password'] ?? '';
 
         $is_email = Str::contains($login, '@');
 
-        $user = User::query()
+        return User::query()
             ->where('user_password', $password)
             ->when($is_email, function ($query) use ($login) {
                 return $query->where('user_email', $login);
@@ -84,13 +90,5 @@ class BasicAuthenticate
             })
             ->exclude(['user_password'])
             ->first();
-
-        if (empty($user)) {
-            return false;
-        }
-
-        $GLOBALS['user'] = $user;
-
-        return true;
     }
 }

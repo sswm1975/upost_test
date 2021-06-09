@@ -23,8 +23,7 @@ class RouteController extends Controller
      */
     public function saveRoute(Request $request): JsonResponse
     {
-        $user = $GLOBALS['user'];
-        $request->merge(['user_id' => $user->user_id]);
+        $user = $request->user();
 
         # Якшо ім'я, прізвище, дата народження не заповнені - то не давати створити маршрут.
         if (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday)) {
@@ -41,6 +40,8 @@ class RouteController extends Controller
                 'errors' => $validator->errors()->all(),
             ]);
         }
+
+        $request->merge(['user_id' => $user->user_id]);
 
         $route = Route::create($request->all());
 
@@ -180,7 +181,7 @@ class RouteController extends Controller
      */
     public function updateRoute(int $route_id, Request $request): JsonResponse
     {
-        $user = $GLOBALS['user'];
+        $user = $request->user();
 
         # Якшо ім'я, прізвище, дата народження не заповнені - то не давати створити маршрут.
         if (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday)) {
@@ -225,11 +226,12 @@ class RouteController extends Controller
      * Удалить маршрут.
      *
      * @param int $route_id
+     * @param Request $request
      * @return JsonResponse
      */
-    public function deleteRoute(int $route_id): JsonResponse
+    public function deleteRoute(int $route_id, Request $request): JsonResponse
     {
-        $user = $GLOBALS['user'];
+        $user = $request->user();
 
         # Якшо ім'я, прізвище, дата народження не заповнені - то не давати створити маршрут.
         if (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday)) {
@@ -269,7 +271,7 @@ class RouteController extends Controller
      */
     public function selectionRoute(int $order_id, Request $request):JsonResponse
     {
-        $user = $GLOBALS['user'];
+        $user = $request->user();
 
         $order = Order::find($order_id);
 
