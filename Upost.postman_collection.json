@@ -1300,6 +1300,49 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Вивести список обраних",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/show_favorite?type=order",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"show_favorite"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "order"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

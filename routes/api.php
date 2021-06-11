@@ -87,3 +87,6 @@ Route::get('selection_route/{order_id}', 'API\RouteController@selectionRoute')->
 
 # Додати в список обраних
 Route::post('update_favorite', 'API\FavoriteController@updateFavorite')->middleware('auth.basic');
+
+# Вивести список обраних
+Route::get('show_favorite', 'API\FavoriteController@showFavorites')->middleware('auth.basic');
