@@ -84,3 +84,6 @@ Route::delete('delete_route/{route_id}', 'API\RouteController@deleteRoute')->mid
 
 # Підбір маршруту для замовлення
 Route::get('selection_route/{order_id}', 'API\RouteController@selectionRoute')->middleware('auth.basic');
+
+# Додати в список обраних
+Route::post('update_favorite', 'API\FavoriteController@updateFavorite')->middleware('auth.basic');

@@ -1,10 +1,54 @@
 {
 	"info": {
-		"_postman_id": "22b6da46-dcbd-4a90-a4cf-7d1ec43f5911",
+		"_postman_id": "f320b983-83fa-4320-bb35-e2e946cc1e5e",
 		"name": "Upost",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Авторизація",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"description": "Логин емейл",
+						"type": "text"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))",
+						"type": "text"
+					},
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{phone}}",
+						"description": "Логин телефон",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "test_password",
+						"description": "Пароль для тестирования",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{host}}{{endpoint}}/login",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "Реєстрація",
 			"request": {
@@ -52,62 +96,18 @@
 			"response": []
 		},
 		{
-			"name": "Авторизація",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{email}}",
-						"description": "Логин емейл",
-						"type": "text"
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "{{password_hash}}",
-						"description": "Хеш пароля, результат выполнения md5(md5(password))",
-						"type": "text"
-					},
-					{
-						"key": "PHP-AUTH-USER",
-						"value": "{{phone}}",
-						"description": "Логин телефон",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "PHP-AUTH-PW",
-						"value": "test_password",
-						"description": "Пароль для тестирования",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"url": {
-					"raw": "{{host}}{{endpoint}}/login",
-					"host": [
-						"{{host}}{{endpoint}}"
-					],
-					"path": [
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Отримання інформації про користувача (тільки публічні дані)",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}{{endpoint}}/profile/1",
+					"raw": "{{host}}{{endpoint}}/profile/2",
 					"host": [
 						"{{host}}{{endpoint}}"
 					],
 					"path": [
 						"profile",
-						"1"
+						"2"
 					]
 				}
 			},
@@ -643,7 +643,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{host}}{{endpoint}}/show_orders?user_id=15&show=4&page=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=usd",
+					"raw": "{{host}}{{endpoint}}/show_orders?user_id=1&show=4&page=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=usd",
 					"host": [
 						"{{host}}{{endpoint}}"
 					],
@@ -653,7 +653,7 @@
 					"query": [
 						{
 							"key": "user_id",
-							"value": "15"
+							"value": "1"
 						},
 						{
 							"key": "show",
@@ -1255,6 +1255,51 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Додати в список обраних",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "type",
+							"value": "order",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/update_favorite",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"update_favorite"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -1283,7 +1328,8 @@
 	"variable": [
 		{
 			"key": "host",
-			"value": "http://upost.test"
+			"value": "https://uapi.tantal-web.top",
+			"disabled": true
 		},
 		{
 			"key": "endpoint",
@@ -1291,7 +1337,7 @@
 		},
 		{
 			"key": "phone",
-			"value": "+380971122333"
+			"value": "+380978800099"
 		},
 		{
 			"key": "email",
@@ -1300,6 +1346,10 @@
 		{
 			"key": "password",
 			"value": "qwerty"
+		},
+		{
+			"key": "host",
+			"value": ""
 		}
 	]
 }
