@@ -1432,7 +1432,7 @@
 				"type": "text/javascript",
 				"exec": [
 					"var CryptoJS = require(\"crypto-js\");",
-					"var password = pm.collectionVariables.get('password');",
+					"var password = pm.environment.get('password');",
 					"var password_hash = CryptoJS.MD5(CryptoJS.MD5(password).toString()).toString();",
 					"postman.setEnvironmentVariable('password_hash', password_hash);"
 				]
@@ -1451,23 +1451,28 @@
 	"variable": [
 		{
 			"key": "host",
-			"value": "https://uapi.tantal-web.top"
+			"value": "https://uapi.tantal-web.top",
+			"disabled": true
 		},
 		{
 			"key": "endpoint",
-			"value": "/api"
+			"value": "/api",
+			"disabled": true
 		},
 		{
 			"key": "phone",
-			"value": "+380978800099"
+			"value": "+380978800099",
+			"disabled": true
 		},
 		{
 			"key": "email",
-			"value": "test_email@gmail.com"
+			"value": "test_email@gmail.com",
+			"disabled": true
 		},
 		{
 			"key": "password",
-			"value": "qwerty"
+			"value": "qwerty",
+			"disabled": true
 		}
 	]
 }
