@@ -21,4 +21,14 @@ class Rate extends Model
             $model->rate_date  = date('Y-m-d H:i');
         });
     }
+
+    public function setRateTextAttribute($value)
+    {
+        $this->attributes['rate_text'] = strip_tags(strip_unsafe($value), ['br']);
+    }
+
+    public function setRateCurrencyAttribute($value)
+    {
+        $this->attributes['rate_currency'] = config('app.currencies')[$value];
+    }
 }

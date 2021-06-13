@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Rate;
 use App\Models\Route;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -23,21 +23,22 @@ class RateController extends Controller
      */
     public function createRate(Request $request): JsonResponse
     {
+        $request->merge(['user_id' => $request->user()->user_id]);
+
         $validator = $this->validator4create($request);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 404,
-                'params' => $request->all(),
-                'query'  => DB::getQueryLog(),
                 'errors' => $validator->errors(),
             ]);
         }
 
+        $rate = Rate::create($request->all());
+
         return response()->json([
             'status'  => 200,
-            'params' => $request->all(),
-            'query'  => DB::getQueryLog(),
+            'result'  => null_to_blank($rate->toArray()),
         ]);
     }
 
@@ -49,16 +50,15 @@ class RateController extends Controller
      */
     protected function validator4create(Request $request): \Illuminate\Contracts\Validation\Validator
     {
-        DB::enableQueryLog();
-
         $validator = Validator::make($request->all(),
             [
-                'who_start'     => 'required|integer|exists:users,user_id',
+                'who_start'     => 'required|integer',
                 'rate_type'     => 'required|in:order,route',
                 'order_id'      => 'required|integer',
                 'route_id'      => 'required|integer',
                 'parent_id'     => 'required|integer',
-                'rate_text'     => 'required|string',
+                'rate_text'     => 'required|string|max:300',
+                'rate_deadline' => 'required|date',
                 'rate_price'    => 'required|numeric',
                 'rate_currency' => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
             ],
@@ -66,68 +66,107 @@ class RateController extends Controller
             config('validation.attributes')
         );
 
+        # если есть ошибки на первичной проверке, то выходим
+        if ($validator->fails()) {
+            return $validator;
+        }
+
         # доп.проверки
         $validator->after(function ($validator) use ($request) {
-            # контрставка (parent_id <> 0) должна существовать и быть активной
-            if ($request->get('parent_id')) {
-                $cnt = Rate::query()
-                    ->where('rate_id', $request->get('parent_id'))
-                    ->where('rate_status', 'active')
-                    ->count();
-
-                if (!$cnt) {
-                    $validator->errors()->add('parent_id', 'contrrate_not_exists_or_not_active');
-                }
+            # создатель ставки должен существовать
+            if (!User::where('user_id', $request->who_start)->count()) {
+                $validator->errors()->add('who_start', 'the_selected_who_start_is_invalid');
             }
 
-            # указан тип "Заказ"
-            if ($request->get('rate_type') == 'order') {
-                # заказ должен принадлежать пользователю
-                $cnt = Order::query()
-                    ->where('order_id', $request->get('order_id'))
-                    ->where('user_id', $request->user()->user_id)
-                    ->count();
-
-                if (!$cnt) {
-                    $validator->errors()->add('order_id', 'not_exists_order');
+            # это основная ставка
+            if ($request->parent_id == 0) {
+                # создателем первоначальной ставки должен быть авторизированный пользователь
+                if ($request->who_start <> $request->user_id) {
+                    $validator->errors()->add('who_start', 'for_main_rate_who_start_be_equal_user_id');
                 }
 
-                # для заказа может быть только одна основная ставка (parent_id = 0)
-                if ($request->get('parent_id') == 0) {
-                    $cnt = Rate::query()
-                        ->where('user_id', $request->user()->user_id)
-                        ->where('order_id', $request->get('order_id'))
-                        ->where('parent_id', 0)
-                        ->count();
+                # если указан тип "Заказ"
+                if ($request->rate_type == 'order') {
+                    # заказ должен существовать
+                    if (!Order::where('order_id', $request->order_id)->count()) {
+                        $validator->errors()->add('order_id', 'order_not_exists');
+                    }
 
+                    # маршрут должен принадлежать пользователю
+                    if (!Route::where(['route_id' => $request->route_id, 'user_id' => $request->user_id])->count()) {
+                        $validator->errors()->add('route_id', 'route_not_exists');
+                    }
+
+                    # для типа "Заказ" может быть только одна основная ставка (parent_id = 0)
+                    $cnt = Rate::where(['user_id' => $request->user_id, 'order_id' => $request->order_id, 'parent_id' => 0])->count();
                     if ($cnt) {
                         $validator->errors()->add('order_id', 'can_be_only_one_basic_rate_per_order');
                     }
                 }
+
+                # если указан тип "Маршрут"
+                if ($request->rate_type == 'route') {
+                    # маршрут должен существовать
+                    if (!Route::where('route_id', $request->route_id)->count()) {
+                        $validator->errors()->add('route_id', 'route_not_exists');
+                    }
+
+                    # заказ должен принадлежать пользователю
+                    if (!Order::where(['order_id' => $request->order_id, 'user_id' => $request->user_id])->count()) {
+                        $validator->errors()->add('order_id', 'order_not_exists');
+                    }
+
+                    # для типа "Маршрут" может быть максимум три основных ставки (parent_id = 0)
+                    $cnt = Rate::where(['user_id' => $request->user_id, 'route_id' => $request->route_id, 'parent_id' => 0])->count();
+                    if ($cnt > 2) {
+                        $validator->errors()->add('route_id', 'can_be_max_three_basic_rate_per_router');
+                    }
+                }
             }
 
-            # указан тип "Маршрут"
-            if ($request->get('rate_type') == 'route') {
-                # маршрут должен принадлежать пользователю
-                $cnt = Route::query()
-                    ->where('route_id', $request->get('route_id'))
-                    ->where('user_id', $request->user()->user_id)
-                    ->count();
-
-                if (!$cnt) {
-                    $validator->errors()->add('route_id', 'not_exists_route');
+            # это ответ или контрставка
+            if ($request->parent_id <> 0) {
+                # основная ставка должна существовать и быть активной
+                $main_rate = Rate::where(['rate_id' => $request->parent_id, 'rate_status' => 'active'])->first();
+                if (!$main_rate) {
+                    $validator->errors()->add('parent_id', 'main_rate_not_exists_or_not_active');
+                } else {
+                    # основные параметры должны соответствовать основной ставке
+                    if ($main_rate->who_start <> $request->who_start) {
+                        $validator->errors()->add('who_start', 'order_id_is_different_in_main_rate');
+                    }
+                    if ($main_rate->rate_type <> $request->rate_type) {
+                        $validator->errors()->add('rate_type', 'rate_type_is_different_in_main_rate');
+                    }
+                    if ($main_rate->order_id <> $request->order_id) {
+                        $validator->errors()->add('order_id', 'who_start_is_different_in_main_rate');
+                    }
+                    if ($main_rate->route_id <> $request->route_id) {
+                        $validator->errors()->add('route_id', 'route_id_is_different_in_main_rate');
+                    }
                 }
 
-                # для маршрута может быть максимум три основных ставки (parent_id = 0)
-                if ($request->get('parent_id') == 0) {
-                    $cnt = Rate::query()
-                        ->where('user_id', $request->user()->user_id)
-                        ->where('route_id', $request->get('route_id'))
-                        ->where('parent_id', 0)
-                        ->count();
+                # это ответ на ставку
+                if ($request->who_start <> $request->user_id) {
+                    # заказ должен принадлежать ответчику
+                    if ($request->rate_type == 'order') {
+                        if (!Order::where(['order_id' => $request->order_id, 'user_id' => $request->user_id])->count()) {
+                            $validator->errors()->add('order_id', 'order_not_exists');
+                        }
+                    }
 
-                    if ($cnt > 3) {
-                        $validator->errors()->add('route_id', 'can_be_max_three_basic_rate_per_router');
+                    # маршрут должен принадлежать ответчику
+                    if ($request->rate_type == 'route') {
+                        if (!Route::where(['route_id' => $request->route_id, 'user_id' => $request->user_id])->count()) {
+                            $validator->errors()->add('route_id', 'route_not_exists');
+                        }
+                    }
+
+                # это контрставка
+                } else {
+                    # создатель контрставки должен быть владельцем основной ставки
+                    if ($main_rate && $main_rate->user_id <> $request->user_id) {
+                        $validator->errors()->add('parent_id', 'you_not_owner_main_rate');
                     }
                 }
             }

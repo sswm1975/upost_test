@@ -1366,6 +1366,11 @@
 					"mode": "urlencoded",
 					"urlencoded": [
 						{
+							"key": "parent_id",
+							"value": "0",
+							"type": "text"
+						},
+						{
 							"key": "who_start",
 							"value": "15",
 							"type": "text"
@@ -1386,11 +1391,6 @@
 							"type": "text"
 						},
 						{
-							"key": "parent_id",
-							"value": "0",
-							"type": "text"
-						},
-						{
 							"key": "rate_price",
 							"value": "100",
 							"type": "text"
@@ -1403,6 +1403,11 @@
 						{
 							"key": "rate_text",
 							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "rate_deadline",
+							"value": "2021-05-06",
 							"type": "text"
 						}
 					]
