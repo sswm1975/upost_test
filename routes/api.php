@@ -90,3 +90,6 @@ Route::post('update_favorite', 'API\FavoriteController@updateFavorite')->middlew
 
 # Вивести список обраних
 Route::get('show_favorite', 'API\FavoriteController@showFavorites')->middleware('auth.basic');
+
+# Зробити ставку
+Route::post('create_rate', 'API\RateController@createRate')->middleware('auth.basic');

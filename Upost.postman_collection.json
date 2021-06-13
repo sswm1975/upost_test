@@ -1275,8 +1275,8 @@
 					}
 				],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
+					"mode": "urlencoded",
+					"urlencoded": [
 						{
 							"key": "type",
 							"value": "order",
@@ -1343,6 +1343,81 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Зробити ставку",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "who_start",
+							"value": "15",
+							"type": "text"
+						},
+						{
+							"key": "rate_type",
+							"value": "order",
+							"type": "text"
+						},
+						{
+							"key": "order_id",
+							"value": "28",
+							"type": "text"
+						},
+						{
+							"key": "route_id",
+							"value": "67",
+							"type": "text"
+						},
+						{
+							"key": "parent_id",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "rate_price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "rate_currency",
+							"value": "usd",
+							"type": "text"
+						},
+						{
+							"key": "rate_text",
+							"value": "test",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/create_rate",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"create_rate"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -1371,8 +1446,7 @@
 	"variable": [
 		{
 			"key": "host",
-			"value": "https://uapi.tantal-web.top",
-			"disabled": true
+			"value": "https://uapi.tantal-web.top"
 		},
 		{
 			"key": "endpoint",
@@ -1389,10 +1463,6 @@
 		{
 			"key": "password",
 			"value": "qwerty"
-		},
-		{
-			"key": "host",
-			"value": ""
 		}
 	]
 }
