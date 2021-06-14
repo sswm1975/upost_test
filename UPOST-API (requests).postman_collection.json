@@ -1514,6 +1514,41 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Відхилити ставку",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/reject_rate/304",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"reject_rate",
+						"304"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

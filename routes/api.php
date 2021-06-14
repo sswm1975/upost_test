@@ -99,3 +99,6 @@ Route::post('update_rate/{rate_id}', 'API\RateController@updateRate')->middlewar
 
 # Видалити ставку
 Route::delete('delete_rate/{rate_id}', 'API\RateController@deleteRate')->middleware('auth.basic');
+
+# Відхилити ставку
+Route::post('reject_rate/{rate_id}', 'API\RateController@rejectRate')->middleware('auth.basic');

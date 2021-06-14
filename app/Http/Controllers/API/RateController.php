@@ -308,4 +308,54 @@ class RateController extends Controller
             'status' => 200,
         ]);
     }
+
+    /**
+     * Оклонить ставку.
+     *
+     * @param int $rate_id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function rejectRate(int $rate_id, Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $rate = Rate::query()
+            ->where('rate_id', $rate_id)
+            ->where('user_id', '<>', $user->user_id)
+            ->where('rate_status', 'active')
+            ->first();
+
+        if (empty($rate)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'rate_not_found',
+            ]);
+        }
+
+        if ($rate->parent_id == 0) {
+            $exists_next_rate = Rate::query()
+                ->where('parent_id', $rate_id)
+                ->where('user_id', '<>', $user->user_id)
+                ->count();
+        } else {
+            $exists_next_rate = Rate::query()
+                ->where('parent_id', $rate->parent_id)
+                ->where('user_id', '<>', $user->user_id)
+                ->where('rate_id', '>', $rate_id)
+                ->count();
+        }
+        if ($exists_next_rate) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'not_last_rate',
+            ]);
+        }
+
+        $rate->update(['rate_status' => 'ban']);
+
+        return response()->json([
+            'status' => 200,
+        ]);
+    }
 }
