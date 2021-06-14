@@ -1423,6 +1423,62 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Редагувати ставку",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "PHP-AUTH-USER",
+						"value": "{{email}}",
+						"type": "text",
+						"description": "Логин (емейл или телефон)"
+					},
+					{
+						"key": "PHP-AUTH-PW",
+						"value": "{{password_hash}}",
+						"type": "text",
+						"description": "Хеш пароля, результат выполнения md5(md5(password))"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "rate_price",
+							"value": "200",
+							"type": "text"
+						},
+						{
+							"key": "rate_currency",
+							"value": "usd",
+							"type": "text"
+						},
+						{
+							"key": "rate_text",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "rate_deadline",
+							"value": "2021-05-06",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}{{endpoint}}/update_rate/302",
+					"host": [
+						"{{host}}{{endpoint}}"
+					],
+					"path": [
+						"update_rate",
+						"302"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

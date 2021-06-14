@@ -174,4 +174,90 @@ class RateController extends Controller
 
         return $validator;
     }
+
+    /**
+     * Редактировать ставку.
+     *
+     * @param int $rate_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function updateRate(int $rate_id, Request $request): JsonResponse
+    {
+        $request->merge(['user_id' => $request->user()->user_id]);
+
+        $validator = $this->validator4update($rate_id, $request);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 404,
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        $rate = Rate::where('rate_id', $rate_id)->first()->fill($validator->validated());
+        $rate->save();
+
+        return response()->json([
+            'status'  => 200,
+            'result'  => null_to_blank($rate->toArray()),
+        ]);
+    }
+
+    /**
+     * Валидатор запроса для обновления ставки.
+     *
+     * @param int $rate_id
+     * @param  Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator4update(int $rate_id, Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $validator = Validator::make($request->all(),
+            [
+                'rate_text'     => 'required|string|max:300',
+                'rate_deadline' => 'required|date',
+                'rate_price'    => 'required|numeric',
+                'rate_currency' => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
+            ],
+            config('validation.messages'),
+            config('validation.attributes')
+        );
+
+        # если есть ошибки на первичной проверке, то выходим
+        if ($validator->fails()) {
+            return $validator;
+        }
+
+        # доп.проверки
+        $validator->after(function ($validator) use ($rate_id, $request) {
+            $rate = Rate::query()
+                ->where([
+                    'rate_id' => $rate_id,
+                    'user_id' => $request->user_id,
+                    'rate_status' => 'active'
+                ])
+                ->first();
+            if (empty($rate)) {
+                $validator->errors()->add('rate_id', 'rate_not_found');
+            } else {
+                if ($rate->parent_id == 0) {
+                    $exists_next_rate = Rate::query()
+                        ->where('parent_id', $rate_id)
+                        ->count();
+                } else {
+                    $exists_next_rate = Rate::query()
+                        ->where('parent_id', $rate->parent_id)
+                        ->where('rate_id', '>', $rate_id)
+                        ->count();
+                }
+                if ($exists_next_rate) {
+                    $validator->errors()->add('rate_id', 'not_last_rate');
+                }
+            }
+        });
+
+        return $validator;
+    }
 }

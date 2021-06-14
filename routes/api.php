@@ -93,3 +93,6 @@ Route::get('show_favorite', 'API\FavoriteController@showFavorites')->middleware(
 
 # Зробити ставку
 Route::post('create_rate', 'API\RateController@createRate')->middleware('auth.basic');
+
+# Редагувати ставку
+Route::post('update_rate/{rate_id}', 'API\RateController@updateRate')->middleware('auth.basic');
