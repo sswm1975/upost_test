@@ -111,3 +111,6 @@ Route::get('show_rate/{rate_id}', 'API\RateController@showRate')->middleware('au
 
 # Прийняти ставку
 Route::post('accept_rate/{rate_id}', 'API\RateController@acceptRate')->middleware('auth.basic');
+
+# Створення завдання
+Route::post('create_job', 'API\JobController@createJob')->middleware('auth.basic');
