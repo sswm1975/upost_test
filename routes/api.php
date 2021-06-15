@@ -102,3 +102,6 @@ Route::delete('delete_rate/{rate_id}', 'API\RateController@deleteRate')->middlew
 
 # Відхилити ставку
 Route::post('reject_rate/{rate_id}', 'API\RateController@rejectRate')->middleware('auth.basic');
+
+# Отримати ставки
+Route::get('show_rates', 'API\RateController@showRates')->middleware('auth.basic');

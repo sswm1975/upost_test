@@ -358,4 +358,116 @@ class RateController extends Controller
             'status' => 200,
         ]);
     }
+
+    /**
+     * Получить ставки.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function showRates(Request $request):JsonResponse
+    {
+        $validator = Validator::make($request->all(),
+            [
+                'rate_type'     => 'required|in:order,route',
+                'user_id'       => 'sometimes|integer',
+                'rate_id'       => 'sometimes|integer',
+                'order_id'      => 'required_without:route_id|integer',
+                'route_id'      => 'required_without:order_id|integer',
+                'parent_id'     => 'sometimes|integer',
+                'who_start'     => 'sometimes|integer',
+            ],
+            config('validation.messages'),
+            config('validation.attributes')
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 404,
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        $data = $validator->validated();
+
+        $rates = Rate::query()
+            ->where('rate_type', $request->rate_type)
+            ->when($request->filled('user_id'), function ($query) use ($data) {
+                return $query->where('user_id', $data['user_id']);
+            })
+            ->when(!$request->filled('rate_id') && $request->filled('order_id'), function ($query) use ($data) {
+                return $query->where('order_id', $data['order_id']);
+            })
+            ->when(!$request->filled('rate_id') && $request->filled('route_id'), function ($query) use ($data) {
+                return $query->where('route_id', $data['route_id']);
+            })
+            ->when($request->filled('rate_id'), function ($query) use ($data) {
+                return $query->where('rate_id', $data['rate_id']);
+            })
+            ->when($request->filled('parent_id'), function ($query) use ($data) {
+                return $query->where('parent_id', $data['parent_id']);
+            })
+            ->when($request->filled('who_start'), function ($query) use ($data) {
+                return $query->where('who_start', $data['who_start']);
+            })
+            ->orderByDesc('rate_id')
+            ->get();
+
+        $data = ['count' => 0, 'result' => []];
+
+        if ($rates->count()) {
+            # нахожу заказ на мой маршрут (может быть не больше одного заказа)
+            if ($request->rate_type == 'order') {
+                $parent = $rates->where('parent_id', 0)->first();
+                if ($parent == 0) {
+                    $parent = Rate::find($rates[0]->parent_id);
+                }
+                $receiver = Order::where('order_id', $parent->order_id)->first('user_id')->user_id;
+                $data = [
+                    'count'     => $rates->count(),
+                    'who_start' => $parent->who_start ?? 0,
+                    'receiver'  => $receiver ?? 0,
+                    'parent'    => $parent ?? [],
+                    'result'    => $rates,
+                ];
+            }
+
+            # нахожу маршруты на мой заказ (их может быть до 3 штук)
+            if ($request->rate_type == 'route') {
+                $parents = $rates->where('parent_id', 0)->all();
+
+                # в выборке нет родителя
+                if (count($parents) == 0) {
+                    $parent = Rate::find($rates[0]->parent_id);
+                    $receiver = Route::where('route_id', $parent->route_id)->first('user_id')->user_id;
+                    $data = [
+                        'count'     => $rates->count(),
+                        'who_start' => $parent->who_start,
+                        'receiver'  => $receiver,
+                        'parent'    => $parent,
+                        'result'    => $rates,
+                    ];
+
+                # в выборке несколько маршрутов на мой заказ - выводим только основные ставки
+                } elseif (count($parents) > 1) {
+                    $data = ['count' => count($parents), 'result' => $parents];
+
+                # в выборке только один родитель
+                } else {
+                    $parent = array_shift($parents);
+                    $receiver = Route::where('route_id', $parent->route_id)->first('user_id')->user_id;
+                    $data = [
+                        'count'     => $rates->count(),
+                        'who_start' => $parent->who_start,
+                        'receiver'  => $receiver,
+                        'parent'    => $parent,
+                        'result'    => $rates,
+                    ];
+                }
+            }
+        }
+
+        return response()->json(array_merge(['status' => 200], $data));
+    }
 }
