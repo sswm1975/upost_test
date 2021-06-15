@@ -470,4 +470,31 @@ class RateController extends Controller
 
         return response()->json(array_merge(['status' => 200], $data));
     }
+
+    /**
+     * Получить ставку.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function showRate(int $rate_id, Request $request):JsonResponse
+    {
+        $rate = Rate::find($rate_id);
+
+        if (empty($rate)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'rate_not_found',
+            ]);
+        }
+
+        $rate->read_rate = true;
+        $rate->save();
+
+        return response()->json([
+            'status' => 200,
+            'result' => null_to_blank($rate->toArray()),
+        ]);
+    }
 }

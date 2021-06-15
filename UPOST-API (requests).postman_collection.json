@@ -1647,6 +1647,76 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Переглянути ставку",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/show_rates?user_id=3&rate_type=route&order_id=2&route_id=49",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"show_rates"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "3"
+								},
+								{
+									"key": "rate_type",
+									"value": "route"
+								},
+								{
+									"key": "order_id",
+									"value": "2"
+								},
+								{
+									"key": "route_id",
+									"value": "49"
+								},
+								{
+									"key": "rate_id",
+									"value": "264",
+									"disabled": true
+								},
+								{
+									"key": "parent_id",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "who_start",
+									"value": "15",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
