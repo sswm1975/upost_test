@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Rate extends Model
 {
@@ -31,4 +32,15 @@ class Rate extends Model
     {
         $this->attributes['rate_currency'] = config('app.currencies')[$value];
     }
+
+    function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'order_id');
+    }
+
+    function route(): BelongsTo
+    {
+        return $this->belongsTo(Route::class, 'route_id', 'route_id');
+    }
+
 }

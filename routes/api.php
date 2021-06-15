@@ -108,3 +108,6 @@ Route::get('show_rates', 'API\RateController@showRates')->middleware('auth.basic
 
 # Переглянути ставку
 Route::get('show_rate/{rate_id}', 'API\RateController@showRate')->middleware('auth.basic');
+
+# Прийняти ставку
+Route::post('accept_rate/{rate_id}', 'API\RateController@acceptRate')->middleware('auth.basic');

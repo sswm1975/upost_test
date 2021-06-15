@@ -497,4 +497,67 @@ class RateController extends Controller
             'result' => null_to_blank($rate->toArray()),
         ]);
     }
+
+    /**
+     * Принять ставку.
+     *
+     * @param int $rate_id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function acceptRate(int $rate_id, Request $request):JsonResponse
+    {
+        $rate = Rate::query()
+            ->with('route:route_id,user_id', 'order:order_id,user_id')
+            ->where('rate_id', $rate_id)
+            ->where('rate_status', 'active')
+            ->first();
+
+        if (empty($rate)) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'rate_not_found',
+            ]);
+        }
+
+        $user_id = $request->user()->user_id;
+
+        # Условия подтверждения ставки:
+        # - при ставке на заказ подтвердить может только владелец маршрута
+        # - при ставке на машртут подтвердить может только владелец заказа
+        # - свои ставки подтверждать запрещено
+        if ($rate->who_start == $rate->user_id) {
+            $accept = ($rate->rate_type == 'order' && $rate->order->user_id == $user_id) || ($rate->rate_type == 'route' && $rate->route->user_id == $user_id);
+        } else {
+            $accept = ($rate->rate_type == 'order' && $rate->route->user_id == $user_id) || ($rate->rate_type == 'route' && $rate->order->user_id == $user_id);
+        }
+
+        if (!$accept) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'rate_not_accept',
+            ]);
+        }
+
+        # существуют ещё ставки?
+        if ($rate->parent_id == 0) {
+            $exists_next_rate = Rate::where('parent_id', $rate_id)->count();
+        } else {
+            $exists_next_rate = Rate::where('parent_id', $rate->parent_id)->where('rate_id', '>', $rate_id)->count();
+        }
+        if ($exists_next_rate) {
+            return response()->json([
+                'status' => 404,
+                'errors' => 'not_last_rate',
+            ]);
+        }
+
+        $rate->rate_status = 'in_progress';
+        $rate->save();
+
+        return response()->json([
+            'status' => 200,
+            'result' => 'rate_accept',
+        ]);
+    }
 }
