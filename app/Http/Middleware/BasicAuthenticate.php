@@ -28,18 +28,18 @@ class BasicAuthenticate
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
+                'status' => false,
                 'errors' => $validator->errors()->all()
-            ]);
+            ], 404);
         }
 
         $user = $this->login($credentials);
 
         if (empty($user)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'auth_fail'
-            ]);
+                'status' => false,
+                'errors' => [__('message.auth_failed')]
+            ], 404);
         }
 
         $request->setUserResolver(function() use ($user) {
@@ -61,9 +61,7 @@ class BasicAuthenticate
             [
                 'login'    => 'required',
                 'password' => 'required',
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
     }
 

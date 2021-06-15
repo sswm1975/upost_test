@@ -17,9 +17,9 @@ use Illuminate\Support\Facades\Route;
 # Авторизація
 Route::get('login', function () {
     return response()->json([
-        'status'  => 200,
-        'message' => 'successfully_logged_in',
-    ]);
+        'status'  => true,
+        'message' => __('message.login_successful'),
+    ], 200);
 })->middleware('auth.basic');
 
 # Реєстрація

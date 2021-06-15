@@ -22,17 +22,17 @@ class RegisterController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
+                'status' => false,
                 'errors' => $validator->errors()->all()
-            ]);
+            ], 404);
         }
 
         $user = $this->create($request->all());
 
         return response()->json([
-            'status'  => 200,
-            'message' => 'successfully_registered',
-        ]);
+            'status'  => true,
+            'message' => __('message.register_successful'),
+        ], 200);
     }
 
     /**
@@ -48,9 +48,7 @@ class RegisterController extends Controller
                 'user_phone'    => ['required', 'phone', 'unique:users'],
                 'user_email'    => ['required', 'email', 'max:30', 'unique:users'],
                 'user_password' => ['required', 'min:6', 'confirmed'],
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
     }
 
