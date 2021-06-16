@@ -221,3 +221,17 @@ function strip_unsafe(string $content): string
 
     return preg_replace($unsafe, "", $content);
 }
+
+/**
+ * Get SQL.
+ * Pre-call \DB::enableQueryLog()
+ *
+ * @param bool $shoBindings
+ * @return array|string
+ */
+function getSQL(bool $shoBindings = false)
+{
+    return $shoBindings
+        ? \DB::getQueryLog()
+        : preg_replace_array('/\?/', \DB::getQueryLog()[0]['bindings'], \DB::getQueryLog()[0]['query']);
+}

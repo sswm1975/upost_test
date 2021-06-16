@@ -9,4 +9,7 @@ return [
     'country_not_found'     => 'Country not found.',
     'city_not_found'        => 'City not found.',
     'category_not_found'    => 'Category not found.',
+    'not_filled_profile'    => 'In profile not filled name or surname or birthday.',
+    'order_not_found'       => 'Order not found.',
+    'route_not_found'       => 'Route not found.',
 ];

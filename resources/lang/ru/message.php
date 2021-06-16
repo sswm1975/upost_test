@@ -9,4 +9,7 @@ return [
     'country_not_found'     => 'Страна не найдена.',
     'city_not_found'        => 'Город не найден.',
     'category_not_found'    => 'Категория не найдена.',
+    'not_filled_profile'    => 'В профиле не указаны имя или фамилия или день рождения.',
+    'order_not_found'       => 'Заказ не найден.',
+    'route_not_found'       => 'Маршрут не найден.',
 ];

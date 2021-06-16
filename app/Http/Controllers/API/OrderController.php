@@ -34,24 +34,24 @@ class OrderController extends Controller
         # Якшо не заповнені ім’я, прізвищі, дата народження – то заказ розмістити неможливо.
         if (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'in_profile_not_fill_name_or_surname_or_birthday',
-            ]);
+                'status' => false,
+                'errors' => [__('message.not_filled_profile')],
+            ], 404);
         }
 
         $validator = $this->validator($request->all());
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
+                'status' => false,
                 'errors' => $validator->errors()->all(),
-            ]);
+            ], 404);
         }
 
         $order = Order::create($request->all());
 
         return response()->json([
-            'status'  => 200,
+            'status'  => true,
             'url'     => $order->order_url,
         ]);
     }
@@ -89,9 +89,7 @@ class OrderController extends Controller
                 'order_user_price'     => 'required_if:order_personal_price,1',
                 'order_user_currency'  => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
                 'order_not_more_price' => 'required|boolean',
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
     }
 
@@ -114,16 +112,14 @@ class OrderController extends Controller
 
         if (empty($order)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'order_not_found',
-            ]);
+                'status' => false,
+                'errors' => [__('message.order_not_found')],
+            ], 404);
         }
 
-        $order->delete();
+        $affected = $order->delete();
 
-        return response()->json([
-            'status' => 200,
-        ]);
+        return response()->json(['status' => (bool)$affected]);
     }
 
     /**
@@ -156,21 +152,17 @@ class OrderController extends Controller
                 'price_from'     => 'sometimes|required|numeric',
                 'price_to'       => 'sometimes|required|numeric',
                 'currency'       => 'sometimes|required|in:' . implode(',', array_keys(config('app.currencies'))),
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
+                'status' => false,
                 'errors' => $validator->errors()->all()
-            ]);
+            ], 404);
         }
 
         $data = $validator->validated();
-
-//        DB::enableQueryLog();
 
         $rate = Option::rate($request->get('currency', 'usd'));
 
@@ -209,17 +201,8 @@ class OrderController extends Controller
             ->paginate($data['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page'] ?? 1)
             ->toArray();
 
-/* For testing:
         return response()->json([
-            'data'   => $data,
-            'rate'   => $rate,
-            'query'  => DB::getQueryLog(),
-            'orders' => null_to_blank($orders),
-        ]);
-*/
-
-        return response()->json([
-            'status' => 200,
+            'status' => true,
             'count'  => $orders['total'],
             'page'   => $orders['current_page'],
             'pages'  => $orders['last_page'],
@@ -228,7 +211,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Подобрать заказ.
+     * Подобрать заказ для маршрута.
      *
      * @param int $route_id
      * @param Request $request
@@ -240,9 +223,9 @@ class OrderController extends Controller
 
         if (empty($route)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'route_not_found',
-            ]);
+                'status' => false,
+                'errors' => [__('message.route_not_found')],
+            ], 404);
         }
 
         $orders = Order::query()
@@ -255,7 +238,7 @@ class OrderController extends Controller
             ->toArray();
 
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'count'  => count($orders),
             'result' => null_to_blank($orders),
         ]);
