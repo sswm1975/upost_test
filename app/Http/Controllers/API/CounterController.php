@@ -23,18 +23,21 @@ class CounterController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
+                'status' => false,
                 'errors' => $validator->errors()->all(),
-            ]);
+            ], 404);
         }
 
-        if ($request->get('post_type') == 'order') {
+        $post_type = $request->get('post_type');
+
+        if ($post_type == 'order') {
             $model = Order::class;
-        } elseif ($request->get('post_type') == 'route') {
+        } elseif ($post_type == 'route') {
             $model = Route::class;
         } else {
             return response()->json([
-                'status' => 200,
+                'status' => false,
+                'errors' => ['post_type' => 'Error post_type.'],
             ]);
         }
 
@@ -43,20 +46,20 @@ class CounterController extends Controller
         if (empty($object)) {
             return response()->json([
                 'status' => 404,
-                'errors' => 'record_not_found',
-            ]);
+                'errors' => [__('message.' . $post_type == 'order' ? 'order_not_found' : 'route_not_found')],
+            ], 404);
         }
 
         if ($object->user_id == $request->get('user_id')) {
             return response()->json([
-                'status'  => 200,
+                'status'  => true,
             ]);
         }
 
-        $object->increment($request->get('post_type') . '_look');
+        $object->increment($post_type . '_look');
 
         return response()->json([
-            'status'  => 200,
+            'status'  => true,
         ]);
     }
 
@@ -73,9 +76,7 @@ class CounterController extends Controller
                 'post_type' => 'required|in:order,route',
                 'user_id'   => 'required|integer|exists:users,user_id',
                 'id'        => 'required',
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
     }
 }
