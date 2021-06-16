@@ -22,17 +22,15 @@ class FavoriteController extends Controller
         $validator = Validator::make($request->all(),
             [
                 'type' => 'required|in:order,route',
-                'id'   => 'required',
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+                'id'   => 'required|integer',
+            ]
         );
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
+                'status' => false,
                 'errors' => $validator->errors()->all(),
-            ]);
+            ], 404);
         }
 
         $user = $request->user();
@@ -49,7 +47,7 @@ class FavoriteController extends Controller
         $user->save();
 
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'result' => array_values($favorites),
         ]);
     }
@@ -65,16 +63,14 @@ class FavoriteController extends Controller
         $validator = Validator::make($request->all(),
             [
                 'type' => 'required|in:order,route',
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
+                'status' => false,
                 'errors' => $validator->errors()->all(),
-            ]);
+            ], 404);
         }
 
         $type = $request->get('type');
@@ -90,7 +86,7 @@ class FavoriteController extends Controller
         }
 
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'type'   => $type,
             'result' => null_to_blank($rows),
         ]);

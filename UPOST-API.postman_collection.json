@@ -4486,6 +4486,905 @@
 			]
 		},
 		{
+			"name": "Список обраних",
+			"item": [
+				{
+					"name": "Додати в список обраних",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логін: емейл  або телефон"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "type",
+									"value": "order",
+									"description": "Тип сущності: order або route",
+									"type": "text"
+								},
+								{
+									"key": "id",
+									"value": "27",
+									"description": "Код запису",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/update_favorite",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"update_favorite"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Додати в список обраних (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл  або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "type",
+											"value": "order",
+											"description": "Тип сущності: order або route",
+											"type": "text"
+										},
+										{
+											"key": "id",
+											"value": "5",
+											"description": "Код запису",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/update_favorite?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"update_favorite"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 15:09:50 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "54"
+								},
+								{
+									"key": "Content-Length",
+									"value": "34"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": [\n        \"2\",\n        \"5\"\n    ]\n}"
+						},
+						{
+							"name": "Додати в список обраних (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл  або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "type",
+											"value": "order",
+											"description": "Тип сущності: order або route",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "id",
+											"value": "5",
+											"description": "Код запису",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/update_favorite?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"update_favorite"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 15:10:26 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "401"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Поле type є обов'язковим для заповнення.\",\n        \"Поле id є обов'язковим для заповнення.\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Вивести список обраних",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логін: емейл  або телефон"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/show_favorite",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"show_favorite"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "order",
+									"description": "Тип сущності: order або route",
+									"disabled": true
+								},
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Вивести список обраних (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл  або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/show_favorite?type=order&lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"show_favorite"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "order",
+											"description": "Тип сущності: order або route"
+										},
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 15:12:29 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1149"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"type\": \"order\",\n    \"result\": [\n        {\n            \"order_id\": 27,\n            \"user_id\": 19,\n            \"order_register_date\": \"2021-06-08\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-27\",\n            \"order_category\": 2,\n            \"order_price\": 1456.23,\n            \"order_price_usd\": 250,\n            \"order_currency\": \"$\",\n            \"order_count\": \"1\",\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-01\",\n            \"order_personal_price\": \"1\",\n            \"order_user_price\": \"100\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": \"1\",\n            \"order_user_active\": \"\",\n            \"order_status\": \"active\",\n            \"order_look\": 0,\n            \"order_strikes\": 0\n        }\n    ]\n}"
+						},
+						{
+							"name": "Вивести список обраних (errors)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл  або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/show_favorite?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"show_favorite"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "order",
+											"description": "Тип сущності: order або route",
+											"disabled": true
+										},
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 15:13:04 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "215"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Поле type є обов'язковим для заповнення.\"\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Ставки",
+			"item": [
+				{
+					"name": "Зробити ставку",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "parent_id",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "who_start",
+									"value": "15",
+									"type": "text"
+								},
+								{
+									"key": "rate_type",
+									"value": "order",
+									"type": "text"
+								},
+								{
+									"key": "order_id",
+									"value": "28",
+									"type": "text"
+								},
+								{
+									"key": "route_id",
+									"value": "67",
+									"type": "text"
+								},
+								{
+									"key": "rate_price",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "rate_currency",
+									"value": "usd",
+									"type": "text"
+								},
+								{
+									"key": "rate_text",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "rate_deadline",
+									"value": "2021-05-06",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/create_rate",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"create_rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Редагувати ставку",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "rate_price",
+									"value": "200",
+									"type": "text"
+								},
+								{
+									"key": "rate_currency",
+									"value": "usd",
+									"type": "text"
+								},
+								{
+									"key": "rate_text",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "rate_deadline",
+									"value": "2021-05-06",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/update_rate/302",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"update_rate",
+								"302"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Видалити ставку",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/delete_rate/302",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"delete_rate",
+								"302"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Відхилити ставку",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/reject_rate/304",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"reject_rate",
+								"304"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Отримати ставки",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/show_rates?user_id=3&rate_type=route&order_id=2&route_id=49",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"show_rates"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "3"
+								},
+								{
+									"key": "rate_type",
+									"value": "route"
+								},
+								{
+									"key": "order_id",
+									"value": "2"
+								},
+								{
+									"key": "route_id",
+									"value": "49"
+								},
+								{
+									"key": "rate_id",
+									"value": "264",
+									"disabled": true
+								},
+								{
+									"key": "parent_id",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "who_start",
+									"value": "15",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Переглянути ставку",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/show_rate/305",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"show_rate",
+								"305"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Прийняти ставку",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/accept_rate/264",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"accept_rate",
+								"264"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Завдання",
+			"item": [
+				{
+					"name": "Створення завдання",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логин (емейл или телефон)"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат выполнения md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "rate_id",
+									"value": "304",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/create_job",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"create_job"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Різне",
 			"item": [
 				{
@@ -5125,94 +6024,6 @@
 					]
 				},
 				{
-					"name": "Додати в список обраних",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "type",
-									"value": "order",
-									"type": "text"
-								},
-								{
-									"key": "id",
-									"value": "2",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}{{endpoint}}/update_favorite",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"update_favorite"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Вивести список обраних",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "{{host}}{{endpoint}}/show_favorite?type=order",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"show_favorite"
-							],
-							"query": [
-								{
-									"key": "type",
-									"value": "order"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Отримання всіх або конкретної категорії",
 					"request": {
 						"method": "GET",
@@ -5451,405 +6262,6 @@
 							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Категорія не знайдена.\"\n    ]\n}"
 						}
 					]
-				}
-			]
-		},
-		{
-			"name": "Ставки",
-			"item": [
-				{
-					"name": "Зробити ставку",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "parent_id",
-									"value": "0",
-									"type": "text"
-								},
-								{
-									"key": "who_start",
-									"value": "15",
-									"type": "text"
-								},
-								{
-									"key": "rate_type",
-									"value": "order",
-									"type": "text"
-								},
-								{
-									"key": "order_id",
-									"value": "28",
-									"type": "text"
-								},
-								{
-									"key": "route_id",
-									"value": "67",
-									"type": "text"
-								},
-								{
-									"key": "rate_price",
-									"value": "100",
-									"type": "text"
-								},
-								{
-									"key": "rate_currency",
-									"value": "usd",
-									"type": "text"
-								},
-								{
-									"key": "rate_text",
-									"value": "test",
-									"type": "text"
-								},
-								{
-									"key": "rate_deadline",
-									"value": "2021-05-06",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}{{endpoint}}/create_rate",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"create_rate"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Редагувати ставку",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "rate_price",
-									"value": "200",
-									"type": "text"
-								},
-								{
-									"key": "rate_currency",
-									"value": "usd",
-									"type": "text"
-								},
-								{
-									"key": "rate_text",
-									"value": "test",
-									"type": "text"
-								},
-								{
-									"key": "rate_deadline",
-									"value": "2021-05-06",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}{{endpoint}}/update_rate/302",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"update_rate",
-								"302"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Видалити ставку",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{host}}{{endpoint}}/delete_rate/302",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"delete_rate",
-								"302"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Відхилити ставку",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{host}}{{endpoint}}/reject_rate/304",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"reject_rate",
-								"304"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Отримати ставки",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{host}}{{endpoint}}/show_rates?user_id=3&rate_type=route&order_id=2&route_id=49",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"show_rates"
-							],
-							"query": [
-								{
-									"key": "user_id",
-									"value": "3"
-								},
-								{
-									"key": "rate_type",
-									"value": "route"
-								},
-								{
-									"key": "order_id",
-									"value": "2"
-								},
-								{
-									"key": "route_id",
-									"value": "49"
-								},
-								{
-									"key": "rate_id",
-									"value": "264",
-									"disabled": true
-								},
-								{
-									"key": "parent_id",
-									"value": "0",
-									"disabled": true
-								},
-								{
-									"key": "who_start",
-									"value": "15",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Переглянути ставку",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{host}}{{endpoint}}/show_rate/305",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"show_rate",
-								"305"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Прийняти ставку",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{host}}{{endpoint}}/accept_rate/264",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"accept_rate",
-								"264"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Завдання",
-			"item": [
-				{
-					"name": "Створення завдання",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "rate_id",
-									"value": "304",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}{{endpoint}}/create_job",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"create_job"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		}
