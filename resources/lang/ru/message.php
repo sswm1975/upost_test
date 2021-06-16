@@ -8,4 +8,5 @@ return [
     'updated_successful'    => 'Обновлено успешно.',
     'country_not_found'     => 'Страна не найдена.',
     'city_not_found'        => 'Город не найден.',
+    'category_not_found'    => 'Категория не найдена.',
 ];

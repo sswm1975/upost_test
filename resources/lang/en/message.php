@@ -8,4 +8,5 @@ return [
     'updated_successful'    => 'Updated successful.',
     'country_not_found'     => 'Country not found.',
     'city_not_found'        => 'City not found.',
+    'category_not_found'    => 'Category not found.',
 ];
