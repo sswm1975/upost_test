@@ -17,8 +17,8 @@ class CreateJobsTable extends Migration
             $table->increments('id')->comment('Код');
             $table->unsignedInteger('rate_id')->comment('Код ставки');
             $table->enum('status', ['active', 'work', 'dispute', 'successful', 'done'])->default('active')->comment('Статус');
-            $table->timestamp('created_at')->comment('Дата створення');
-            $table->timestamp('updated_at')->comment('Дата оновлення');
+            $table->timestamp('created_at')->nullable()->comment('Дата створення');
+            $table->timestamp('updated_at')->nullable()->comment('Дата оновлення');
         });
 
         DB::statement('ALTER TABLE jobs COMMENT = "Завдання"');
