@@ -1,8 +1,8 @@
 {
 	"info": {
 		"_postman_id": "f320b983-83fa-4320-bb35-e2e946cc1e5e",
-		"name": "UPOST-API (requests)",
-		"description": "Всі запити можуть передавати опційний параметр <b>lang</b> – мова, на якій повертати помилки. Параметр <b>lang</b> може приймати одне із значень:\n<ul>\n<li>en - англійська <i>(за замовчуванням)</i></li>\n<li>ru - російська</li>\n<li>uk – українська</li>\n</ul>",
+		"name": "UPOST-API",
+		"description": "Всі запити можуть передавати опційний параметр <b>lang</b> – мова, на якій повертати помилки. Параметр <b>lang</b> може приймати одне із значень:\n<ul>\n<li>en – англійська <i>(за замовчуванням)</i></li>\n<li>ru – російська</li>\n<li>uk – українська</li>\n</ul>",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -28,7 +28,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/login?lang=uk",
+							"raw": "{{host}}{{endpoint}}/login",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -39,7 +39,8 @@
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
 								}
 							]
 						}
@@ -330,7 +331,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/register?lang=uk",
+							"raw": "{{host}}{{endpoint}}/register",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -341,7 +342,8 @@
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
 								}
 							]
 						}
@@ -669,7 +671,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/profile/2?lang=uk",
+							"raw": "{{host}}{{endpoint}}/profile/2",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -681,7 +683,8 @@
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
 								}
 							]
 						}
@@ -876,7 +879,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/profile?lang=uk",
+							"raw": "{{host}}{{endpoint}}/profile",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -887,7 +890,8 @@
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
 								}
 							]
 						}
@@ -1128,7 +1132,7 @@
 								{
 									"key": "user_photo",
 									"value": "data:image/jpeg;base64,...",
-									"description": "Фото (data:image/jpeg)",
+									"description": "Фото в форматі base64",
 									"type": "text"
 								},
 								{
@@ -1147,7 +1151,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/profile?lang=uk",
+							"raw": "{{host}}{{endpoint}}/profile",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -1158,10 +1162,12 @@
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
 								}
 							]
-						}
+						},
+						"description": "⚠️ Фото передається форматі base64, підтримуються тільки jpg, jpeg. Розмір файлу не повинен перевищувати 3 мегабайти, а розмір зображення не більше 2000х2000 пікселів."
 					},
 					"response": [
 						{
@@ -1731,24 +1737,9 @@
 					"name": "Отримувати назву країни по її ідентифікатору",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)",
-								"disabled": true
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/get_country/2?lang=ru",
+							"raw": "{{host}}{{endpoint}}/get_country/2",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -1759,35 +1750,165 @@
 							"query": [
 								{
 									"key": "lang",
-									"value": "ru"
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально",
+									"disabled": true
 								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Отримувати назву країни по її ідентифікатору (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/get_country/2?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"get_country",
+										"2"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 09:47:34 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "69"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": \"Україна\"\n}"
+						},
+						{
+							"name": "Отримувати назву країни по її ідентифікатору (errors)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/get_country/24?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"get_country",
+										"24"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 09:51:01 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "129"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Країна не знайдена.\"\n    ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Отримати список всіх країн",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)",
-								"disabled": true
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/get_countries?lang=ru",
+							"raw": "{{host}}{{endpoint}}/get_countries",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -1797,35 +1918,94 @@
 							"query": [
 								{
 									"key": "lang",
-									"value": "ru"
+									"value": "ru",
+									"description": "Код мови (uk, ru, en) - опціонально",
+									"disabled": true
 								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Отримати список всіх країн (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/get_countries",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"get_countries"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "ru",
+											"description": "Код мови (uk, ru, en) - опціонально",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 10:04:14 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "231"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": [\n        {\n            \"country_name\": \"Ukraine\",\n            \"country_id\": 2\n        },\n        {\n            \"country_name\": \"Poland\",\n            \"country_id\": 3\n        },\n        {\n            \"country_name\": \"Belarus\",\n            \"country_id\": 4\n        },\n        {\n            \"country_name\": \"USA\",\n            \"country_id\": 8\n        },\n        {\n            \"country_name\": \"Canada\",\n            \"country_id\": 10\n        }\n    ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Отримати назву міста за його ідентифікатором",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)",
-								"disabled": true
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/get_city/2?lang=ru",
+							"raw": "{{host}}{{endpoint}}/get_city/2",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -1836,90 +2016,326 @@
 							"query": [
 								{
 									"key": "lang",
-									"value": "ru"
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально",
+									"disabled": true
 								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Отримати назву міста за його ідентифікатором (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/get_city/2?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"get_city",
+										"2"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 10:15:02 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "50"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"result\": \"Київ\"\n}"
+						},
+						{
+							"name": "Отримати назву міста за його ідентифікатором (errors)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/get_city/26?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"get_city",
+										"26"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 10:15:25 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "122"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Місто не знайдено\"\n    ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Отримати список міст по всім країнам або конкретної країни",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)",
-								"disabled": true
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/get_cities/8?lang=ru",
+							"raw": "{{host}}{{endpoint}}/get_cities/3",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
 								"get_cities",
-								"8"
+								"3"
 							],
 							"query": [
 								{
 									"key": "lang",
-									"value": "ru"
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально",
+									"disabled": true
 								}
 							]
 						}
 					},
-					"response": []
-				},
-				{
-					"name": "Отримання всіх або конкретної категорії",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логин (емейл или телефон)",
-								"disabled": true
+					"response": [
+						{
+							"name": "Отримати список міст по всім країнам або конкретної країни (success - all)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/get_cities",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"get_cities"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально",
+											"disabled": true
+										}
+									]
+								}
 							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат выполнения md5(md5(password))",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{host}}{{endpoint}}/get_сategories/2?lang=ru",
-							"host": [
-								"{{host}}{{endpoint}}"
-							],
-							"path": [
-								"get_сategories",
-								"2"
-							],
-							"query": [
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
 								{
-									"key": "lang",
-									"value": "ru"
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 10:20:24 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "617"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
 								}
-							]
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": [\n        {\n            \"country_name\": \"Ukraine\",\n            \"country_id\": 2,\n            \"cities\": [\n                {\n                    \"city_id\": 2,\n                    \"city_name\": \"Kyiv\"\n                },\n                {\n                    \"city_id\": 6,\n                    \"city_name\": \"Dnipro\"\n                },\n                {\n                    \"city_id\": 13,\n                    \"city_name\": \"Kremenchug\"\n                }\n            ]\n        },\n        {\n            \"country_name\": \"Poland\",\n            \"country_id\": 3,\n            \"cities\": [\n                {\n                    \"city_id\": 4,\n                    \"city_name\": \"Krakov\"\n                },\n                {\n                    \"city_id\": 9,\n                    \"city_name\": \"Wroclaw\"\n                },\n                {\n                    \"city_id\": 11,\n                    \"city_name\": \"Warszawa\"\n                }\n            ]\n        },\n        {\n            \"country_name\": \"Belarus\",\n            \"country_id\": 4,\n            \"cities\": [\n                {\n                    \"city_id\": 10,\n                    \"city_name\": \"Minsk\"\n                }\n            ]\n        },\n        {\n            \"country_name\": \"USA\",\n            \"country_id\": 8,\n            \"cities\": [\n                {\n                    \"city_id\": 8,\n                    \"city_name\": \"Los-Angeles\"\n                }\n            ]\n        },\n        {\n            \"country_name\": \"Canada\",\n            \"country_id\": 10,\n            \"cities\": [\n                {\n                    \"city_id\": 14,\n                    \"city_name\": \"Vancouver\"\n                }\n            ]\n        }\n    ]\n}"
+						},
+						{
+							"name": "Отримати список міст по всім країнам або конкретної країни (success - selected)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/get_cities/3?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"get_cities",
+										"3"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 10:18:45 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "316"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": [\n        {\n            \"country_name\": \"Польша\",\n            \"country_id\": 3,\n            \"cities\": [\n                {\n                    \"city_id\": 4,\n                    \"city_name\": \"Краків\"\n                },\n                {\n                    \"city_id\": 9,\n                    \"city_name\": \"Вроцлав\"\n                },\n                {\n                    \"city_id\": 11,\n                    \"city_name\": \"Варшава\"\n                }\n            ]\n        }\n    ]\n}"
 						}
-					},
-					"response": []
+					]
 				}
 			]
 		},
@@ -2805,6 +3221,31 @@
 								{
 									"key": "type",
 									"value": "order"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Отримання всіх або конкретної категорії",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}{{endpoint}}/get_сategories/2?lang=uk",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"get_сategories",
+								"2"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально"
 								}
 							]
 						}

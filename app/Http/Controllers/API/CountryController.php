@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\App;
 use App\Models\Country;
 use App\Models\City;
 
@@ -15,41 +15,24 @@ class CountryController extends Controller
      * Получить наименование страниы по её коду.
      *
      * @param int $country_id
-     * @param Request $request
      * @return JsonResponse
      */
-    public function getCountry(int $country_id, Request $request): JsonResponse
+    public function getCountry(int $country_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
-        );
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 404,
-                'errors' => $validator->errors()->all(),
-            ]);
-        }
-
         $country = Country::query()
             ->where('country_id', $country_id)
-            ->language($request->get('lang', config('app.default_language')))
+            ->language(App::getLocale())
             ->first();
 
         if (empty($country)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'country_not_found',
-            ]);
+                'status' => false,
+                'errors' => [__('message.country_not_found')],
+            ], 404);
         }
 
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'result' => $country->country_name,
         ]);
     }
@@ -62,30 +45,14 @@ class CountryController extends Controller
      */
     public function getCountries(Request $request): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
-        );
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 404,
-                'errors' => $validator->errors()->all(),
-            ]);
-        }
-
         $countries = Country::query()
-            ->language($request->get('lang', config('app.default_language')))
+            ->language(App::getLocale())
             ->addSelect('country_id')
             ->oldest('country_id')
             ->get();
 
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'result' => $countries,
         ]);
     }
@@ -99,32 +66,16 @@ class CountryController extends Controller
      */
     public function getCity(int $city_id, Request $request): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
-        );
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 404,
-                'errors' => $validator->errors()->all(),
-            ]);
-        }
-
         $city = City::query()
             ->where('city_id', $city_id)
-            ->language($request->get('lang', config('app.default_language')))
+            ->language(App::getLocale())
             ->first();
 
         if (empty($city)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'city_not_found',
-            ]);
+                'status' => false,
+                'errors' => [__('message.city_not_found')],
+            ], 404);
         }
 
         return response()->json([
@@ -134,36 +85,19 @@ class CountryController extends Controller
     }
 
     /**
-     * Получить список всех городов по всем странам или выбранной страны.
+     * Получить список всех городов по всем странам или выбранной стране.
      *
      * @param int $country_id
-     * @param Request $request
      * @return JsonResponse
      */
-    public function getCities(int $country_id, Request $request): JsonResponse
+    public function getCities(int $country_id = 0): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'lang' => 'sometimes|in:' . implode(',', config('app.languages')),
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
-        );
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 404,
-                'errors' => $validator->errors()->all(),
-            ]);
-        }
-
         $countries = Country::query()
-            ->with('cities:country_id,city_id,city_name_' . $request->get('lang', config('app.default_language')) . ' as city_name' )
+            ->with('cities:country_id,city_id,city_name_' . App::getLocale() . ' as city_name' )
             ->when(!empty($country_id), function ($query) use ($country_id) {
                 return $query->where('country_id', $country_id);
             })
-            ->language($request->get('lang', config('app.default_language')))
+            ->language(App::getLocale())
             ->addSelect('country_id')
             ->oldest('country_id')
             ->get()
@@ -177,7 +111,7 @@ class CountryController extends Controller
         }
 
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'result' => $countries,
         ]);
     }

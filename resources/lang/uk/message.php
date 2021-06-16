@@ -6,4 +6,6 @@ return [
     'register_successful'   => 'Реєстрація успішна.',
     'user_not_found'        => 'Користувач не знайдений.',
     'updated_successful'    => 'Оновлено успішно.',
+    'country_not_found'     => 'Країна не знайдена.',
+    'city_not_found'        => 'Місто не знайдено',
 ];
