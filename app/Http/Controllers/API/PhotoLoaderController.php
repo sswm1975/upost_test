@@ -23,29 +23,27 @@ class PhotoLoaderController extends Controller
             [
                 'photo_type' => 'required|in:user,order',
                 'photo'      => 'required|base64_image',
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
+                'status' => false,
                 'errors' => $validator->errors()->all(),
-            ]);
+            ], 404);
         }
 
         $method = 'uploadPhoto4' . Str::title($request->get('photo_type'));
 
         if (!method_exists(self::class, $method)) {
             return response()->json([
-                'status' => 500,
-                'errors' => "method_{$method}_not_found",
-            ]);
+                'status' => false,
+                'errors' => ["method_{$method}_not_found"],
+            ], 500);
         }
 
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'image' => call_user_func([self::class, $method], $request->get('photo'), $request->user()->user_id),
         ]);
     }

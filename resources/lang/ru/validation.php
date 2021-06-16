@@ -122,11 +122,13 @@ return [
     'uploaded'             => 'Загрузка поля :attribute не удалась.',
     'url'                  => 'Поле :attribute имеет ошибочный формат URL.',
     'uuid'                 => 'Поле :attribute должно быть корректным UUID.',
-    'custom'               => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+
+    'custom' => [
+        'photo' => [
+            'base64_image' => 'Неверный формат изображения.',
         ],
     ],
+
     'attributes'           => [
         'address'               => 'Адрес',
         'age'                   => 'Возраст',

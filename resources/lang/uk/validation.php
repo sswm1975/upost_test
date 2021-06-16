@@ -122,11 +122,13 @@ return [
     'uploaded'             => 'Завантаження :attribute не вдалося.',
     'url'                  => 'Формат поля :attribute хибний.',
     'uuid'                 => 'Поле :attribute має бути коректним UUID ідентифікатором.',
-    'custom'               => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+
+    'custom' => [
+        'photo' => [
+            'base64_image' => 'Неправильний формат зображення.',
         ],
     ],
+
     'attributes'           => [
         'address'               => 'Адреса',
         'age'                   => 'Вік',

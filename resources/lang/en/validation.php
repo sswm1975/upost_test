@@ -135,8 +135,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'photo' => [
+            'base64_image' => 'Image invalid format.',
         ],
     ],
 
