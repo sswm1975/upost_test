@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,14 +18,14 @@ Route::get('login', function () {
     return response()->json([
         'status'  => true,
         'message' => __('message.login_successful'),
-    ], 200);
+    ]);
 })->middleware('auth.basic');
 
 # Реєстрація
 Route::post('register', 'API\RegisterController@register');
 
 # Отримання інформації про користувача (тільки публічні дані)
-Route::get('profile/{user_id}', 'API\ProfileController@getPublicData');
+Route::get('profile/{user_id}', 'API\ProfileController@getPublicData')->middleware('auth.basic');
 
 # Отримання інформації про користувача (всі дані)
 Route::get('profile', 'API\ProfileController@getPrivateData')->middleware('auth.basic');
@@ -35,7 +34,7 @@ Route::get('profile', 'API\ProfileController@getPrivateData')->middleware('auth.
 Route::post('profile', 'API\ProfileController@updatePublicData')->middleware('auth.basic');
 
 # Зміна даних мов та валют
-Route::post('language', API\LanguageController::class)->middleware('auth.basic');
+Route::post('language', 'API\ProfileController@updateLanguage')->middleware('auth.basic');
 
 # Отримувати назву країни по її ідентифікатору
 Route::get('get_country/{country_id}', 'API\CountryController@getCountry');

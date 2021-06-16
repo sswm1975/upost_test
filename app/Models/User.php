@@ -43,6 +43,44 @@ class User extends Model
         'user_freelancer_rating',
     ];
 
+    /**
+     * Список полей пользователя для просмотра.
+     *
+     * @var array
+     */
+    const FIELDS_FOR_SHOW = [
+        'user_id',                   # id
+        'user_name',                 # ім’я
+        'user_surname',              # прізвище
+        'user_location',             # локація
+        'user_register_date',        # дата реєстрації
+        'user_last_active',          # час останньої активності
+        'user_status',               # статус
+        'user_birthday',             # день народження
+        'user_gender',               # стать
+        'user_photo',                # фото
+        'user_resume',               # біографія
+        'user_freelancer_rating',    # рейтинг фрілансера
+        'user_creater_rating',       # рейтинг виконавця
+    ];
+
+    /**
+     * Список полей пользователя для редактирования.
+     *
+     * @var array
+     */
+    const FIELDS_FOR_EDIT = [
+        'user_name',                 # ім'я
+        'user_surname',              # прізвище
+        'user_city',                 # код міста проживання
+        'user_location',             # код міста перебування
+        'user_status',               # статус
+        'user_birthday',             # дата народження
+        'user_gender',               # стать
+        'user_photo',                # фото
+        'user_resume',               # біографія
+    ];
+
     public static function boot()
     {
         parent::boot();
@@ -50,6 +88,11 @@ class User extends Model
         static::creating(function ($model) {
             $model->user_register_date = $model->freshTimestamp();
         });
+    }
+
+    public function setUserCurrencyAttribute($value)
+    {
+        $this->attributes['user_currency'] = config('app.currencies')[$value];
     }
 
     public function scopeExclude($query, $value = [])

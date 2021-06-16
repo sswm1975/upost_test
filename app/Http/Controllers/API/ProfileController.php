@@ -13,44 +13,6 @@ use App\Models\User;
 class ProfileController extends Controller
 {
     /**
-     * Список полей пользователя для просмотра.
-     *
-     * @var array
-     */
-    const FIELDS_FOR_SHOW = [
-        'user_id',                   # id
-        'user_name',                 # ім’я
-        'user_surname',              # прізвище
-        'user_location',             # локацію
-        'user_register_date',        # дату реєстрації
-        'user_last_active',          # час останньої активності
-        'user_status',               # статус
-        'user_birthday',             # день народження
-        'user_gender',               # стать
-        'user_photo',                # фото
-        'user_resume',               # біографія
-        'user_freelancer_rating',    # рейтинг фрілансера
-        'user_creater_rating',       # рейтинг виконавця
-    ];
-
-    /**
-     * Список полей пользователя для редактирования.
-     *
-     * @var array
-     */
-    const FIELDS_FOR_EDIT = [
-        'user_name',                 # ім'я
-        'user_surname',              # прізвище
-        'user_city',                 # код міста проживання
-        'user_location',             # код міста перебування
-        'user_status',               # статус
-        'user_birthday',             # дата народження
-        'user_gender',               # стать
-        'user_photo',                # фото
-        'user_resume',               # біографія
-    ];
-
-    /**
      * Получить приватные данные пользователя.
      *
      * @param Request $request
@@ -59,7 +21,7 @@ class ProfileController extends Controller
     public function getPrivateData(Request $request): JsonResponse
     {
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'result' => null_to_blank($request->user()->toArray()),
         ]);
     }
@@ -67,25 +29,24 @@ class ProfileController extends Controller
     /**
      * Получить публичные данные пользователя.
      *
-     * @param  int     $user_id
-     * @param  Request $request
+     * @param  int $user_id
      * @return JsonResponse
      */
-    public function getPublicData(int $user_id, Request $request): JsonResponse
+    public function getPublicData(int $user_id): JsonResponse
     {
         $user = User::query()
             ->where('user_id', $user_id)
-            ->first(self::FIELDS_FOR_SHOW);
+            ->first(User::FIELDS_FOR_SHOW);
 
         if (empty($user)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'user_not_found',
-            ]);
+                'status' => false,
+                'errors' => [__('message.user_not_found')],
+            ], 404);
         }
 
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'result' => null_to_blank($user->toArray()),
         ]);
     }
@@ -102,16 +63,14 @@ class ProfileController extends Controller
             [
                 'user_name'     => 'sometimes|string|max:100',
                 'user_surname'  => 'sometimes|string|max:100',
-                'user_city'     => 'integer',
+                'user_city'     => 'integer|exists:city,city_id',
                 'user_location' => 'string',
                 'user_status'   => 'in:working,new',
                 'user_birthday' => 'date',
                 'user_gender'   => 'in:Мужской,Женский',
                 'user_photo'    => 'nullable|base64_image',
                 'user_resume'   => 'nullable|string',
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
     }
 
@@ -124,13 +83,13 @@ class ProfileController extends Controller
      */
     public function updatePublicData(Request $request): JsonResponse
     {
-        $validator = $this->validator($request->only(self::FIELDS_FOR_EDIT));
+        $validator = $this->validator($request->only(User::FIELDS_FOR_EDIT));
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
+                'status' => false,
                 'errors' => $validator->errors()->all(),
-            ]);
+            ], 404);
         }
 
         $data = $validator->validated();
@@ -152,10 +111,40 @@ class ProfileController extends Controller
         $user->update($data);
 
         return response()->json([
-            'status'  => 200,
-            'message' => 'profile_updated_successfully',
+            'status'  => true,
+            'message' => __('message.updated_successful'),
             'result'  => null_to_blank($data),
         ]);
+    }
+
+    /**
+     * Обновления языка и валюты в профиле пользователя.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function updateLanguage(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->only(['user_lang', 'user_currency']),
+            [
+                'user_lang'     => 'required_without:user_currency|in:' . implode(',', config('app.languages')),
+                'user_currency' => 'required_without:user_lang|in:' . implode(',', array_keys(config('app.currencies'))),
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()->all(),
+            ], 404);
+        }
+
+        $user = $request->user();
+        $user->fill($validator->validated());
+        $user->save();
+
+        return response()->json(['status' => true]);
     }
 
     /**

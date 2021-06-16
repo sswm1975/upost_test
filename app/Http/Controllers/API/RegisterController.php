@@ -27,12 +27,12 @@ class RegisterController extends Controller
             ], 404);
         }
 
-        $user = $this->create($request->all());
+        $this->create($request->all());
 
         return response()->json([
             'status'  => true,
             'message' => __('message.register_successful'),
-        ], 200);
+        ]);
     }
 
     /**
