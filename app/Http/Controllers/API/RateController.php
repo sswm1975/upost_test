@@ -29,16 +29,16 @@ class RateController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
-                'errors' => $validator->errors(),
-            ]);
+                'status' => false,
+                'errors' => $validator->errors()->all(),
+            ], 404);
         }
 
         $rate = Rate::create($request->all());
 
         return response()->json([
-            'status'  => 200,
-            'result'  => null_to_blank($rate->toArray()),
+            'status' => true,
+            'result' => null_to_blank($rate->toArray()),
         ]);
     }
 
@@ -61,9 +61,7 @@ class RateController extends Controller
                 'rate_deadline' => 'required|date',
                 'rate_price'    => 'required|numeric',
                 'rate_currency' => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
 
         # если есть ошибки на первичной проверке, то выходим
@@ -75,32 +73,32 @@ class RateController extends Controller
         $validator->after(function ($validator) use ($request) {
             # создатель ставки должен существовать
             if (!User::where('user_id', $request->who_start)->count()) {
-                $validator->errors()->add('who_start', 'the_selected_who_start_is_invalid');
+                $validator->errors()->add('who_start', __('message.user_not_found'));
             }
 
             # это основная ставка
             if ($request->parent_id == 0) {
                 # создателем первоначальной ставки должен быть авторизированный пользователь
                 if ($request->who_start <> $request->user_id) {
-                    $validator->errors()->add('who_start', 'for_main_rate_who_start_be_equal_user_id');
+                    $validator->errors()->add('who_start', __('message.who_start_incorrect'));
                 }
 
                 # если указан тип "Заказ"
                 if ($request->rate_type == 'order') {
                     # заказ должен существовать
                     if (!Order::where('order_id', $request->order_id)->count()) {
-                        $validator->errors()->add('order_id', 'order_not_exists');
+                        $validator->errors()->add('order_id', __('message.order_not_found'));
                     }
 
                     # маршрут должен принадлежать пользователю
                     if (!Route::where(['route_id' => $request->route_id, 'user_id' => $request->user_id])->count()) {
-                        $validator->errors()->add('route_id', 'route_not_exists');
+                        $validator->errors()->add('route_id', __('message.route_not_found'));
                     }
 
                     # для типа "Заказ" может быть только одна основная ставка (parent_id = 0)
                     $cnt = Rate::where(['user_id' => $request->user_id, 'order_id' => $request->order_id, 'parent_id' => 0])->count();
                     if ($cnt) {
-                        $validator->errors()->add('order_id', 'can_be_only_one_basic_rate_per_order');
+                        $validator->errors()->add('order_id', __('message.one_rate_per_order'));
                     }
                 }
 
@@ -108,18 +106,18 @@ class RateController extends Controller
                 if ($request->rate_type == 'route') {
                     # маршрут должен существовать
                     if (!Route::where('route_id', $request->route_id)->count()) {
-                        $validator->errors()->add('route_id', 'route_not_exists');
+                        $validator->errors()->add('route_id', __('message.route_not_found'));
                     }
 
                     # заказ должен принадлежать пользователю
                     if (!Order::where(['order_id' => $request->order_id, 'user_id' => $request->user_id])->count()) {
-                        $validator->errors()->add('order_id', 'order_not_exists');
+                        $validator->errors()->add('order_id', __('message.order_not_found'));
                     }
 
                     # для типа "Маршрут" может быть максимум три основных ставки (parent_id = 0)
                     $cnt = Rate::where(['user_id' => $request->user_id, 'route_id' => $request->route_id, 'parent_id' => 0])->count();
                     if ($cnt > 2) {
-                        $validator->errors()->add('route_id', 'can_be_max_three_basic_rate_per_router');
+                        $validator->errors()->add('route_id', __('message.three_rate_per_route'));
                     }
                 }
             }
@@ -129,20 +127,20 @@ class RateController extends Controller
                 # основная ставка должна существовать и быть активной
                 $main_rate = Rate::where(['rate_id' => $request->parent_id, 'rate_status' => 'active'])->first();
                 if (!$main_rate) {
-                    $validator->errors()->add('parent_id', 'main_rate_not_exists_or_not_active');
+                    $validator->errors()->add('parent_id', __('message.rate_not_found'));
                 } else {
                     # основные параметры должны соответствовать основной ставке
                     if ($main_rate->who_start <> $request->who_start) {
-                        $validator->errors()->add('who_start', 'order_id_is_different_in_main_rate');
+                        $validator->errors()->add('who_start', __('message.differs_from_basic_rate'));
                     }
                     if ($main_rate->rate_type <> $request->rate_type) {
-                        $validator->errors()->add('rate_type', 'rate_type_is_different_in_main_rate');
+                        $validator->errors()->add('rate_type', __('message.differs_from_basic_rate'));
                     }
                     if ($main_rate->order_id <> $request->order_id) {
-                        $validator->errors()->add('order_id', 'who_start_is_different_in_main_rate');
+                        $validator->errors()->add('order_id', __('message.differs_from_basic_rate'));
                     }
                     if ($main_rate->route_id <> $request->route_id) {
-                        $validator->errors()->add('route_id', 'route_id_is_different_in_main_rate');
+                        $validator->errors()->add('route_id', __('message.differs_from_basic_rate'));
                     }
                 }
 
@@ -151,14 +149,14 @@ class RateController extends Controller
                     # заказ должен принадлежать ответчику
                     if ($request->rate_type == 'order') {
                         if (!Order::where(['order_id' => $request->order_id, 'user_id' => $request->user_id])->count()) {
-                            $validator->errors()->add('order_id', 'order_not_exists');
+                            $validator->errors()->add('order_id', __('message.order_not_found'));
                         }
                     }
 
                     # маршрут должен принадлежать ответчику
                     if ($request->rate_type == 'route') {
                         if (!Route::where(['route_id' => $request->route_id, 'user_id' => $request->user_id])->count()) {
-                            $validator->errors()->add('route_id', 'route_not_exists');
+                            $validator->errors()->add('route_id', __('message.route_not_found'));
                         }
                     }
 
@@ -166,7 +164,7 @@ class RateController extends Controller
                 } else {
                     # создатель контрставки должен быть владельцем основной ставки
                     if ($main_rate && $main_rate->user_id <> $request->user_id) {
-                        $validator->errors()->add('parent_id', 'you_not_owner_main_rate');
+                        $validator->errors()->add('parent_id', __('message.not_owner_basic_rate'));
                     }
                 }
             }
@@ -191,16 +189,16 @@ class RateController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
-                'errors' => $validator->errors(),
-            ]);
+                'status' => false,
+                'errors' => $validator->errors()->all(),
+            ], 404);
         }
 
         $rate = Rate::where('rate_id', $rate_id)->first()->fill($validator->validated());
         $rate->save();
 
         return response()->json([
-            'status'  => 200,
+            'status'  => true,
             'result'  => null_to_blank($rate->toArray()),
         ]);
     }
@@ -220,9 +218,7 @@ class RateController extends Controller
                 'rate_deadline' => 'required|date',
                 'rate_price'    => 'required|numeric',
                 'rate_currency' => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
 
         # если есть ошибки на первичной проверке, то выходим
@@ -240,7 +236,7 @@ class RateController extends Controller
                 ])
                 ->first();
             if (empty($rate)) {
-                $validator->errors()->add('rate_id', 'rate_not_found');
+                $validator->errors()->add('rate_id', __('message.rate_not_found'));
             } else {
                 if ($rate->parent_id == 0) {
                     $exists_next_rate = Rate::query()
@@ -253,7 +249,7 @@ class RateController extends Controller
                         ->count();
                 }
                 if ($exists_next_rate) {
-                    $validator->errors()->add('rate_id', 'not_last_rate');
+                    $validator->errors()->add('rate_id', __('message.not_last_rate'));
                 }
             }
         });
@@ -280,9 +276,9 @@ class RateController extends Controller
 
         if (empty($rate)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'rate_not_found',
-            ]);
+                'status' => false,
+                'errors' => [__('message.rate_not_found')],
+            ], 404);
         }
 
         if ($rate->parent_id == 0) {
@@ -297,15 +293,15 @@ class RateController extends Controller
         }
         if ($exists_next_rate) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'not_last_rate',
-            ]);
+                'status' => false,
+                'errors' => [__('message.not_last_rate')],
+            ], 404);
         }
 
-        $rate->delete();
+        $affected = $rate->delete();
 
         return response()->json([
-            'status' => 200,
+            'status' => (bool)$affected,
         ]);
     }
 
@@ -328,9 +324,9 @@ class RateController extends Controller
 
         if (empty($rate)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'rate_not_found',
-            ]);
+                'status' => false,
+                'errors' => [__('message.rate_not_found')],
+            ], 404);
         }
 
         if ($rate->parent_id == 0) {
@@ -347,15 +343,15 @@ class RateController extends Controller
         }
         if ($exists_next_rate) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'not_last_rate',
-            ]);
+                'status' => false,
+                'errors' => [__('message.not_last_rate')],
+            ], 404);
         }
 
-        $rate->update(['rate_status' => 'ban']);
+        $affected = $rate->update(['rate_status' => 'ban']);
 
         return response()->json([
-            'status' => 200,
+            'status' => (bool)$affected,
         ]);
     }
 
@@ -377,16 +373,14 @@ class RateController extends Controller
                 'route_id'      => 'required_without:order_id|integer',
                 'parent_id'     => 'sometimes|integer',
                 'who_start'     => 'sometimes|integer',
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
+                'status' => false,
                 'errors' => $validator->errors(),
-            ]);
+            ], 404);
         }
 
         $data = $validator->validated();
@@ -468,7 +462,7 @@ class RateController extends Controller
             }
         }
 
-        return response()->json(array_merge(['status' => 200], $data));
+        return response()->json(array_merge(['status' => true], $data));
     }
 
     /**
@@ -484,16 +478,16 @@ class RateController extends Controller
 
         if (empty($rate)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'rate_not_found',
-            ]);
+                'status' => false,
+                'errors' => [__('message.rate_not_found')],
+            ], 404);
         }
 
         $rate->read_rate = true;
         $rate->save();
 
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'result' => null_to_blank($rate->toArray()),
         ]);
     }
@@ -515,9 +509,9 @@ class RateController extends Controller
 
         if (empty($rate)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'rate_not_found',
-            ]);
+                'status' => false,
+                'errors' => [__('message.rate_not_found')],
+            ], 404);
         }
 
         $user_id = $request->user()->user_id;
@@ -534,9 +528,9 @@ class RateController extends Controller
 
         if (!$accept) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'rate_not_accept',
-            ]);
+                'status' => false,
+                'errors' => [__('message.rate_not_accepted')],
+            ], 404);
         }
 
         # существуют ещё ставки?
@@ -547,17 +541,17 @@ class RateController extends Controller
         }
         if ($exists_next_rate) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'not_last_rate',
-            ]);
+                'status' => false,
+                'errors' => [__('message.not_last_rate')],
+            ], 404);
         }
 
         $rate->rate_status = 'in_progress';
         $rate->save();
 
         return response()->json([
-            'status' => 200,
-            'result' => 'rate_accept',
+            'status' => true,
+            'result' => [__('message.rate_accepted')],
         ]);
     }
 }
