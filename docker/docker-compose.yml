@@ -5,8 +5,8 @@ services:
       context: ./php
     volumes:
       - './../:/var/www/html'
-      - './sites:/etc/apache2/sites-available'
-      - './data/dev:/home/dev'
+      - './docker/sites:/etc/apache2/sites-available'
+      - './docker/data/dev:/home/dev'
     links:
       - db
     depends_on:
@@ -26,6 +26,8 @@ services:
       MYSQL_USER: dev
       MYSQL_PASSWORD: dev
       MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 13306:3306
     networks:
       app_net:
         ipv4_address: 172.16.1.03
