@@ -55,6 +55,19 @@ Route::group(
     }
 );
 
+// Чати
+Route::group(
+    [
+        'prefix' => 'chat',
+    ],
+    function () {
+        # Додати чат
+        Route::post('add', 'API\ChatsController@addChat')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Отримати чат
+        Route::get('show', 'API\ChatsController@showChat');
+    }
+);
 
 # Зміна даних мов та валют
 Route::post('language', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
