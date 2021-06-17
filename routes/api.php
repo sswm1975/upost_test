@@ -37,10 +37,6 @@ Route::get('profile', 'API\ProfileController@getPrivateData')->middleware(MIDDLE
 # Зміна даних профілю (тільки публічні дані)
 Route::post('profile', 'API\ProfileController@updatePublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Отримання рейтингу користувача
-Route::get('rating/{user_id}', 'API\ProfileController@getRating')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-
 // Відгуки
 Route::group(
     [
@@ -52,6 +48,9 @@ Route::group(
 
         # Отримати відгуки
         Route::get('show', 'API\RewiesController@showReviews');
+
+        # Отримати рейтинг користувача
+        Route::get('rating', 'API\RewiesController@getRating');
     }
 );
 

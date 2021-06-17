@@ -8,8 +8,10 @@ use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Job;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -25,10 +27,11 @@ class RewiesController extends Controller
      */
     public function addReview(Request $request): JsonResponse
     {
-        $userId = $request->user()->id;
+        $userId = $request->user()->user_id;
+
         $validator = Validator::make($request->all(),
             [
-                'user_id' => 'required|integer|exists:users,user_id',
+                //    'user_id' => 'required|integer|exists:users,user_id',
                 'job_id'  => [
                     'required',
                     'integer',
@@ -44,30 +47,47 @@ class RewiesController extends Controller
         );
         $this->returnValidated($validator);
 
-        $data       = $request->post();
-        $job        = Job::find($data['job_id']);
-        $rate       = $job->rate;
-        $order      = $rate->order;
-        $executorId = $order->user_id;
-        $clientId   = $rate->user_id;
+        $data = $request->post();
+        $job = Job::find($data['job_id']);
 
-        if (!in_array($data['user_id'], [$executorId, $clientId])) {
+        if ($job->status !== Job::STATUS_DONE) {
+            throw new ErrorException(__('message.review_not_ready'));
+        }
+
+        $rate = $job->rate;
+        $order = $rate->order;
+        $creatorId = $order->user_id;
+        $freelancerId = $rate->user_id;
+
+        if (!in_array($userId, [$creatorId, $freelancerId])) {
             throw new ErrorException(__('message.review_not_allowed'));
         }
 
-
         try {
+            DB::beginTransaction();
+            if ($userId === $creatorId) {
+                $user = User::find($freelancerId);
+                $user->user_freelancer_rating += $data['rating'];
+            }
+            else {
+                $user = User::find($creatorId);
+                $user->user_creater_rating += $data['rating'];
+            }
+            $user->save();
+
             Review::create([
                 'user_id' => $userId,
                 'job_id'  => $data['job_id'],
                 'rating'  => $data['rating'],
                 'comment' => htmlentities($data['comment']),
             ]);
+            DB::commit();
             return response()->json([
                 'status' => true,
             ]);
         }
         catch (\Exception $e) {
+            DB::rollBack();
             throw new TryException($e->getMessage());
         }
     }
@@ -82,11 +102,8 @@ class RewiesController extends Controller
     public function showReviews(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(),
-            [
-                'user_id' => 'required|integer|exists:users,user_id',
-            ]
+            ['user_id' => 'required|integer|exists:users,user_id']
         );
-
         $this->returnValidated($validator);
 
         $jobs = Job::whereHas('rate', function ($q) use ($request) {
@@ -101,5 +118,14 @@ class RewiesController extends Controller
             'number' => count($reviews),
             'result' => null_to_blank($reviews),
         ]);
+    }
+
+    public function getRating(Request $request )
+    {
+        $validator = Validator::make($request->all(),
+            ['user_id' => 'required|integer|exists:users,user_id']
+        );
+        $this->returnValidated($validator);
+
     }
 }
