@@ -3251,7 +3251,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/show_orders?user_id=15&show=2&page=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=usd&lang=uk",
+							"raw": "{{host}}{{endpoint}}/show_orders",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -3262,12 +3262,14 @@
 								{
 									"key": "user_id",
 									"value": "15",
-									"description": "Код користувача (опціонально)"
+									"description": "Код користувача (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "show",
 									"value": "2",
-									"description": "Кількість замовлень на сторінці, за замовченням 5  (опціонально)"
+									"description": "Кількість замовлень на сторінці, за замовченням 5  (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "status",
@@ -3278,67 +3280,80 @@
 								{
 									"key": "page",
 									"value": "1",
-									"description": "Номер сторінки для виводу, за замовченням 1  (опціонально)"
+									"description": "Номер сторінки для виводу, за замовченням 1  (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "date_from",
 									"value": "2021-06-01",
-									"description": "Дата початку  (опціонально)"
+									"description": "Дата початку  (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "date_to",
 									"value": "2021-06-05",
-									"description": "Кінцева дата  (опціонально)"
+									"description": "Кінцева дата  (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "city_from[]",
 									"value": "4",
-									"description": "Код міста початку, масив (опціонально)"
+									"description": "Код міста початку, масив (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "city_from[]",
 									"value": "3",
-									"description": "Код міста початку, масив (опціонально)"
+									"description": "Код міста початку, масив (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "city_to[]",
 									"value": "2",
-									"description": "Код міста прибуття, масив (опціонально)"
+									"description": "Код міста прибуття, масив (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "city_to[]",
 									"value": "3",
-									"description": "Код міста прибуття, масив (опціонально)"
+									"description": "Код міста прибуття, масив (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "country_from[]",
 									"value": "3",
-									"description": "Код країни початку, масив  (опціонально)"
+									"description": "Код країни початку, масив  (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "country_to[]",
 									"value": "2",
-									"description": "Код каїни прибуття, масив (опціонально)"
+									"description": "Код каїни прибуття, масив (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "price_from",
 									"value": "100",
-									"description": "Ціна Від  (опціонально)"
+									"description": "Ціна Від  (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "price_to",
 									"value": "250",
-									"description": "Ціна По  (опціонально)"
+									"description": "Ціна По  (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "currency",
 									"value": "usd",
-									"description": "Валюта, в якій передається ціна (uah, rub, usd, eur) (опціонально)"
+									"description": "Валюта, в якій передається ціна (uah, rub, usd, eur) (опціонально)",
+									"disabled": true
 								},
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
 								}
 							]
 						}
@@ -3885,9 +3900,6 @@
 				},
 				{
 					"name": "Підбір замовлення для маршруту",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -3904,10 +3916,6 @@
 								"description": "Хеш пароля, результат виконання md5(md5(password))"
 							}
 						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
 						"url": {
 							"raw": "{{host}}{{endpoint}}/selection_order/58",
 							"host": [
@@ -4206,7 +4214,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/save_route?lang=uk",
+							"raw": "{{host}}{{endpoint}}/save_route",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -4217,7 +4225,8 @@
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
 								}
 							]
 						}
@@ -5125,7 +5134,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/update_route/67?lang=uk",
+							"raw": "{{host}}{{endpoint}}/update_route/67",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -5137,7 +5146,8 @@
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
 								}
 							]
 						}
@@ -5510,10 +5520,6 @@
 								"description": "Хеш пароля, результат виконання md5(md5(password))"
 							}
 						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
 						"url": {
 							"raw": "{{host}}{{endpoint}}/delete_route/72",
 							"host": [
@@ -5715,9 +5721,6 @@
 				},
 				{
 					"name": "Підбір маршруту для замовлення",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -5734,10 +5737,6 @@
 								"description": "Хеш пароля, результат виконання md5(md5(password))"
 							}
 						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
 						"url": {
 							"raw": "{{host}}{{endpoint}}/selection_route/25",
 							"host": [
@@ -6194,9 +6193,6 @@
 				},
 				{
 					"name": "Вивести список обраних",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -6213,10 +6209,6 @@
 								"description": "Хеш пароля, результат виконання md5(md5(password))"
 							}
 						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
 						"url": {
 							"raw": "{{host}}{{endpoint}}/show_favorite",
 							"host": [
@@ -7259,10 +7251,6 @@
 								"description": "Хеш пароля, результат виконання md5(md5(password))"
 							}
 						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
 						"url": {
 							"raw": "{{host}}{{endpoint}}/delete_rate/306",
 							"host": [
@@ -7480,10 +7468,6 @@
 								"description": "Хеш пароля, результат виконання md5(md5(password))"
 							}
 						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
 						"url": {
 							"raw": "{{host}}{{endpoint}}/reject_rate/304",
 							"host": [
@@ -7522,10 +7506,6 @@
 										"description": "Хеш пароля, результат виконання md5(md5(password))"
 									}
 								],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
 								"url": {
 									"raw": "{{host}}{{endpoint}}/reject_rate/304",
 									"host": [
@@ -7611,10 +7591,6 @@
 										"description": "Хеш пароля, результат виконання md5(md5(password))"
 									}
 								],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
 								"url": {
 									"raw": "{{host}}{{endpoint}}/reject_rate/304",
 									"host": [
@@ -7686,9 +7662,6 @@
 				},
 				{
 					"name": "Отримати ставки",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -7707,10 +7680,6 @@
 								"disabled": true
 							}
 						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
 						"url": {
 							"raw": "{{host}}{{endpoint}}/show_rates",
 							"host": [
@@ -7790,10 +7759,6 @@
 										"description": "Хеш пароля, результат виконання md5(md5(password))"
 									}
 								],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
 								"url": {
 									"raw": "{{host}}{{endpoint}}/show_rates?user_id=3&rate_type=route&order_id=2&route_id=49&lang=uk",
 									"host": [
@@ -7915,10 +7880,6 @@
 										"description": "Хеш пароля, результат виконання md5(md5(password))"
 									}
 								],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
 								"url": {
 									"raw": "{{host}}{{endpoint}}/show_rates?user_id=3&rate_type=route3&order_id=2&route_id=49&lang=uk",
 									"host": [
@@ -8026,9 +7987,6 @@
 				},
 				{
 					"name": "Переглянути ставку",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -8047,10 +8005,6 @@
 								"disabled": true
 							}
 						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
 						"url": {
 							"raw": "{{host}}{{endpoint}}/show_rate/3053",
 							"host": [
@@ -8089,10 +8043,6 @@
 										"description": "Хеш пароля, результат виконання md5(md5(password))"
 									}
 								],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
 								"url": {
 									"raw": "{{host}}{{endpoint}}/show_rate/305?lang=uk",
 									"host": [
@@ -8177,10 +8127,6 @@
 										"description": "Хеш пароля, результат виконання md5(md5(password))"
 									}
 								],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
 								"url": {
 									"raw": "{{host}}{{endpoint}}/show_rate/3053",
 									"host": [
@@ -8270,10 +8216,6 @@
 								"disabled": true
 							}
 						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
 						"url": {
 							"raw": "{{host}}{{endpoint}}/accept_rate/304",
 							"host": [
@@ -8312,10 +8254,6 @@
 										"description": "Хеш пароля, результат виконання md5(md5(password))"
 									}
 								],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
 								"url": {
 									"raw": "{{host}}{{endpoint}}/accept_rate/304",
 									"host": [
@@ -8401,10 +8339,6 @@
 										"description": "Хеш пароля, результат виконання md5(md5(password))"
 									}
 								],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
 								"url": {
 									"raw": "{{host}}{{endpoint}}/accept_rate/264?lang=uk",
 									"host": [
@@ -8487,13 +8421,15 @@
 								"key": "PHP-AUTH-USER",
 								"value": "{{email}}",
 								"type": "text",
-								"description": "Логін: емейл або телефон"
+								"description": "Логін: емейл або телефон",
+								"disabled": true
 							},
 							{
 								"key": "PHP-AUTH-PW",
 								"value": "{{password_hash}}",
 								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
+								"description": "Хеш пароля, результат виконання md5(md5(password))",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -8501,8 +8437,17 @@
 							"formdata": [
 								{
 									"key": "rate_id",
-									"value": "304",
-									"type": "text"
+									"value": "3043",
+									"description": "Код ставки",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
@@ -8516,7 +8461,188 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Створення завдання (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rate_id",
+											"value": "304",
+											"description": "Код ставки",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/create_job",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"create_job"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 17 Jun 2021 15:34:17 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "53"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"rate_id\": \"304\",\n        \"job_id\": 1\n    }\n}"
+						},
+						{
+							"name": "Створення завдання (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rate_id",
+											"value": "3043",
+											"description": "Код ставки",
+											"type": "text"
+										},
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/create_job",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"create_job"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 17 Jun 2021 15:37:32 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "129"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Ставку не знайдено.\"\n    ]\n}"
+						}
+					]
 				}
 			]
 		},
