@@ -61,10 +61,10 @@ Route::group(
         'prefix' => 'messages',
     ],
     function () {
-        # Додати відгук
+        # Додати повiдомлення
         Route::post('add', 'API\MessagesController@addMessages')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-        # Отримати відгуки
+        # Отримати повiдомлення
         Route::get('show', 'API\MessagesController@showMessages');
     }
 );
