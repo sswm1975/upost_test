@@ -9,7 +9,7 @@ class Job extends Model
     public const STATUS_DONE = 'done';
 
     protected $primaryKey = 'job_id';
-    protected $fillable = ['rate_id', 'rate_status'];
+    protected $fillable = ['rate_id', 'job_status'];
     public $timestamps = false;
 
     public function rate()

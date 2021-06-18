@@ -39,7 +39,7 @@ class User extends Model
         'user_resume',
         'user_messages_viewed',
         'user_wallet',
-        'user_creater_rating',
+        'user_creator_rating',
         'user_freelancer_rating',
     ];
 
@@ -61,7 +61,7 @@ class User extends Model
         'user_photo',                # фото
         'user_resume',               # біографія
         'user_freelancer_rating',    # рейтинг фрілансера
-        'user_creater_rating',       # рейтинг виконавця
+        'user_creator_rating',       # рейтинг виконавця
     ];
 
     /**

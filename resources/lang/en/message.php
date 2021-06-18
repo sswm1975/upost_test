@@ -12,4 +12,9 @@ return [
     'not_filled_profile'    => 'In profile not filled name or surname or birthday.',
     'order_not_found'       => 'Order not found.',
     'route_not_found'       => 'Route not found.',
+    'unique_review'       => 'You have already reviewed this job',
+    'review_not_allowed'  => 'You can not leave review for this job',
+    'review_not_ready'    => 'You can not leave review for unfinished job',
+    'type_freelancer'     => 'Freelancer',
+    'type_creator'        => 'Creator',
 ];

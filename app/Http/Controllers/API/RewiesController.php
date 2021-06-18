@@ -50,7 +50,7 @@ class RewiesController extends Controller
         $data = $request->post();
         $job = Job::find($data['job_id']);
 
-        if ($job->status !== Job::STATUS_DONE) {
+        if ($job->job_status !== Job::STATUS_DONE) {
             throw new ErrorException(__('message.review_not_ready'));
         }
 
@@ -65,21 +65,27 @@ class RewiesController extends Controller
 
         try {
             DB::beginTransaction();
+
+            // Заказчик
             if ($userId === $creatorId) {
                 $user = User::find($freelancerId);
                 $user->user_freelancer_rating += $data['rating'];
+                $reviewType = Review::TYPE_CREATOR;
             }
+            // Исполнитель
             else {
                 $user = User::find($creatorId);
-                $user->user_creater_rating += $data['rating'];
+                $user->user_creator_rating += $data['rating'];
+                $reviewType = Review::TYPE_FREELANCER;
             }
             $user->save();
 
             Review::create([
-                'user_id' => $userId,
-                'job_id'  => $data['job_id'],
-                'rating'  => $data['rating'],
-                'comment' => htmlentities($data['comment']),
+                'user_id'     => $userId,
+                'job_id'      => $data['job_id'],
+                'rating'      => $data['rating'],
+                'comment'     => htmlentities($data['comment']),
+                'review_type' => $reviewType,
             ]);
             DB::commit();
             return response()->json([
@@ -120,12 +126,26 @@ class RewiesController extends Controller
         ]);
     }
 
-    public function getRating(Request $request )
+    public function getRating(Request $request)
     {
         $validator = Validator::make($request->all(),
             ['user_id' => 'required|integer|exists:users,user_id']
         );
         $this->returnValidated($validator);
+
+        $user = User::find($request->get('user_id'));
+
+        $creatorReviews = Review::where(['user_id' => $user->user_id, 'review_type' => Review::TYPE_CREATOR])->count();
+        $freelancerReviews = Review::where(['user_id' => $user->user_id, 'review_type' => Review::TYPE_FREELANCER])->count();
+
+        $creatorRating = $creatorReviews ? $user->user_creator_rating / $creatorReviews : 0;
+        $freelancerRating = $freelancerReviews ? $user->user_freelancer_rating / $freelancerReviews : 0;
+
+        return response()->json([
+            'status'            => true,
+            'creator_rating'    => round($creatorRating, 1),
+            'freelancer_rating' => round($freelancerRating, 1),
+        ]);
 
     }
 }
