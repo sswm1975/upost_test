@@ -10,6 +10,7 @@ use App\Models\Chat;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -115,5 +116,27 @@ class ChatsController extends Controller
             'number' => count($chats),
             'result' => null_to_blank($chats),
         ]);
+    }
+
+    public function deleteChat(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(),
+            [
+                'chat_id'  => 'integer|exists:chats,chat_id',
+                'user_id'   => 'required|integer|exists:users,user_id',
+
+            ]
+        );
+
+        $this->returnValidated($validator);
+
+        $data = $request->post();
+
+        $affected = DB::table('chats')
+            ->where('chat_id', $data['chat_id'])
+            ->where('user_id', $data['user_id'])
+            ->delete();
+
+        return response()->json(['status' => (bool)$affected]);
     }
 }

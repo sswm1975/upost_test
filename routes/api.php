@@ -66,6 +66,9 @@ Route::group(
 
         # Отримати чат
         Route::get('show', 'API\ChatsController@showChat');
+
+        # Видалити чат
+        Route::post('delete', 'API\ChatsController@deleteChat');
     }
 );
 
