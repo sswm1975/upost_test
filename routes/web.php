@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Modules\Parsers\Parser;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,4 +17,26 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/parser', function() {
+    $url = request('url');
+    if (!$url) {
+        return 'Param url empty!';
+    }
+    $parser = (new Parser($url))->parser();
+
+    echo 'NAME: ' . $parser->getProductName();
+    echo "<br>";
+
+    echo 'CATEGORY: ' . $parser->getProductCategory();
+    echo "<br>";
+
+    echo 'PRICE: ' . $parser->getProductPrice();
+    echo "<br>";
+
+    echo '<img src="' . $parser->getProductImage() . '">';
+    echo "<br>";
+
+    echo '<img src="' . $parser->getFavicon() . '">';
 });
