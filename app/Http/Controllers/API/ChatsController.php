@@ -26,30 +26,13 @@ class ChatsController extends Controller
      */
     public function addChat(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'rate_id' => [
-                    'required',
-                    'integer',
-                    'exists:rate,rate_id',
-                ],
-                'order_id'  => [
-                    'required',
-                    'integer',
-                    'exists:orders,order_id',
-                ],
-                'to_user'  => [
-                    'required',
-                    'integer',
-                    'exists:users,user_id'
-                ],
-                'user_id'  => [
-                    'required',
-                    'integer',
-                    'exists:users,user_id'
-                ],
-            ],
-        );
+        $validator = Validator::make($request->all(), [
+            'rate_id'   => 'required|integer|exists:rate,rate_id',
+            'order_id'  => 'required|integer|exists:orders,order_id',
+            'to_user'   => 'required|integer|exists:users,user_id',
+            'user_id'   => 'required|integer|exists:users,user_id',
+        ]);
+
         $this->returnValidated($validator);
 
         $data = $request->post();
@@ -58,17 +41,17 @@ class ChatsController extends Controller
          * TODO: Application rules
         */
 
-
         try {
             Chat::create([
-                'rate_id'  => $data['rate_id'],
-                'order_id'  => $data['order_id'],
-                'user_id'  => $data['user_id'],
-                'to_user'  => $data['to_user'],
+                'rate_id'     => $data['rate_id'],
+                'order_id'    => $data['order_id'],
+                'user_id'     => $data['user_id'],
+                'to_user'     => $data['to_user'],
                 'chat_date'   => Carbon::now(),
                 'chat_status' => 'active',
-                'last_sms' => '',
+                'last_sms'    => '',
             ]);
+
             return response()->json([
                 'status' => true,
             ]);
@@ -124,7 +107,6 @@ class ChatsController extends Controller
             [
                 'chat_id'  => 'integer|exists:chats,chat_id',
                 'user_id'   => 'required|integer|exists:users,user_id',
-
             ]
         );
 
