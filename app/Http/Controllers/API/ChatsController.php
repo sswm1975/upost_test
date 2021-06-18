@@ -25,39 +25,17 @@ class ChatsController extends Controller
      */
     public function addChat(Request $request): JsonResponse
     {
-        $userId     = $request->post('user_id');
-        $rateId     = $request->post('rate_id');
-        $orderId    = $request->post('order_id');
-
-        if(is_null($userId)) {
-            throw new ErrorException('Invalid user_id field in request');
-        }
-
-        if(is_null($rateId)) {
-            throw new ErrorException('Invalid rate_id field in request');
-        }
-
-        if(is_null($orderId)) {
-            throw new ErrorException('Invalid order_id field in request');
-        }
-
         $validator = Validator::make($request->all(),
             [
                 'rate_id' => [
                     'required',
                     'integer',
                     'exists:rate,rate_id',
-                    Rule::unique('rate', 'rate_id')->where(function($query) use ($userId, $rateId) {
-                        return $query->where('rate_id', $rateId)->where('user_id', $userId);
-                    }),
                 ],
                 'order_id'  => [
                     'required',
                     'integer',
                     'exists:orders,order_id',
-                    Rule::unique('rate', 'rate_id')->where(function($query) use ($userId, $rateId, $orderId) {
-                        return $query->where('rate_id', $rateId)->where('user_id', $userId)->where('orderId', $orderId);
-                    }),
                 ],
                 'to_user'  => [
                     'required',
@@ -74,6 +52,11 @@ class ChatsController extends Controller
         $this->returnValidated($validator);
 
         $data = $request->post();
+
+        /**
+         * TODO: Application rules
+        */
+
 
         try {
             Chat::create([
