@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Exceptions\ErrorException;
 use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
@@ -12,7 +11,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class ChatsController extends Controller
 {
@@ -22,7 +20,6 @@ class ChatsController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidatorException|TryException
-     * @throws ErrorException
      */
     public function addChat(Request $request): JsonResponse
     {
@@ -101,6 +98,13 @@ class ChatsController extends Controller
         ]);
     }
 
+    /**
+     * Удалить чат
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException
+     */
     public function deleteChat(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(),
