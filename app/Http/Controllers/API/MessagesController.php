@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Exceptions\ErrorException;
 use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
-use App\Models\Job;
 use App\Models\Message;
-use App\Models\Review;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class MessagesController extends Controller
 {
