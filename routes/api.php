@@ -86,6 +86,9 @@ Route::delete('delete_order/{order_id}', 'API\OrderController@deleteOrder')->mid
 # Підбір замовлення для маршруту
 Route::get('selection_order/{route_id}', 'API\OrderController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+# Підтвердити виконання замовлення
+Route::post('confirm_order', 'API\OrderController@confirmOrder')->middleware('auth.basic');
+
 # Лічильник переглядів
 Route::post('update_counter', API\CounterController::class);
 
