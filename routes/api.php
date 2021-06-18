@@ -136,3 +136,6 @@ Route::post('accept_rate/{rate_id}', 'API\RateController@acceptRate')->middlewar
 
 # Створення завдання
 Route::post('create_job', 'API\JobController@createJob')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+#Завантаження файлу
+Route::post('upload', 'API\UploadController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
