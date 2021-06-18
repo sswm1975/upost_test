@@ -21,4 +21,9 @@ return [
     'not_last_rate'           => 'Not last rate.',
     'rate_not_accepted'       => 'Rate not accepted.',
     'rate_accepted'           => 'Rate accepted.',
+    'unique_review'       => 'You have already reviewed this job',
+    'review_not_allowed'  => 'You can not leave review for this job',
+    'review_not_ready'    => 'You can not leave review for unfinished job',
+    'type_freelancer'     => 'Freelancer',
+    'type_creator'        => 'Creator',
 ];
