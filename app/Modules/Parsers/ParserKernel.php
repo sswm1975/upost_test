@@ -7,6 +7,8 @@ use DOMXPath;
 
 class ParserKernel
 {
+    const DELETE_TAGS = ['?', "\n"];
+
     protected $domain;
     protected $xpath;
 
@@ -24,6 +26,11 @@ class ParserKernel
         libxml_use_internal_errors(false);
 
         $this->xpath = new DOMXPath($doc);
+    }
+
+    function cleanTags($string): string
+    {
+        return trim(str_replace(self::DELETE_TAGS, '', strip_tags($string)));
     }
 
     public function findOne(string $select): string
@@ -49,7 +56,7 @@ class ParserKernel
 
     public function getText(array $selects): string
     {
-        return utf8_decode(addslashes($this->find($selects)));
+        return $this->cleanTags(utf8_decode($this->find($selects)));
     }
 
     public function getPrice(array $selects): string
@@ -83,9 +90,9 @@ class ParserKernel
 
     public function getJsonDecode(array $selects):array
     {
-        $json = $this->getText($selects);
+        $json = $this->find($selects);
 
-        return $json ? json_decode(stripcslashes($json), true) : [];
+        return $json ? json_decode(utf8_decode($json), true) : [];
     }
 
     public function getImageToBase64($href):string

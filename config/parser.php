@@ -51,5 +51,30 @@ return [
                 "//script[@data-seo='BreadcrumbList']",
             ],
         ],
+
+        'amazon' => [
+            'mask' => 'amazon.com',
+            'handler' => \App\Modules\Parsers\DefaultParser::class,
+            'name_selects' => [
+                "//h1[@class='a-size-large a-spacing-none']",
+            ],
+            'category_selects' => [
+                "//div[@id='wayfinding-breadcrumbs_feature_div']/ul/li[1]",
+            ],
+            'price_selects' => [
+                "//span[@id='priceblock_ourprice']",
+                "//span[@id='priceblock_saleprice']",
+                "//p[@class='a-spacing-none a-text-left a-size-mini twisterSwatchPrice']",
+            ],
+            'image_selects' => [
+                "//img[@id='landingImage']/@src",
+            ],
+            'size_selects' => [
+                "//th[contains(text(),'Product Dimensions')]/following-sibling::td[1]",
+            ],
+            'weight_selects' => [
+                "//th[contains(text(),'Item Weight')]/following-sibling::td[1]",
+            ],
+        ],
     ],
 ];

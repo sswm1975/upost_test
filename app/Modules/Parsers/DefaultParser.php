@@ -45,7 +45,6 @@ class DefaultParser extends ParserKernel implements ParserInterface
         return isset($this->config['size_selects'])
             ? $this->getText($this->config['size_selects'])
             : '';
-
     }
 
     public function getProductWeight():string
