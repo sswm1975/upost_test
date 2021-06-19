@@ -7,7 +7,7 @@ use DOMXPath;
 
 class ParserKernel
 {
-    const DELETE_TAGS = ['?', "\n"];
+    const CLEAR_CHARS = " \t\n\r\0\x0B\xC2\xA0\x{200e}\x{200f}";
 
     protected $domain;
     protected $xpath;
@@ -30,7 +30,7 @@ class ParserKernel
 
     function cleanTags($string): string
     {
-        return trim(str_replace(self::DELETE_TAGS, '', strip_tags($string)));
+        return trim(strip_tags($string), self::CLEAR_CHARS);
     }
 
     public function findOne(string $select): string
@@ -56,7 +56,7 @@ class ParserKernel
 
     public function getText(array $selects): string
     {
-        return $this->cleanTags(utf8_decode($this->find($selects)));
+        return $this->cleanTags(addslashes($this->find($selects) ));
     }
 
     public function getPrice(array $selects): string
@@ -65,8 +65,8 @@ class ParserKernel
 
         if (!$found) return '';
 
-        $currency = preg_replace('/[0-9.,]/', '', $found);
-        $price = preg_replace('/[^0-9.,]/', '', $found);
+        $currency = trim(preg_replace('/[0-9.,]/', '', $found), " \t\n\r\0\x0B\xC2\xA0");
+        $price = trim(preg_replace('/[^0-9.,]/', '', $found), " \t\n\r\0\x0B\xC2\xA0");
 
         return $price . ' ' . $currency;
     }

@@ -76,5 +76,32 @@ return [
                 "//th[contains(text(),'Item Weight')]/following-sibling::td[1]",
             ],
         ],
+
+        'moyo' => [
+            'mask' => 'moyo.ua',
+            'handler' => \App\Modules\Parsers\DefaultParser::class,
+            'name_selects' => [
+                "//h1[@class='tovar_title__name']",
+                "//h1[@class='product_name']",
+            ],
+            'category_selects' => [
+                "//div[@id='breadcrumbs']/ul/li[2]",
+                "//ol[@class='breadcrumbs']/li[2]",
+            ],
+            'price_selects' => [
+                "//div[@class='actual-price' or @id='priceblock_saleprice']",
+                "//div[@class='product_price_current sale js-current-price']",
+            ],
+            'image_selects' => [
+                "//img[@class='fits']/@src",
+                "//img[@class='lazy-interaction']/@src",
+            ],
+            'size_selects' => [
+
+            ],
+            'weight_selects' => [
+
+            ],
+        ],
     ],
 ];
