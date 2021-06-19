@@ -19,6 +19,7 @@ class Parser
             if (isset($parser['mask']) && Str::contains($this->link, $parser['mask'])) {
                 $this->handler = $parser['handler'] ?? null;
                 $this->config = $parser;
+                break;
             }
         }
 

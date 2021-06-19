@@ -31,6 +31,7 @@ class ParserKernel
         if (empty($select)) return '';
 
         $find = $this->xpath->query($select);
+
         if (!$find->length) return '';
 
         return trim($find->item(0)->textContent);
@@ -65,14 +66,11 @@ class ParserKernel
 
     public function getImage(array $selects): string
     {
-        $src = $this->find($selects);
+        $href = $this->find($selects);
 
-        if (!$src) return '';
+        if (!$href) return '';
 
-        $type = pathinfo($src, PATHINFO_EXTENSION);
-        $data = file_get_contents($src);
-
-        return 'data:image/' . $type . ';base64,' . base64_encode($data);
+        return $this->getImageToBase64($href);
     }
 
     public function getFavicon(): string
@@ -81,5 +79,20 @@ class ParserKernel
         $host = $this->domain['host'];
 
         return 'https://www.google.com/s2/favicons?domain=' . $scheme . '://' . $host;
+    }
+
+    public function getJsonDecode(array $selects):array
+    {
+        $json = $this->getText($selects);
+
+        return $json ? json_decode(stripcslashes($json), true) : [];
+    }
+
+    public function getImageToBase64($href):string
+    {
+        $type = pathinfo($href, PATHINFO_EXTENSION);
+        $data = file_get_contents($href);
+
+        return 'data:image/' . $type . ';base64,' . base64_encode($data);
     }
 }
