@@ -35,6 +35,8 @@ Route::get('/parser', function() {
         'name'     => $parser->getProductName(),
         'category' => $parser->getProductCategory(),
         'price'    => $parser->getProductPrice(),
+        'size'     => $parser->getProductSize(),
+        'weight'   => $parser->getProductWeight(),
         'image'    => $parser->getProductImage(),
         'favicon'  => $parser->getFavicon(),
     ]);

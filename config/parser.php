@@ -33,6 +33,12 @@ return [
                 "//img[@class='app-filmstrip__image cc-image']/@src",
                 "//img[@id='icImg']/@src",
             ],
+            'size_selects' => [
+
+            ],
+            'weight_selects' => [
+
+            ],
         ],
     ],
 ];

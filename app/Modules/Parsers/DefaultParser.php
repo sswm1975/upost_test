@@ -40,6 +40,21 @@ class DefaultParser extends ParserKernel implements ParserInterface
             : '';
     }
 
+    public function getProductSize():string
+    {
+        return isset($this->config['size_selects'])
+            ? $this->getText($this->config['size_selects'])
+            : '';
+
+    }
+
+    public function getProductWeight():string
+    {
+        return isset($this->config['weight_selects'])
+            ? $this->getText($this->config['weight_selects'])
+            : '';
+    }
+
     public function getFavicon():string
     {
         return parent::getFavicon();
