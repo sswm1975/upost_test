@@ -72,6 +72,35 @@ Route::group(
     }
 );
 
+// Повiдомлення
+Route::group(
+    [
+        'prefix' => 'messages',
+    ],
+    function () {
+        # Додати повiдомлення
+        Route::post('add', 'API\MessagesController@addMessages')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Отримати повiдомлення
+        Route::get('show', 'API\MessagesController@showMessages');
+    }
+);
+
+
+Route::group(
+    [
+        'prefix' => 'reviews',
+    ],
+    function () {
+        # Додати відгук
+        Route::post('add', 'API\RewiesController@addReview')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Отримати відгуки
+        Route::get('show', 'API\RewiesController@showReviews');
+    }
+);
+
+
 # Зміна даних мов та валют
 Route::post('language', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
 
