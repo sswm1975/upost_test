@@ -13,6 +13,8 @@ services:
       - db
     environment:
       PHP_IDE_CONFIG: serverName=Docker
+    ports:
+      - 80:80
     networks:
       app_net:
         ipv4_address: 172.16.1.04
