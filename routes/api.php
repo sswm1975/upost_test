@@ -57,7 +57,7 @@ Route::group(
 // Чати
 Route::group(
     [
-        'prefix' => 'chat',
+        'prefix' => 'chats',
     ],
     function () {
         # Додати чат
@@ -67,7 +67,7 @@ Route::group(
         Route::get('show', 'API\ChatsController@showChat');
 
         # Видалити чат
-        Route::post('delete', 'API\ChatsController@deleteChat');
+        Route::post('delete', 'API\ChatsController@deleteChat')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
 
