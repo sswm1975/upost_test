@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Route;
 use Illuminate\Http\JsonResponse;
@@ -242,5 +243,30 @@ class OrderController extends Controller
             'count'  => count($orders),
             'result' => null_to_blank($orders),
         ]);
+    }
+
+    /**
+     * Подтвердить выполнение заказа
+     *
+     * @param Request $request
+     * @return Request
+     * @throws ValidatorException
+     */
+    public function confirmOrder(Request $request): Request
+    {
+        $validator = Validator::make(request()->all(),
+            [
+                'chat_id'        => 'required|integer|exists:chats,chat_id',
+                'user_id'        => 'required|integer|exists:users,user_id',
+            ]
+        );
+        $this->returnValidated($validator);
+
+        $data = $request->post();
+
+        /*
+         * TODO: Add Ext Validation
+         * */
+
     }
 }

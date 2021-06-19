@@ -37,10 +37,6 @@ Route::get('profile', 'API\ProfileController@getPrivateData')->middleware(MIDDLE
 # Зміна даних профілю (тільки публічні дані)
 Route::post('profile', 'API\ProfileController@updatePublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Отримання рейтингу користувача
-Route::get('rating/{user_id}', 'API\ProfileController@getRating')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-
 // Відгуки
 Route::group(
     [
@@ -52,6 +48,9 @@ Route::group(
 
         # Отримати відгуки
         Route::get('show', 'API\RewiesController@showReviews');
+
+        # Отримати рейтинг користувача
+        Route::get('rating', 'API\RewiesController@getRating');
     }
 );
 
@@ -131,6 +130,9 @@ Route::delete('delete_order/{order_id}', 'API\OrderController@deleteOrder')->mid
 
 # Підбір замовлення для маршруту
 Route::get('selection_order/{route_id}', 'API\OrderController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+# Підтвердити виконання замовлення
+Route::post('confirm_order', 'API\OrderController@confirmOrder')->middleware('auth.basic');
 
 # Лічильник переглядів
 Route::post('update_counter', API\CounterController::class);

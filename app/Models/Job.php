@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
 {
+    public const STATUS_DONE = 'done';
+
     protected $primaryKey = 'job_id';
     protected $fillable = ['rate_id', 'rate_status'];
     public $timestamps = false;

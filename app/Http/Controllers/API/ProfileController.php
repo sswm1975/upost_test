@@ -191,26 +191,4 @@ class ProfileController extends Controller
         return strip_tags(strip_unsafe($content), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
     }
 
-
-    /**
-     * Получить рейтинг пользователя.
-     *
-     * @param  int $user_id
-     * @return JsonResponse
-     */
-    public function getRating(int $user_id): JsonResponse
-    {
-        $user = User::find($user_id);
-        if (empty($user)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.user_not_found')],
-            ], 404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'result' => $user->user_rating,
-        ]);
-    }
 }
