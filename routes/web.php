@@ -22,7 +22,7 @@ Route::get('/', function () {
 Route::get('/parser', function() {
     $url = request('url');
 
-    if (!$url) {
+    if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
         return response()->json([
             'status' => false,
         ], 404);

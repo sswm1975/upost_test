@@ -40,5 +40,16 @@ return [
 
             ],
         ],
+
+        'rozetka' => [
+            'mask' => 'rozetka.com.ua',
+            'handler' => \App\Modules\Parsers\Rozetka::class,
+            'product' => [
+                "//script[@data-seo='Product']",
+            ],
+            'category' => [
+                "//script[@data-seo='BreadcrumbList']",
+            ],
+        ],
     ],
 ];
