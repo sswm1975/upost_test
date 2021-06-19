@@ -21,22 +21,21 @@ Route::get('/', function () {
 
 Route::get('/parser', function() {
     $url = request('url');
+
     if (!$url) {
-        return 'Param url empty!';
+        return response()->json([
+            'status' => false,
+        ], 404);
     }
-    $parser = (new Parser($url))->parser();
 
-    echo 'NAME: ' . $parser->getProductName();
-    echo "<br>";
+    $parser = (new Parser($url))->handler();
 
-    echo 'CATEGORY: ' . $parser->getProductCategory();
-    echo "<br>";
-
-    echo 'PRICE: ' . $parser->getProductPrice();
-    echo "<br>";
-
-    echo '<img src="' . $parser->getProductImage() . '">';
-    echo "<br>";
-
-    echo '<img src="' . $parser->getFavicon() . '">';
+    return response()->json([
+        'status'   => true,
+        'name'     => $parser->getProductName(),
+        'category' => $parser->getProductCategory(),
+        'price'    => $parser->getProductPrice(),
+        'image'    => $parser->getProductImage(),
+        'favicon'  => $parser->getFavicon(),
+    ]);
 });

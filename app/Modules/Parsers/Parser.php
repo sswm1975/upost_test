@@ -6,36 +6,30 @@ use Illuminate\Support\Str;
 
 class Parser
 {
-    protected $class;
-    protected $link;
-
-    protected static $parsers = [
-        'www.ebay.com'   => \App\Modules\Parsers\Ebay::class,
-        'rozetka.com.ua' => \App\Modules\Parsers\Rozetka::class,
-        'aliexpress'     => \App\Modules\Parsers\Aliexpress::class,
-        'alibaba.com'    => \App\Modules\Parsers\Alibaba::class,
-    ];
+    protected $handler = null;
+    protected array $config = [];
+    protected string $link;
 
     public function __construct($link)
     {
         $this->link = mb_strtolower($link);
+        $parsers = config('parser.parsers');
 
-        $class = null;
-        foreach (static::$parsers as $url => $parser) {
-            if (Str::contains($this->link, $url)) {
-                $class = $parser;
+        foreach ($parsers as $parser) {
+            if (isset($parser['mask']) && Str::contains($this->link, $parser['mask'])) {
+                $this->handler = $parser['handler'] ?? null;
+                $this->config = $parser;
             }
         }
-        if (is_null($class) || !in_array('App\Modules\Parsers\ParserInterface', class_implements($class))) {
+
+        if (empty($this->handler) || !in_array('App\Modules\Parsers\ParserInterface', class_implements($this->handler))) {
             return 'Parser class error';
         }
-
-        $this->class = $class;
     }
 
-    public function parser()
+    public function handler()
     {
-        return new $this->class($this->link);
+        return new $this->handler($this->link, $this->config);
     }
 }
 
