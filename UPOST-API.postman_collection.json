@@ -9783,6 +9783,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "AliExpress",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}{{endpoint}}/parser?url=https://aliexpress.ru/item/4001359505142.html",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"parser"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
+								},
+								{
+									"key": "url",
+									"value": "https://aliexpress.ru/item/4001359505142.html"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
