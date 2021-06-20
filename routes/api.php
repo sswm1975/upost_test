@@ -139,4 +139,4 @@ Route::post('accept_rate/{rate_id}', 'API\RateController@acceptRate')->middlewar
 Route::post('create_job', 'API\JobController@createJob')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 # Парсинг даних
-Route::get('parser', API\ParserController::class);
+Route::get('parser', API\ParserController::class)->middleware(MIDDLEWARE_AUTH_BASIC);

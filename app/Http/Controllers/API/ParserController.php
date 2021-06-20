@@ -25,6 +25,13 @@ class ParserController extends Controller
 
         $parser = (new Parser($request->url))->handler();
 
+        $image_base64 = $parser->getProductImage();
+        if ($image_base64) {
+            $image = (new PhotoLoaderController)->uploadPhoto4Order($image_base64, $request->user()->user_id);
+        } else {
+            $image = '';
+        }
+
         return response()->json([
             'status'   => true,
             'name'     => $parser->getProductName(),
@@ -32,7 +39,7 @@ class ParserController extends Controller
             'price'    => $parser->getProductPrice(),
             'size'     => $parser->getProductSize(),
             'weight'   => $parser->getProductWeight(),
-            'image'    => $parser->getProductImage(),
+            'image'    => $image,
             'favicon'  => $parser->getFavicon(),
         ]);
     }
