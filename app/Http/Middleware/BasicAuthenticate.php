@@ -13,9 +13,10 @@ class BasicAuthenticate
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
+     * @param Request $request
+     * @param Closure $next
      * @return mixed
+     * @throws \App\Exceptions\ValidatorException
      */
     public function handle(Request $request, Closure $next)
     {
@@ -26,12 +27,7 @@ class BasicAuthenticate
 
         $validator = $this->validator($credentials);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all()
-            ], 404);
-        }
+        validateOrExit($validator);
 
         $user = $this->login($credentials);
 

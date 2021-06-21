@@ -1,5 +1,8 @@
 <?php
 
+use App\Exceptions\ValidatorException;
+use Illuminate\Support\Facades\DB;
+
 /**
  * Convert Null to Blank string.
  *
@@ -28,8 +31,8 @@ function validate_base64(string $base64data, array $allowedMime, int $maxSize, i
 {
     # strip out data uri scheme information (see RFC 2397)
     if (strpos($base64data, ';base64') !== false) {
-        list(, $base64data) = explode(';', $base64data);
-        list(, $base64data) = explode(',', $base64data);
+        [, $base64data] = explode(';', $base64data);
+        [, $base64data] = explode(',', $base64data);
     }
 
     # strict mode filters for non-base64 alphabet characters
@@ -106,10 +109,10 @@ function cropAlign($image, $cropWidth, $cropHeight, $horizontalAlign = 'center',
     $verticalAlignPixels = calculatePixelsForAlign($height, $cropHeight, $verticalAlign);
 
     return imageCrop($image, [
-        'x' => $horizontalAlignPixels[0],
-        'y' => $verticalAlignPixels[0],
-        'width' => $horizontalAlignPixels[1],
-        'height' => $verticalAlignPixels[1]
+        'x'      => $horizontalAlignPixels[0],
+        'y'      => $verticalAlignPixels[0],
+        'width'  => $horizontalAlignPixels[1],
+        'height' => $verticalAlignPixels[1],
     ]);
 }
 
@@ -136,7 +139,8 @@ function calculatePixelsForAlign($imageSize, $cropSize, $align): array
                 max(0, floor(($imageSize / 2) - ($cropSize / 2))),
                 min($cropSize, $imageSize),
             ];
-        default: return [0, $imageSize];
+        default:
+            return [0, $imageSize];
     }
 }
 
@@ -144,26 +148,27 @@ function calculatePixelsForAlign($imageSize, $cropSize, $align): array
  * Создать рисунок c пропорциональным измененнем сторон.
  *
  * @param GdImage $src
- * @param int     $size
- * @param string  $full_filename
+ * @param int $size
+ * @param string $full_filename
  * @return void
  */
 function createResizedImage($src, int $size, string $full_filename)
 {
     $width = imagesx($src);
     $height = imagesy($src);
-    $aspect_ratio = $height/$width;
+    $aspect_ratio = $height / $width;
 
     if ($width <= $size) {
         $new_w = $width;
         $new_h = $height;
-    } else {
+    }
+    else {
         $new_w = $size;
         $new_h = abs($new_w * $aspect_ratio);
     }
 
     $img = imagecreatetruecolor($new_w, $new_h);
-    imagecopyresized($img, $src,0,0,0,0,$new_w,$new_h,$width, $height);
+    imagecopyresized($img, $src, 0, 0, 0, 0, $new_w, $new_h, $width, $height);
 
     imagejpeg($img, $full_filename);
     imagedestroy($img);
@@ -232,6 +237,18 @@ function strip_unsafe(string $content): string
 function getSQL(bool $shoBindings = false)
 {
     return $shoBindings
-        ? \DB::getQueryLog()
-        : preg_replace_array('/\?/', \DB::getQueryLog()[0]['bindings'], \DB::getQueryLog()[0]['query']);
+        ? DB::getQueryLog()
+        : preg_replace_array('/\?/', DB::getQueryLog()[0]['bindings'], DB::getQueryLog()[0]['query']);
+}
+
+/**
+ * Выполнение правил валидации и вызов исключения при ошибках.
+ * В исключении возвращается стандартизированный ответ
+ * @throws ValidatorException
+ */
+function validateOrExit($validator)
+{
+    if ($validator->fails()) {
+        throw new ValidatorException($validator->errors()->all());
+    }
 }

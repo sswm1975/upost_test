@@ -45,7 +45,7 @@ class RewiesController extends Controller
             ],
             ['unique' => __('message.unique_review')]
         );
-        $this->returnValidated($validator);
+         validateOrExit($validator);
 
         $data = $request->post();
         $job = Job::find($data['job_id']);
@@ -110,7 +110,7 @@ class RewiesController extends Controller
         $validator = Validator::make($request->all(),
             ['user_id' => 'required|integer|exists:users,user_id']
         );
-        $this->returnValidated($validator);
+         validateOrExit($validator);
 
         $jobs = Job::whereHas('rate', function ($q) use ($request) {
             return $q->where(['user_id' => $request->get('user_id')]);
@@ -131,7 +131,7 @@ class RewiesController extends Controller
         $validator = Validator::make($request->all(),
             ['user_id' => 'required|integer|exists:users,user_id']
         );
-        $this->returnValidated($validator);
+         validateOrExit($validator);
 
         $user = User::find($request->get('user_id'));
 

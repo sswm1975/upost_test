@@ -13,15 +13,4 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /**
-     * Выполнение правил валидации и вызов исключения при ошибках.
-     * В исключении возвращается стандартизированный ответ
-     * @throws ValidatorException
-     */
-    public function returnValidated($validator)
-    {
-        if ($validator->fails()) {
-            throw new ValidatorException($validator->errors()->all());
-        }
-    }
 }

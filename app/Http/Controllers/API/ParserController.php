@@ -21,7 +21,7 @@ class ParserController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), ['url' => 'required|url']);
-        $this->returnValidated($validator);
+         validateOrExit($validator);
 
         $parser = (new Parser($request->url))->handler();
 
