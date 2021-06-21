@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Modules\Parsers\Parser;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes

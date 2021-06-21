@@ -55,7 +55,7 @@ class PhotoLoaderController extends Controller
      * @param int $user_id
      * @return string
      */
-    protected function uploadPhoto4User(string $base64_image, int $user_id): string
+    public function uploadPhoto4User(string $base64_image, int $user_id): string
     {
         $path = 'users/' . $user_id . '/';
 
@@ -89,7 +89,7 @@ class PhotoLoaderController extends Controller
      * @param int $user_id
      * @return string
      */
-    protected function uploadPhoto4Order(string $base64_image, int $user_id): string
+    public function uploadPhoto4Order(string $base64_image, int $user_id): string
     {
         $uniqid = uniqid();
 

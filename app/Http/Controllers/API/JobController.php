@@ -22,16 +22,14 @@ class JobController extends Controller
         $validator = Validator::make($request->all(),
             [
                 'rate_id' => 'required|integer|unique:jobs,rate_id',
-            ],
-            config('validation.messages'),
-            config('validation.attributes')
+            ]
         );
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
-                'errors' => $validator->errors(),
-            ]);
+                'status' => false,
+                'errors' => $validator->errors()->all(),
+            ], 404);
         }
 
         $user_id = $request->user()->user_id;
@@ -43,17 +41,17 @@ class JobController extends Controller
 
         if (empty($rate)) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'rate_not_found',
-            ]);
+                'status' => false,
+                'errors' => [__('message.rate_not_found')],
+            ], 404);
         }
 
         # запрещено создавать задание, если пользователь к этой ставке не имеет отношения
         if ($rate->order->user_id <> $user_id && $rate->route->user_id <> $user_id) {
             return response()->json([
-                'status' => 404,
-                'errors' => 'rate_is_not_yours',
-            ]);
+                'status' => false,
+                'errors' => [__('message.rate_not_found')],
+            ], 404);
         }
 
         $job = Job::create([
@@ -62,9 +60,8 @@ class JobController extends Controller
         ]);
 
         return response()->json([
-            'status' => 200,
-            'result' => $job,
+            'status' => true,
+            'result' => null_to_blank($job->toArray()),
         ]);
     }
-
 }
