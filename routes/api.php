@@ -64,7 +64,7 @@ Route::group(
         Route::post('add', 'API\ChatsController@addChat')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Отримати чат
-        Route::get('show', 'API\ChatsController@showChat');
+        Route::get('show', 'API\ChatsController@showChats')->middleware(MIDDLEWARE_AUTH_BASIC);;
 
         # Видалити чат
         Route::post('delete', 'API\ChatsController@deleteChat')->middleware(MIDDLEWARE_AUTH_BASIC);
@@ -78,10 +78,10 @@ Route::group(
     ],
     function () {
         # Додати повiдомлення
-        Route::post('add', 'API\MessagesController@addMessages')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('add', 'API\MessagesController@addMessage')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-        # Отримати повiдомлення
-        Route::get('show', 'API\MessagesController@showMessages');
+        # Отримати повiдомлення1
+        Route::get('show', 'API\MessagesController@showMessages')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
 

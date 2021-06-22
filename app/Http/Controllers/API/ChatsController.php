@@ -32,13 +32,14 @@ class ChatsController extends Controller
 
         $this->returnValidated($validator);
 
-        $data = $request->post();
+        $data = $request->all();
 
         /**
          * TODO: Application rules
         */
 
         try {
+
             Chat::create([
                 'rate_id'     => $data['rate_id'],
                 'order_id'    => $data['order_id'],
@@ -82,11 +83,11 @@ class ChatsController extends Controller
         $query = Chat::query()->where('user_id', $data['user_id']);
 
         if(isset($data['addressee'])) {
-            $query->where('to_user', $data['addressee']);
+            $query = $query->where('to_user', $data['addressee']);
         }
 
         if(isset($data['order_id'])) {
-            $query->where('order_id', $data['order_id']);
+            $query = $query->where('order_id', $data['order_id']);
         }
 
         $chats = $query->get()->toArray();
@@ -109,14 +110,14 @@ class ChatsController extends Controller
     {
         $validator = Validator::make($request->all(),
             [
-                'chat_id'  => 'integer|exists:chats,chat_id',
+                'chat_id'  => 'required|integer|exists:chats,chat_id',
                 'user_id'   => 'required|integer|exists:users,user_id',
             ]
         );
 
         $this->returnValidated($validator);
 
-        $data = $request->post();
+        $data = $request->all();
 
         $affected = DB::table('chats')
             ->where('chat_id', $data['chat_id'])

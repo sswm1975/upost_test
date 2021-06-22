@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chat extends Model
 {
+    // Disable timestamps
+    public $timestamps = false;
+
     // Chat model
     protected $fillable = [
         'chat_id',

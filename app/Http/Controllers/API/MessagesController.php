@@ -28,13 +28,13 @@ class MessagesController extends Controller
                 'order_id'          => 'required|integer|exists:orders,order_id',
                 'from_user'         => 'required|integer|exists:users,user_id',
                 'to_user'           => 'required|integer|exists:users,user_id',
-                'message_attach'    => 'required|string',
+                'message_attach'    => 'string',
                 'type'              => 'string'
             ]
         );
         $this->returnValidated($validator);
 
-        $data = $request->post();
+        $data = $request->all();
 
         /*
          * TODO: Add Ext Validation
@@ -90,7 +90,7 @@ class MessagesController extends Controller
         $data['sorting'] = $data['sorting'] ?? 'ASC';
 
         $query = Message::query()
-            ->where('from_id', $data['user_id'])
+            ->where('from_user', $data['user_id'])
             ->where('chat_id', $data['chat_id']);
 
         if(isset($data['page']) && isset($data['count'])) {
