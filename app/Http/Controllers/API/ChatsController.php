@@ -30,7 +30,7 @@ class ChatsController extends Controller
             'user_id'   => 'required|integer|exists:users,user_id',
         ]);
 
-        $this->returnValidated($validator);
+        validateOrExit($validator);
 
         $data = $request->all();
 
@@ -76,7 +76,7 @@ class ChatsController extends Controller
             ]
         );
 
-        $this->returnValidated($validator);
+        validateOrExit($validator);
 
         $data = $request->post();
 
@@ -115,7 +115,7 @@ class ChatsController extends Controller
             ]
         );
 
-        $this->returnValidated($validator);
+        validateOrExit($validator);
 
         $data = $request->all();
 

@@ -32,7 +32,7 @@ class MessagesController extends Controller
                 'type'              => 'string'
             ]
         );
-        $this->returnValidated($validator);
+        validateOrExit($validator);
 
         $data = $request->all();
 
@@ -83,7 +83,7 @@ class MessagesController extends Controller
             ]
         );
 
-        $this->returnValidated($validator);
+        validateOrExit($validator);
 
         $data = $request->all();
 

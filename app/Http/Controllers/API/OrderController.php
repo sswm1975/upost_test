@@ -260,7 +260,7 @@ class OrderController extends Controller
                 'user_id'        => 'required|integer|exists:users,user_id',
             ]
         );
-        $this->returnValidated($validator);
+        validateOrExit($validator);
 
         $data = $request->all();
 
