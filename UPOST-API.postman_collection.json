@@ -1755,22 +1755,19 @@
 									"key": "old_password",
 									"value": "qwerty",
 									"description": "Старий пароль",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "user_password",
 									"value": "testtest",
 									"description": "Новий пароль",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "user_password_confirmation",
 									"value": "testtest",
 									"description": "Підтвердження нового паролю",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								}
 							]
 						},
@@ -1837,7 +1834,7 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_password?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/update_password",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
@@ -1849,7 +1846,8 @@
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
 										}
 									]
 								}
@@ -1860,7 +1858,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Tue, 22 Jun 2021 08:50:03 GMT"
+									"value": "Tue, 22 Jun 2021 11:14:21 GMT"
 								},
 								{
 									"key": "Server",
@@ -1880,11 +1878,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "57"
+									"value": "58"
 								},
 								{
 									"key": "Content-Length",
-									"value": "15"
+									"value": "34"
 								},
 								{
 									"key": "Keep-Alive",
@@ -1900,7 +1898,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true\n}"
+							"body": "{\n    \"status\": true,\n    \"token\": \"iYyYntC2\"\n}"
 						},
 						{
 							"name": "Зміна паролю (errors_1)",
@@ -2146,15 +2144,13 @@
 									"key": "user_phone",
 									"value": "+380978800098",
 									"description": "Старий пароль",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "user_email",
 									"value": "test_email55@gmail.com",
 									"description": "Новий пароль",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								}
 							]
 						},
@@ -2179,6 +2175,108 @@
 						"description": "В запиті обов’язково повинен бути один із параметрів: або <b>user_lang</b> або <b>user_currency</b>."
 					},
 					"response": [
+						{
+							"name": "Зміна логіну: телефону та/або емейлу (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "user_phone",
+											"value": "+380978800098",
+											"description": "Старий пароль",
+											"type": "text"
+										},
+										{
+											"key": "user_email",
+											"value": "test_email55@gmail.com",
+											"description": "Новий пароль",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/users/update_login",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"users",
+										"update_login"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 22 Jun 2021 12:04:40 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "34"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"token\": \"NQGpq5xA\"\n}"
+						},
 						{
 							"name": "Зміна логіну: телефону та/або емейлу (errors_1)",
 							"originalRequest": {
@@ -2397,107 +2495,6 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Телефон неправильний.\"\n    ]\n}"
-						},
-						{
-							"name": "Зміна логіну: телефону та/або емейлу (success)",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "user_phone",
-											"value": "+380978800098",
-											"description": "Старий пароль",
-											"type": "text"
-										},
-										{
-											"key": "user_email",
-											"value": "test_email55@gmail.com",
-											"description": "Новий пароль",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_login?lang=uk",
-									"host": [
-										"{{host}}{{endpoint}}"
-									],
-									"path": [
-										"users",
-										"update_login"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Tue, 22 Jun 2021 09:19:13 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/7.4.16"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "56"
-								},
-								{
-									"key": "Content-Length",
-									"value": "15"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5, max=100"
-								},
-								{
-									"key": "Connection",
-									"value": "Keep-Alive"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status\": true\n}"
 						}
 					]
 				},
@@ -2526,15 +2523,13 @@
 									"key": "user_card_number",
 									"value": "5167803207038238",
 									"description": "Номер пластикової картки",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "user_card_name",
 									"value": "Вася Пупкин",
 									"description": "Ім'я та призвище на карті",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								}
 							]
 						},
@@ -2559,6 +2554,108 @@
 						"description": "В запиті обов’язково повинен бути один із параметрів: або <b>user_lang</b> або <b>user_currency</b>."
 					},
 					"response": [
+						{
+							"name": "Зміна даних пластикової картки (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "user_card_number",
+											"value": "5167803207038238",
+											"description": "Номер пластикової картки",
+											"type": "text"
+										},
+										{
+											"key": "user_card_name",
+											"value": "Вася Пупкин",
+											"description": "Ім'я та призвище на карті",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/users/update_card",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"users",
+										"update_card"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 22 Jun 2021 12:06:02 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "34"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"token\": \"JgEuc7O8\"\n}"
+						},
 						{
 							"name": "Зміна даних пластикової картки (errors)",
 							"originalRequest": {
@@ -2659,56 +2756,56 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Номер картки неправильний.\"\n    ]\n}"
-						},
+						}
+					]
+				},
+				{
+					"name": "Веріфікація зміни даних користувача",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}{{endpoint}}/users/verification/EUDRcW2D",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"users",
+								"verification",
+								"EUDRcW2D"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
 						{
-							"name": "Зміна даних пластикової картки (success)",
+							"name": "Веріфікація зміни даних користувача (success)",
 							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "user_card_number",
-											"value": "5167803207038238",
-											"description": "Номер пластикової картки",
-											"type": "text"
-										},
-										{
-											"key": "user_card_name",
-											"value": "Вася Пупкин",
-											"description": "Ім'я та призвище на карті",
-											"type": "text"
-										}
-									]
-								},
+								"method": "GET",
+								"header": [],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_card?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/verification/EUDRcW2D",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_card"
+										"verification",
+										"EUDRcW2D"
 									],
 									"query": [
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
 										}
 									]
 								}
@@ -2719,7 +2816,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Tue, 22 Jun 2021 09:40:13 GMT"
+									"value": "Tue, 22 Jun 2021 11:52:20 GMT"
 								},
 								{
 									"key": "Server",
@@ -2760,6 +2857,78 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"status\": true\n}"
+						},
+						{
+							"name": "Веріфікація зміни даних користувача (errors)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/users/verification/test?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"users",
+										"verification",
+										"test"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 22 Jun 2021 11:38:35 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								},
+								{
+									"key": "Content-Length",
+									"value": "134"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=99"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Токен неправильний.\"\n    ]\n}"
 						}
 					]
 				}

@@ -130,6 +130,9 @@ return [
         'user_phone' => [
             'phone' => 'Телефон неверный.',
         ],
+        'user_card_number' => [
+            'bankcard' => 'Номер карты неверный.',
+        ],
     ],
 
     'attributes'           => [

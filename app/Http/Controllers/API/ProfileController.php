@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+use App\Models\UserChange;
 
 class ProfileController extends Controller
 {
@@ -171,10 +174,18 @@ class ProfileController extends Controller
         );
         validateOrExit($validator);
 
-        $user->user_password = md5(md5($request->get('user_password')));
-        $user->save();
+        $token = $this->generateToken();
 
-        return response()->json(['status' => true]);
+        $user_change = new UserChange;
+        $user_change->token = $token;
+        $user_change->user_id = $user->user_id;
+        $user_change->user_password = md5(md5($request->get('user_password')));
+        $user_change->save();
+
+        return response()->json([
+            'status' => true,
+            'token'  => $token,
+        ]);
     }
 
     /**
@@ -194,11 +205,19 @@ class ProfileController extends Controller
         );
         validateOrExit($validator);
 
-        $user = $request->user();
-        $user->fill($validator->validated());
-        $user->save();
+        $token = $this->generateToken();
 
-        return response()->json(['status' => true]);
+        $user_change = new UserChange;
+        $user_change->token = $token;
+        $user_change->user_id = $request->user()->user_id;
+        if ($request->has('user_phone')) $user_change->user_phone = $request->get('user_phone');
+        if ($request->has('user_email')) $user_change->user_email = $request->get('user_email');
+        $user_change->save();
+
+        return response()->json([
+            'status' => true,
+            'token'  => $token,
+        ]);
     }
 
     /**
@@ -218,11 +237,58 @@ class ProfileController extends Controller
         );
         validateOrExit($validator);
 
-        $user = $request->user();
-        $user->fill($validator->validated());
+        $token = $this->generateToken();
+
+        $user_change = new UserChange;
+        $user_change->token = $token;
+        $user_change->user_id = $request->user()->user_id;
+        if ($request->has('user_card_number')) $user_change->user_card_number = $request->get('user_card_number');
+        if ($request->has('user_card_name')) $user_change->user_card_name = $request->get('user_card_name');
+        $user_change->save();
+
+        return response()->json([
+            'status' => true,
+            'token'  => $token,
+        ]);
+    }
+
+    /**
+     * Верификация изменения данных пользователя.
+     *
+     * @param string $token
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function verificationUser(string $token): JsonResponse
+    {
+        $user_change = UserChange::find($token);
+        if (!$user_change) throw new ErrorException(__('message.token_incorrect'));
+
+        $user = User::find($user_change->user_id);
+        if (!$user) throw new ErrorException(__('message.user_not_found'));
+
+        if (!is_null($user_change->user_email)) {
+            $user->user_email = $user_change->user_email;
+        }
+        if (!is_null($user_change->user_phone)) {
+            $user->user_phone = $user_change->user_phone;
+        }
+        if (!is_null($user_change->user_password)) {
+            $user->user_password = $user_change->user_password;
+        }
+        if (!is_null($user_change->user_card_number)) {
+            $user->user_card_number = $user_change->user_card_number;
+        }
+        if (!is_null($user_change->user_card_name)) {
+            $user->user_card_name = $user_change->user_card_name;
+        }
         $user->save();
 
-        return response()->json(['status' => true]);
+        $user_change->delete();
+
+        return response()->json([
+            'status' => true
+        ]);
     }
 
     /**
@@ -267,6 +333,16 @@ class ProfileController extends Controller
     protected function processResume(string $content): string
     {
         return strip_tags(strip_unsafe($content), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+    }
+
+    /**
+     * Generate the verification token.
+     *
+     * @return string|bool
+     */
+    protected function generateToken()
+    {
+        return Str::random(8);
     }
 
 }

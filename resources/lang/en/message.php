@@ -6,6 +6,7 @@ return [
     'register_successful'     => 'Register successful.',
     'user_not_found'          => 'User not found.',
     'old_password_incorrect'  => 'The current password is incorrect.',
+    'token_incorrect'         => 'The token is incorrect.',
     'updated_successful'      => 'Updated successful.',
     'country_not_found'       => 'Country not found.',
     'city_not_found'          => 'City not found.',

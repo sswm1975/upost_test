@@ -70,6 +70,9 @@ Route::group(
 
         # Зміна даних пластикової картки
         Route::post('update_card', 'API\ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Веріфікація зміни даних користувача
+        Route::get('verification/{token}', 'API\ProfileController@verificationUser');
     }
 );
 
