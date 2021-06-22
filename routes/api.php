@@ -75,6 +75,54 @@ Route::group(
         Route::get('verification/{token}', 'API\ProfileController@verificationUser');
     }
 );
+// Чати
+Route::group(
+    [
+        'prefix' => 'chats',
+    ],
+    function () {
+        # Додати чат
+        Route::post('add', 'API\ChatsController@addChat')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Отримати чат
+        Route::get('show', 'API\ChatsController@showChats')->middleware(MIDDLEWARE_AUTH_BASIC);;
+
+        # Видалити чат
+        Route::post('delete', 'API\ChatsController@deleteChat')->middleware(MIDDLEWARE_AUTH_BASIC);
+    }
+);
+
+// Повiдомлення
+Route::group(
+    [
+        'prefix' => 'messages',
+    ],
+    function () {
+        # Додати повiдомлення
+        Route::post('add', 'API\MessagesController@addMessage')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Отримати повiдомлення1
+        Route::get('show', 'API\MessagesController@showMessages')->middleware(MIDDLEWARE_AUTH_BASIC);
+    }
+);
+
+
+Route::group(
+    [
+        'prefix' => 'reviews',
+    ],
+    function () {
+        # Додати відгук
+        Route::post('add', 'API\RewiesController@addReview')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Отримати відгуки
+        Route::get('show', 'API\RewiesController@showReviews');
+    }
+);
+
+
+# Зміна даних мов та валют
+Route::post('language', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 # Отримувати назву країни по її ідентифікатору
 Route::get('get_country/{country_id}', 'API\CountryController@getCountry');
@@ -103,6 +151,9 @@ Route::delete('delete_order/{order_id}', 'API\OrderController@deleteOrder')->mid
 
 # Підбір замовлення для маршруту
 Route::get('selection_order/{route_id}', 'API\OrderController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+# Підтвердити виконання замовлення
+Route::post('confirm_order', 'API\OrderController@confirmOrder')->middleware('auth.basic');
 
 # Лічильник переглядів
 Route::post('update_counter', API\CounterController::class);
@@ -157,3 +208,6 @@ Route::post('create_job', 'API\JobController@createJob')->middleware(MIDDLEWARE_
 
 # Парсинг даних
 Route::get('parser', API\ParserController::class)->middleware(MIDDLEWARE_AUTH_BASIC);
+
+#Завантаження файлу
+Route::post('upload', 'API\UploadController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
