@@ -82,7 +82,6 @@ class BasicAuthenticate
             ->when(!$is_email, function ($query) use ($login) {
                 return $query->where('user_phone', $login);
             })
-            ->exclude(['user_password'])
             ->first();
     }
 }

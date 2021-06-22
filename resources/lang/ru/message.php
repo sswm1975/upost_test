@@ -5,6 +5,7 @@ return [
     'auth_failed'             => 'Неверное имя пользователя или пароль.',
     'register_successful'     => 'Регистрация прошла успешно.',
     'user_not_found'          => 'Пользователь не найден.',
+    'old_password_incorrect'  => 'Текущий пароль неверен.',
     'updated_successful'      => 'Обновлено успешно.',
     'country_not_found'       => 'Страна не найдена.',
     'city_not_found'          => 'Город не найден.',

@@ -54,9 +54,18 @@ Route::group(
     }
 );
 
+Route::group(
+    [
+        'prefix' => 'users',
+    ],
+    function () {
+        # Зміна даних мов та валют
+        Route::post('update_language', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Зміна даних мов та валют
-Route::post('language', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Зміна паролю
+        Route::post('update_password', 'API\ProfileController@updatePassword')->middleware(MIDDLEWARE_AUTH_BASIC);
+    }
+);
 
 # Отримувати назву країни по її ідентифікатору
 Route::get('get_country/{country_id}', 'API\CountryController@getCountry');

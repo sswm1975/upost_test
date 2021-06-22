@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -146,6 +147,36 @@ class ProfileController extends Controller
 
         return response()->json(['status' => true]);
     }
+
+    /**
+     * Обновление пароля пользователя.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException
+     */
+    public function updatePassword(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(),
+            [
+                'old_password'  => ['required', function ($attribute, $value, $fail) use ($user) {
+                    if (md5(md5($value)) !== $user->user_password) {
+                        return $fail(__('message.old_password_incorrect'));
+                    }
+                }],
+                'user_password' => ['required', 'min:6', 'confirmed'],
+            ]
+        );
+        validateOrExit($validator);
+
+        $user->user_password = md5(md5($request->get('user_password')));
+        $user->save();
+
+        return response()->json(['status' => true]);
+    }
+
 
     /**
      * Сохранить фотографию.
