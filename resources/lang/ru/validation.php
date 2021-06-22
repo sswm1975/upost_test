@@ -127,6 +127,9 @@ return [
         'photo' => [
             'base64_image' => 'Неверный формат изображения.',
         ],
+        'user_phone' => [
+            'phone' => 'Телефон неверный.',
+        ],
     ],
 
     'attributes'           => [

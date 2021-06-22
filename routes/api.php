@@ -64,6 +64,9 @@ Route::group(
 
         # Зміна паролю
         Route::post('update_password', 'API\ProfileController@updatePassword')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Зміна логіну: телефону та/або емейлу
+        Route::post('update_login', 'API\ProfileController@updateLogin')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
 

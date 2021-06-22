@@ -177,6 +177,29 @@ class ProfileController extends Controller
         return response()->json(['status' => true]);
     }
 
+    /**
+     * Обновление емейла и/или телефона пользователя.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException
+     */
+    public function updateLogin(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(),
+            [
+                'user_phone'    => ['required_without:user_email', 'phone', 'unique:users,user_phone'],
+                'user_email'    => ['required_without:user_phone', 'email', 'max:30', 'unique:users,user_email'],
+            ]
+        );
+        validateOrExit($validator);
+
+        $user = $request->user();
+        $user->fill($validator->validated());
+        $user->save();
+
+        return response()->json(['status' => true]);
+    }
 
     /**
      * Сохранить фотографию.
