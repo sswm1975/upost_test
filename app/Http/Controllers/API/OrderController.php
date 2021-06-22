@@ -252,7 +252,7 @@ class OrderController extends Controller
      * @return Request
      * @throws ValidatorException
      */
-    public function confirmOrder(Request $request): Request
+    public function confirmOrder(Request $request): JsonResponse
     {
         $validator = Validator::make(request()->all(),
             [
@@ -262,11 +262,14 @@ class OrderController extends Controller
         );
         $this->returnValidated($validator);
 
-        $data = $request->post();
+        $data = $request->all();
 
         /*
          * TODO: Add Ext Validation
          * */
 
+        return response()->json([
+            'status' => true
+        ]);
     }
 }
