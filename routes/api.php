@@ -67,6 +67,9 @@ Route::group(
 
         # Зміна логіну: телефону та/або емейлу
         Route::post('update_login', 'API\ProfileController@updateLogin')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Зміна даних пластикової картки
+        Route::post('update_card', 'API\ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
 

@@ -202,6 +202,30 @@ class ProfileController extends Controller
     }
 
     /**
+     * Обновление данных пластиковой карточки пользователя.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException
+     */
+    public function updateCard(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(),
+            [
+                'user_card_number' => ['required_without:user_card_name', 'bankcard'],
+                'user_card_name'   => ['required_without:user_card_number', 'max:50'],
+            ]
+        );
+        validateOrExit($validator);
+
+        $user = $request->user();
+        $user->fill($validator->validated());
+        $user->save();
+
+        return response()->json(['status' => true]);
+    }
+
+    /**
      * Сохранить фотографию.
      *
      * @param string $base64_image

@@ -141,6 +141,9 @@ return [
         'user_phone' => [
             'phone' => 'Phone is incorrect.',
         ],
+        'user_card_number' => [
+            'bankcard' => 'Card number is incorrect.',
+        ],
     ],
 
     /*
