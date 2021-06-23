@@ -28,11 +28,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/login",
+							"raw": "{{host}}{{endpoint}}/users/login",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
+								"users",
 								"login"
 							],
 							"query": [
@@ -65,11 +66,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/login?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/login?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
+										"users",
 										"login"
 									],
 									"query": [
@@ -149,11 +151,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/login?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/login?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
+										"users",
 										"login"
 									],
 									"query": [
@@ -231,11 +234,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/login?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/login?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
+										"users",
 										"login"
 									],
 									"query": [
@@ -331,11 +335,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/register",
+							"raw": "{{host}}{{endpoint}}/users/register",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
+								"users",
 								"register"
 							],
 							"query": [
@@ -384,11 +389,12 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/register?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/register?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
+										"users",
 										"register"
 									],
 									"query": [
@@ -483,11 +489,12 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/register?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/register?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
+										"users",
 										"register"
 									],
 									"query": [
@@ -586,11 +593,12 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/register?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/register?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
+										"users",
 										"register"
 									],
 									"query": [
@@ -671,11 +679,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/profile/2",
+							"raw": "{{host}}{{endpoint}}/users/profile/2",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
+								"users",
 								"profile",
 								"2"
 							],
@@ -709,11 +718,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/profile/2?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/profile/2?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
+										"users",
 										"profile",
 										"2"
 									],
@@ -793,11 +803,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/profile/23?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/profile/23?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
+										"users",
 										"profile",
 										"23"
 									],
@@ -879,11 +890,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/profile",
+							"raw": "{{host}}{{endpoint}}/users/profile",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
+								"users",
 								"profile"
 							],
 							"query": [
@@ -916,11 +928,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/profile?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/profile?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
+										"users",
 										"profile"
 									],
 									"query": [
@@ -1000,11 +1013,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/profile?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/profile?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
+										"users",
 										"profile"
 									],
 									"query": [
@@ -1133,7 +1147,8 @@
 									"key": "user_photo",
 									"value": "data:image/jpeg;base64,...",
 									"description": "Фото в форматі base64",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "remove_photo",
@@ -1151,12 +1166,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/profile",
+							"raw": "{{host}}{{endpoint}}/users/update_profile",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"profile"
+								"users",
+								"update_profile"
 							],
 							"query": [
 								{
@@ -10760,7 +10776,7 @@
 							"urlencoded": [
 								{
 									"key": "job_id",
-									"value": "2",
+									"value": "1",
 									"type": "text"
 								},
 								{
@@ -11526,6 +11542,348 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Чати",
+			"item": [
+				{
+					"name": "Додати чат",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}{{endpoint}}/chats/add?rate_id=152&order_id=7&to_user=1&user_id=1",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"chats",
+								"add"
+							],
+							"query": [
+								{
+									"key": "rate_id",
+									"value": "152"
+								},
+								{
+									"key": "order_id",
+									"value": "7"
+								},
+								{
+									"key": "to_user",
+									"value": "1"
+								},
+								{
+									"key": "user_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Отримати чати",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}{{endpoint}}/chats/show?user_id=1&addressee=11&order_id=3",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"chats",
+								"show"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "1"
+								},
+								{
+									"key": "addressee",
+									"value": "11"
+								},
+								{
+									"key": "order_id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Видалити чат",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/chats/delete?chat_id=12&user_id=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"chats",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "chat_id",
+									"value": "12"
+								},
+								{
+									"key": "user_id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Видалити чат"
+					},
+					"response": []
+				}
+			],
+			"description": "Chats",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Повiдомлення",
+			"item": [
+				{
+					"name": "Додати повiдомлення",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}{{endpoint}}/messages/add?chat_id=9&rate_id=291&order_id=1&from_user=5&to_user=1&message_date=2021-06-22 15:04&message_text=Test message&message_attach=ZZZ&type=accepting",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"messages",
+								"add"
+							],
+							"query": [
+								{
+									"key": "chat_id",
+									"value": "9"
+								},
+								{
+									"key": "rate_id",
+									"value": "291"
+								},
+								{
+									"key": "order_id",
+									"value": "1"
+								},
+								{
+									"key": "from_user",
+									"value": "5"
+								},
+								{
+									"key": "to_user",
+									"value": "1"
+								},
+								{
+									"key": "message_date",
+									"value": "2021-06-22 15:04"
+								},
+								{
+									"key": "message_text",
+									"value": "Test message"
+								},
+								{
+									"key": "message_attach",
+									"value": "ZZZ"
+								},
+								{
+									"key": "type",
+									"value": "accepting"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Отримати повiдомлення",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}{{endpoint}}/messages/show?user_id=1&chat_id=7&count=1&pages=1&sort=DESC",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"messages",
+								"show"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "1"
+								},
+								{
+									"key": "chat_id",
+									"value": "7"
+								},
+								{
+									"key": "count",
+									"value": "1"
+								},
+								{
+									"key": "pages",
+									"value": "1"
+								},
+								{
+									"key": "sort",
+									"value": "DESC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Повiдомлення"
+		},
+		{
+			"name": "Замовлення",
+			"item": [
+				{
+					"name": "Пiдтвердити виконання замовлення",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}{{endpoint}}/confirm_order?chat_id=7&user_id=1",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"confirm_order"
+							],
+							"query": [
+								{
+									"key": "chat_id",
+									"value": "7"
+								},
+								{
+									"key": "user_id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Пiдтвердити виконання замовлення"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Завантаження файлiв",
+			"item": [],
+			"description": "Завантаження файлiв"
 		}
 	],
 	"event": [
