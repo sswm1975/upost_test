@@ -15,27 +15,48 @@ use Illuminate\Support\Facades\Route;
 
 const MIDDLEWARE_AUTH_BASIC = 'auth.basic';
 
-# Авторизація
-Route::get('login', function () {
-    return response()->json([
-        'status'  => true,
-        'message' => __('message.login_successful'),
-    ]);
-})->middleware(MIDDLEWARE_AUTH_BASIC);
+// Операції с профілем користувача
+Route::group(
+    [
+        'prefix' => 'users',
+    ],
+    function () {
+        # Авторизація
+        Route::get('login', function () {
+            return response()->json([
+                'status'  => true,
+                'message' => __('message.login_successful'),
+            ]);
+        })->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Реєстрація
-Route::post('register', 'API\RegisterController@register');
+        # Реєстрація
+        Route::post('register', 'API\RegisterController@register');
 
-// Операції с провілем користувача
+        # Отримання інформації про користувача (тільки публічні дані)
+        Route::get('profile/{user_id}', 'API\ProfileController@getPublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Отримання інформації про користувача (тільки публічні дані)
-Route::get('profile/{user_id}', 'API\ProfileController@getPublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Отримання інформації про користувача (всі дані)
+        Route::get('profile', 'API\ProfileController@getPrivateData')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Отримання інформації про користувача (всі дані)
-Route::get('profile', 'API\ProfileController@getPrivateData')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Зміна даних профілю (тільки публічні дані)
+        Route::post('update_profile', 'API\ProfileController@updatePublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Зміна даних профілю (тільки публічні дані)
-Route::post('profile', 'API\ProfileController@updatePublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Зміна даних мов та валют
+        Route::post('update_language', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Зміна паролю
+        Route::post('update_password', 'API\ProfileController@updatePassword')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Зміна логіну: телефону та/або емейлу
+        Route::post('update_login', 'API\ProfileController@updateLogin')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Зміна даних пластикової картки
+        Route::post('update_card', 'API\ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Верифікація зміни даних користувача (тільки пароль/логін/картка)
+        Route::get('verification/{token}', 'API\ProfileController@verificationUser');
+    }
+);
 
 // Відгуки
 Route::group(
@@ -54,27 +75,6 @@ Route::group(
     }
 );
 
-Route::group(
-    [
-        'prefix' => 'users',
-    ],
-    function () {
-        # Зміна даних мов та валют
-        Route::post('update_language', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Зміна паролю
-        Route::post('update_password', 'API\ProfileController@updatePassword')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Зміна логіну: телефону та/або емейлу
-        Route::post('update_login', 'API\ProfileController@updateLogin')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Зміна даних пластикової картки
-        Route::post('update_card', 'API\ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Веріфікація зміни даних користувача
-        Route::get('verification/{token}', 'API\ProfileController@verificationUser');
-    }
-);
 // Чати
 Route::group(
     [
@@ -92,7 +92,7 @@ Route::group(
     }
 );
 
-// Повiдомлення
+// Повідомлення
 Route::group(
     [
         'prefix' => 'messages',
@@ -105,24 +105,6 @@ Route::group(
         Route::get('show', 'API\MessagesController@showMessages')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
-
-
-Route::group(
-    [
-        'prefix' => 'reviews',
-    ],
-    function () {
-        # Додати відгук
-        Route::post('add', 'API\RewiesController@addReview')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Отримати відгуки
-        Route::get('show', 'API\RewiesController@showReviews');
-    }
-);
-
-
-# Зміна даних мов та валют
-Route::post('language', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 # Отримувати назву країни по її ідентифікатору
 Route::get('get_country/{country_id}', 'API\CountryController@getCountry');
@@ -153,7 +135,7 @@ Route::delete('delete_order/{order_id}', 'API\OrderController@deleteOrder')->mid
 Route::get('selection_order/{route_id}', 'API\OrderController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 # Підтвердити виконання замовлення
-Route::post('confirm_order', 'API\OrderController@confirmOrder')->middleware('auth.basic');
+Route::post('confirm_order', 'API\OrderController@confirmOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 # Лічильник переглядів
 Route::post('update_counter', API\CounterController::class);
@@ -209,5 +191,5 @@ Route::post('create_job', 'API\JobController@createJob')->middleware(MIDDLEWARE_
 # Парсинг даних
 Route::get('parser', API\ParserController::class)->middleware(MIDDLEWARE_AUTH_BASIC);
 
-#Завантаження файлу
+# Завантаження файлу
 Route::post('upload', 'API\UploadController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
