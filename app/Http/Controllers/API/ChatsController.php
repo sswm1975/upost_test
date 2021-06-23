@@ -6,7 +6,9 @@ use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
+use App\Models\Rate;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -34,11 +36,8 @@ class ChatsController extends Controller
 
         $data = $request->all();
 
-        /**
-         * TODO: Application rules
-        */
-
         try {
+            $this->addExtValidate($data);
 
             Chat::create([
                 'rate_id'     => $data['rate_id'],
@@ -54,7 +53,7 @@ class ChatsController extends Controller
                 'status' => true,
             ]);
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             throw new TryException($e->getMessage());
         }
     }
@@ -65,6 +64,7 @@ class ChatsController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidatorException
+     * @throws TryException
      */
     public function showChats(Request $request): JsonResponse
     {
@@ -80,23 +80,39 @@ class ChatsController extends Controller
 
         $data = $request->post();
 
-        $query = Chat::query()->where('user_id', $data['user_id']);
+        try {
 
-        if(isset($data['addressee'])) {
-            $query = $query->where('to_user', $data['addressee']);
+            $query = Chat::query()->where('user_id', $data['user_id'])
+                ->orWhere('to_user', $data['user_id']);
+
+            if(isset($data['addressee'])) {
+                $query = $query->where('to_user', $data['addressee']);
+            }
+
+            if(isset($data['order_id'])) {
+                $query = $query->where('order_id', $data['order_id']);
+            }
+
+            $chats = $query->get()->toArray();
+
+            $res = [];
+            foreach ($chats as $chat) {
+                if($chat['chat_status'] == "active") {
+                    $res[] = $chat;
+                } elseif($chat["user_id"] == $data["user_id"]) {
+                    $res[] = $chat;
+                }
+            }
+
+            return response()->json([
+                'status' => true,
+                'number' => count($res),
+                'result' => null_to_blank($res),
+            ]);
         }
-
-        if(isset($data['order_id'])) {
-            $query = $query->where('order_id', $data['order_id']);
+        catch (Exception $e) {
+            throw new TryException($e->getMessage());
         }
-
-        $chats = $query->get()->toArray();
-
-        return response()->json([
-            'status' => true,
-            'number' => count($chats),
-            'result' => null_to_blank($chats),
-        ]);
     }
 
     /**
@@ -105,6 +121,7 @@ class ChatsController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidatorException
+     * @throws TryException
      */
     public function deleteChat(Request $request): JsonResponse
     {
@@ -119,11 +136,83 @@ class ChatsController extends Controller
 
         $data = $request->all();
 
-        $affected = DB::table('chats')
-            ->where('chat_id', $data['chat_id'])
-            ->where('user_id', $data['user_id'])
-            ->delete();
+        try {
+
+            $this->deleteExtValidate($data);
+
+            $affected = DB::table('chats')
+                ->where('chat_id', $data['chat_id'])
+                ->where('user_id', $data['user_id'])
+                ->delete();
+        }
+        catch (Exception $e) {
+            throw new TryException($e->getMessage());
+        }
 
         return response()->json(['status' => (bool)$affected]);
+    }
+
+    /**
+     * Validation request data for add chat
+     *
+     * @param array $data
+     * @return bool
+     * @throws Exception
+     */
+    private function addExtValidate(array $data): bool
+    {
+        // Check rate_id
+        $query = (new Rate())->newQuery();
+        $count = $query->where('rate_id', $data['rate_id'])
+            ->where('order_id', $data['order_id'])
+            ->count();
+
+        if($count == 0) {
+            throw new Exception("This rate belongs to other order");
+        }
+
+        // Check user_id
+        $query = (new Rate())->newQuery();
+        $count = $query->where('rate_id', $data['rate_id'])
+            ->where('who_start', $data['user_id'])
+            ->where('user_id', $data['to_user'])
+            ->count();
+
+        if($count == 0) {
+            throw new Exception("This User not have permissions for rate");
+        }
+
+        return true;
+    }
+
+    /**
+     * Validation request data for delete chat
+     *
+     * @param array $data
+     * @return bool
+     * @throws Exception
+     */
+    private function deleteExtValidate(array $data): bool
+    {
+        $query = (new Chat())->newQuery();
+        $count = $query->where('chat_id', $data['chat_id'])
+            ->where('chat_status', '<>', 'active')
+            ->count();
+
+        if($count == 0) {
+            throw new Exception("This chat now is active. Can not delete chat.");
+        }
+
+        $query = (new Chat())->newQuery();
+        $count = $query->where('chat_id', $data['chat_id'])
+            ->where('user_id', $data['user_id'])
+            ->count();
+
+        if($count == 0) {
+            throw new Exception("This chat created by other user. Can not delete chat.");
+        }
+
+        return true;
+
     }
 }

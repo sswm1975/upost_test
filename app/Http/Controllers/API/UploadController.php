@@ -23,17 +23,16 @@ class UploadController extends Controller
     public function upload(Request $request):JsonResponse
     {
         $url = [];
-        $upload_dir = public_path(env('APP_UPLOAD_FOLDER', '/content/files/'));
         $files = $request->allFiles();
-        /** @var $file UploadedFile $file */
-        foreach ($files['images'] as $file) {
-            $ext = $file->getExtension();
-            echo $ext;die;
-            if(!in_array($ext, ['jpg', 'png', 'gif', 'mp4', 'avi', 'mov'])) {
-                throw new ErrorException('File format is not supported');
-            }
 
-            $url[] = env('APP_UPLOAD_FOLDER', '/content/files/') . $file->getFilename();
+        /** @var $file UploadedFile $file */
+        foreach ($files['files'] as $file) {
+            $ext = $file->getClientOriginalExtension();
+            if(!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'])) {
+                throw new ErrorException('File format is not supported (' . $file->getClientOriginalName() . ')');
+            }
+            $file->move(public_path(env('APP_UPLOAD_FOLDER', '/content/files/')), $file->getClientOriginalName());
+            $url[] = env('APP_UPLOAD_FOLDER', '/content/files/') . $file->getClientOriginalName();
         }
 
         return response()->json([

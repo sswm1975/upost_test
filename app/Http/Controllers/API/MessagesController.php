@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\Chat;
 use App\Models\Message;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -36,13 +38,12 @@ class MessagesController extends Controller
 
         $data = $request->all();
 
-        /*
-         * TODO: Add Ext Validation
-         * */
-
         $data['type'] = $data['type'] ?? 'simple';
 
         try {
+
+            $this->addExtValidate($data);
+
             Message::create([
                 'chat_id'           => $data['chat_id'],
                 'rate_id'           => $data['rate_id'],
@@ -59,7 +60,7 @@ class MessagesController extends Controller
                 'status' => true,
             ]);
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             throw new TryException($e->getMessage());
         }
     }
@@ -106,5 +107,28 @@ class MessagesController extends Controller
             'number' => count($messages),
             'result' => null_to_blank($messages),
         ]);
+    }
+
+    /**
+     * Validation request data for add message
+     *
+     * @param array $data
+     * @return bool
+     * @throws Exception
+     */
+    private function addExtValidate(array $data): bool
+    {
+        $user_id = auth()->id();
+
+        // Check user_id
+        $query = (new Chat())->newQuery();
+        $chat_user = $query->where('chat_id', $data['chat_id'])
+            ->pluck('user_id');
+
+        if($chat_user != $user_id && $data["to_user"] != $user_id) {
+            throw new Exception("Permissions failed");
+        }
+
+        return true;
     }
 }

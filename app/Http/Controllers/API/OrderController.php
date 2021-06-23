@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\Chat;
 use App\Models\Route;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -251,6 +254,7 @@ class OrderController extends Controller
      * @param Request $request
      * @return Request
      * @throws ValidatorException
+     * @throws TryException
      */
     public function confirmOrder(Request $request): JsonResponse
     {
@@ -264,12 +268,36 @@ class OrderController extends Controller
 
         $data = $request->all();
 
-        /*
-         * TODO: Add Ext Validation
-         * */
+        try {
+            $this->confirmExtValidate($data);
+        }
+        catch (Exception $e) {
+            throw new TryException($e->getMessage());
+        }
 
         return response()->json([
             'status' => true
         ]);
+    }
+
+    /**
+     * confirm order validation
+     *
+     * @param array $data
+     * @return bool
+     * @throws Exception
+     */
+    private function confirmExtValidate(array $data): bool
+    {
+        $query = (new Chat())->newQuery();
+        $count = $query->where('chat_id', $data['chat_id'])
+            ->where('user_id', $data['user_id'])
+            ->count();
+
+        if($count == 0) {
+            throw new Exception("This chat belongs to other user");
+        }
+
+        return true;
     }
 }
