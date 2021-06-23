@@ -231,12 +231,12 @@ function strip_unsafe(string $content): string
  * Get SQL.
  * Pre-call \DB::enableQueryLog()
  *
- * @param bool $shoBindings
+ * @param bool $showBindings
  * @return array|string
  */
-function getSQL(bool $shoBindings = false)
+function getSQL(bool $showBindings = false)
 {
-    return $shoBindings
+    return $showBindings
         ? DB::getQueryLog()
         : preg_replace_array('/\?/', DB::getQueryLog()[0]['bindings'], DB::getQueryLog()[0]['query']);
 }
@@ -251,4 +251,15 @@ function validateOrExit($validator)
     if ($validator->fails()) {
         throw new ValidatorException($validator->errors()->all());
     }
+}
+
+/**
+ * Возвращает хэш пароля.
+ *
+ * @param string $password
+ * @return string
+ */
+function getHashPassword(string $password): string
+{
+    return md5(md5($password));
 }

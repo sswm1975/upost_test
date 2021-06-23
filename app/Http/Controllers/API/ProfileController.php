@@ -9,7 +9,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\UserChange;
@@ -160,12 +159,10 @@ class ProfileController extends Controller
      */
     public function updatePassword(Request $request): JsonResponse
     {
-        $user = $request->user();
-
         $validator = Validator::make($request->all(),
             [
-                'old_password'  => ['required', function ($attribute, $value, $fail) use ($user) {
-                    if (md5(md5($value)) !== $user->user_password) {
+                'old_password'  => ['required', function ($attribute, $value, $fail) {
+                    if (getHashPassword($value) !== request()->user()->user_password) {
                         return $fail(__('message.old_password_incorrect'));
                     }
                 }],
@@ -174,17 +171,11 @@ class ProfileController extends Controller
         );
         validateOrExit($validator);
 
-        $token = $this->generateToken();
-
-        $user_change = new UserChange;
-        $user_change->token = $token;
-        $user_change->user_id = $user->user_id;
-        $user_change->user_password = md5(md5($request->get('user_password')));
-        $user_change->save();
+        $user_change = UserChange::create($validator->validated());
 
         return response()->json([
             'status' => true,
-            'token'  => $token,
+            'token'  => $user_change->token,
         ]);
     }
 
@@ -205,18 +196,11 @@ class ProfileController extends Controller
         );
         validateOrExit($validator);
 
-        $token = $this->generateToken();
-
-        $user_change = new UserChange;
-        $user_change->token = $token;
-        $user_change->user_id = $request->user()->user_id;
-        if ($request->has('user_phone')) $user_change->user_phone = $request->get('user_phone');
-        if ($request->has('user_email')) $user_change->user_email = $request->get('user_email');
-        $user_change->save();
+        $user_change = UserChange::create($validator->validated());
 
         return response()->json([
             'status' => true,
-            'token'  => $token,
+            'token'  => $user_change->token,
         ]);
     }
 
@@ -237,18 +221,11 @@ class ProfileController extends Controller
         );
         validateOrExit($validator);
 
-        $token = $this->generateToken();
-
-        $user_change = new UserChange;
-        $user_change->token = $token;
-        $user_change->user_id = $request->user()->user_id;
-        if ($request->has('user_card_number')) $user_change->user_card_number = $request->get('user_card_number');
-        if ($request->has('user_card_name')) $user_change->user_card_name = $request->get('user_card_name');
-        $user_change->save();
+        $user_change = UserChange::create($validator->validated());
 
         return response()->json([
             'status' => true,
-            'token'  => $token,
+            'token'  => $user_change->token,
         ]);
     }
 
@@ -334,15 +311,4 @@ class ProfileController extends Controller
     {
         return strip_tags(strip_unsafe($content), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
     }
-
-    /**
-     * Generate the verification token.
-     *
-     * @return string|bool
-     */
-    protected function generateToken()
-    {
-        return Str::random(8);
-    }
-
 }
