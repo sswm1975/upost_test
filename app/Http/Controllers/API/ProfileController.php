@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\UserChange;
@@ -238,27 +239,19 @@ class ProfileController extends Controller
      */
     public function verificationUser(string $token): JsonResponse
     {
-        $user_change = UserChange::find($token);
+        $user_change = UserChange::whereToken($token)->first();
         if (!$user_change) throw new ErrorException(__('message.token_incorrect'));
 
         $user = User::find($user_change->user_id);
         if (!$user) throw new ErrorException(__('message.user_not_found'));
 
-        if (!is_null($user_change->user_email)) {
-            $user->user_email = $user_change->user_email;
+        $data = [];
+        foreach($user_change->getAttributes() as $key => $value) {
+            if (!is_null($value) && $key != 'user_id' && Str::startsWith($key, 'user_')) {
+                $data[$key] = $value;
+            }
         }
-        if (!is_null($user_change->user_phone)) {
-            $user->user_phone = $user_change->user_phone;
-        }
-        if (!is_null($user_change->user_password)) {
-            $user->user_password = $user_change->user_password;
-        }
-        if (!is_null($user_change->user_card_number)) {
-            $user->user_card_number = $user_change->user_card_number;
-        }
-        if (!is_null($user_change->user_card_name)) {
-            $user->user_card_name = $user_change->user_card_name;
-        }
+        $user->fill($data);
         $user->save();
 
         $user_change->delete();
