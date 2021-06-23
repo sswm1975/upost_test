@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Rate extends Model
 {
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_PROGRESS = 'progress';
+    public const STATUS_DISPUTE = 'dispute';
+
     protected $table = 'rate';
     protected $primaryKey = 'rate_id';
     protected $guarded = ['rate_id'];

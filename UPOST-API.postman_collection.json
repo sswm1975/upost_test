@@ -11882,8 +11882,347 @@
 		},
 		{
 			"name": "Завантаження файлiв",
-			"item": [],
+			"item": [
+				{
+					"name": "Завантажити файли",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files[]",
+									"type": "file",
+									"src": [
+										"NdVFBqF1_/cat.jpeg",
+										"NdVFBqF1_/изображение_viber_2021-01-31_14-13-43.jpg"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/upload",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			],
 			"description": "Завантаження файлiв"
+		},
+		{
+			"name": "Спори",
+			"item": [
+				{
+					"name": "Відкрити спор на завдання",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "job_id",
+									"value": "1",
+									"description": "Код замовлення",
+									"type": "text"
+								},
+								{
+									"key": "problem_id",
+									"value": "1",
+									"description": "Код проблеми",
+									"type": "text"
+								},
+								{
+									"key": "comment",
+									"value": "test",
+									"description": "Коментар",
+									"type": "text"
+								},
+								{
+									"key": "files[]",
+									"value": "file.png",
+									"description": "Масив файлів",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}{{endpoint}}/disputes/add",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"disputes",
+								"add"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Відкрити спор на завдання (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "job_id",
+											"value": "1",
+											"description": "Код замовлення",
+											"type": "text"
+										},
+										{
+											"key": "problem_id",
+											"value": "1",
+											"description": "Код проблеми",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "comment",
+											"value": "test",
+											"description": "Коментар",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "files[]",
+											"value": "file.png",
+											"description": "Масив файлів",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/disputes/add?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"disputes",
+										"add"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 23 Jun 2021 18:02:07 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "704"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"У вас немає дозволу.\",\n        \"Поле problem id є обов'язковим для заповнення.\",\n        \"Поле files є обов'язковим для заповнення.\",\n        \"Поле comment є обов'язковим для заповнення.\"\n    ]\n}"
+						},
+						{
+							"name": "Відкрити спор на завдання (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "job_id",
+											"value": "1",
+											"description": "Код замовлення",
+											"type": "text"
+										},
+										{
+											"key": "problem_id",
+											"value": "1",
+											"description": "Код проблеми",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": "test",
+											"description": "Коментар",
+											"type": "text"
+										},
+										{
+											"key": "files[]",
+											"value": "file.png",
+											"description": "Масив файлів",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/disputes/add?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"disputes",
+										"add"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 23 Jun 2021 18:33:14 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "15"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true\n}"
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [

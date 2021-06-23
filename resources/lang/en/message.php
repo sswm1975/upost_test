@@ -28,4 +28,5 @@ return [
     'review_not_ready'        => 'You can not leave review for unfinished job',
     'type_freelancer'         => 'Freelancer',
     'type_creator'            => 'Creator',
+    'not_have_permission'     => 'You don\'t have permission.',
 ];

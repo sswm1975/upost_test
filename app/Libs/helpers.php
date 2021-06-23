@@ -236,9 +236,15 @@ function strip_unsafe(string $content): string
  */
 function getSQL(bool $showBindings = false)
 {
+    $logs =  DB::getQueryLog();
+
+    if (empty($logs)) {
+        return '';
+    }
+
     return $showBindings
-        ? DB::getQueryLog()
-        : preg_replace_array('/\?/', DB::getQueryLog()[0]['bindings'], DB::getQueryLog()[0]['query']);
+        ? $logs
+        : preg_replace_array('/\?/', $logs[0]['bindings'], $logs[0]['query']);
 }
 
 /**

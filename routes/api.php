@@ -193,3 +193,14 @@ Route::get('parser', API\ParserController::class)->middleware(MIDDLEWARE_AUTH_BA
 
 # Завантаження файлу
 Route::post('upload', 'API\UploadController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+// Спори
+Route::group(
+    [
+        'prefix' => 'disputes',
+    ],
+    function () {
+        # Відкрити спор на завдання
+        Route::post('add', 'API\DisputeController@addDispute')->middleware(MIDDLEWARE_AUTH_BASIC);
+    }
+);

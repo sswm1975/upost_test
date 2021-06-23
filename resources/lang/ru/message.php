@@ -28,4 +28,5 @@ return [
     'review_not_ready'        => 'Вы не можете оставить отзыв к незавершенной задаче',
     'type_freelancer'         => 'Фрилансер',
     'type_creator'            => 'Заказчик',
+    'not_have_permission'     => 'У вас нет разрешения.',
 ];
