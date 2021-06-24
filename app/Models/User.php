@@ -3,14 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 
 class User extends Model
 {
+    use Notifiable;
+
     protected $primaryKey = 'user_id';
     protected $guarded = ['user_id'];
     public $timestamps = false;
 
-    protected $columns = [
+    protected array $columns = [
         'user_id',
         'user_phone',
         'user_email',
@@ -90,6 +95,16 @@ class User extends Model
         });
     }
 
+    public function rates(): HasMany
+    {
+        return $this->hasMany(Rate::class, 'user_id', 'user_id');
+    }
+
+    public function ratesDeadlineToday()
+    {
+        return $this->rates()->deadlineToday();
+    }
+
     public function setUserCurrencyAttribute($value)
     {
         $this->attributes['user_currency'] = config('app.currencies')[$value];
@@ -98,5 +113,16 @@ class User extends Model
     public function scopeExclude($query, $value = [])
     {
         return $query->select(array_diff($this->columns, (array) $value));
+    }
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @param  Notification  $notification
+     * @return string
+     */
+    public function routeNotificationForMail(Notification $notification)
+    {
+        return $this->user_email;
     }
 }

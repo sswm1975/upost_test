@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chat extends Model
 {
+    public const STATUS_SUCCESSFUL = 'successful';
+
     // Disable timestamps
     public $timestamps = false;
 

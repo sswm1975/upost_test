@@ -9,6 +9,7 @@ class Job extends Model
     public const STATUS_DONE = 'done';
     public const STATUS_WORK = 'work';
     public const STATUS_DISPUTE = 'dispute';
+    public const STATUS_SUCCESSFUL = 'successful';
 
     protected $primaryKey = 'job_id';
     protected $fillable = ['rate_id', 'job_status'];

@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Carbon\Carbon;
 
 class Rate extends Model
 {
     public const STATUS_ACTIVE = 'active';
     public const STATUS_PROGRESS = 'progress';
     public const STATUS_DISPUTE = 'dispute';
+    public const STATUS_SUCCESSFUL = 'successful';
 
     protected $table = 'rate';
     protected $primaryKey = 'rate_id';
@@ -47,4 +49,17 @@ class Rate extends Model
         return $this->belongsTo(Route::class, 'route_id', 'route_id');
     }
 
+    function scopeDeadlineToday($query)
+    {
+        return $query->where([
+            'rate_deadline' => Carbon::today()->toDateString(),
+            'rate_status'   => self::STATUS_ACTIVE,
+        ]);
+    }
+
+    function scopeDeadlineTermExpired($query, int $days = 0)
+    {
+        return $query->where('rate_status', self::STATUS_ACTIVE)
+            ->where('rate_deadline', '>=', Carbon::today()->addDays($days)->toDateString());
+    }
 }
