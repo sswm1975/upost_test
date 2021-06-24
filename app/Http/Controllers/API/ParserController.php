@@ -37,6 +37,7 @@ class ParserController extends Controller
             'name'     => $parser->getProductName(),
             'category' => $parser->getProductCategory(),
             'price'    => $parser->getProductPrice(),
+            'currency' => $parser->getProductCurrency(),
             'size'     => $parser->getProductSize(),
             'weight'   => $parser->getProductWeight(),
             'image'    => $image,

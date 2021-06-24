@@ -35,10 +35,12 @@ class Rozetka extends ParserKernel implements ParserInterface
 
     public function getProductPrice():string
     {
-        $price = $this->product['offers']['price'] ?? '';
-        $currency = $this->product['offers']['priceCurrency'] ?? '';
+        return $this->product['offers']['price'] ?? '';
+    }
 
-        return $price . ' ' . $currency;
+    public function getProductCurrency():string
+    {
+        return getCurrencySymbol($this->product['offers']['priceCurrency'] ?? '');
     }
 
     public function getProductImage():string

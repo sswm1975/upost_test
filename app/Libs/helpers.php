@@ -2,6 +2,7 @@
 
 use App\Exceptions\ValidatorException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * Convert Null to Blank string.
@@ -268,4 +269,24 @@ function validateOrExit($validator)
 function getHashPassword(string $password): string
 {
     return md5(md5($password));
+}
+
+/**
+ * Конвертирование строкового названия валюты в соответстующий символ (знак).
+ * Пример: грн => ₴; usd => $ и т.п.
+ *
+ * @param string $currency
+ * @return string
+ */
+function getCurrencySymbol(string $currency): string
+{
+    $currency = strtolower($currency);
+
+    foreach (config('app.currencies_decode') as $symbol => $masks) {
+        if (Str::contains($currency, $masks)) {
+            return $symbol;
+        }
+    }
+
+    return $currency;
 }

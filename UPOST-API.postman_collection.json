@@ -10170,7 +10170,7 @@
 								{
 									"key": "photo_type",
 									"value": "order",
-									"description": "Тип сущності: order або route",
+									"description": "Тип сущності: order або user",
 									"type": "text"
 								},
 								{
@@ -10224,7 +10224,7 @@
 										{
 											"key": "photo_type",
 											"value": "order",
-											"description": "Тип сущності: order або route",
+											"description": "Тип сущності: order або user",
 											"type": "text"
 										},
 										{
@@ -10324,7 +10324,7 @@
 										{
 											"key": "photo_type",
 											"value": "order",
-											"description": "Тип сущності: order або route",
+											"description": "Тип сущності: order або user",
 											"type": "text",
 											"disabled": true
 										},
@@ -10426,7 +10426,7 @@
 										{
 											"key": "photo_type",
 											"value": "order",
-											"description": "Тип сущності: order або route",
+											"description": "Тип сущності: order або user",
 											"type": "text"
 										},
 										{
@@ -10892,7 +10892,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/parser",
+							"raw": "{{host}}{{endpoint}}/parser?url=https://www.ebay.com/itm/324444618400",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -10903,8 +10903,7 @@
 								{
 									"key": "url",
 									"value": "https://www.ebay.com/itm/324444618400",
-									"description": "Посилання на товар",
-									"disabled": true
+									"description": "Посилання на товар"
 								},
 								{
 									"key": "lang",
@@ -10963,7 +10962,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 20 Jun 2021 16:50:04 GMT"
+									"value": "Thu, 24 Jun 2021 12:05:58 GMT"
 								},
 								{
 									"key": "Server",
@@ -10987,7 +10986,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "319"
+									"value": "329"
 								},
 								{
 									"key": "Keep-Alive",
@@ -11003,7 +11002,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"name\": \"Casio G-SHOCK DW-5600TGA-9 Neon Lightning Tough Yellow Unisex Digital Watch Rar\",\n    \"category\": \"Jewelry & Watches\",\n    \"price\": \"82.99 US $\",\n    \"size\": \"\",\n    \"weight\": \"\",\n    \"image\": \"content/order/19/super_image_60cf71be4f183.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://www.ebay.com\"\n}"
+							"body": "{\n    \"status\": true,\n    \"name\": \"Casio G-SHOCK DW-5600TGA-9 Neon Lightning Tough Yellow Unisex Digital Watch Rar\",\n    \"category\": \"Jewelry & Watches\",\n    \"price\": \"82.99\",\n    \"currency\": \"$\",\n    \"size\": \"\",\n    \"weight\": \"\",\n    \"image\": \"content/order/19/super_image_60d47528d37a4.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://www.ebay.com\"\n}"
 						}
 					]
 				},
@@ -11026,7 +11025,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/parser",
+							"raw": "{{host}}{{endpoint}}/parser?url=https://hard.rozetka.com.ua/dell_210_axrq/p274014238/",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -11037,8 +11036,7 @@
 								{
 									"key": "url",
 									"value": "https://hard.rozetka.com.ua/dell_210_axrq/p274014238/",
-									"description": "Посилання на товар",
-									"disabled": true
+									"description": "Посилання на товар"
 								},
 								{
 									"key": "lang",
@@ -11097,7 +11095,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 20 Jun 2021 16:50:57 GMT"
+									"value": "Thu, 24 Jun 2021 12:10:30 GMT"
 								},
 								{
 									"key": "Server",
@@ -11117,11 +11115,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "58"
+									"value": "59"
 								},
 								{
 									"key": "Content-Length",
-									"value": "421"
+									"value": "437"
 								},
 								{
 									"key": "Keep-Alive",
@@ -11137,7 +11135,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"name\": \"Монитор 27\\\" Dell S2721DGFA (210-AXRQ)\",\n    \"category\": \"Компьютеры и ноутбуки\",\n    \"price\": \"14777.00 UAH\",\n    \"size\": \"\",\n    \"weight\": \"\",\n    \"image\": \"content/order/19/super_image_60cf71f1ed8dc.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://hard.rozetka.com.ua\"\n}"
+							"body": "{\n    \"status\": true,\n    \"name\": \"Монитор 27\\\" Dell S2721DGFA (210-AXRQ)\",\n    \"category\": \"Компьютеры и ноутбуки\",\n    \"price\": \"14777.00\",\n    \"currency\": \"₴\",\n    \"size\": \"\",\n    \"weight\": \"\",\n    \"image\": \"content/order/19/super_image_60d476379a1d4.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://hard.rozetka.com.ua\"\n}"
 						}
 					]
 				},
@@ -11160,7 +11158,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/parser",
+							"raw": "{{host}}{{endpoint}}/parser?url=https://www.amazon.com/Dell-SE2419Hx-23-8-1920x1080-Monitor/dp/B07HKV5RLG/ref=psdc_1292115011_t3_B08BF4CZSV",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -11171,8 +11169,7 @@
 								{
 									"key": "url",
 									"value": "https://www.amazon.com/Dell-SE2419Hx-23-8-1920x1080-Monitor/dp/B07HKV5RLG/ref=psdc_1292115011_t3_B08BF4CZSV",
-									"description": "Посилання на товар",
-									"disabled": true
+									"description": "Посилання на товар"
 								},
 								{
 									"key": "lang",
@@ -11231,7 +11228,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 20 Jun 2021 16:51:26 GMT"
+									"value": "Thu, 24 Jun 2021 12:17:37 GMT"
 								},
 								{
 									"key": "Server",
@@ -11255,7 +11252,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "357"
+									"value": "358"
 								},
 								{
 									"key": "Keep-Alive",
@@ -11271,7 +11268,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"name\": \"Dell 24 Inch PC Monitor SE2419Hx IPS Full HD (1920 x 1080) Monitor, Black\",\n    \"category\": \"Electronics\",\n    \"price\": \"179.66 $\",\n    \"size\": \"\\u200e21.24 x 6.02 x 16.28 inches\",\n    \"weight\": \"\\u200e8.62 pounds\",\n    \"image\": \"content/order/19/super_image_60cf72111919f.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://www.amazon.com\"\n}"
+							"body": "{\n    \"status\": true,\n    \"name\": \"Dell 24 Inch PC Monitor SE2419Hx IPS Full HD (1920 x 1080) Monitor, Black\",\n    \"category\": \"Electronics\",\n    \"price\": \"179.66\",\n    \"currency\": \"$\",\n    \"size\": \"21.24 x 6.02 x 16.28 inches\",\n    \"weight\": \"8.62 pounds\",\n    \"image\": \"content/order/19/super_image_60d477e36590c.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://www.amazon.com\"\n}"
 						}
 					]
 				},
@@ -11294,7 +11291,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/parser",
+							"raw": "{{host}}{{endpoint}}/parser?url=https://www.moyo.ua/noutbuk_hp_15-dw1015ua_2f3g3ea_/477782.html",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -11305,8 +11302,7 @@
 								{
 									"key": "url",
 									"value": "https://www.moyo.ua/noutbuk_hp_15-dw1015ua_2f3g3ea_/477782.html",
-									"description": "Посилання на товар",
-									"disabled": true
+									"description": "Посилання на товар"
 								},
 								{
 									"key": "lang",
@@ -11365,7 +11361,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 20 Jun 2021 16:51:51 GMT"
+									"value": "Thu, 24 Jun 2021 12:19:15 GMT"
 								},
 								{
 									"key": "Server",
@@ -11385,11 +11381,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "58"
+									"value": "59"
 								},
 								{
 									"key": "Content-Length",
-									"value": "351"
+									"value": "352"
 								},
 								{
 									"key": "Keep-Alive",
@@ -11405,7 +11401,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"name\": \"Ноутбук HP 15-dw1015ua (2F3G3EA)\",\n    \"category\": \"Ноутбуки\",\n    \"price\": \"15555 грн\",\n    \"size\": \"\",\n    \"weight\": \"\",\n    \"image\": \"content/order/19/super_image_60cf722956683.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://www.moyo.ua\"\n}"
+							"body": "{\n    \"status\": true,\n    \"name\": \"Ноутбук HP 15-dw1015ua (2F3G3EA)\",\n    \"category\": \"Ноутбуки\",\n    \"price\": \"15555\",\n    \"currency\": \"₴\",\n    \"size\": \"\",\n    \"weight\": \"\",\n    \"image\": \"content/order/19/super_image_60d478452c1bd.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://www.moyo.ua\"\n}"
 						}
 					]
 				},
@@ -11428,7 +11424,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/parser",
+							"raw": "{{host}}{{endpoint}}/parser?url=https://aliexpress.ru/item/4001359505142.html",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
@@ -11438,8 +11434,7 @@
 							"query": [
 								{
 									"key": "url",
-									"value": "https://aliexpress.ru/item/4001359505142.html",
-									"disabled": true
+									"value": "https://aliexpress.ru/item/4001359505142.html"
 								},
 								{
 									"key": "lang",
@@ -11497,7 +11492,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 20 Jun 2021 16:52:15 GMT"
+									"value": "Thu, 24 Jun 2021 12:21:17 GMT"
 								},
 								{
 									"key": "Server",
@@ -11517,11 +11512,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "57"
+									"value": "59"
 								},
 								{
 									"key": "Content-Length",
-									"value": "641"
+									"value": "656"
 								},
 								{
 									"key": "Keep-Alive",
@@ -11537,7 +11532,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"name\": \"CHUWI HiPad X планшет на Android 10, восемь ядер, экран 10,1 дюйма, 4 Гб + 128 ГБ|Планшеты|   | АлиЭкспресс\",\n    \"category\": \"Планшеты\",\n    \"price\": \"13414.96 RUB\",\n    \"size\": \"\",\n    \"weight\": \"\",\n    \"image\": \"content/order/19/super_image_60cf7243b8144.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://aliexpress.ru\"\n}"
+							"body": "{\n    \"status\": true,\n    \"name\": \"CHUWI HiPad X планшет на Android 10, восемь ядер, экран 10,1 дюйма, 4 Гб + 128 ГБ|Планшеты|   | АлиЭкспресс\",\n    \"category\": \"Планшеты\",\n    \"price\": \"13449.7\",\n    \"currency\": \"₽\",\n    \"size\": \"\",\n    \"weight\": \"\",\n    \"image\": \"content/order/19/super_image_60d478bee3615.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://aliexpress.ru\"\n}"
 						}
 					]
 				}

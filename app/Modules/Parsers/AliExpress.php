@@ -30,10 +30,12 @@ class AliExpress implements ParserInterface
 
     public function getProductPrice():string
     {
-        $price = $this->data['priceModule']['minActivityAmount']['value'] ?? '';
-        $currency =  $this->data['priceModule']['minActivityAmount']['currency'] ?? '';
+        return $this->data['priceModule']['minActivityAmount']['value'] ?? '';
+    }
 
-        return $price . ' ' . $currency;
+    public function getProductCurrency():string
+    {
+        return getCurrencySymbol($this->data['priceModule']['minActivityAmount']['currency'] ?? '');
     }
 
     public function getProductImage():string

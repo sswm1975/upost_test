@@ -4,10 +4,11 @@ namespace App\Modules\Parsers;
 
 use DOMDocument;
 use DOMXPath;
+use Illuminate\Support\Str;
 
 class ParserKernel
 {
-    const CLEAR_CHARS = " \t\n\r\0\x0B\xC2\xA0\x{200e}\x{200f}";
+    const CLEAR_CHARS = " \t\n\r\0\x0B\xC2\xA0";
 
     protected $domain;
     protected $xpath;
@@ -30,7 +31,7 @@ class ParserKernel
 
     function cleanTags($string): string
     {
-        return trim(strip_tags($string), self::CLEAR_CHARS);
+        return trim(preg_replace('/(\x{200e}|\x{200f})/u', '', strip_tags($string)), self::CLEAR_CHARS);
     }
 
     public function findOne(string $select): string
@@ -65,10 +66,18 @@ class ParserKernel
 
         if (!$found) return '';
 
-        $currency = trim(preg_replace('/[0-9.,]/', '', $found), " \t\n\r\0\x0B\xC2\xA0");
-        $price = trim(preg_replace('/[^0-9.,]/', '', $found), " \t\n\r\0\x0B\xC2\xA0");
+        return trim(preg_replace('/[^0-9.,]/', '', $found), " \t\n\r\0\x0B\xC2\xA0");
+    }
 
-        return $price . ' ' . $currency;
+    public function getCurrency(array $selects): string
+    {
+        $found = $this->find($selects);
+
+        if (!$found) return '';
+
+        $currency =  trim(preg_replace('/[0-9.,]/', '', $found), " \t\n\r\0\x0B\xC2\xA0");
+
+        return getCurrencySymbol($currency);
     }
 
     public function getImage(array $selects): string

@@ -33,6 +33,13 @@ class DefaultParser extends ParserKernel implements ParserInterface
             : '';
     }
 
+    public function getProductCurrency():string
+    {
+        return isset($this->config['price_selects'])
+            ? $this->getCurrency($this->config['price_selects'])
+            : '';
+    }
+
     public function getProductImage():string
     {
         return isset($this->config['image_selects'])
