@@ -6,13 +6,22 @@ use Exception;
 
 class ErrorException extends Exception
 {
-    //
-    //
     private $error;
+
     public function __construct(string $error)
     {
         parent::__construct();
         $this->error = $error;
+    }
+
+    /**
+     * Report the exception.
+     *
+     * @return void
+     */
+    public function report()
+    {
+        //
     }
 
     /**
@@ -22,7 +31,6 @@ class ErrorException extends Exception
      */
     public function render()
     {
-
         return response()->json([
             'status' => false,
             'errors' => [$this->error]
