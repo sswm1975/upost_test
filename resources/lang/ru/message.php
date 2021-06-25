@@ -29,4 +29,5 @@ return [
     'type_freelancer'         => 'Фрилансер',
     'type_creator'            => 'Заказчик',
     'not_have_permission'     => 'У вас нет разрешения.',
+    'already_have_complaint'  => 'От вас уже поступила жалоба.',
 ];

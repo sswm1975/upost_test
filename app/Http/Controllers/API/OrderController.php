@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\OrderBanned;
+use App\Exceptions\ErrorException;
 use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
@@ -23,6 +25,9 @@ class OrderController extends Controller
         'date'  => 'order_register_date',
         'price' => 'order_price_usd',
     ];
+
+    /** @var int Количество страйков, за которое выдается бан (заказ переводится в статус ban) */
+    const COUNT_STRIKES_FOR_BAN = 50;
 
     /**
      * Сохранить заказ.
@@ -299,5 +304,48 @@ class OrderController extends Controller
         }
 
         return true;
+    }
+
+    /**
+     * Пожаловаться на заказ.
+     *
+     * @param int $order_id
+     * @param Request $request
+     * @throws ValidatorException|TryException|ErrorException
+     */
+    public function strikeOrder(int $order_id, Request $request): JsonResponse
+    {
+        $validator = Validator::make(request()->all(),
+            [
+                'strike_id' => 'required|integer',
+            ]
+        );
+        validateOrExit($validator);
+
+        $order = Order::find($order_id);
+        if (empty($order)) {
+            throw new ErrorException(__('message.order_not_found'));
+        }
+
+        $user_id = $request->user()->user_id;
+        $strikes = json_decode($order->order_strikes, true);
+        if (array_key_exists($user_id, $strikes)) {
+            throw new ErrorException(__('message.already_have_complaint'));
+        }
+
+        $strikes[$user_id] = $request->get('strike_id');
+        $order->order_strikes = $strikes;
+
+        if (count($strikes) >= static::COUNT_STRIKES_FOR_BAN) {
+            $order->order_status = Order::STATUS_BAN;
+
+            event(new OrderBanned($order));
+        }
+
+        $order->save();
+
+        return response()->json([
+            'status' => true
+        ]);
     }
 }

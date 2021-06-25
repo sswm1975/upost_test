@@ -137,6 +137,9 @@ Route::get('selection_order/{route_id}', 'API\OrderController@selectionOrder')->
 # Підтвердити виконання замовлення
 Route::post('confirm_order', 'API\OrderController@confirmOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+# Скарга на замовлення
+Route::post('strike_order/{order_id}', 'API\OrderController@strikeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
 # Лічильник переглядів
 Route::post('update_counter', API\CounterController::class);
 

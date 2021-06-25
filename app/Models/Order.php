@@ -9,6 +9,10 @@ use Illuminate\Support\Str;
 
 class Order extends Model
 {
+    const STATUS_ACTIVE = 'active';
+    const STATUS_CLOSED = 'closed';
+    const STATUS_BAN = 'ban';
+
     protected $primaryKey = 'order_id';
     protected $guarded = ['order_id'];
     public $timestamps = false;

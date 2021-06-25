@@ -29,4 +29,5 @@ return [
     'type_freelancer'         => 'Freelancer',
     'type_creator'            => 'Creator',
     'not_have_permission'     => 'You don\'t have permission.',
+    'already_have_complaint'  => 'There is already a complaint from you.',
 ];
