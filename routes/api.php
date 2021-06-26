@@ -106,6 +106,7 @@ Route::group(
     }
 );
 
+// Країна і Місто
 Route::group(
     [
         'prefix' => 'countries',
@@ -128,8 +129,19 @@ Route::group(
     }
 );
 
-# Отримання всіх або конкретної категорії
-Route::get('get_сategories/{category_id?}', 'API\CategoryController@getCategories');
+// Категорії
+Route::group(
+    [
+        'prefix' => 'сategories',
+    ],
+    function () {
+        # Отримання всіх категорій
+        Route::get('show', 'API\CategoryController@getCategories');
+
+        # Отримання конкретної категорії
+        Route::get('{category_id}/show', 'API\CategoryController@getCategories');
+    }
+);
 
 // Замовлення
 Route::group(
