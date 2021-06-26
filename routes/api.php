@@ -33,25 +33,25 @@ Route::group(
         Route::post('register', 'API\RegisterController@register');
 
         # Отримання інформації про користувача (тільки публічні дані)
-        Route::get('profile/{user_id}', 'API\ProfileController@getPublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('{user_id}/profile', 'API\ProfileController@getPublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Отримання інформації про користувача (всі дані)
         Route::get('profile', 'API\ProfileController@getPrivateData')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Зміна даних профілю (тільки публічні дані)
-        Route::post('update_profile', 'API\ProfileController@updatePublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('profile/update', 'API\ProfileController@updatePublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Зміна даних мов та валют
-        Route::post('update_language', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('language/update', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Зміна паролю
-        Route::post('update_password', 'API\ProfileController@updatePassword')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('password/update', 'API\ProfileController@updatePassword')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Зміна логіну: телефону та/або емейлу
-        Route::post('update_login', 'API\ProfileController@updateLogin')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('login/update', 'API\ProfileController@updateLogin')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Зміна даних пластикової картки
-        Route::post('update_card', 'API\ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('card/update', 'API\ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Верифікація зміни даних користувача (тільки пароль/логін/картка)
         Route::get('verification/{token}', 'API\ProfileController@verificationUser');

@@ -662,6 +662,17 @@
 				},
 				{
 					"name": "Отримання інформації про користувача (тільки публічні дані)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"user_id\", 2);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -679,14 +690,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/users/profile/2",
+							"raw": "{{host}}{{endpoint}}/users/{{user_id}}/profile",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
 								"users",
-								"profile",
-								"2"
+								"{{user_id}}",
+								"profile"
 							],
 							"query": [
 								{
@@ -718,14 +729,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/profile/2?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/2/profile?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"profile",
-										"2"
+										"2",
+										"profile"
 									],
 									"query": [
 										{
@@ -803,14 +814,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/profile/23?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/23/profile?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"profile",
-										"23"
+										"23",
+										"profile"
 									],
 									"query": [
 										{
@@ -1166,13 +1177,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/users/update_profile",
+							"raw": "{{host}}{{endpoint}}/users/profile/update",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
 								"users",
-								"update_profile"
+								"profile",
+								"update"
 							],
 							"query": [
 								{
@@ -1271,12 +1283,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/profile?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/profile/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"profile"
+										"users",
+										"profile",
+										"update"
 									],
 									"query": [
 										{
@@ -1420,12 +1434,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/profile?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/profile/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"profile"
+										"users",
+										"profile",
+										"update"
 									],
 									"query": [
 										{
@@ -1522,19 +1538,21 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/users/update_language?lang=uk",
+							"raw": "{{host}}{{endpoint}}/users/language/update",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
 								"users",
-								"update_language"
+								"language",
+								"update"
 							],
 							"query": [
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
 								}
 							]
 						},
@@ -1577,13 +1595,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_language?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/language/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_language"
+										"language",
+										"update"
 									],
 									"query": [
 										{
@@ -1679,13 +1698,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_language?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/language/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_language"
+										"language",
+										"update"
 									],
 									"query": [
 										{
@@ -1788,13 +1808,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/users/update_password",
+							"raw": "{{host}}{{endpoint}}/users/password/update",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
 								"users",
-								"update_password"
+								"password",
+								"update"
 							],
 							"query": [
 								{
@@ -1850,13 +1871,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_password",
+									"raw": "{{host}}{{endpoint}}/users/password/update",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_password"
+										"password",
+										"update"
 									],
 									"query": [
 										{
@@ -1961,13 +1983,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_password?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/password/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_password"
+										"password",
+										"update"
 									],
 									"query": [
 										{
@@ -2068,13 +2091,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_password?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/password/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_password"
+										"password",
+										"update"
 									],
 									"query": [
 										{
@@ -2171,13 +2195,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/users/update_login",
+							"raw": "{{host}}{{endpoint}}/users/login/update",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
 								"users",
-								"update_login"
+								"login",
+								"update"
 							],
 							"query": [
 								{
@@ -2227,13 +2252,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_login",
+									"raw": "{{host}}{{endpoint}}/users/login/update",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_login"
+										"login",
+										"update"
 									],
 									"query": [
 										{
@@ -2338,13 +2364,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_login?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/login/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_login"
+										"login",
+										"update"
 									],
 									"query": [
 										{
@@ -2447,13 +2474,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_login?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/login/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_login"
+										"login",
+										"update"
 									],
 									"query": [
 										{
@@ -2550,13 +2578,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/users/update_card",
+							"raw": "{{host}}{{endpoint}}/users/card/update",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
 								"users",
-								"update_card"
+								"card",
+								"update"
 							],
 							"query": [
 								{
@@ -2606,13 +2635,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_card",
+									"raw": "{{host}}{{endpoint}}/users/card/update",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_card"
+										"card",
+										"update"
 									],
 									"query": [
 										{
@@ -2708,13 +2738,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/users/update_card?lang=uk",
+									"raw": "{{host}}{{endpoint}}/users/card/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
 										"users",
-										"update_card"
+										"card",
+										"update"
 									],
 									"query": [
 										{
@@ -2777,18 +2808,29 @@
 				},
 				{
 					"name": "Веріфікація зміни даних користувача",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"token\", 'XoWf79VR');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/users/verification/EUDRcW2D",
+							"raw": "{{host}}{{endpoint}}/users/verification/{{token}}",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
 								"users",
 								"verification",
-								"EUDRcW2D"
+								"{{token}}"
 							],
 							"query": [
 								{
