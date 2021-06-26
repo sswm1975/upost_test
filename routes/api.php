@@ -121,24 +121,31 @@ Route::get('get_cities/{country_id?}', 'API\CountryController@getCities');
 # Отримання всіх або конкретної категорії
 Route::get('get_сategories/{category_id?}', 'API\CategoryController@getCategories');
 
-# Створення замовлення
-Route::post('save_order', 'API\OrderController@saveOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+// Замовлення
+Route::group(
+    [
+        'prefix' => 'orders',
+    ],
+    function () {
+        # Створення замовлення
+        Route::post('add', 'API\OrderController@addOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Вивід замовлень
-Route::get('show_orders', 'API\OrderController@showOrders')/*->middleware(MIDDLEWARE_AUTH_BASIC)*/
-;
+        # Вивід замовлень
+        Route::get('show', 'API\OrderController@showOrders');
 
-# Видалення замовлення
-Route::delete('delete_order/{order_id}', 'API\OrderController@deleteOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Видалення замовлення
+        Route::delete('{order_id}/delete', 'API\OrderController@deleteOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Підбір замовлення для маршруту
-Route::get('selection_order/{route_id}', 'API\OrderController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Підбір маршруту для замовлення
+        Route::get('{order_id}/selection_route', 'API\OrderController@selectionRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Підтвердити виконання замовлення
-Route::post('confirm_order', 'API\OrderController@confirmOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Підтвердити виконання замовлення
+        Route::post('confirm', 'API\OrderController@confirmOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Скарга на замовлення
-Route::post('strike_order/{order_id}', 'API\OrderController@strikeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Скарга на замовлення
+        Route::post('{order_id}/strike', 'API\OrderController@strikeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+    }
+);
 
 # Лічильник переглядів
 Route::post('update_counter', API\CounterController::class);
@@ -158,8 +165,8 @@ Route::post('update_route/{route_id}', 'API\RouteController@updateRoute')->middl
 # Видалення маршруту
 Route::delete('delete_route/{route_id}', 'API\RouteController@deleteRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Підбір маршруту для замовлення
-Route::get('selection_route/{order_id}', 'API\RouteController@selectionRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+# Підбір замовлення для маршруту
+Route::get('selection_order/{route_id}', 'API\RouteController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 # Додати в список обраних
 Route::post('update_favorite', 'API\FavoriteController@updateFavorite')->middleware(MIDDLEWARE_AUTH_BASIC);

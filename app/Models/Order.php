@@ -18,6 +18,7 @@ class Order extends Model
     public $timestamps = false;
     protected $casts = [
         'order_images' => 'array',
+        'order_strikes' => 'json',
     ];
 
     public static function boot()
@@ -26,7 +27,6 @@ class Order extends Model
 
         static::creating(function ($model) {
             $model->order_look = 0;
-            $model->order_strikes = 0;
             $model->order_register_date = $model->freshTimestamp();
         });
 

@@ -30,12 +30,12 @@ class OrderController extends Controller
     const COUNT_STRIKES_FOR_BAN = 50;
 
     /**
-     * Сохранить заказ.
+     * Добавить заказ.
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function saveOrder(Request $request): JsonResponse
+    public function addOrder(Request $request): JsonResponse
     {
         $user = $request->user();
         $request->merge(['user_id' => $user->user_id]);
@@ -220,41 +220,43 @@ class OrderController extends Controller
     }
 
     /**
-     * Подобрать заказ для маршрута.
+     * Подобрать маршрут для заказа.
      *
-     * @param int $route_id
+     * @param int $order_id
      * @param Request $request
      * @return JsonResponse
      */
-    public function selectionOrder(int $route_id, Request $request):JsonResponse
+    public function selectionRoute(int $order_id, Request $request):JsonResponse
     {
-        $route = Route::find($route_id);
+        $user = $request->user();
 
-        if (empty($route)) {
+        $order = Order::find($order_id);
+
+        if (empty($order)) {
             return response()->json([
                 'status' => false,
-                'errors' => [__('message.route_not_found')],
+                'errors' => [__('message.order_not_found')],
             ], 404);
         }
 
-        $orders = Order::query()
-            ->where('user_id',  $request->user()->user_id)
-            ->where('order_status', 'active')
-            ->where('order_from_country', $route->route_from_country)
-            ->where('order_start', '>=', $route->route_start)
-            ->where('order_deadline', '<=', $route->route_end)
+        $routes = Route::query()
+            ->where('user_id', $user->user_id)
+            ->where('route_status', 'active')
+            ->where('route_from_country', $order->order_from_country)
+            ->where('route_start', '>=', $order->order_start)
+            ->where('route_end', '<=', $order->order_deadline)
             ->get()
             ->toArray();
 
         return response()->json([
             'status' => true,
-            'count'  => count($orders),
-            'result' => null_to_blank($orders),
+            'count'  => count($routes),
+            'result' => null_to_blank($routes),
         ]);
     }
 
     /**
-     * Подтвердить выполнение заказа
+     * Подтвердить выполнение заказа.
      *
      * @param Request $request
      * @return Request
@@ -328,11 +330,11 @@ class OrderController extends Controller
         }
 
         $user_id = $request->user()->user_id;
-        $strikes = json_decode($order->order_strikes, true);
-        if (array_key_exists($user_id, $strikes)) {
+
+        $strikes = $order->order_strikes;
+        if ($strikes && array_key_exists($user_id, $strikes)) {
             throw new ErrorException(__('message.already_have_complaint'));
         }
-
         $strikes[$user_id] = $request->get('strike_id');
         $order->order_strikes = $strikes;
 
