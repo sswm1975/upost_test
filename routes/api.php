@@ -198,11 +198,19 @@ Route::group(
     }
 );
 
-# Додати в список обраних
-Route::post('update_favorite', 'API\FavoriteController@updateFavorite')->middleware(MIDDLEWARE_AUTH_BASIC);
+// Список обраних
+Route::group(
+    [
+        'prefix' => 'favorites',
+    ],
+    function () {
+        # Додати в список обраних
+        Route::post('update', 'API\FavoriteController@updateFavorite')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Вивести список обраних
-Route::get('show_favorite', 'API\FavoriteController@showFavorites')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Вивести список обраних
+        Route::get('show', 'API\FavoriteController@showFavorites')->middleware(MIDDLEWARE_AUTH_BASIC);
+    }
+);
 
 # Зробити ставку
 Route::post('create_rate', 'API\RateController@createRate')->middleware(MIDDLEWARE_AUTH_BASIC);

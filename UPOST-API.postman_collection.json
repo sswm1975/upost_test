@@ -8006,12 +8006,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/update_favorite",
+							"raw": "{{host}}{{endpoint}}/favorites/update",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"update_favorite"
+								"favorites",
+								"update"
 							],
 							"query": [
 								{
@@ -8060,12 +8061,13 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/update_favorite?lang=uk",
+									"raw": "{{host}}{{endpoint}}/favorites/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"update_favorite"
+										"favorites",
+										"update"
 									],
 									"query": [
 										{
@@ -8162,12 +8164,13 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/update_favorite?lang=uk",
+									"raw": "{{host}}{{endpoint}}/favorites/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"update_favorite"
+										"favorites",
+										"update"
 									],
 									"query": [
 										{
@@ -8247,12 +8250,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/show_favorite",
+							"raw": "{{host}}{{endpoint}}/favorites/show",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"show_favorite"
+								"favorites",
+								"show"
 							],
 							"query": [
 								{
@@ -8290,12 +8294,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/show_favorite?type=order&lang=uk",
+									"raw": "{{host}}{{endpoint}}/favorites/show?type=order&lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"show_favorite"
+										"favorites",
+										"show"
 									],
 									"query": [
 										{
@@ -8378,12 +8383,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/show_favorite?lang=uk",
+									"raw": "{{host}}{{endpoint}}/favorites/show?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"show_favorite"
+										"favorites",
+										"show"
 									],
 									"query": [
 										{
