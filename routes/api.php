@@ -153,20 +153,28 @@ Route::post('update_counter', API\CounterController::class);
 # Загрузка фото і створення мініатюр
 Route::post('upload_photo', 'API\PhotoLoaderController@uploadPhoto')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Створення маршруту
-Route::post('save_route', 'API\RouteController@saveRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+// Маршрут
+Route::group(
+    [
+        'prefix' => 'routes',
+    ],
+    function () {
+        # Створення маршруту
+        Route::post('add', 'API\RouteController@addRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Виведення маршруту
-Route::get('show_routes', 'API\RouteController@showRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Виведення маршруту
+        Route::get('show', 'API\RouteController@showRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Редагування маршруту
-Route::post('update_route/{route_id}', 'API\RouteController@updateRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Редагування маршруту
+        Route::post('{route_id}/update', 'API\RouteController@updateRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Видалення маршруту
-Route::delete('delete_route/{route_id}', 'API\RouteController@deleteRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Видалення маршруту
+        Route::delete('{route_id}/delete', 'API\RouteController@deleteRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Підбір замовлення для маршруту
-Route::get('selection_order/{route_id}', 'API\RouteController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Підбір замовлення для маршруту
+        Route::get('{route_id}/selection_order', 'API\RouteController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+    }
+);
 
 # Додати в список обраних
 Route::post('update_favorite', 'API\FavoriteController@updateFavorite')->middleware(MIDDLEWARE_AUTH_BASIC);

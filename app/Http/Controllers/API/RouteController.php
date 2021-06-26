@@ -15,12 +15,12 @@ class RouteController extends Controller
     const DEFAULT_PER_PAGE = 5;
 
     /**
-     * Сохранить маршрут.
+     * Добавить маршрут.
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function saveRoute(Request $request): JsonResponse
+    public function addRoute(Request $request): JsonResponse
     {
         $user = $request->user();
 
@@ -236,38 +236,36 @@ class RouteController extends Controller
     }
 
     /**
-     * Подобрать маршрут.
+     * Подобрать заказ для маршрута.
      *
-     * @param int $order_id
+     * @param int $route_id
      * @param Request $request
      * @return JsonResponse
      */
-    public function selectionRoute(int $order_id, Request $request):JsonResponse
+    public function selectionOrder(int $route_id, Request $request):JsonResponse
     {
-        $user = $request->user();
+        $route = Route::find($route_id);
 
-        $order = Order::find($order_id);
-
-        if (empty($order)) {
+        if (empty($route)) {
             return response()->json([
                 'status' => false,
-                'errors' => [__('message.order_not_found')],
+                'errors' => [__('message.route_not_found')],
             ], 404);
         }
 
-        $routes = Route::query()
-            ->where('user_id', $user->user_id)
-            ->where('route_status', 'active')
-            ->where('route_from_country', $order->order_from_country)
-            ->where('route_start', '>=', $order->order_start)
-            ->where('route_end', '<=', $order->order_deadline)
+        $orders = Order::query()
+            ->where('user_id',  $request->user()->user_id)
+            ->where('order_status', 'active')
+            ->where('order_from_country', $route->route_from_country)
+            ->where('order_start', '>=', $route->route_start)
+            ->where('order_deadline', '<=', $route->route_end)
             ->get()
             ->toArray();
 
         return response()->json([
             'status' => true,
-            'count'  => count($routes),
-            'result' => null_to_blank($routes),
+            'count'  => count($orders),
+            'result' => null_to_blank($orders),
         ]);
     }
 }

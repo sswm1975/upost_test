@@ -5733,12 +5733,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/save_route",
+							"raw": "{{host}}{{endpoint}}/routes/add",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"save_route"
+								"routes",
+								"add"
 							],
 							"query": [
 								{
@@ -5853,12 +5854,13 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/save_route",
+									"raw": "{{host}}{{endpoint}}/routes/add",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"save_route"
+										"routes",
+										"add"
 									],
 									"query": [
 										{
@@ -6031,12 +6033,13 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/save_route?lang=uk",
+									"raw": "{{host}}{{endpoint}}/routes/add?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"save_route"
+										"routes",
+										"add"
 									],
 									"query": [
 										{
@@ -6116,12 +6119,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/show_routes",
+							"raw": "{{host}}{{endpoint}}/routes/show",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"show_routes"
+								"routes",
+								"show"
 							],
 							"query": [
 								{
@@ -6237,12 +6241,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/show_routes?route_id[]=60&route_id[]=64&user_id=15&status=active&date_from=2021-06-01&date_to=2021-07-01&country_from[]=3&city_from[]=4&city_from[]=3&country_to[]=2&city_to[]=2&city_to[]=3&show=4&page=1&lang=uk",
+									"raw": "{{host}}{{endpoint}}/routes/show?route_id[]=60&route_id[]=64&user_id=15&status=active&date_from=2021-06-01&date_to=2021-07-01&country_from[]=3&city_from[]=4&city_from[]=3&country_to[]=2&city_to[]=2&city_to[]=3&show=4&page=1&lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"show_routes"
+										"routes",
+										"show"
 									],
 									"query": [
 										{
@@ -6390,12 +6395,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/show_routes?date_from=2021-06-01&date_to=2021-05-01&lang=uk",
+									"raw": "{{host}}{{endpoint}}/routes/show?date_from=2021-06-01&date_to=2021-05-01&lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"show_routes"
+										"routes",
+										"show"
 									],
 									"query": [
 										{
@@ -6653,13 +6659,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/update_route/67",
+							"raw": "{{host}}{{endpoint}}/routes/67/update",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"update_route",
-								"67"
+								"routes",
+								"67",
+								"update"
 							],
 							"query": [
 								{
@@ -6774,13 +6781,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/update_route/72?lang=uk",
+									"raw": "{{host}}{{endpoint}}/routes/72/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"update_route",
-										"72"
+										"routes",
+										"72",
+										"update"
 									],
 									"query": [
 										{
@@ -6954,13 +6962,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/update_route/67?lang=uk",
+									"raw": "{{host}}{{endpoint}}/routes/67/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"update_route",
-										"67"
+										"routes",
+										"67",
+										"update"
 									],
 									"query": [
 										{
@@ -7040,13 +7049,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/delete_route/72",
+							"raw": "{{host}}{{endpoint}}/routes/73/delete",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"delete_route",
-								"72"
+								"routes",
+								"73",
+								"delete"
 							],
 							"query": [
 								{
@@ -7082,13 +7092,14 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/delete_route/72",
+									"raw": "{{host}}{{endpoint}}/routes/73/delete",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"delete_route",
-										"72"
+										"routes",
+										"73",
+										"delete"
 									],
 									"query": [
 										{
@@ -7171,13 +7182,14 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/delete_route/66?lang=uk",
+									"raw": "{{host}}{{endpoint}}/routes/73/delete?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"delete_route",
-										"66"
+										"routes",
+										"73",
+										"delete"
 									],
 									"query": [
 										{
@@ -7257,13 +7269,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/selection_order/58",
+							"raw": "{{host}}{{endpoint}}/routes/58/selection_order",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"selection_order",
-								"58"
+								"routes",
+								"58",
+								"selection_order"
 							],
 							"query": [
 								{
@@ -7275,7 +7288,180 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Підбір замовлення для маршруту (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/routes/58/selection_order",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"routes",
+										"58",
+										"selection_order"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sat, 26 Jun 2021 04:31:05 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2254"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"count\": 2,\n    \"result\": [\n        {\n            \"order_id\": 27,\n            \"user_id\": 19,\n            \"order_register_date\": \"2021-06-08\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-27\",\n            \"order_category\": 2,\n            \"order_price\": 1456.23,\n            \"order_price_usd\": 250,\n            \"order_currency\": \"$\",\n            \"order_count\": \"1\",\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-01\",\n            \"order_personal_price\": \"1\",\n            \"order_user_price\": \"100\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": \"1\",\n            \"order_user_active\": \"\",\n            \"order_status\": \"active\",\n            \"order_look\": 0,\n            \"order_strikes\": \"\"\n        },\n        {\n            \"order_id\": 26,\n            \"user_id\": 19,\n            \"order_register_date\": \"2021-06-08\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-26\",\n            \"order_category\": 2,\n            \"order_price\": 1456.23,\n            \"order_price_usd\": 250,\n            \"order_currency\": \"$\",\n            \"order_count\": \"1\",\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-01\",\n            \"order_personal_price\": \"1\",\n            \"order_user_price\": \"100\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": \"1\",\n            \"order_user_active\": \"\",\n            \"order_status\": \"active\",\n            \"order_look\": 0,\n            \"order_strikes\": \"\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Підбір замовлення для маршруту (errors)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/routes/580/selection_order",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"routes",
+										"580",
+										"selection_order"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sat, 26 Jun 2021 04:31:45 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "46"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Route not found.\"\n    ]\n}"
+						}
+					]
 				}
 			]
 		},
