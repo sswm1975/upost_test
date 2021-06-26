@@ -106,17 +106,27 @@ Route::group(
     }
 );
 
-# Отримувати назву країни по її ідентифікатору
-Route::get('get_country/{country_id}', 'API\CountryController@getCountry');
+Route::group(
+    [
+        'prefix' => 'countries',
+    ],
+    function () {
+        # Отримати список всіх країн
+        Route::get('show', 'API\CountryController@getCountries');
 
-# Отримати список всіх країн
-Route::get('get_countries', 'API\CountryController@getCountries');
+        # Отримати список міст по всім країнам
+        Route::get('cities/show', 'API\CountryController@getCities');
 
-# Отримати назву міста за його ідентифікатором
-Route::get('get_city/{city_id}', 'API\CountryController@getCity');
+        # Отримувати назву країни по її ідентифікатору
+        Route::get('{country_id}/show', 'API\CountryController@getCountry');
 
-# Отримати список міст по всім країнам або конкретної країни
-Route::get('get_cities/{country_id?}', 'API\CountryController@getCities');
+        # Отримати назву міста за його ідентифікатором
+        Route::get('cities/{city_id}/show', 'API\CountryController@getCity');
+
+        # Отримати список міст по всім країнам або конкретної країни
+        Route::get('{country_id}/cities/show', 'API\CountryController@getCities');
+    }
+);
 
 # Отримання всіх або конкретної категорії
 Route::get('get_сategories/{category_id?}', 'API\CategoryController@getCategories');

@@ -2955,17 +2955,29 @@
 			"item": [
 				{
 					"name": "Отримувати назву країни по її ідентифікатору",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"country_id\", 2);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/get_country/2",
+							"raw": "{{host}}{{endpoint}}/countries/{{country_id}}/show",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"get_country",
-								"2"
+								"countries",
+								"{{country_id}}",
+								"show"
 							],
 							"query": [
 								{
@@ -2984,13 +2996,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/get_country/2?lang=uk",
+									"raw": "{{host}}{{endpoint}}/countries/2/show?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"get_country",
-										"2"
+										"countries",
+										"2",
+										"show"
 									],
 									"query": [
 										{
@@ -3055,12 +3068,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/get_country/24?lang=uk",
+									"raw": "{{host}}{{endpoint}}/countries/show/24?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"get_country",
+										"countries",
+										"show",
 										"24"
 									],
 									"query": [
@@ -3128,12 +3142,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/get_countries",
+							"raw": "{{host}}{{endpoint}}/countries/show",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"get_countries"
+								"countries",
+								"show"
 							],
 							"query": [
 								{
@@ -3152,12 +3167,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/get_countries",
+									"raw": "{{host}}{{endpoint}}/countries/show",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"get_countries"
+										"countries",
+										"show"
 									],
 									"query": [
 										{
@@ -3221,17 +3237,30 @@
 				},
 				{
 					"name": "Отримати назву міста за його ідентифікатором",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"city_id\", 2);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/get_city/2",
+							"raw": "{{host}}{{endpoint}}/countries/cities/{{city_id}}/show",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"get_city",
-								"2"
+								"countries",
+								"cities",
+								"{{city_id}}",
+								"show"
 							],
 							"query": [
 								{
@@ -3250,13 +3279,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/get_city/2?lang=uk",
+									"raw": "{{host}}{{endpoint}}/countries/cities/2/show?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"get_city",
-										"2"
+										"countries",
+										"cities",
+										"2",
+										"show"
 									],
 									"query": [
 										{
@@ -3321,13 +3352,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/get_city/26?lang=uk",
+									"raw": "{{host}}{{endpoint}}/countries/cities/26/show?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"get_city",
-										"26"
+										"countries",
+										"cities",
+										"26",
+										"show"
 									],
 									"query": [
 										{
@@ -3389,18 +3422,201 @@
 					]
 				},
 				{
-					"name": "Отримати список міст по всім країнам або конкретної країни",
+					"name": "Отримати список міст по всім країнам",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/get_cities/3",
+							"raw": "{{host}}{{endpoint}}/countries/cities/show",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"get_cities",
-								"3"
+								"countries",
+								"cities",
+								"show"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Отримати список міст по всім країнам або конкретної країни (success - all)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/get_cities",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"get_cities"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 10:20:24 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "617"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": [\n        {\n            \"country_name\": \"Ukraine\",\n            \"country_id\": 2,\n            \"cities\": [\n                {\n                    \"city_id\": 2,\n                    \"city_name\": \"Kyiv\"\n                },\n                {\n                    \"city_id\": 6,\n                    \"city_name\": \"Dnipro\"\n                },\n                {\n                    \"city_id\": 13,\n                    \"city_name\": \"Kremenchug\"\n                }\n            ]\n        },\n        {\n            \"country_name\": \"Poland\",\n            \"country_id\": 3,\n            \"cities\": [\n                {\n                    \"city_id\": 4,\n                    \"city_name\": \"Krakov\"\n                },\n                {\n                    \"city_id\": 9,\n                    \"city_name\": \"Wroclaw\"\n                },\n                {\n                    \"city_id\": 11,\n                    \"city_name\": \"Warszawa\"\n                }\n            ]\n        },\n        {\n            \"country_name\": \"Belarus\",\n            \"country_id\": 4,\n            \"cities\": [\n                {\n                    \"city_id\": 10,\n                    \"city_name\": \"Minsk\"\n                }\n            ]\n        },\n        {\n            \"country_name\": \"USA\",\n            \"country_id\": 8,\n            \"cities\": [\n                {\n                    \"city_id\": 8,\n                    \"city_name\": \"Los-Angeles\"\n                }\n            ]\n        },\n        {\n            \"country_name\": \"Canada\",\n            \"country_id\": 10,\n            \"cities\": [\n                {\n                    \"city_id\": 14,\n                    \"city_name\": \"Vancouver\"\n                }\n            ]\n        }\n    ]\n}"
+						},
+						{
+							"name": "Отримати список міст по всім країнам або конкретної країни (success - selected)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{endpoint}}/get_cities/3?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"get_cities",
+										"3"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 16 Jun 2021 10:18:45 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "316"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": [\n        {\n            \"country_name\": \"Польша\",\n            \"country_id\": 3,\n            \"cities\": [\n                {\n                    \"city_id\": 4,\n                    \"city_name\": \"Краків\"\n                },\n                {\n                    \"city_id\": 9,\n                    \"city_name\": \"Вроцлав\"\n                },\n                {\n                    \"city_id\": 11,\n                    \"city_name\": \"Варшава\"\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Отримати список міст конкретної країни",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"country_id\", 3);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}{{endpoint}}/countries/{{country_id}}/cities/show",
+							"host": [
+								"{{host}}{{endpoint}}"
+							],
+							"path": [
+								"countries",
+								"{{country_id}}",
+								"cities",
+								"show"
 							],
 							"query": [
 								{
