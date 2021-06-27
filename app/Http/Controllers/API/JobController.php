@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ErrorException;
+use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Job;
 use App\Models\Rate;
@@ -16,8 +18,10 @@ class JobController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidatorException
+     * @throws ErrorException
      */
-    public function createJob(Request $request): JsonResponse
+    public function addJob(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(),
             [
@@ -25,12 +29,7 @@ class JobController extends Controller
             ]
         );
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all(),
-            ], 404);
-        }
+        validateOrExit($validator);
 
         $user_id = $request->user()->user_id;
 
@@ -40,23 +39,17 @@ class JobController extends Controller
             ->first();
 
         if (empty($rate)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.rate_not_found')],
-            ], 404);
+            throw new ErrorException(__('message.rate_not_found'));
         }
 
         # запрещено создавать задание, если пользователь к этой ставке не имеет отношения
         if ($rate->order->user_id <> $user_id && $rate->route->user_id <> $user_id) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.rate_not_found')],
-            ], 404);
+            throw new ErrorException(__('message.rate_not_found'));
         }
 
         $job = Job::create([
             'rate_id' => $request->rate_id,
-            'status'  => 'active',
+            'status'  => Job::STATUS_ACTIVE,
         ]);
 
         return response()->json([

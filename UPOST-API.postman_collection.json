@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "86e84e72-cfee-4afe-8fab-1ea6c1064ac3",
+		"_postman_id": "f2e97f9f-13a8-4d1c-a88a-54607e27586b",
 		"name": "UPOST-API",
 		"description": "Всі запити можуть передавати опційний параметр <b>lang</b> – мова, на якій повертати помилки. Параметр <b>lang</b> може приймати одне із значень:\n<ul>\n<li>en – англійська <i>(за замовчуванням)</i></li>\n<li>ru – російська</li>\n<li>uk – українська</li>\n</ul>",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -30,9 +30,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/login",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"users",
 								"login"
 							],
@@ -68,9 +69,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/login?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"login"
 									],
@@ -153,9 +155,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/login?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"login"
 									],
@@ -236,9 +239,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/login?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"login"
 									],
@@ -337,9 +341,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/register",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"users",
 								"register"
 							],
@@ -391,9 +396,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/register?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"register"
 									],
@@ -491,9 +497,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/register?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"register"
 									],
@@ -595,9 +602,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/register?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"register"
 									],
@@ -692,9 +700,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"users",
 								"{{user_id}}",
 								"profile"
@@ -731,9 +740,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/2/profile?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"2",
 										"profile"
@@ -816,9 +826,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/23/profile?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"23",
 										"profile"
@@ -903,9 +914,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/profile",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"users",
 								"profile"
 							],
@@ -941,9 +953,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/profile?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"profile"
 									],
@@ -1026,9 +1039,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/profile?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"profile"
 									],
@@ -1179,9 +1193,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/profile/update",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"users",
 								"profile",
 								"update"
@@ -1285,9 +1300,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/profile/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"profile",
 										"update"
@@ -1436,9 +1452,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/profile/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"profile",
 										"update"
@@ -1540,9 +1557,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/language/update",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"users",
 								"language",
 								"update"
@@ -1597,9 +1615,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/language/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"language",
 										"update"
@@ -1700,9 +1719,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/language/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"language",
 										"update"
@@ -1810,9 +1830,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/password/update",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"users",
 								"password",
 								"update"
@@ -1873,9 +1894,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/password/update",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"password",
 										"update"
@@ -1985,9 +2007,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/password/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"password",
 										"update"
@@ -2093,9 +2116,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/password/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"password",
 										"update"
@@ -2197,9 +2221,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/login/update",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"users",
 								"login",
 								"update"
@@ -2254,9 +2279,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/login/update",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"login",
 										"update"
@@ -2366,9 +2392,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/login/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"login",
 										"update"
@@ -2476,9 +2503,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/login/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"login",
 										"update"
@@ -2580,9 +2608,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/card/update",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"users",
 								"card",
 								"update"
@@ -2637,9 +2666,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/card/update",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"card",
 										"update"
@@ -2740,9 +2770,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/card/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"card",
 										"update"
@@ -2825,9 +2856,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/verification/{{token}}",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"users",
 								"verification",
 								"{{token}}"
@@ -2851,9 +2883,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/verification/EUDRcW2D",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"verification",
 										"EUDRcW2D"
@@ -2924,9 +2957,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/verification/test?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"users",
 										"verification",
 										"test"
@@ -3014,9 +3048,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/countries/{{country_id}}/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"countries",
 								"{{country_id}}",
 								"show"
@@ -3040,9 +3075,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/countries/2/show?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"countries",
 										"2",
 										"show"
@@ -3112,9 +3148,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/countries/show/24?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"countries",
 										"show",
 										"24"
@@ -3186,9 +3223,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/countries/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"countries",
 								"show"
 							],
@@ -3211,9 +3249,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/countries/show",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"countries",
 										"show"
 									],
@@ -3296,9 +3335,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/countries/cities/{{city_id}}/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"countries",
 								"cities",
 								"{{city_id}}",
@@ -3323,9 +3363,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/countries/cities/2/show?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"countries",
 										"cities",
 										"2",
@@ -3396,9 +3437,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/countries/cities/26/show?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"countries",
 										"cities",
 										"26",
@@ -3471,9 +3513,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/countries/cities/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"countries",
 								"cities",
 								"show"
@@ -3497,9 +3540,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/get_cities",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"get_cities"
 									],
 									"query": [
@@ -3568,9 +3612,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/get_cities/3?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"get_cities",
 										"3"
 									],
@@ -3652,9 +3697,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/countries/{{country_id}}/cities/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"countries",
 								"{{country_id}}",
 								"cities",
@@ -3679,9 +3725,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/get_cities",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"get_cities"
 									],
 									"query": [
@@ -3750,9 +3797,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/get_cities/3?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"get_cities",
 										"3"
 									],
@@ -3828,9 +3876,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/сategories/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"сategories",
 								"show"
 							],
@@ -3853,9 +3902,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/сategories/show?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"сategories",
 										"show"
 									],
@@ -3937,9 +3987,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/сategories/{{category_id}}/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"сategories",
 								"{{category_id}}",
 								"show"
@@ -3963,9 +4014,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/сategories/2/show?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"сategories",
 										"2",
 										"show"
@@ -4035,9 +4087,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/сategories/55/show?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"сategories",
 										"55",
 										"show"
@@ -4276,9 +4329,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/orders/add",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"orders",
 								"add"
 							],
@@ -4463,9 +4517,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/add?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"add"
 									],
@@ -4696,9 +4751,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/add?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"add"
 									],
@@ -4935,9 +4991,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/add?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"add"
 									],
@@ -5021,9 +5078,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/orders/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"orders",
 								"show"
 							],
@@ -5149,9 +5207,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/show?user_id=15&show=2&page=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=usd&lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"show"
 									],
@@ -5309,9 +5368,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/show?user_id=15&show=2&status=test&page=1&date_from=2021h0601&date_to=2021h0605&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=usdw&lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"show"
 									],
@@ -5485,9 +5545,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/delete",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"orders",
 								"{{order_id}}",
 								"delete"
@@ -5528,9 +5589,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/29/delete?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"29",
 										"delete"
@@ -5617,9 +5679,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/29/delete?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"29",
 										"delete"
@@ -5715,9 +5778,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/selection_route",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"orders",
 								"{{order_id}}",
 								"selection_route"
@@ -5754,9 +5818,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/25/selection_route",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"25",
 										"selection_route"
@@ -5840,9 +5905,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/250/selection_route",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"250",
 										"selection_route"
@@ -5926,9 +5992,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/orders/confirm?chat_id=7&user_id=1",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"orders",
 								"confirm"
 							],
@@ -5990,9 +6057,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/strike",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"orders",
 								"{{order_id}}",
 								"strike"
@@ -6040,9 +6108,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/1/strike",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"1",
 										"strike"
@@ -6137,9 +6206,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/1/strike?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"orders",
 										"1",
 										"strike"
@@ -6312,9 +6382,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/routes/add",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"routes",
 								"add"
 							],
@@ -6433,9 +6504,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/add",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"routes",
 										"add"
 									],
@@ -6612,9 +6684,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/add?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"routes",
 										"add"
 									],
@@ -6698,9 +6771,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/routes/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"routes",
 								"show"
 							],
@@ -6820,9 +6894,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/show?route_id[]=60&route_id[]=64&user_id=15&status=active&date_from=2021-06-01&date_to=2021-07-01&country_from[]=3&city_from[]=4&city_from[]=3&country_to[]=2&city_to[]=2&city_to[]=3&show=4&page=1&lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"routes",
 										"show"
 									],
@@ -6974,9 +7049,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/show?date_from=2021-06-01&date_to=2021-05-01&lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"routes",
 										"show"
 									],
@@ -7249,9 +7325,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/update",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"routes",
 								"{{route_id}}",
 								"update"
@@ -7371,9 +7448,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/72/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"routes",
 										"72",
 										"update"
@@ -7552,9 +7630,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/67/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"routes",
 										"67",
 										"update"
@@ -7650,9 +7729,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/delete",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"routes",
 								"{{route_id}}",
 								"delete"
@@ -7693,9 +7773,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/73/delete",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"routes",
 										"73",
 										"delete"
@@ -7783,9 +7864,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/73/delete?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"routes",
 										"73",
 										"delete"
@@ -7881,9 +7963,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/selection_order",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"routes",
 								"{{route_id}}",
 								"selection_order"
@@ -7920,9 +8003,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/58/selection_order",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"routes",
 										"58",
 										"selection_order"
@@ -8006,9 +8090,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/580/selection_order",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"routes",
 										"580",
 										"selection_order"
@@ -8116,9 +8201,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/favorites/update",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"favorites",
 								"update"
 							],
@@ -8171,9 +8257,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/favorites/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"favorites",
 										"update"
 									],
@@ -8274,9 +8361,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/favorites/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"favorites",
 										"update"
 									],
@@ -8360,9 +8448,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/favorites/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"favorites",
 								"show"
 							],
@@ -8404,9 +8493,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/favorites/show?type=order&lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"favorites",
 										"show"
 									],
@@ -8493,9 +8583,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/favorites/show?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"favorites",
 										"show"
 									],
@@ -8665,9 +8756,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/add",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"rates",
 								"add"
 							]
@@ -8760,9 +8852,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/add",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"add"
 									]
@@ -8911,9 +9004,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/add",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"add"
 									]
@@ -9036,9 +9130,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/update",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"rates",
 								"{{rate_id}}",
 								"update"
@@ -9104,9 +9199,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/306/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"306",
 										"update"
@@ -9222,9 +9318,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/302/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"302",
 										"update"
@@ -9336,9 +9433,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/302/update?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"302",
 										"update"
@@ -9434,9 +9532,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/delete",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"rates",
 								"{{rate_id}}",
 								"delete"
@@ -9477,9 +9576,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/306/delete",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"306",
 										"delete"
@@ -9567,9 +9667,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/302/delete?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"302",
 										"delete"
@@ -9665,9 +9766,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/reject",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"rates",
 								"{{rate_id}}",
 								"reject"
@@ -9704,9 +9806,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/304/reject",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"304",
 										"reject"
@@ -9790,9 +9893,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/304/reject",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"304",
 										"reject"
@@ -9878,9 +9982,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"rates",
 								"show"
 							],
@@ -9958,9 +10063,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/show?user_id=3&rate_type=route&order_id=2&route_id=49&lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"show"
 									],
@@ -10080,9 +10186,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/show",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"show"
 									],
@@ -10220,9 +10327,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"rates",
 								"{{rate_id}}",
 								"show"
@@ -10259,9 +10367,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/305/show?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"305",
 										"show"
@@ -10344,9 +10453,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/3053/show",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"3053",
 										"show"
@@ -10443,9 +10553,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/accept",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"rates",
 								"{{rate_id}}",
 								"accept"
@@ -10482,9 +10593,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/304/accept",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"304",
 										"accept"
@@ -10568,9 +10680,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/264/accept?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"rates",
 										"264",
 										"accept"
@@ -10679,12 +10792,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/create_job",
+							"raw": "{{host}}/{{endpoint}}/jobs/add",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
-								"create_job"
+								"{{endpoint}}",
+								"jobs",
+								"add"
 							]
 						}
 					},
@@ -10719,12 +10834,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/create_job",
+									"raw": "{{host}}/{{endpoint}}/jobs/add",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
-										"create_job"
+										"{{endpoint}}",
+										"jobs",
+										"add"
 									]
 								}
 							},
@@ -10812,12 +10929,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/create_job",
+									"raw": "{{host}}/{{endpoint}}/jobs/add",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
-										"create_job"
+										"{{endpoint}}",
+										"jobs",
+										"add"
 									]
 								}
 							},
@@ -10920,9 +11039,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/update_counter",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"update_counter"
 							],
 							"query": [
@@ -10980,9 +11100,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/update_counter?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"update_counter"
 									],
 									"query": [
@@ -11089,9 +11210,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/update_counter?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"update_counter"
 									],
 									"query": [
@@ -11191,9 +11313,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/upload_photo",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"upload_photo"
 							],
 							"query": [
@@ -11245,9 +11368,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/upload_photo?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"upload_photo"
 									],
 									"query": [
@@ -11347,9 +11471,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/upload_photo?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"upload_photo"
 									],
 									"query": [
@@ -11447,9 +11572,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/upload_photo",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"upload_photo"
 									],
 									"query": [
@@ -11561,9 +11687,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/reviews/add?lang=uk",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"reviews",
 								"add"
 							],
@@ -11585,9 +11712,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/reviews/show?lang=uk&user_id=3",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"reviews",
 								"show"
 							],
@@ -11615,9 +11743,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/reviews/show?lang=uk&user_id=5",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"reviews",
 								"show"
 							],
@@ -11672,9 +11801,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/parser?url={{url_ebay}}",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"parser"
 							],
 							"query": [
@@ -11713,9 +11843,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/parser?url=https://www.ebay.com/itm/324444618400",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"parser"
 									],
 									"query": [
@@ -11815,9 +11946,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/parser?url={{url_rozetka}}",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"parser"
 							],
 							"query": [
@@ -11856,9 +11988,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/parser?url=https://hard.rozetka.com.ua/dell_210_axrq/p274014238/",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"parser"
 									],
 									"query": [
@@ -11958,9 +12091,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/parser?url={{url_amazon}}",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"parser"
 							],
 							"query": [
@@ -11999,9 +12133,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/parser?url=https://www.amazon.com/Dell-SE2419Hx-23-8-1920x1080-Monitor/dp/B07HKV5RLG/ref=psdc_1292115011_t3_B08BF4CZSV",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"parser"
 									],
 									"query": [
@@ -12101,9 +12236,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/parser?url={{url_moyo}}",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"parser"
 							],
 							"query": [
@@ -12142,9 +12278,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/parser?url=https://www.moyo.ua/noutbuk_hp_15-dw1015ua_2f3g3ea_/477782.html",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"parser"
 									],
 									"query": [
@@ -12244,9 +12381,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/parser?url={{url_aliexpress}}",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"parser"
 							],
 							"query": [
@@ -12285,9 +12423,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/parser?url=https://aliexpress.ru/item/4001359505142.html",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"parser"
 									],
 									"query": [
@@ -12381,9 +12520,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/chats/add?rate_id=152&order_id=7&to_user=1&user_id=1",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"chats",
 								"add"
 							],
@@ -12431,9 +12571,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/chats/show?user_id=1&addressee=11&order_id=3",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"chats",
 								"show"
 							],
@@ -12474,9 +12615,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/chats/delete?chat_id=12&user_id=1",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"chats",
 								"delete"
 							],
@@ -12540,52 +12682,65 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "{{host}}/{{endpoint}}/messages/add?chat_id=9&rate_id=291&order_id=1&from_user=5&to_user=1&message_date=2021-06-22 15:04&message_text=Test message&message_attach=ZZZ&type=accepting",
-							"host": [
-								"{{host}}/{{endpoint}}"
-							],
-							"path": [
-								"messages",
-								"add"
-							],
-							"query": [
+						"body": {
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "chat_id",
-									"value": "9"
+									"value": "9",
+									"type": "text"
 								},
 								{
 									"key": "rate_id",
-									"value": "291"
+									"value": "291",
+									"type": "text"
 								},
 								{
 									"key": "order_id",
-									"value": "1"
+									"value": "1",
+									"type": "text"
 								},
 								{
 									"key": "from_user",
-									"value": "5"
+									"value": "5",
+									"type": "text"
 								},
 								{
 									"key": "to_user",
-									"value": "1"
+									"value": "1",
+									"type": "text"
 								},
 								{
 									"key": "message_date",
-									"value": "2021-06-22 15:04"
+									"value": "2021-06-22 15:04",
+									"type": "text"
 								},
 								{
 									"key": "message_text",
-									"value": "Test message"
+									"value": "Test message",
+									"type": "text"
 								},
 								{
 									"key": "message_attach",
-									"value": "ZZZ"
+									"value": "ZZZ",
+									"type": "text"
 								},
 								{
 									"key": "type",
-									"value": "accepting"
+									"value": "accepting",
+									"type": "text"
 								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/messages/add",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"messages",
+								"add"
 							]
 						}
 					},
@@ -12611,34 +12766,40 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/messages/show?user_id=1&chat_id=7&count=1&pages=1&sort=DESC",
+							"raw": "{{host}}/{{endpoint}}/messages/show",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"messages",
 								"show"
 							],
 							"query": [
 								{
 									"key": "user_id",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "chat_id",
-									"value": "7"
+									"value": "7",
+									"disabled": true
 								},
 								{
 									"key": "count",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "pages",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "sort",
-									"value": "DESC"
+									"value": "DESC",
+									"disabled": true
 								}
 							]
 						}
@@ -12683,9 +12844,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/upload",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"upload"
 							]
 						}
@@ -12746,9 +12908,10 @@
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/disputes/add",
 							"host": [
-								"{{host}}/{{endpoint}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{endpoint}}",
 								"disputes",
 								"add"
 							],
@@ -12814,9 +12977,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/disputes/add?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"disputes",
 										"add"
 									],
@@ -12925,9 +13089,10 @@
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/disputes/add?lang=uk",
 									"host": [
-										"{{host}}/{{endpoint}}"
+										"{{host}}"
 									],
 									"path": [
+										"{{endpoint}}",
 										"disputes",
 										"add"
 									],

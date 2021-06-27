@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
 {
+    public const STATUS_ACTIVE = 'active';
     public const STATUS_DONE = 'done';
     public const STATUS_WORK = 'work';
     public const STATUS_DISPUTE = 'dispute';

@@ -241,8 +241,16 @@ Route::group(
     }
 );
 
-# Створення завдання
-Route::post('create_job', 'API\JobController@createJob')->middleware(MIDDLEWARE_AUTH_BASIC);
+// Завдання
+Route::group(
+    [
+        'prefix' => 'jobs',
+    ],
+    function () {
+        # Створення завдання
+        Route::post('add', 'API\JobController@addJob')->middleware(MIDDLEWARE_AUTH_BASIC);
+    }
+);
 
 # Парсинг даних
 Route::get('parser', API\ParserController::class)->middleware(MIDDLEWARE_AUTH_BASIC);
