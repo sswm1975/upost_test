@@ -212,26 +212,34 @@ Route::group(
     }
 );
 
-# Зробити ставку
-Route::post('create_rate', 'API\RateController@createRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+// Ставки
+Route::group(
+    [
+        'prefix' => 'rates',
+    ],
+    function () {
+        # Зробити ставку
+        Route::post('add', 'API\RateController@addRate')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Редагувати ставку
-Route::post('update_rate/{rate_id}', 'API\RateController@updateRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Редагувати ставку
+        Route::post('{rate_id}/update', 'API\RateController@updateRate')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Видалити ставку
-Route::delete('delete_rate/{rate_id}', 'API\RateController@deleteRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Видалити ставку
+        Route::delete('{rate_id}/delete', 'API\RateController@deleteRate')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Відхилити ставку
-Route::post('reject_rate/{rate_id}', 'API\RateController@rejectRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Відхилити ставку
+        Route::post('{rate_id}/reject', 'API\RateController@rejectRate')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Отримати ставки
-Route::get('show_rates', 'API\RateController@showRates')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Отримати ставки
+        Route::get('show', 'API\RateController@showRates')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Переглянути ставку
-Route::get('show_rate/{rate_id}', 'API\RateController@showRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Переглянути ставку
+        Route::get('{rate_id}/show', 'API\RateController@showRate')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Прийняти ставку
-Route::post('accept_rate/{rate_id}', 'API\RateController@acceptRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Прийняти ставку
+        Route::post('{rate_id}/accept', 'API\RateController@acceptRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+    }
+);
 
 # Створення завдання
 Route::post('create_job', 'API\JobController@createJob')->middleware(MIDDLEWARE_AUTH_BASIC);

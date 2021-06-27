@@ -12,6 +12,7 @@ class Rate extends Model
     public const STATUS_PROGRESS = 'progress';
     public const STATUS_DISPUTE = 'dispute';
     public const STATUS_SUCCESSFUL = 'successful';
+    public const STATUS_BAN = 'ban';
 
     protected $table = 'rate';
     protected $primaryKey = 'rate_id';
@@ -23,7 +24,8 @@ class Rate extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->rate_status = 'active';
+            $model->user_id = request()->user()->user_id;
+            $model->rate_status = self::STATUS_ACTIVE;
             $model->read_rate = 0;
             $model->rate_date  = date('Y-m-d H:i');
         });

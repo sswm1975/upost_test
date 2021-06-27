@@ -8663,12 +8663,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/create_rate",
+							"raw": "{{host}}{{endpoint}}/rates/add",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"create_rate"
+								"rates",
+								"add"
 							]
 						}
 					},
@@ -8757,12 +8758,13 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/create_rate",
+									"raw": "{{host}}{{endpoint}}/rates/add",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"create_rate"
+										"rates",
+										"add"
 									]
 								}
 							},
@@ -8907,12 +8909,13 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/create_rate",
+									"raw": "{{host}}{{endpoint}}/rates/add",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"create_rate"
+										"rates",
+										"add"
 									]
 								}
 							},
@@ -8968,6 +8971,17 @@
 				},
 				{
 					"name": "Редагувати ставку",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"rate_id\", 306);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -9020,13 +9034,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}{{endpoint}}/update_rate/306",
+							"raw": "{{host}}{{endpoint}}/rates/{{rate_id}}/update",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"update_rate",
-								"306"
+								"rates",
+								"{{rate_id}}",
+								"update"
 							],
 							"query": [
 								{
@@ -9087,13 +9102,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/update_rate/306?lang=uk",
+									"raw": "{{host}}{{endpoint}}/rates/306/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"update_rate",
-										"306"
+										"rates",
+										"306",
+										"update"
 									],
 									"query": [
 										{
@@ -9204,13 +9220,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/update_rate/302?lang=uk",
+									"raw": "{{host}}{{endpoint}}/rates/302/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"update_rate",
-										"302"
+										"rates",
+										"302",
+										"update"
 									],
 									"query": [
 										{
@@ -9317,13 +9334,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/update_rate/302?lang=uk",
+									"raw": "{{host}}{{endpoint}}/rates/302/update?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"update_rate",
-										"302"
+										"rates",
+										"302",
+										"update"
 									],
 									"query": [
 										{
@@ -9386,6 +9404,17 @@
 				},
 				{
 					"name": "Видалити ставку",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"rate_id\", 306);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -9403,13 +9432,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/delete_rate/306",
+							"raw": "{{host}}{{endpoint}}/rates/{{rate_id}}/delete",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"delete_rate",
-								"306"
+								"rates",
+								"{{rate_id}}",
+								"delete"
 							],
 							"query": [
 								{
@@ -9445,13 +9475,14 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/delete_rate/306",
+									"raw": "{{host}}{{endpoint}}/rates/306/delete",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"delete_rate",
-										"306"
+										"rates",
+										"306",
+										"delete"
 									],
 									"query": [
 										{
@@ -9534,13 +9565,14 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{host}}{{endpoint}}/delete_rate/302?lang=uk",
+									"raw": "{{host}}{{endpoint}}/rates/302/delete?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"delete_rate",
-										"302"
+										"rates",
+										"302",
+										"delete"
 									],
 									"query": [
 										{
@@ -9603,6 +9635,17 @@
 				},
 				{
 					"name": "Відхилити ставку",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"rate_id\", 304);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -9620,13 +9663,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/reject_rate/304",
+							"raw": "{{host}}{{endpoint}}/rates/{{rate_id}}/reject",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"reject_rate",
-								"304"
+								"rates",
+								"{{rate_id}}",
+								"reject"
 							],
 							"query": [
 								{
@@ -9658,13 +9702,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/reject_rate/304",
+									"raw": "{{host}}{{endpoint}}/rates/304/reject",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"reject_rate",
-										"304"
+										"rates",
+										"304",
+										"reject"
 									],
 									"query": [
 										{
@@ -9743,13 +9788,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/reject_rate/304",
+									"raw": "{{host}}{{endpoint}}/rates/304/reject",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"reject_rate",
-										"304"
+										"rates",
+										"304",
+										"reject"
 									],
 									"query": [
 										{
@@ -9820,24 +9866,23 @@
 								"key": "PHP-AUTH-USER",
 								"value": "{{email}}",
 								"type": "text",
-								"description": "Логін: емейл або телефон",
-								"disabled": true
+								"description": "Логін: емейл або телефон"
 							},
 							{
 								"key": "PHP-AUTH-PW",
 								"value": "{{password_hash}}",
 								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))",
-								"disabled": true
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/show_rates",
+							"raw": "{{host}}{{endpoint}}/rates/show",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"show_rates"
+								"rates",
+								"show"
 							],
 							"query": [
 								{
@@ -9911,12 +9956,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/show_rates?user_id=3&rate_type=route&order_id=2&route_id=49&lang=uk",
+									"raw": "{{host}}{{endpoint}}/rates/show?user_id=3&rate_type=route&order_id=2&route_id=49&lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"show_rates"
+										"rates",
+										"show"
 									],
 									"query": [
 										{
@@ -10032,33 +10078,38 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/show_rates?user_id=3&rate_type=route3&order_id=2&route_id=49&lang=uk",
+									"raw": "{{host}}{{endpoint}}/rates/show",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"show_rates"
+										"rates",
+										"show"
 									],
 									"query": [
 										{
 											"key": "user_id",
 											"value": "3",
-											"description": "Код користувача"
+											"description": "Код користувача",
+											"disabled": true
 										},
 										{
 											"key": "rate_type",
-											"value": "route3",
-											"description": "Тип сущності: order або route"
+											"value": "route",
+											"description": "Тип сущності: order або route",
+											"disabled": true
 										},
 										{
 											"key": "order_id",
 											"value": "2",
-											"description": "Код замовлення"
+											"description": "Код замовлення",
+											"disabled": true
 										},
 										{
 											"key": "route_id",
 											"value": "49",
-											"description": "Код маршруту"
+											"description": "Код маршруту",
+											"disabled": true
 										},
 										{
 											"key": "rate_id",
@@ -10081,7 +10132,8 @@
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
 										}
 									]
 								}
@@ -10092,7 +10144,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Thu, 17 Jun 2021 14:53:21 GMT"
+									"value": "Sun, 27 Jun 2021 04:05:02 GMT"
 								},
 								{
 									"key": "Server",
@@ -10112,11 +10164,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "57"
+									"value": "59"
 								},
 								{
 									"key": "Content-Length",
-									"value": "227"
+									"value": "188"
 								},
 								{
 									"key": "Keep-Alive",
@@ -10132,12 +10184,23 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": false,\n    \"errors\": {\n        \"rate_type\": [\n            \"Вибране для rate type значення не коректне.\"\n        ]\n    }\n}"
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"The rate type field is required.\",\n        \"The order id field is required when route id is not present.\",\n        \"The route id field is required when order id is not present.\"\n    ]\n}"
 						}
 					]
 				},
 				{
 					"name": "Переглянути ставку",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"rate_id\", 304);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -10145,25 +10208,24 @@
 								"key": "PHP-AUTH-USER",
 								"value": "{{email}}",
 								"type": "text",
-								"description": "Логін: емейл або телефон",
-								"disabled": true
+								"description": "Логін: емейл або телефон"
 							},
 							{
 								"key": "PHP-AUTH-PW",
 								"value": "{{password_hash}}",
 								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))",
-								"disabled": true
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/show_rate/3053",
+							"raw": "{{host}}{{endpoint}}/rates/{{rate_id}}/show",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"show_rate",
-								"3053"
+								"rates",
+								"{{rate_id}}",
+								"show"
 							],
 							"query": [
 								{
@@ -10195,13 +10257,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/show_rate/305?lang=uk",
+									"raw": "{{host}}{{endpoint}}/rates/305/show?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"show_rate",
-										"305"
+										"rates",
+										"305",
+										"show"
 									],
 									"query": [
 										{
@@ -10279,13 +10342,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/show_rate/3053",
+									"raw": "{{host}}{{endpoint}}/rates/3053/show",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"show_rate",
-										"3053"
+										"rates",
+										"3053",
+										"show"
 									],
 									"query": [
 										{
@@ -10349,6 +10413,17 @@
 				},
 				{
 					"name": "Прийняти ставку",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"rate_id\", 306);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -10356,25 +10431,24 @@
 								"key": "PHP-AUTH-USER",
 								"value": "{{email}}",
 								"type": "text",
-								"description": "Логін: емейл або телефон",
-								"disabled": true
+								"description": "Логін: емейл або телефон"
 							},
 							{
 								"key": "PHP-AUTH-PW",
 								"value": "{{password_hash}}",
 								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))",
-								"disabled": true
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
 							}
 						],
 						"url": {
-							"raw": "{{host}}{{endpoint}}/accept_rate/304",
+							"raw": "{{host}}{{endpoint}}/rates/{{rate_id}}/accept",
 							"host": [
 								"{{host}}{{endpoint}}"
 							],
 							"path": [
-								"accept_rate",
-								"304"
+								"rates",
+								"{{rate_id}}",
+								"accept"
 							],
 							"query": [
 								{
@@ -10406,13 +10480,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/accept_rate/304",
+									"raw": "{{host}}{{endpoint}}/rates/304/accept",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"accept_rate",
-										"304"
+										"rates",
+										"304",
+										"accept"
 									],
 									"query": [
 										{
@@ -10491,13 +10566,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{host}}{{endpoint}}/accept_rate/264?lang=uk",
+									"raw": "{{host}}{{endpoint}}/rates/264/accept?lang=uk",
 									"host": [
 										"{{host}}{{endpoint}}"
 									],
 									"path": [
-										"accept_rate",
-										"264"
+										"rates",
+										"264",
+										"accept"
 									],
 									"query": [
 										{
