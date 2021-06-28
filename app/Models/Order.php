@@ -26,6 +26,7 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            $model->user_id = request()->user()->user_id;
             $model->order_look = 0;
             $model->order_register_date = $model->freshTimestamp();
         });

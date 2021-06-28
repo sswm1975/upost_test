@@ -164,13 +164,13 @@ Route::group(
         # Підтвердити виконання замовлення
         Route::post('confirm', 'API\OrderController@confirmOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+        # Лічильник переглядів
+        Route::post('{order_id}/add_look', 'API\OrderController@addLook');
+
         # Скарга на замовлення
         Route::post('{order_id}/strike', 'API\OrderController@strikeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
-
-# Лічильник переглядів
-Route::post('update_counter', API\CounterController::class);
 
 # Загрузка фото і створення мініатюр
 Route::post('upload_photo', 'API\PhotoLoaderController@uploadPhoto')->middleware(MIDDLEWARE_AUTH_BASIC);
@@ -195,6 +195,9 @@ Route::group(
 
         # Підбір замовлення для маршруту
         Route::get('{route_id}/selection_order', 'API\RouteController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Лічильник переглядів
+        Route::post('{route_id}/add_look', 'API\RouteController@addLook');
     }
 );
 

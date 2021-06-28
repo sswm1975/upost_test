@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ErrorException;
+use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Route;
 use App\Models\Order;
@@ -19,34 +21,22 @@ class RouteController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException
+     * @throws ValidatorException
      */
     public function addRoute(Request $request): JsonResponse
     {
-        $user = $request->user();
-
-        # Якшо ім'я, прізвище, дата народження не заповнені - то не давати створити маршрут.
-        if (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.not_filled_profile')],
-            ], 404);
-        }
-        $validator = $this->validator($request->all());
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all(),
-            ], 404);
+        if (isProfileNotFilled()) {
+            throw new ErrorException(__('message.not_filled_profile'));
         }
 
-        $request->merge(['user_id' => $user->user_id]);
+        validateOrExit($this->validator($request->all()));
 
         $route = Route::create($request->all());
 
         return response()->json([
-            'status'  => true,
-            'result'  => null_to_blank($route->toArray()),
+            'status' => true,
+            'result' => null_to_blank($route->toArray()),
         ]);
     }
 
@@ -85,6 +75,7 @@ class RouteController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws ValidatorException
      */
     public function showRoutes(Request $request): JsonResponse
     {
@@ -108,13 +99,7 @@ class RouteController extends Controller
                 'page'           => 'sometimes|required|integer|min:1',
             ]
         );
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all()
-            ], 404);
-        }
+        validateOrExit($validator);
 
         $data = $validator->validated();
 
@@ -163,41 +148,28 @@ class RouteController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws ErrorException
+     * @throws ValidatorException
      */
     public function updateRoute(int $route_id, Request $request): JsonResponse
     {
-        $user = $request->user();
-
-        # Якшо ім'я, прізвище, дата народження не заповнені - то не давати створити маршрут.
-        if (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.not_filled_profile')],
-            ], 404);
+        if (isProfileNotFilled()) {
+            throw new ErrorException(__('message.not_filled_profile'));
         }
 
         # Ищем маршрут по его коду, он должен принадлежать авторизированному пользователю и быть активным
         $route = Route::query()
             ->where('route_id', $route_id)
-            ->where('user_id', $user->user_id)
+            ->where('user_id', $request->user()->user_id)
             ->where('route_status', 'active')
             ->first();
 
         if (empty($route)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.route_not_found')],
-            ], 404);
+            throw new ErrorException(__('message.route_not_found'));
         }
 
         $validator = $this->validator($request->all());
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all()
-            ], 404);
-        }
+        validateOrExit($validator);
 
         $route->update($validator->validated());
 
@@ -213,6 +185,7 @@ class RouteController extends Controller
      * @param int $route_id
      * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function deleteRoute(int $route_id, Request $request): JsonResponse
     {
@@ -220,14 +193,15 @@ class RouteController extends Controller
         $route = Route::query()
             ->where('route_id', $route_id)
             ->where('user_id',  $request->user()->user_id)
-            ->whereIn('route_status', ['active', 'ban', 'close'])
+            ->whereIn('route_status', [
+                Route::STATUS_ACTIVE,
+                Route::STATUS_BAN,
+                Route::STATUS_CLOSED,
+            ])
             ->first();
 
         if (empty($route)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.route_not_found')],
-            ], 404);
+            throw new ErrorException(__('message.route_not_found'));
         }
 
         $affected = $route->delete();
@@ -244,18 +218,13 @@ class RouteController extends Controller
      */
     public function selectionOrder(int $route_id, Request $request):JsonResponse
     {
-        $route = Route::find($route_id);
-
-        if (empty($route)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.route_not_found')],
-            ], 404);
+        if (!$route = Route::find($route_id)) {
+            throw new ErrorException(__('message.route_not_found'));
         }
 
         $orders = Order::query()
             ->where('user_id',  $request->user()->user_id)
-            ->where('order_status', 'active')
+            ->where('order_status', Order::STATUS_ACTIVE)
             ->where('order_from_country', $route->route_from_country)
             ->where('order_start', '>=', $route->route_start)
             ->where('order_deadline', '<=', $route->route_end)
@@ -266,6 +235,39 @@ class RouteController extends Controller
             'status' => true,
             'count'  => count($orders),
             'result' => null_to_blank($orders),
+        ]);
+    }
+
+    /**
+     * Увеличить счетчик просмотров маршрута.
+     *
+     * @param int $route_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     * @throws ValidatorException
+     */
+    public function addLook(int $route_id, Request $request): JsonResponse
+    {
+        validateOrExit(
+            Validator::make($request->all(),
+                [
+                    'user_id' => 'required|integer|exists:users,user_id',
+                ]
+            )
+        );
+
+        if (!$route = Route::find($route_id)) {
+            throw new ErrorException(__('message.route_not_found'));
+        }
+
+        if ($route->user_id <> $request->get('user_id')) {
+            $route->increment('route_look');
+        }
+
+        return response()->json([
+            'status'  => true,
+            'looks'   => $route->route_look,
         ]);
     }
 }

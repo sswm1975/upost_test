@@ -261,6 +261,20 @@ function validateOrExit($validator)
 }
 
 /**
+ * Проверка заполнения профиля (ім'я, прізвище, дата народження).
+ *
+ * @return bool
+ */
+function isProfileNotFilled(): bool
+{
+    if (!$user = request()->user()) {
+        return false;
+    };
+
+    return (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday));
+}
+
+/**
  * Возвращает хэш пароля.
  *
  * @param string $password

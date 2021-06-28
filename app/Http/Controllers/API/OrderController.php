@@ -34,28 +34,16 @@ class OrderController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException
+     * @throws ValidatorException
      */
     public function addOrder(Request $request): JsonResponse
     {
-        $user = $request->user();
-        $request->merge(['user_id' => $user->user_id]);
-
-        # Якшо не заповнені ім’я, прізвищі, дата народження – то заказ розмістити неможливо.
-        if (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.not_filled_profile')],
-            ], 404);
+        if (isProfileNotFilled()) {
+            throw new ErrorException(__('message.not_filled_profile'));
         }
 
-        $validator = $this->validator($request->all());
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all(),
-            ], 404);
-        }
+        validateOrExit($this->validator($request->all()));
 
         $order = Order::create($request->all());
 
@@ -108,22 +96,22 @@ class OrderController extends Controller
      * @param int $order_id
      * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function deleteOrder(int $order_id, Request $request): JsonResponse
     {
-        $user = $request->user();
-
         $order = Order::query()
             ->where('order_id', $order_id)
-            ->where('user_id', $user->user_id)
-            ->whereIn('order_status', ['active', 'ban', 'closed'])
+            ->where('user_id', $request->user()->user_id)
+            ->whereIn('order_status', [
+                Order::STATUS_ACTIVE,
+                Order::STATUS_BAN,
+                Order::STATUS_CLOSED,
+            ])
             ->first();
 
         if (empty($order)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.order_not_found')],
-            ], 404);
+            throw new ErrorException(__('message.order_not_found'));
         }
 
         $affected = $order->delete();
@@ -137,6 +125,7 @@ class OrderController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws ValidatorException
      */
     public function showOrders(Request $request): JsonResponse
     {
@@ -163,13 +152,7 @@ class OrderController extends Controller
                 'currency'       => 'sometimes|required|in:' . implode(',', array_keys(config('app.currencies'))),
             ]
         );
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all()
-            ], 404);
-        }
+        validateOrExit($validator);
 
         $data = $validator->validated();
 
@@ -225,23 +208,17 @@ class OrderController extends Controller
      * @param int $order_id
      * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function selectionRoute(int $order_id, Request $request):JsonResponse
     {
-        $user = $request->user();
-
-        $order = Order::find($order_id);
-
-        if (empty($order)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.order_not_found')],
-            ], 404);
+        if (!$order = Order::find($order_id)) {
+            throw new ErrorException(__('message.order_not_found'));
         }
 
         $routes = Route::query()
-            ->where('user_id', $user->user_id)
-            ->where('route_status', 'active')
+            ->where('user_id', $request->user()->user_id)
+            ->where('route_status', Route::STATUS_ACTIVE)
             ->where('route_from_country', $order->order_from_country)
             ->where('route_start', '>=', $order->order_start)
             ->where('route_end', '<=', $order->order_deadline)
@@ -317,15 +294,15 @@ class OrderController extends Controller
      */
     public function strikeOrder(int $order_id, Request $request): JsonResponse
     {
-        $validator = Validator::make(request()->all(),
-            [
-                'strike_id' => 'required|integer',
-            ]
+        validateOrExit(
+            Validator::make(request()->all(),
+                [
+                    'strike_id' => 'required|integer',
+                ]
+            )
         );
-        validateOrExit($validator);
 
-        $order = Order::find($order_id);
-        if (empty($order)) {
+        if (!$order = Order::find($order_id)) {
             throw new ErrorException(__('message.order_not_found'));
         }
 
@@ -348,6 +325,39 @@ class OrderController extends Controller
 
         return response()->json([
             'status' => true
+        ]);
+    }
+
+    /**
+     * Увеличить счетчик просмотров заказа.
+     *
+     * @param int $order_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     * @throws ValidatorException
+     */
+    public function addLook(int $order_id, Request $request): JsonResponse
+    {
+        validateOrExit(
+            Validator::make($request->all(),
+                [
+                    'user_id' => 'required|integer|exists:users,user_id',
+                ]
+            )
+        );
+
+        if (!$order = Order::find($order_id)) {
+            throw new ErrorException(__('message.order_not_found'));
+        }
+
+        if ($order->user_id <> $request->get('user_id')) {
+            $order->increment('order_look');
+        }
+
+        return response()->json([
+            'status'  => true,
+            'looks'   => $order->order_look,
         ]);
     }
 }
