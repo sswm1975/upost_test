@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class FavoriteController extends Controller
 {
@@ -16,22 +18,14 @@ class FavoriteController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidatorException|ValidationException
      */
     public function updateFavorite(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'type' => 'required|in:order,route',
-                'id'   => 'required|integer',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all(),
-            ], 404);
-        }
+        validateOrExit([
+            'type' => 'required|in:order,route',
+            'id'   => 'required|integer',
+        ]);
 
         $user = $request->user();
         $field = 'user_favorite_' . $request->get('type') . 's';
@@ -57,21 +51,13 @@ class FavoriteController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidatorException|ValidationException
      */
     public function showFavorites(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'type' => 'required|in:order,route',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all(),
-            ], 404);
-        }
+        validateOrExit([
+            'type' => 'required|in:order,route',
+        ]);
 
         $type = $request->get('type');
         $field = 'user_favorite_' . $type . 's';

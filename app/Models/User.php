@@ -11,6 +11,9 @@ class User extends Model
 {
     use Notifiable;
 
+    const VALIDATION_STATUS_NO_VALID = 'no_valid';
+    const VALIDATION_STATUS_VALID = 'valid';
+
     protected $primaryKey = 'user_id';
     protected $guarded = ['user_id'];
     public $timestamps = false;
@@ -92,6 +95,7 @@ class User extends Model
 
         static::creating(function ($model) {
             $model->user_register_date = $model->freshTimestamp();
+            $model->user_validation = self::VALIDATION_STATUS_NO_VALID;
         });
     }
 
@@ -121,7 +125,7 @@ class User extends Model
      * @param  Notification  $notification
      * @return string
      */
-    public function routeNotificationForMail(Notification $notification)
+    public function routeNotificationForMail(Notification $notification): string
     {
         return $this->user_email;
     }

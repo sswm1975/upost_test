@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Models\Country;
 use App\Models\City;
@@ -16,20 +16,15 @@ class CountryController extends Controller
      *
      * @param int $country_id
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function getCountry(int $country_id): JsonResponse
     {
-        $country = Country::query()
+        $country = Country::language(App::getLocale())
             ->where('country_id', $country_id)
-            ->language(App::getLocale())
             ->first();
 
-        if (empty($country)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.country_not_found')],
-            ], 404);
-        }
+        if (!$country) throw new ErrorException(__('message.country_not_found'));
 
         return response()->json([
             'status' => true,
@@ -40,13 +35,11 @@ class CountryController extends Controller
     /**
      * Получить список всех стран.
      *
-     * @param Request $request
      * @return JsonResponse
      */
-    public function getCountries(Request $request): JsonResponse
+    public function getCountries(): JsonResponse
     {
-        $countries = Country::query()
-            ->language(App::getLocale())
+        $countries = Country::language(App::getLocale())
             ->addSelect('country_id')
             ->oldest('country_id')
             ->get();
@@ -61,25 +54,19 @@ class CountryController extends Controller
      * Получить наименование города по его коду.
      *
      * @param int $city_id
-     * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException
      */
-    public function getCity(int $city_id, Request $request): JsonResponse
+    public function getCity(int $city_id): JsonResponse
     {
-        $city = City::query()
+        $city = City::language(App::getLocale())
             ->where('city_id', $city_id)
-            ->language(App::getLocale())
             ->first();
 
-        if (empty($city)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.city_not_found')],
-            ], 404);
-        }
+        if (!$city) throw new ErrorException(__('message.city_not_found'));
 
         return response()->json([
-            'status' => 200,
+            'status' => true,
             'result' => $city->city_name,
         ]);
     }
@@ -92,12 +79,11 @@ class CountryController extends Controller
      */
     public function getCities(int $country_id = 0): JsonResponse
     {
-        $countries = Country::query()
+        $countries = Country::language(App::getLocale())
             ->with('cities:country_id,city_id,city_name_' . App::getLocale() . ' as city_name' )
-            ->when(!empty($country_id), function ($query) use ($country_id) {
+            ->when($country_id, function ($query) use ($country_id) {
                 return $query->where('country_id', $country_id);
             })
-            ->language(App::getLocale())
             ->addSelect('country_id')
             ->oldest('country_id')
             ->get()

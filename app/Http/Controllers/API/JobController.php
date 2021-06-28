@@ -9,7 +9,7 @@ use App\Models\Job;
 use App\Models\Rate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class JobController extends Controller
 {
@@ -18,29 +18,22 @@ class JobController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException
-     * @throws ErrorException
+     * @throws ValidatorException|ErrorException|ValidationException
      */
     public function addJob(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'rate_id' => 'required|integer|unique:jobs,rate_id',
-            ]
-        );
-
-        validateOrExit($validator);
-
-        $user_id = $request->user()->user_id;
+        validateOrExit([
+            'rate_id' => 'required|integer|unique:jobs,rate_id',
+        ]);
 
         $rate = Rate::query()
             ->with('route:route_id,user_id', 'order:order_id,user_id')
             ->where('rate_id', $request->rate_id)
             ->first();
 
-        if (empty($rate)) {
-            throw new ErrorException(__('message.rate_not_found'));
-        }
+        if (!$rate) throw new ErrorException(__('message.rate_not_found'));
+
+        $user_id = $request->user()->user_id;
 
         # запрещено создавать задание, если пользователь к этой ставке не имеет отношения
         if ($rate->order->user_id <> $user_id && $rate->route->user_id <> $user_id) {

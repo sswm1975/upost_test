@@ -33,8 +33,9 @@ class ProfileController extends Controller
     /**
      * Получить публичные данные пользователя.
      *
-     * @param  int $user_id
+     * @param int $user_id
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function getPublicData(int $user_id): JsonResponse
     {
@@ -42,12 +43,7 @@ class ProfileController extends Controller
             ->where('user_id', $user_id)
             ->first(User::FIELDS_FOR_SHOW);
 
-        if (empty($user)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.user_not_found')],
-            ], 404);
-        }
+        if (!$user) throw new ErrorException(__('message.user_not_found'));
 
         return response()->json([
             'status' => true,
@@ -83,20 +79,11 @@ class ProfileController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|ValidatorException
      */
     public function updatePublicData(Request $request): JsonResponse
     {
-        $validator = $this->validator($request->only(User::FIELDS_FOR_EDIT));
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all(),
-            ], 404);
-        }
-
-        $data = $validator->validated();
+        $data = validateOrExit($this->validator($request->only(User::FIELDS_FOR_EDIT)));
 
         $user = $request->user();
 
@@ -104,7 +91,7 @@ class ProfileController extends Controller
             $data['user_photo'] = null;
         }
 
-        if (!empty($data['user_photo'])) {
+        if ($request->filled('user_photo')) {
             $data['user_photo'] = $this->saveImage($data['user_photo'], $user->user_id);
         }
 
@@ -126,27 +113,16 @@ class ProfileController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|ValidatorException
      */
     public function updateLanguage(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->only(['user_lang', 'user_currency']),
-            [
-                'user_lang'     => 'required_without:user_currency|in:' . implode(',', config('app.languages')),
-                'user_currency' => 'required_without:user_lang|in:' . implode(',', array_keys(config('app.currencies'))),
-            ]
-        );
+        $data = validateOrExit([
+            'user_lang'     => 'required_without:user_currency|in:' . implode(',', config('app.languages')),
+            'user_currency' => 'required_without:user_lang|in:' . implode(',', array_keys(config('app.currencies'))),
+        ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all(),
-            ], 404);
-        }
-
-        $user = $request->user();
-        $user->fill($validator->validated());
-        $user->save();
+        $request->user()->fill($data)->save();
 
         return response()->json(['status' => true]);
     }
@@ -156,27 +132,22 @@ class ProfileController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException
+     * @throws ValidationException|ValidatorException
      */
     public function updatePassword(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'old_password'  => ['required', function ($attribute, $value, $fail) {
-                    if (getHashPassword($value) !== request()->user()->user_password) {
-                        return $fail(__('message.old_password_incorrect'));
-                    }
-                }],
-                'user_password' => ['required', 'min:6', 'confirmed'],
-            ]
-        );
-        validateOrExit($validator);
-
-        $user_change = UserChange::create($validator->validated());
+        $data = validateOrExit([
+            'old_password'  => ['required', function ($attribute, $value, $fail) {
+                if (getHashPassword($value) !== request()->user()->user_password) {
+                    return $fail(__('message.old_password_incorrect'));
+                }
+            }],
+            'user_password' => ['required', 'min:6', 'confirmed'],
+        ]);
 
         return response()->json([
             'status' => true,
-            'token'  => $user_change->token,
+            'token'  => UserChange::create($data)->token,
         ]);
     }
 
@@ -185,23 +156,18 @@ class ProfileController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException
+     * @throws ValidationException|ValidatorException
      */
     public function updateLogin(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'user_phone'    => ['required_without:user_email', 'phone', 'unique:users,user_phone'],
-                'user_email'    => ['required_without:user_phone', 'email', 'max:30', 'unique:users,user_email'],
-            ]
-        );
-        validateOrExit($validator);
-
-        $user_change = UserChange::create($validator->validated());
+        $data = validateOrExit([
+            'user_phone'    => ['required_without:user_email', 'phone', 'unique:users,user_phone'],
+            'user_email'    => ['required_without:user_phone', 'email', 'max:30', 'unique:users,user_email'],
+        ]);
 
         return response()->json([
             'status' => true,
-            'token'  => $user_change->token,
+            'token'  => UserChange::create($data)->token,
         ]);
     }
 
@@ -210,23 +176,18 @@ class ProfileController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException
+     * @throws ValidationException|ValidatorException
      */
     public function updateCard(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'user_card_number' => ['required_without:user_card_name', 'bankcard'],
-                'user_card_name'   => ['required_without:user_card_number', 'max:50'],
-            ]
-        );
-        validateOrExit($validator);
-
-        $user_change = UserChange::create($validator->validated());
+        $data = validateOrExit([
+            'user_card_number' => ['required_without:user_card_name', 'bankcard'],
+            'user_card_name'   => ['required_without:user_card_number', 'max:50'],
+        ]);
 
         return response()->json([
             'status' => true,
-            'token'  => $user_change->token,
+            'token'  => UserChange::create($data)->token,
         ]);
     }
 
@@ -251,8 +212,7 @@ class ProfileController extends Controller
                 $data[$key] = $value;
             }
         }
-        $user->fill($data);
-        $user->save();
+        $user->fill($data)->save();
 
         $user_change->delete();
 

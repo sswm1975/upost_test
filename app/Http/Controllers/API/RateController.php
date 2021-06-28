@@ -21,13 +21,11 @@ class RateController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException
+     * @throws ValidatorException|ValidationException
      */
     public function addRate(Request $request): JsonResponse
     {
-        $validator = $this->validator4add($request);
-
-        validateOrExit($validator);
+        validateOrExit($this->validator4add($request));
 
         $rate = Rate::create($request->all());
 
@@ -175,16 +173,13 @@ class RateController extends Controller
      * @param int $rate_id
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
-     * @throws ValidatorException
+     * @throws ValidationException|ValidatorException
      */
     public function updateRate(int $rate_id, Request $request): JsonResponse
     {
-        $validator = $this->validator4update($rate_id, $request);
+        $data = validateOrExit($this->validator4update($rate_id, $request));
 
-        validateOrExit($validator);
-
-        $rate = Rate::where('rate_id', $rate_id)->first()->fill($validator->validated());
+        $rate = Rate::where('rate_id', $rate_id)->first()->fill($data);
         $rate->save();
 
         return response()->json([
@@ -257,17 +252,13 @@ class RateController extends Controller
      */
     public function deleteRate(int $rate_id, Request $request): JsonResponse
     {
-        $user = $request->user();
-
         $rate = Rate::query()
             ->where('rate_id', $rate_id)
-            ->where('user_id', $user->user_id)
+            ->where('user_id', $request->user()->user_id)
             ->where('rate_status', Rate::STATUS_ACTIVE)
             ->first();
 
-        if (empty($rate)) {
-            throw new ErrorException(__('message.rate_not_found'));
-        }
+        if (!$rate) throw new ErrorException(__('message.rate_not_found'));
 
         if ($rate->parent_id == 0) {
             $exists_next_rate = Rate::query()
@@ -279,9 +270,7 @@ class RateController extends Controller
                 ->where('rate_id', '>', $rate_id)
                 ->count();
         }
-        if ($exists_next_rate) {
-            throw new ErrorException(__('message.not_last_rate'));
-        }
+        if ($exists_next_rate) throw new ErrorException(__('message.not_last_rate'));
 
         $affected = $rate->delete();
 
@@ -308,9 +297,7 @@ class RateController extends Controller
             ->where('rate_status', Rate::STATUS_ACTIVE)
             ->first();
 
-        if (empty($rate)) {
-            throw new ErrorException(__('message.rate_not_found'));
-        }
+        if (!$rate) throw new ErrorException(__('message.rate_not_found'));
 
         if ($rate->parent_id == 0) {
             $exists_next_rate = Rate::query()
@@ -324,9 +311,7 @@ class RateController extends Controller
                 ->where('rate_id', '>', $rate_id)
                 ->count();
         }
-        if ($exists_next_rate) {
-            throw new ErrorException(__('message.not_last_rate'));
-        }
+        if ($exists_next_rate) throw new ErrorException(__('message.not_last_rate'));
 
         $affected = $rate->update(['rate_status' => Rate::STATUS_BAN]);
 
@@ -340,26 +325,19 @@ class RateController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
-     * @throws ValidatorException
+     * @throws ValidationException|ValidatorException
      */
     public function showRates(Request $request):JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'rate_type'     => 'required|in:order,route',
-                'user_id'       => 'sometimes|integer',
-                'rate_id'       => 'sometimes|integer',
-                'order_id'      => 'required_without:route_id|integer',
-                'route_id'      => 'required_without:order_id|integer',
-                'parent_id'     => 'sometimes|integer',
-                'who_start'     => 'sometimes|integer',
-            ]
-        );
-
-        validateOrExit($validator);
-
-        $data = $validator->validated();
+        $data = validateOrExit([
+            'rate_type' => 'required|in:order,route',
+            'user_id'   => 'sometimes|integer',
+            'rate_id'   => 'sometimes|integer',
+            'order_id'  => 'required_without:route_id|integer',
+            'route_id'  => 'required_without:order_id|integer',
+            'parent_id' => 'sometimes|integer',
+            'who_start' => 'sometimes|integer',
+        ]);
 
         $rates = Rate::query()
             ->where('rate_type', $request->rate_type)
@@ -387,7 +365,7 @@ class RateController extends Controller
         $data = ['count' => 0, 'result' => []];
 
         if ($rates->count()) {
-            # нахожу заказ на мой маршрут (может быть не больше одного заказа)
+            # находим заказ на мой маршрут (может быть не больше одного заказа)
             if ($request->rate_type == 'order') {
                 $parent = $rates->where('parent_id', 0)->first();
                 if ($parent == 0) {
@@ -403,7 +381,7 @@ class RateController extends Controller
                 ];
             }
 
-            # нахожу маршруты на мой заказ (их может быть до 3 штук)
+            # находим маршруты на мой заказ (их может быть до 3 штук)
             if ($request->rate_type == 'route') {
                 $parents = $rates->where('parent_id', 0)->all();
 
@@ -451,9 +429,7 @@ class RateController extends Controller
      */
     public function showRate(int $rate_id, Request $request):JsonResponse
     {
-        $rate = Rate::find($rate_id);
-
-        if (empty($rate)) {
+        if (!$rate = Rate::find($rate_id)) {
             throw new ErrorException(__('message.rate_not_found'));
         }
 
@@ -482,9 +458,7 @@ class RateController extends Controller
             ->where('rate_status', 'active')
             ->first();
 
-        if (empty($rate)) {
-            throw new ErrorException(__('message.rate_not_found'));
-        }
+        if (!$rate) throw new ErrorException(__('message.rate_not_found'));
 
         $user_id = $request->user()->user_id;
 
@@ -498,9 +472,7 @@ class RateController extends Controller
             $accept = ($rate->rate_type == 'order' && $rate->route->user_id == $user_id) || ($rate->rate_type == 'route' && $rate->order->user_id == $user_id);
         }
 
-        if (!$accept) {
-            throw new ErrorException(__('message.rate_not_accepted'));
-        }
+        if (!$accept) throw new ErrorException(__('message.rate_not_accepted'));
 
         # существуют ещё ставки?
         if ($rate->parent_id == 0) {
@@ -508,11 +480,9 @@ class RateController extends Controller
         } else {
             $exists_next_rate = Rate::where('parent_id', $rate->parent_id)->where('rate_id', '>', $rate_id)->count();
         }
-        if ($exists_next_rate) {
-            throw new ErrorException(__('message.not_last_rate'));
-        }
+        if ($exists_next_rate) throw new ErrorException(__('message.not_last_rate'));
 
-        $rate->rate_status = 'in_progress';
+        $rate->rate_status = Rate::STATUS_PROGRESS;
         $rate->save();
 
         return response()->json([

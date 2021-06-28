@@ -21,14 +21,11 @@ class RouteController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
-     * @throws ValidatorException
+     * @throws ErrorException|ValidatorException|ValidationException
      */
     public function addRoute(Request $request): JsonResponse
     {
-        if (isProfileNotFilled()) {
-            throw new ErrorException(__('message.not_filled_profile'));
-        }
+        if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
         validateOrExit($this->validator($request->all()));
 
@@ -74,34 +71,28 @@ class RouteController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
-     * @throws ValidatorException
+     * @throws ValidationException|ValidatorException
      */
     public function showRoutes(Request $request): JsonResponse
     {
-        $validator = Validator::make(request()->all(),
-            [
-                'route_id'       => 'sometimes|required|array',
-                'route_id.*'     => 'required|integer',
-                'user_id'        => 'sometimes|required|integer',
-                'status'         => 'sometimes|required|in:active,ban,close',
-                'date_from'      => 'sometimes|required|date',
-                'date_to'        => 'sometimes|required|date|after_or_equal:date_from',
-                'country_from'   => 'sometimes|required|array',
-                'country_from.*' => 'required|integer',
-                'city_from'      => 'sometimes|required|array',
-                'city_from.*'    => 'required|integer',
-                'country_to'     => 'sometimes|required|array',
-                'country_to.*'   => 'required|integer',
-                'city_to'        => 'sometimes|required|array',
-                'city_to.*'      => 'required|integer',
-                'show'           => 'sometimes|required|integer|min:1',
-                'page'           => 'sometimes|required|integer|min:1',
-            ]
-        );
-        validateOrExit($validator);
-
-        $data = $validator->validated();
+        $data = validateOrExit([
+            'route_id'       => 'sometimes|required|array',
+            'route_id.*'     => 'required|integer',
+            'user_id'        => 'sometimes|required|integer',
+            'status'         => 'sometimes|required|in:active,ban,close',
+            'date_from'      => 'sometimes|required|date',
+            'date_to'        => 'sometimes|required|date|after_or_equal:date_from',
+            'country_from'   => 'sometimes|required|array',
+            'country_from.*' => 'required|integer',
+            'city_from'      => 'sometimes|required|array',
+            'city_from.*'    => 'required|integer',
+            'country_to'     => 'sometimes|required|array',
+            'country_to.*'   => 'required|integer',
+            'city_to'        => 'sometimes|required|array',
+            'city_to.*'      => 'required|integer',
+            'show'           => 'sometimes|required|integer|min:1',
+            'page'           => 'sometimes|required|integer|min:1',
+        ]);
 
         $routes = Route::query()
             ->where('route_status', $request->get('status', 'active'))
@@ -147,15 +138,11 @@ class RouteController extends Controller
      * @param int route_id
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
-     * @throws ErrorException
-     * @throws ValidatorException
+     * @throws ValidationException|ErrorException|ValidatorException
      */
     public function updateRoute(int $route_id, Request $request): JsonResponse
     {
-        if (isProfileNotFilled()) {
-            throw new ErrorException(__('message.not_filled_profile'));
-        }
+        if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
         # Ищем маршрут по его коду, он должен принадлежать авторизированному пользователю и быть активным
         $route = Route::query()
@@ -164,14 +151,11 @@ class RouteController extends Controller
             ->where('route_status', 'active')
             ->first();
 
-        if (empty($route)) {
-            throw new ErrorException(__('message.route_not_found'));
-        }
+        if (!$route) throw new ErrorException(__('message.route_not_found'));
 
-        $validator = $this->validator($request->all());
-        validateOrExit($validator);
+        $data = validateOrExit($this->validator($request->all()));
 
-        $route->update($validator->validated());
+        $route->update($data);
 
         return response()->json([
             'status'  => true,
@@ -200,9 +184,7 @@ class RouteController extends Controller
             ])
             ->first();
 
-        if (empty($route)) {
-            throw new ErrorException(__('message.route_not_found'));
-        }
+        if (!$route) throw new ErrorException(__('message.route_not_found'));
 
         $affected = $route->delete();
 
@@ -215,6 +197,7 @@ class RouteController extends Controller
      * @param int $route_id
      * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function selectionOrder(int $route_id, Request $request):JsonResponse
     {
@@ -244,18 +227,13 @@ class RouteController extends Controller
      * @param int $route_id
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
-     * @throws ValidatorException
+     * @throws ErrorException|ValidatorException|ValidationException
      */
     public function addLook(int $route_id, Request $request): JsonResponse
     {
-        validateOrExit(
-            Validator::make($request->all(),
-                [
-                    'user_id' => 'required|integer|exists:users,user_id',
-                ]
-            )
-        );
+        validateOrExit([
+            'user_id' => 'required|integer|exists:users,user_id',
+        ]);
 
         if (!$route = Route::find($route_id)) {
             throw new ErrorException(__('message.route_not_found'));

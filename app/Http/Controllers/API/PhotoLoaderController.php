@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use App\Exceptions\ValidatorException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 
 class PhotoLoaderController extends Controller
@@ -16,29 +17,21 @@ class PhotoLoaderController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidatorException|ValidationException
      */
     public function uploadPhoto(Request $request):JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'photo_type' => 'required|in:user,order',
-                'photo'      => 'required|base64_image',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()->all(),
-            ], 404);
-        }
+        validateOrExit([
+            'photo_type' => 'required|in:user,order',
+            'photo'      => 'required|base64_image',
+        ]);
 
         $method = 'uploadPhoto4' . Str::title($request->get('photo_type'));
 
         if (!method_exists(self::class, $method)) {
             return response()->json([
                 'status' => false,
-                'errors' => ["method_{$method}_not_found"],
+                'errors' => ["Method {$method} not found"],
             ], 500);
         }
 

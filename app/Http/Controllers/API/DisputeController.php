@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Rate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Exceptions\ValidatorException;
 use App\Models\Dispute;
@@ -23,35 +22,31 @@ class DisputeController extends Controller
      */
     public function addDispute(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'job_id'  => [
-                    'required',
-                    'integer',
-                    function ($attribute, $value, $fail) {
-                        $is_permission = Job::query()
-                            ->where('job_id', '=', $value)
-                            ->where('job_status','=',Job::STATUS_WORK)
-                            ->whereHas('rate', function ($qr) {
-                                return $qr->whereHas('order', function($qo) {
-                                    return $qo->where('user_id', request()->user()->user_id);
-                                });
-                            })->count();
+        $data = validateOrExit([
+            'job_id'  => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) {
+                    $is_permission = Job::query()
+                        ->where('job_id', $value)
+                        ->where('job_status',Job::STATUS_WORK)
+                        ->whereHas('rate', function ($qr) {
+                            return $qr->whereHas('order', function($qo) {
+                                return $qo->where('user_id', request()->user()->user_id);
+                            });
+                        })->count();
 
-                        if(!$is_permission) {
-                            return $fail(__('message.not_have_permission'));
-                        }
+                    if(!$is_permission) {
+                        return $fail(__('message.not_have_permission'));
                     }
-                ],
-                'problem_id'  => 'required|integer',
-                'files' => 'required|array|min:1',
-                'comment' => 'required|string|max:300',
-            ]
-        );
+                }
+            ],
+            'problem_id'  => 'required|integer',
+            'files' => 'required|array|min:1',
+            'comment' => 'required|string|max:300',
+        ]);
 
-        validateOrExit($validator);
-
-        Dispute::create($validator->validated());
+        Dispute::create($data);
 
         $job = Job::find($request->get('job_id'));
         $job->update(['job_status' => Job::STATUS_DISPUTE]);

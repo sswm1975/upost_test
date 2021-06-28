@@ -2,7 +2,9 @@
 
 use App\Exceptions\ValidatorException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Convert Null to Blank string.
@@ -250,14 +252,21 @@ function getSQL(bool $showBindings = false)
 
 /**
  * Выполнение правил валидации и вызов исключения при ошибках.
- * В исключении возвращается стандартизированный ответ
- * @throws ValidatorException
+ * В исключении возвращается стандартизированный ответ.
+ *
+ * @param \Illuminate\Contracts\Validation\Validator|array $validator_or_rules
+ * @return array
+ * @throws ValidationException|ValidatorException
  */
-function validateOrExit($validator)
+function validateOrExit($validator_or_rules): array
 {
+    $validator = is_array($validator_or_rules) ? Validator::make(request()->all(), $validator_or_rules) : $validator_or_rules;
+
     if ($validator->fails()) {
         throw new ValidatorException($validator->errors()->all());
     }
+
+    return $validator->validated();
 }
 
 /**

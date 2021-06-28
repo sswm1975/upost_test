@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Modules\Parsers\Parser;
+use App\Exceptions\ValidatorException;
+use Illuminate\Validation\ValidationException;
 
 class ParserController extends Controller
 {
@@ -16,12 +16,11 @@ class ParserController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException
+     * @throws ValidatorException|ValidationException
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), ['url' => 'required|url']);
-         validateOrExit($validator);
+        validateOrExit(['url' => 'required|url']);
 
         $parser = (new Parser($request->url))->handler();
 

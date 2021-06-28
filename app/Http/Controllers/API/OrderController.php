@@ -35,13 +35,11 @@ class OrderController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ErrorException
-     * @throws ValidatorException
+     * @throws ValidatorException|ValidationException
      */
     public function addOrder(Request $request): JsonResponse
     {
-        if (isProfileNotFilled()) {
-            throw new ErrorException(__('message.not_filled_profile'));
-        }
+        if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
         validateOrExit($this->validator($request->all()));
 
@@ -110,9 +108,7 @@ class OrderController extends Controller
             ])
             ->first();
 
-        if (empty($order)) {
-            throw new ErrorException(__('message.order_not_found'));
-        }
+        if (!$order) throw new ErrorException(__('message.order_not_found'));
 
         $affected = $order->delete();
 
@@ -124,37 +120,31 @@ class OrderController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
-     * @throws ValidatorException
+     * @throws ValidationException|ValidatorException
      */
     public function showOrders(Request $request): JsonResponse
     {
-        $validator = Validator::make(request()->all(),
-            [
-                'user_id'        => 'sometimes|required|integer',
-                'status'         => 'sometimes|required|in:active,ban',
-                'sorting'        => 'sometimes|required|in:asc,desc',
-                'sort_by'        => 'sometimes|required|in:date,price',
-                'show'           => 'sometimes|required|integer|min:1',
-                'page'           => 'sometimes|required|integer|min:1',
-                'date_from'      => 'sometimes|required|date',
-                'date_to'        => 'sometimes|required|date|after_or_equal:date_from',
-                'city_from'      => 'sometimes|required|array',
-                'city_from.*'    => 'required|integer',
-                'city_to'        => 'sometimes|required|array',
-                'city_to.*'      => 'required|integer',
-                'country_from'   => 'sometimes|required|array',
-                'country_from.*' => 'required|integer',
-                'country_to'     => 'sometimes|required|array',
-                'country_to.*'   => 'required|integer',
-                'price_from'     => 'sometimes|required|numeric',
-                'price_to'       => 'sometimes|required|numeric',
-                'currency'       => 'sometimes|required|in:' . implode(',', array_keys(config('app.currencies'))),
-            ]
-        );
-        validateOrExit($validator);
-
-        $data = $validator->validated();
+        $data = validateOrExit([
+            'user_id'        => 'sometimes|required|integer',
+            'status'         => 'sometimes|required|in:active,ban',
+            'sorting'        => 'sometimes|required|in:asc,desc',
+            'sort_by'        => 'sometimes|required|in:date,price',
+            'show'           => 'sometimes|required|integer|min:1',
+            'page'           => 'sometimes|required|integer|min:1',
+            'date_from'      => 'sometimes|required|date',
+            'date_to'        => 'sometimes|required|date|after_or_equal:date_from',
+            'city_from'      => 'sometimes|required|array',
+            'city_from.*'    => 'required|integer',
+            'city_to'        => 'sometimes|required|array',
+            'city_to.*'      => 'required|integer',
+            'country_from'   => 'sometimes|required|array',
+            'country_from.*' => 'required|integer',
+            'country_to'     => 'sometimes|required|array',
+            'country_to.*'   => 'required|integer',
+            'price_from'     => 'sometimes|required|numeric',
+            'price_to'       => 'sometimes|required|numeric',
+            'currency'       => 'sometimes|required|in:' . implode(',', array_keys(config('app.currencies'))),
+        ]);
 
         $rate = Option::rate($request->get('currency', 'usd'));
 
@@ -290,17 +280,13 @@ class OrderController extends Controller
      *
      * @param int $order_id
      * @param Request $request
-     * @throws ValidatorException|TryException|ErrorException
+     * @throws ValidatorException|ErrorException|ValidationException
      */
     public function strikeOrder(int $order_id, Request $request): JsonResponse
     {
-        validateOrExit(
-            Validator::make(request()->all(),
-                [
-                    'strike_id' => 'required|integer',
-                ]
-            )
-        );
+        validateOrExit([
+            'strike_id' => 'required|integer',
+        ]);
 
         if (!$order = Order::find($order_id)) {
             throw new ErrorException(__('message.order_not_found'));
@@ -334,18 +320,13 @@ class OrderController extends Controller
      * @param int $order_id
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
-     * @throws ValidatorException
+     * @throws ValidationException|ValidatorException|ErrorException
      */
     public function addLook(int $order_id, Request $request): JsonResponse
     {
-        validateOrExit(
-            Validator::make($request->all(),
-                [
-                    'user_id' => 'required|integer|exists:users,user_id',
-                ]
-            )
-        );
+        validateOrExit([
+            'user_id' => 'required|integer|exists:users,user_id',
+        ]);
 
         if (!$order = Order::find($order_id)) {
             throw new ErrorException(__('message.order_not_found'));
@@ -356,8 +337,8 @@ class OrderController extends Controller
         }
 
         return response()->json([
-            'status'  => true,
-            'looks'   => $order->order_look,
+            'status' => true,
+            'looks'  => $order->order_look,
         ]);
     }
 }

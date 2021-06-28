@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
@@ -14,6 +15,7 @@ class CategoryController extends Controller
      *
      * @param int $category_id
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function getCategories(int $category_id = 0): JsonResponse
     {
@@ -27,12 +29,7 @@ class CategoryController extends Controller
             ->get()
             ->toArray();
 
-        if (empty($categories)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.category_not_found')],
-            ], 404);
-        }
+        if (!$categories) throw new ErrorException(__('message.category_not_found'));
 
         return response()->json([
             'status' => true,
