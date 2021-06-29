@@ -7,6 +7,7 @@ use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ class MessagesController extends Controller
                 'order_id'          => 'required|integer|exists:orders,order_id',
                 'from_user'         => 'required|integer|exists:users,user_id',
                 'to_user'           => 'required|integer|exists:users,user_id',
+                'message_text'      => 'required|string',
                 'message_attach'    => 'string',
                 'type'              => 'string'
             ]
@@ -50,7 +52,7 @@ class MessagesController extends Controller
                 'order_id'          => $data['order_id'],
                 'from_user'         => $data['from_user'],
                 'to_user'           => $data['to_user'],
-                'message_date'      => $data['message_date'],
+                'message_date'      => Carbon::now()->format('d.m.Y H:i'),
                 'message_text'      => $data['message_text'],
                 'message_attach'    => $data['message_attach'],
                 'type'              => $data['type'],
