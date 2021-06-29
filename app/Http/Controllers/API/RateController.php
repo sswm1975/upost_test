@@ -368,7 +368,7 @@ class RateController extends Controller
             # находим заказ на мой маршрут (может быть не больше одного заказа)
             if ($request->rate_type == 'order') {
                 $parent = $rates->where('parent_id', 0)->first();
-                if ($parent == 0) {
+                if (!$parent) {
                     $parent = Rate::find($rates[0]->parent_id);
                 }
                 $receiver = Order::where('order_id', $parent->order_id)->first('user_id')->user_id;
