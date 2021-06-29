@@ -30,7 +30,7 @@ Route::group(
         })->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Реєстрація
-        Route::post('register', 'API\RegisterController@register');
+        Route::post('register', 'API\ProfileController@register');
 
         # Отримання інформації про користувача (тільки публічні дані)
         Route::get('{user_id}/profile', 'API\ProfileController@getPublicData')->middleware(MIDDLEWARE_AUTH_BASIC);

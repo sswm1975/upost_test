@@ -11,45 +11,20 @@ class User extends Model
 {
     use Notifiable;
 
-    const VALIDATION_STATUS_NO_VALID = 'no_valid';
+    const STATUS_ACTIVE = 'active';
+    const STATUS_BANNED = 'banned';
+    const STATUS_REMOVED = 'removed';
+
     const VALIDATION_STATUS_VALID = 'valid';
+    const VALIDATION_STATUS_NO_VALID = 'no_valid';
+
+    const ROLE_USER = 'user';
+    const ROLE_SUPER_ADMIN = 'super_admin';
+    const ROLE_MODERATOR = 'moderator';
 
     protected $primaryKey = 'user_id';
     protected $guarded = ['user_id'];
     public $timestamps = false;
-
-    protected array $columns = [
-        'user_id',
-        'user_phone',
-        'user_email',
-        'user_password',
-        'user_hash',
-        'user_ip',
-        'user_name',
-        'user_surname',
-        'user_rating',
-        'user_city',
-        'user_location',
-        'user_status',
-        'user_card_number',
-        'user_card_name',
-        'user_birthday',
-        'user_gender',
-        'user_lang',
-        'user_currency',
-        'user_validation',
-        'user_register_date',
-        'user_role',
-        'user_photo',
-        'user_favorite_orders',
-        'user_favorite_routes',
-        'user_last_active',
-        'user_resume',
-        'user_messages_viewed',
-        'user_wallet',
-        'user_creator_rating',
-        'user_freelancer_rating',
-    ];
 
     /**
      * Список полей пользователя для просмотра.
@@ -95,7 +70,11 @@ class User extends Model
 
         static::creating(function ($model) {
             $model->user_register_date = $model->freshTimestamp();
+            $model->user_status = self::STATUS_ACTIVE;
             $model->user_validation = self::VALIDATION_STATUS_NO_VALID;
+            $model->user_lang = config('user.default.lang');
+            $model->user_currency = config('user.default.currency');
+            $model->user_role = self::ROLE_USER;
         });
     }
 
@@ -116,7 +95,7 @@ class User extends Model
 
     public function scopeExclude($query, $value = [])
     {
-        return $query->select(array_diff($this->columns, (array) $value));
+        return $query->select(array_diff($this->getAttributes(), (array) $value));
     }
 
     /**

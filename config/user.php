@@ -2,9 +2,7 @@
 
 return [
     'default' => [
-    'status' => 'new',
         'lang' => 'en',
-        'currency' => '₽',
-        'role' => 'client',
+        'currency' => 'usd',
     ],
 ];

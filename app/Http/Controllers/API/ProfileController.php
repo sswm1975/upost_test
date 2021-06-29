@@ -17,6 +17,33 @@ use App\Models\UserChange;
 class ProfileController extends Controller
 {
     /**
+     * API Register user.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException|ValidatorException
+     */
+    public function register(Request $request): JsonResponse
+    {
+        $data = validateOrExit([
+            'user_phone'    => ['required', 'phone', 'unique:users'],
+            'user_email'    => ['required', 'email', 'max:30', 'unique:users'],
+            'user_password' => ['required', 'min:6', 'confirmed'],
+        ]);
+
+        User::create([
+            'user_phone'    => $data['user_phone'],
+            'user_email'    => $data['user_email'],
+            'user_password' => getHashPassword($data['user_password']),
+        ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => __('message.register_successful'),
+        ]);
+    }
+
+    /**
      * Получить приватные данные пользователя.
      *
      * @param Request $request
@@ -24,9 +51,12 @@ class ProfileController extends Controller
      */
     public function getPrivateData(Request $request): JsonResponse
     {
+        $user = $request->user()->toArray();
+        unset($user['user_password']);
+
         return response()->json([
             'status' => true,
-            'result' => null_to_blank($request->user()->toArray()),
+            'result' => null_to_blank($user),
         ]);
     }
 
@@ -64,10 +94,10 @@ class ProfileController extends Controller
                 'user_name'     => 'sometimes|string|max:100',
                 'user_surname'  => 'sometimes|string|max:100',
                 'user_city'     => 'integer|exists:city,city_id',
-                'user_location' => 'string',
-                'user_status'   => 'in:working,new',
+                'user_location' => 'nullable|integer|exists:city,city_id',
+                'user_status'   => 'in:active,banned,removed',
                 'user_birthday' => 'date',
-                'user_gender'   => 'in:Мужской,Женский',
+                'user_gender'   => 'nullable|in:Мужской,Женский',
                 'user_photo'    => 'nullable|base64_image',
                 'user_resume'   => 'nullable|string',
             ]

@@ -1146,14 +1146,14 @@
 								},
 								{
 									"key": "user_location",
-									"value": "45,23",
+									"value": "4",
 									"description": "Код міста перебування",
 									"type": "text"
 								},
 								{
 									"key": "user_status",
-									"value": "working",
-									"description": "Статус (working / new)",
+									"value": "active",
+									"description": "Статус (active / banned / removed)",
 									"type": "text"
 								},
 								{
@@ -1254,14 +1254,14 @@
 										},
 										{
 											"key": "user_location",
-											"value": "45,23",
+											"value": "4",
 											"description": "Код міста перебування",
 											"type": "text"
 										},
 										{
 											"key": "user_status",
-											"value": "working",
-											"description": "Статус (working / new)",
+											"value": "active",
+											"description": "Статус (active / banned / removed)",
 											"type": "text"
 										},
 										{
@@ -1406,14 +1406,14 @@
 										},
 										{
 											"key": "user_location",
-											"value": "45,23",
+											"value": "4",
 											"description": "Код міста перебування",
 											"type": "text"
 										},
 										{
 											"key": "user_status",
-											"value": "working",
-											"description": "Статус (working / new)",
+											"value": "active",
+											"description": "Статус (active / banned / removed)",
 											"type": "text"
 										},
 										{
@@ -5974,7 +5974,7 @@
 					]
 				},
 				{
-					"name": "Пiдтвердити виконання замовлення (?!?)",
+					"name": "Пiдтвердити виконання замовлення",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -6012,7 +6012,94 @@
 						},
 						"description": "Пiдтвердити виконання замовлення"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Пiдтвердити виконання замовлення (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/orders/confirm?chat_id=7&user_id=1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"orders",
+										"confirm"
+									],
+									"query": [
+										{
+											"key": "chat_id",
+											"value": "7"
+										},
+										{
+											"key": "user_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Пiдтвердити виконання замовлення (error)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/orders/confirm?chat_id=777&user_id=1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"orders",
+										"confirm"
+									],
+									"query": [
+										{
+											"key": "chat_id",
+											"value": "777"
+										},
+										{
+											"key": "user_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
 				},
 				{
 					"name": "Лічильник переглядів",
@@ -8385,7 +8472,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.variables.set(\"router_id\", 71);"
+									"pm.variables.set(\"route_id\", 71);"
 								],
 								"type": "text/javascript"
 							}
@@ -8406,14 +8493,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/routes/{{router_id}}/add_look",
+							"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/add_look",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{endpoint}}",
 								"routes",
-								"{{router_id}}",
+								"{{route_id}}",
 								"add_look"
 							],
 							"query": [
@@ -10421,7 +10508,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/rates/show",
+							"raw": "{{host}}/{{endpoint}}/rates/show?user_id=16&rate_type=order&order_id=16",
 							"host": [
 								"{{host}}"
 							],
@@ -10433,21 +10520,18 @@
 							"query": [
 								{
 									"key": "user_id",
-									"value": "3",
-									"description": "Код користувача",
-									"disabled": true
+									"value": "16",
+									"description": "Код користувача"
 								},
 								{
 									"key": "rate_type",
-									"value": "route",
-									"description": "Тип сущності: order або route",
-									"disabled": true
+									"value": "order",
+									"description": "Тип сущності: order або route"
 								},
 								{
 									"key": "order_id",
-									"value": "2",
-									"description": "Код замовлення",
-									"disabled": true
+									"value": "16",
+									"description": "Код замовлення"
 								},
 								{
 									"key": "route_id",
@@ -11202,15 +11286,13 @@
 								"key": "PHP-AUTH-USER",
 								"value": "{{email}}",
 								"type": "text",
-								"description": "Логін: емейл або телефон",
-								"disabled": true
+								"description": "Логін: емейл або телефон"
 							},
 							{
 								"key": "PHP-AUTH-PW",
 								"value": "{{password_hash}}",
 								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))",
-								"disabled": true
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
 							}
 						],
 						"body": {
@@ -11805,7 +11887,7 @@
 			"name": "Відгуки та рейтинг",
 			"item": [
 				{
-					"name": "addReview",
+					"name": "Додати відгук",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -11826,8 +11908,8 @@
 							}
 						],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "job_id",
 									"value": "1",
@@ -11840,7 +11922,7 @@
 								},
 								{
 									"key": "comment",
-									"value": " Привет, примеров и описаний. Для того чтобы лучше понимать что такое\n                 laravel,eloquent , настоятельно рекомендую прочитать все из категории <a class=\"cl-terms  \" href=\"/category/famworks-fremvorki\" target=\"_blank\"> Фреймворки. Famworks ( программная платформа)</a> ",
+									"value": " Привет, примеров и описаний. Для того чтобы лучше понимать что такое\n                 laravel,eloquent , настоятельно рекомендую прочитать все из категории <a class=\"cl-terms  \" href=\"/category/famworks-fremvorki\" target=\"_blank\"> Фреймворки. Famworks ( программная платформа)</a>",
 									"type": "text"
 								}
 							]
@@ -11863,10 +11945,144 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Додати відгук(success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "job_id",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "rating",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": " Привет, примеров и описаний. Для того чтобы лучше понимать что такое\n                 laravel,eloquent , настоятельно рекомендую прочитать все из категории <a class=\"cl-terms  \" href=\"/category/famworks-fremvorki\" target=\"_blank\"> Фреймворки. Famworks ( программная платформа)</a>",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/reviews/add?lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"reviews",
+										"add"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Додати відгук(error)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "job_id",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "rating",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": " Привет, примеров и описаний. Для того чтобы лучше понимать что такое\n                 laravel,eloquent , настоятельно рекомендую прочитать все из категории <a class=\"cl-terms  \" href=\"/category/famworks-fremvorki\" target=\"_blank\"> Фреймворки. Famworks ( программная платформа)</a>",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint}}/reviews/add?lang=uk",
+									"host": [
+										"{{host}}{{endpoint}}"
+									],
+									"path": [
+										"reviews",
+										"add"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Вибране для job id значення не коректне.\"\n    ]\n}"
+						}
+					]
 				},
 				{
-					"name": "showRewies",
+					"name": "Показати відгуки",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -11894,10 +12110,79 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Показати відгуки (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/reviews/show?lang=uk&user_id=3",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"reviews",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										},
+										{
+											"key": "user_id",
+											"value": "3",
+											"description": "Код користувача"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"number\": 0,\n    \"result\": []\n}"
+						},
+						{
+							"name": "Показати відгуки(error)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/reviews/show?lang=uk&user_id=111",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"reviews",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										},
+										{
+											"key": "user_id",
+											"value": "111",
+											"description": "Код користувача"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Вибране для user id значення не коректне.\"\n    ]\n}"
+						}
+					]
 				},
 				{
-					"name": "rating",
+					"name": "Отримати рейтинг",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -11923,7 +12208,72 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Отримати рейтинг (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/reviews/show?lang=uk&user_id=5",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"reviews",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk"
+										},
+										{
+											"key": "user_id",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"number\": 0,\n    \"result\": []\n}"
+						},
+						{
+							"name": "Отримати рейтинг (error)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/reviews/show?lang=uk&user_id=111",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"reviews",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk"
+										},
+										{
+											"key": "user_id",
+											"value": "111"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Вибране для user id значення не коректне.\"\n    ]\n}"
+						}
+					]
 				}
 			]
 		},
@@ -12678,8 +13028,33 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "rate_id",
+									"value": "152",
+									"type": "text"
+								},
+								{
+									"key": "order_id",
+									"value": "7",
+									"type": "text"
+								},
+								{
+									"key": "to_user",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/chats/add?rate_id=152&order_id=7&to_user=1&user_id=1",
+							"raw": "{{host}}/{{endpoint}}/chats/add",
 							"host": [
 								"{{host}}"
 							],
@@ -12687,28 +13062,127 @@
 								"{{endpoint}}",
 								"chats",
 								"add"
-							],
-							"query": [
-								{
-									"key": "rate_id",
-									"value": "152"
-								},
-								{
-									"key": "order_id",
-									"value": "7"
-								},
-								{
-									"key": "to_user",
-									"value": "1"
-								},
-								{
-									"key": "user_id",
-									"value": "1"
-								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Додати чат (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rate_id",
+											"value": "152",
+											"type": "text"
+										},
+										{
+											"key": "order_id",
+											"value": "7",
+											"type": "text"
+										},
+										{
+											"key": "to_user",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "user_id",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/chats/add",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"chats",
+										"add"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Додати чат (error)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rate_id",
+											"value": "152",
+											"type": "text"
+										},
+										{
+											"key": "order_id",
+											"value": "777",
+											"type": "text"
+										},
+										{
+											"key": "to_user",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "user_id",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/chats/add",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"chats",
+										"add"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
 				},
 				{
 					"name": "Отримати чати",
@@ -12730,7 +13204,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/chats/show?user_id=1&addressee=11&order_id=3",
+							"raw": "{{host}}/{{endpoint}}/chats/show",
 							"host": [
 								"{{host}}"
 							],
@@ -12742,23 +13216,132 @@
 							"query": [
 								{
 									"key": "user_id",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "addressee",
-									"value": "11"
+									"value": "11",
+									"disabled": true
 								},
 								{
 									"key": "order_id",
-									"value": "3"
+									"value": "3",
+									"disabled": true
 								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Отримати чати (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/chats/show?user_id=1&addressee=11&order_id=3",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"chats",
+										"show"
+									],
+									"query": [
+										{
+											"key": "user_id",
+											"value": "1"
+										},
+										{
+											"key": "addressee",
+											"value": "11"
+										},
+										{
+											"key": "order_id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Отримати чати (error)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/chats/show?user_id=1999&addressee=11&order_id=3",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"chats",
+										"show"
+									],
+									"query": [
+										{
+											"key": "user_id",
+											"value": "1999"
+										},
+										{
+											"key": "addressee",
+											"value": "11"
+										},
+										{
+											"key": "order_id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
 				},
 				{
 					"name": "Видалити чат",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -12773,8 +13356,23 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "chat_id",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/chats/delete?chat_id=12&user_id=1",
+							"raw": "{{host}}/{{endpoint}}/chats/delete",
 							"host": [
 								"{{host}}"
 							],
@@ -12782,21 +13380,98 @@
 								"{{endpoint}}",
 								"chats",
 								"delete"
-							],
-							"query": [
-								{
-									"key": "chat_id",
-									"value": "12"
-								},
-								{
-									"key": "user_id",
-									"value": "1"
-								}
 							]
 						},
 						"description": "Видалити чат"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Видалити чат (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/chats/delete?chat_id=12&user_id=1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"chats",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "chat_id",
+											"value": "12"
+										},
+										{
+											"key": "user_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Видалити чат (error)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/chats/delete?chat_id=12999&user_id=1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"chats",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "chat_id",
+											"value": "12999"
+										},
+										{
+											"key": "user_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			],
 			"description": "Chats",
@@ -12905,7 +13580,242 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Додати повiдомлення (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "chat_id",
+											"value": "9",
+											"type": "text"
+										},
+										{
+											"key": "rate_id",
+											"value": "291",
+											"type": "text"
+										},
+										{
+											"key": "order_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "from_user",
+											"value": "5",
+											"type": "text"
+										},
+										{
+											"key": "to_user",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "message_date",
+											"value": "2021-06-22 15:04",
+											"type": "text"
+										},
+										{
+											"key": "message_text",
+											"value": "Test message",
+											"type": "text"
+										},
+										{
+											"key": "message_attach",
+											"value": "ZZZ",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "accepting",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/messages/add?chat_id=9&rate_id=291&order_id=1&from_user=5&to_user=1&message_text=Test message&message_attach=test.jpg&type=accepting",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"messages",
+										"add"
+									],
+									"query": [
+										{
+											"key": "chat_id",
+											"value": "9"
+										},
+										{
+											"key": "rate_id",
+											"value": "291"
+										},
+										{
+											"key": "order_id",
+											"value": "1"
+										},
+										{
+											"key": "from_user",
+											"value": "5"
+										},
+										{
+											"key": "to_user",
+											"value": "1"
+										},
+										{
+											"key": "message_text",
+											"value": "Test message"
+										},
+										{
+											"key": "message_attach",
+											"value": "test.jpg"
+										},
+										{
+											"key": "type",
+											"value": "accepting"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Додати повiдомлення (error)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "chat_id",
+											"value": "9",
+											"type": "text"
+										},
+										{
+											"key": "rate_id",
+											"value": "291",
+											"type": "text"
+										},
+										{
+											"key": "order_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "from_user",
+											"value": "5",
+											"type": "text"
+										},
+										{
+											"key": "to_user",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "message_date",
+											"value": "2021-06-22 15:04",
+											"type": "text"
+										},
+										{
+											"key": "message_text",
+											"value": "Test message",
+											"type": "text"
+										},
+										{
+											"key": "message_attach",
+											"value": "ZZZ",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "accepting",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/messages/add?chat_id=9&rate_id=291&order_id=1&from_user=5&to_user=1&message_text=&message_attach=&type=accepting",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"messages",
+										"add"
+									],
+									"query": [
+										{
+											"key": "chat_id",
+											"value": "9"
+										},
+										{
+											"key": "rate_id",
+											"value": "291"
+										},
+										{
+											"key": "order_id",
+											"value": "1"
+										},
+										{
+											"key": "from_user",
+											"value": "5"
+										},
+										{
+											"key": "to_user",
+											"value": "1"
+										},
+										{
+											"key": "message_text",
+											"value": ""
+										},
+										{
+											"key": "message_attach",
+											"value": ""
+										},
+										{
+											"key": "type",
+											"value": "accepting"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
 				},
 				{
 					"name": "Отримати повiдомлення",
@@ -12927,7 +13837,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/messages/show",
+							"raw": "{{host}}/{{endpoint}}/messages/show?user_id=1&chat_id=7&count=1&pages=1&sort=DESC",
 							"host": [
 								"{{host}}"
 							],
@@ -12939,33 +13849,139 @@
 							"query": [
 								{
 									"key": "user_id",
-									"value": "1",
-									"disabled": true
+									"value": "1"
 								},
 								{
 									"key": "chat_id",
-									"value": "7",
-									"disabled": true
+									"value": "7"
 								},
 								{
 									"key": "count",
-									"value": "1",
-									"disabled": true
+									"value": "1"
 								},
 								{
 									"key": "pages",
-									"value": "1",
-									"disabled": true
+									"value": "1"
 								},
 								{
 									"key": "sort",
-									"value": "DESC",
-									"disabled": true
+									"value": "DESC"
 								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Отримати повiдомлення (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/messages/show?user_id=1&chat_id=7&count=1&pages=1&sort=DESC",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"messages",
+										"show"
+									],
+									"query": [
+										{
+											"key": "user_id",
+											"value": "1"
+										},
+										{
+											"key": "chat_id",
+											"value": "7"
+										},
+										{
+											"key": "count",
+											"value": "1"
+										},
+										{
+											"key": "pages",
+											"value": "1"
+										},
+										{
+											"key": "sort",
+											"value": "DESC"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Отримати повiдомлення (error)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/messages/show?user_id=111&chat_id=7&count=1&pages=1&sort=DESC",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"messages",
+										"show"
+									],
+									"query": [
+										{
+											"key": "user_id",
+											"value": "111"
+										},
+										{
+											"key": "chat_id",
+											"value": "7"
+										},
+										{
+											"key": "count",
+											"value": "1"
+										},
+										{
+											"key": "pages",
+											"value": "1"
+										},
+										{
+											"key": "sort",
+											"value": "DESC"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			],
 			"description": "Повiдомлення"
@@ -13013,7 +14029,99 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Завантажити файли (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "files[]",
+											"type": "file",
+											"src": [
+												"NdVFBqF1_/cat.jpeg",
+												"NdVFBqF1_/изображение_viber_2021-01-31_14-13-43.jpg"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/upload",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"upload"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Завантажити файли (error)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "files[]",
+											"type": "file",
+											"src": [
+												"NdVFBqF1_/cat.jpeg",
+												"NdVFBqF1_/изображение_viber_2021-01-31_14-13-43.jpg"
+											],
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/upload",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"upload"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			],
 			"description": "Завантаження файлiв"
