@@ -8,7 +8,6 @@ use App\Models\Order;
 use App\Models\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class FavoriteController extends Controller

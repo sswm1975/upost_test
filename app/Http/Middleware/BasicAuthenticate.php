@@ -2,11 +2,14 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
+use App\Exceptions\ErrorException;
+use App\Exceptions\ValidatorException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Closure;
 
 class BasicAuthenticate
 {
@@ -16,7 +19,7 @@ class BasicAuthenticate
      * @param Request $request
      * @param Closure $next
      * @return mixed
-     * @throws \App\Exceptions\ValidatorException
+     * @throws ValidatorException|ValidationException|ErrorException
      */
     public function handle(Request $request, Closure $next)
     {
@@ -25,18 +28,11 @@ class BasicAuthenticate
             'password' => $request->header('PHP-AUTH-PW', ''),
         ];
 
-        $validator = $this->validator($credentials);
-
-        validateOrExit($validator);
+        validateOrExit($this->validator($credentials));
 
         $user = $this->login($credentials);
 
-        if (empty($user)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [__('message.auth_failed')]
-            ], 404);
-        }
+        if (!$user) throw new ErrorException(__('message.auth_failed'));
 
         $request->setUserResolver(function() use ($user) {
             return $user;
@@ -67,10 +63,10 @@ class BasicAuthenticate
      * @param array $credentials
      * @return User|null
      */
-    protected function login(array $credentials)
+    protected function login(array $credentials): ?User
     {
-        $login = $credentials['login'] ?? '';
-        $password = $credentials['password'] ?? '';
+        $login = $credentials['login'];
+        $password = $credentials['password'];
 
         $is_email = Str::contains($login, '@');
 
