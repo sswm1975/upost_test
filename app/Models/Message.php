@@ -7,12 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
+    const TYPE_SIMPLE = 'simple';
     const TYPE_PRODUCT_CONFIRMATION = 'product_confirmation';
 
-    // Disable timestamps
     public $timestamps = false;
 
-    // Message model
     protected $fillable = [
         'chat_id',
         'rate_id',
