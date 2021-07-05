@@ -22,4 +22,9 @@ class Chat extends Model
         'chat_status',
         'last_sms',
     ];
+
+    public function rate()
+    {
+        return $this->belongsTo(Rate::class, 'rate_id');
+    }
 }

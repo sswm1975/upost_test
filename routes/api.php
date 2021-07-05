@@ -96,13 +96,17 @@ Route::group(
 Route::group(
     [
         'prefix' => 'messages',
+        'middleware' => MIDDLEWARE_AUTH_BASIC,
     ],
     function () {
         # Додати повiдомлення
-        Route::post('add', 'API\MessagesController@addMessage')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('add', 'API\MessagesController@addMessage');
 
         # Отримати повiдомлення1
-        Route::get('show', 'API\MessagesController@showMessages')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('show', 'API\MessagesController@showMessages');
+
+        # Підтвердження здійснення покупки (виконавець)
+        Route::post('accept_shopping', 'API\MessagesController@acceptShoppingByPerformer');
     }
 );
 

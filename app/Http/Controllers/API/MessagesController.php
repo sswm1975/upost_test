@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ErrorException;
 use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
@@ -12,6 +13,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class MessagesController extends Controller
 {
@@ -132,5 +134,45 @@ class MessagesController extends Controller
         }
 
         return true;
+    }
+
+    /**
+     * Подтверждение совершения покупки (исполнитель).
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException|ErrorException
+     */
+    public function acceptShoppingByPerformer(Request $request): JsonResponse
+    {
+        $data = validateOrExit([
+            'chat_id'  => 'required|integer|exists:chats,chat_id',
+            'photos'   => 'required|array|max:8',
+            'photos.*' => 'required|string',
+        ]);
+
+        $chat = Chat::query()
+            ->with('rate')
+            ->where('chat_id', $request->chat_id)
+            ->first();
+
+        if (!$chat) throw new ErrorException(__('message.chat_not_found'));
+
+        $user_id = $request->user()->user_id;
+
+        # запрещено создавать задание, если пользователь к этой ставке не имеет отношения
+        if ($chat->rate->who_start <> $user_id && $chat->rate->user_id <> $user_id) {
+            throw new ErrorException(__('message.rate_not_found'));
+        }
+
+        Message::create([
+            'chat_id'        => $data['chat_id'],
+            'message_attach' => $data['photos'],
+            'type'           => Message::TYPE_PRODUCT_CONFIRMATION,
+        ]);
+
+        return response()->json([
+            'status' => true,
+        ]);
     }
 }
