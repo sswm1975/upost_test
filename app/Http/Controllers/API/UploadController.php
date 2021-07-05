@@ -25,19 +25,28 @@ class UploadController extends Controller
         $url = [];
         $files = $request->allFiles();
 
-        /** @var $file UploadedFile $file */
-        foreach ($files['files'] as $file) {
-            $ext = $file->getClientOriginalExtension();
-            if(!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'])) {
-                throw new ErrorException('File format is not supported (' . $file->getClientOriginalName() . ')');
+        if($files) {
+            /** @var $file UploadedFile $file */
+            foreach ($files['files'] as $file) {
+                $ext = $file->getClientOriginalExtension();
+                if(!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'])) {
+                    throw new ErrorException('File format is not supported (' . $file->getClientOriginalName() . ')');
+                }
+                $file->move(public_path(env('APP_UPLOAD_FOLDER', '/content/files/')), $file->getClientOriginalName());
+                $url[] = env('APP_UPLOAD_FOLDER', '/content/files/') . $file->getClientOriginalName();
             }
-            $file->move(public_path(env('APP_UPLOAD_FOLDER', '/content/files/')), $file->getClientOriginalName());
-            $url[] = env('APP_UPLOAD_FOLDER', '/content/files/') . $file->getClientOriginalName();
+
+            return response()->json([
+                'status' => true,
+                'url' => $url,
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error uploaded files',
+            ]);
         }
 
-        return response()->json([
-            'status' => true,
-            'url' => $url,
-        ]);
+
     }
 }
