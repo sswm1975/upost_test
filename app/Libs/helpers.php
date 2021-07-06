@@ -235,19 +235,43 @@ function strip_unsafe(string $content): string
  * Pre-call \DB::enableQueryLog()
  *
  * @param bool $showBindings
- * @return array|string
+ * @return array
  */
-function getSQL(bool $showBindings = false)
+function getSQL(bool $showBindings = false): array
 {
     $logs =  DB::getQueryLog();
 
-    if (empty($logs)) {
-        return '';
-    }
+    if (empty($logs) || $showBindings) return $logs;
 
-    return $showBindings
-        ? $logs
-        : preg_replace_array('/\?/', $logs[0]['bindings'], $logs[0]['query']);
+    return array_map(
+        function($log) {
+            return preg_replace_array('/\?/', $log['bindings'], $log['query']);
+        },
+        $logs
+    );
+}
+
+/**
+ * Get format SQL.
+ * !Use only if fix Illuminate\Database\Connection and Illuminate\Database\Events\QueryExecuted
+ * Pre-call \DB::enableQueryLog()
+ *
+ * @return array
+ */
+function getSQLForFixDatabase(): array
+{
+    $logs =  DB::getQueryLog();
+
+    return array_map(
+        function($log) {
+            return [
+                'sql' => preg_replace_array('/\?/', $log['bindings'], $log['query']),
+                'time' => $log['time'],
+                'rows' => $log['rows'],
+            ];
+        },
+        $logs
+    );
 }
 
 /**
