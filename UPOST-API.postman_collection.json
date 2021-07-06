@@ -13547,17 +13547,12 @@
 									"type": "text"
 								},
 								{
-									"key": "message_date",
-									"value": "2021-06-22 15:04",
-									"type": "text"
-								},
-								{
 									"key": "message_text",
 									"value": "Test message",
 									"type": "text"
 								},
 								{
-									"key": "message_attach",
+									"key": "message_attach[]",
 									"value": "ZZZ",
 									"type": "text"
 								},
@@ -13626,18 +13621,13 @@
 											"type": "text"
 										},
 										{
-											"key": "message_date",
-											"value": "2021-06-22 15:04",
-											"type": "text"
-										},
-										{
 											"key": "message_text",
 											"value": "Test message",
 											"type": "text"
 										},
 										{
-											"key": "message_attach",
-											"value": "ZZZ",
+											"key": "message_attach[]",
+											"value": "test.jpg",
 											"type": "text"
 										},
 										{
@@ -13648,7 +13638,7 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/messages/add?chat_id=9&rate_id=291&order_id=1&from_user=5&to_user=1&message_text=Test message&message_attach=test.jpg&type=accepting",
+									"raw": "{{host}}/{{endpoint}}/messages/add",
 									"host": [
 										"{{host}}"
 									],
@@ -13656,40 +13646,6 @@
 										"{{endpoint}}",
 										"messages",
 										"add"
-									],
-									"query": [
-										{
-											"key": "chat_id",
-											"value": "9"
-										},
-										{
-											"key": "rate_id",
-											"value": "291"
-										},
-										{
-											"key": "order_id",
-											"value": "1"
-										},
-										{
-											"key": "from_user",
-											"value": "5"
-										},
-										{
-											"key": "to_user",
-											"value": "1"
-										},
-										{
-											"key": "message_text",
-											"value": "Test message"
-										},
-										{
-											"key": "message_attach",
-											"value": "test.jpg"
-										},
-										{
-											"key": "type",
-											"value": "accepting"
-										}
 									]
 								}
 							},
@@ -13743,18 +13699,13 @@
 											"type": "text"
 										},
 										{
-											"key": "message_date",
-											"value": "2021-06-22 15:04",
-											"type": "text"
-										},
-										{
 											"key": "message_text",
-											"value": "Test message",
+											"value": "",
 											"type": "text"
 										},
 										{
-											"key": "message_attach",
-											"value": "ZZZ",
+											"key": "message_attach[]",
+											"value": "",
 											"type": "text"
 										},
 										{
@@ -13765,7 +13716,7 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/messages/add?chat_id=9&rate_id=291&order_id=1&from_user=5&to_user=1&message_text=&message_attach=&type=accepting",
+									"raw": "{{host}}/{{endpoint}}/messages/add",
 									"host": [
 										"{{host}}"
 									],
@@ -13773,40 +13724,6 @@
 										"{{endpoint}}",
 										"messages",
 										"add"
-									],
-									"query": [
-										{
-											"key": "chat_id",
-											"value": "9"
-										},
-										{
-											"key": "rate_id",
-											"value": "291"
-										},
-										{
-											"key": "order_id",
-											"value": "1"
-										},
-										{
-											"key": "from_user",
-											"value": "5"
-										},
-										{
-											"key": "to_user",
-											"value": "1"
-										},
-										{
-											"key": "message_text",
-											"value": ""
-										},
-										{
-											"key": "message_attach",
-											"value": ""
-										},
-										{
-											"key": "type",
-											"value": "accepting"
-										}
 									]
 								}
 							},
