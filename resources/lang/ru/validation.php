@@ -133,6 +133,9 @@ return [
         'user_card_number' => [
             'bankcard' => 'Номер карты неверный.',
         ],
+        'rate_id' => [
+            'owner_rate' => 'У вас нет разрешения.',
+        ],
     ],
 
     'attributes'           => [
@@ -166,6 +169,6 @@ return [
         'title'                 => 'Наименование',
         'username'              => 'Никнейм',
         'year'                  => 'Год',
-	'login'                 => 'Логин',
+	    'login'                 => 'Логин',
     ],
 ];

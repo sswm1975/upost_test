@@ -102,7 +102,7 @@ Route::group(
         # Додати повiдомлення
         Route::post('add', 'API\MessagesController@addMessage');
 
-        # Отримати повiдомлення1
+        # Отримати повiдомлення
         Route::get('show', 'API\MessagesController@showMessages');
 
         # Підтвердження здійснення покупки (виконавець)
@@ -252,10 +252,14 @@ Route::group(
 Route::group(
     [
         'prefix' => 'jobs',
+        'middleware' => MIDDLEWARE_AUTH_BASIC,
     ],
     function () {
         # Створення завдання
-        Route::post('add', 'API\JobController@addJob')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('add', 'API\JobController@addJob');
+
+        # Підтвердження правильності покупки (замовник)
+        Route::post('accept', 'API\JobController@acceptJob');
     }
 );
 

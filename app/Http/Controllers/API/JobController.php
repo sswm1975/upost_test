@@ -18,36 +18,40 @@ class JobController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException|ErrorException|ValidationException
+     * @throws ValidatorException|ValidationException
      */
     public function addJob(Request $request): JsonResponse
     {
-        validateOrExit([
-            'rate_id' => 'required|integer|unique:jobs,rate_id',
+        $data = validateOrExit([
+            'rate_id' => 'required|integer|owner_rate|unique:jobs,rate_id',
         ]);
-
-        $rate = Rate::query()
-            ->with('route:route_id,user_id', 'order:order_id,user_id')
-            ->where('rate_id', $request->rate_id)
-            ->first();
-
-        if (!$rate) throw new ErrorException(__('message.rate_not_found'));
-
-        $user_id = $request->user()->user_id;
-
-        # запрещено создавать задание, если пользователь к этой ставке не имеет отношения
-        if ($rate->order->user_id <> $user_id && $rate->route->user_id <> $user_id) {
-            throw new ErrorException(__('message.rate_not_found'));
-        }
 
         $job = Job::create([
-            'rate_id' => $request->rate_id,
+            'rate_id' => $data['rate_id'],
             'status'  => Job::STATUS_ACTIVE,
-        ]);
+        ])->toArray();
 
         return response()->json([
             'status' => true,
-            'result' => null_to_blank($job->toArray()),
+            'result' => null_to_blank($job),
         ]);
+    }
+
+    /**
+     * Подтверждение правильности покупки (заказчик).
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function acceptJob(Request $request): JsonResponse
+    {
+        $data = validateOrExit([
+            'rate_id' => 'required|integer|owner_rate|exists:jobs,rate_id',
+        ]);
+
+        Job::whereRateId($data['rate_id'])->update(['job_status' => Job::STATUS_WORK]);
+
+        return response()->json(['status' => true]);
     }
 }

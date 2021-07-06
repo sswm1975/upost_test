@@ -144,6 +144,9 @@ return [
         'user_card_number' => [
             'bankcard' => 'Card number is incorrect.',
         ],
+        'rate_id' => [
+            'owner_rate' => 'You don\'t have permission.',
+        ],
     ],
 
     /*

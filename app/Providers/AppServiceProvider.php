@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Rate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
@@ -33,6 +34,21 @@ class AppServiceProvider extends ServiceProvider
          */
         Validator::extend('phone', function($attribute, $value, $parameters) {
             return preg_match('/^(00|\+)(\d{12,})$/', $value) === 1;
+        });
+
+        /**
+         * Валидация: Проверка, что авторизированный пользователь имеет отношения к ставке.
+         * Авторизированному пользователю должен принадлежать Заказ или Маршрут.
+         */
+        Validator::extend('owner_rate', function($attribute, $value, $parameters) {
+            $rate = Rate::query()
+                ->with('route:route_id,user_id', 'order:order_id,user_id')
+                ->where('rate_id', $value)
+                ->first(['rate_id', 'route_id', 'order_id']);
+
+            if (!$rate) return false;
+
+            return in_array(request()->user()->user_id, [$rate->order->user_id, $rate->route->user_id]);
         });
 
         /**
