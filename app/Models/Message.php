@@ -2,13 +2,19 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
     const TYPE_SIMPLE = 'simple';
+    const TYPE_ACCEPTING = 'accepting';
     const TYPE_PRODUCT_CONFIRMATION = 'product_confirmation';
+
+    const TYPES = [
+        self::TYPE_SIMPLE,
+        self::TYPE_ACCEPTING,
+        self::TYPE_PRODUCT_CONFIRMATION,
+    ];
 
     public $timestamps = false;
 
@@ -21,7 +27,7 @@ class Message extends Model
         'message_date',
         'message_text',
         'message_attach',
-        'type'
+        'type',
     ];
 
     protected $casts = [
@@ -33,7 +39,7 @@ class Message extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->message_date = Carbon::now()->format('d.m.Y H:i');
+            $model->message_date = $model->freshTimestamp();
             $model->from_user = request()->user()->user_id;
         });
     }

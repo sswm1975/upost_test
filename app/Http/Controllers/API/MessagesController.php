@@ -7,7 +7,6 @@ use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -36,28 +35,18 @@ class MessagesController extends Controller
                 'message_text'      => 'required|string',
                 'message_attach'    => 'required|array|max:8',
                 'message_attach.*'  => 'required|string',
-                'type'              => 'string'
+                'type'              => 'sometimes|required|in:' . implode(',', Message::TYPES),
             ]
         );
 
-        $user_id = $request->user()->user_id();
+        $user_id = $request->user()->user_id;
         $chat_user_id = Chat::where('chat_id', $data['chat_id'])->first()->user_id;
 
         if ($chat_user_id != $user_id && $data['to_user'] != $user_id) {
             throw new ErrorException(__('message.not_have_permission'));
         }
 
-        Message::create([
-            'chat_id'         => $data['chat_id'],
-            'rate_id'         => $data['rate_id'],
-            'order_id'        => $data['order_id'],
-            'from_user'       => $data['from_user'],
-            'to_user'         => $data['to_user'],
-            'message_date'    => Carbon::now()->format('d.m.Y H:i'),
-            'message_text'    => $data['message_text'],
-            'message_attach'  => $data['message_attach'],
-            'type'            => $data['type'] ?? Message::TYPE_SIMPLE,
-        ]);
+        Message::create($data);
 
         return response()->json([
             'status' => true,
