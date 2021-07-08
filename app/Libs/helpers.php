@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\ValidatorException;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -9,11 +10,15 @@ use Illuminate\Validation\ValidationException;
 /**
  * Convert Null to Blank string.
  *
- * @param array $data
+ * @param array|object $data
  * @return array
  */
-function null_to_blank(array $data = []): array
+function null_to_blank($data = []): array
 {
+    if ($data instanceof Arrayable) {
+        $data = $data->toArray();
+    }
+
     array_walk_recursive($data, function (&$item) {
         $item = $item === null ? '' : $item;
     });
