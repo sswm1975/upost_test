@@ -3,11 +3,18 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 
 class ValidatorException extends Exception
 {
-    private $errors;
+    /** @var array  */
+    private array $errors;
 
+    /**
+     * ValidatorException constructor.
+     *
+     * @param array $errors
+     */
     public function __construct(Array $errors)
     {
         parent::__construct();
@@ -27,13 +34,19 @@ class ValidatorException extends Exception
     /**
      * Render the exception into an HTTP response.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function render()
+    public function render(): JsonResponse
     {
-        return response()->json([
+        $data = [
             'status' => false,
             'errors' => $this->errors
-        ], 404);
+        ];
+
+        if (app()->environment('local') || config('app.debug')) {
+            $data['sql'] = getSQLForFixDatabase();
+        }
+
+        return response()->json($data, 404);
     }
 }

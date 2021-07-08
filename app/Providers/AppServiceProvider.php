@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Rate;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
@@ -26,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (app()->environment('local') || config('app.debug')) {
+            DB::enableQueryLog();
+        }
+
         Schema::defaultStringLength(191);
 
         /**

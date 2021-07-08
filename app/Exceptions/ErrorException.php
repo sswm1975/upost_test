@@ -3,15 +3,24 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 
 class ErrorException extends Exception
 {
-    private $error;
+    /** @var string  */
+    private string $error;
 
-    public function __construct(string $error)
+    /**
+     * ErrorException constructor.
+     *
+     * @param string $error
+     * @param int $code
+     */
+    public function __construct(string $error, int $code = 404)
     {
         parent::__construct();
         $this->error = $error;
+        $this->code = $code;
     }
 
     /**
@@ -27,13 +36,19 @@ class ErrorException extends Exception
     /**
      * Render the exception into an HTTP response.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function render()
+    public function render(): JsonResponse
     {
-        return response()->json([
+        $data = [
             'status' => false,
             'errors' => [$this->error]
-        ], 404);
+        ];
+
+        if (app()->environment('local') || config('app.debug')) {
+            $data['sql'] = getSQLForFixDatabase();
+        }
+
+        return response()->json($data, $this->code);
     }
 }
