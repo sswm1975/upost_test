@@ -30,4 +30,9 @@ return [
     'type_creator'            => 'Заказчик',
     'not_have_permission'     => 'У вас нет разрешения.',
     'already_have_complaint'  => 'От вас уже поступила жалоба.',
+    'chat_not_found'          => 'Чат не найден.',
+    'exists_active_statement' => 'Существует активное заявление.',
+    'statement_max_limit'     => 'Было создано максимальное количество пролонгаций.',
+    'deadline_not_arrived'    => 'Конечный срок не наступил.',
+    'statement_not_found'     => 'Заявление не найдено.',
 ];

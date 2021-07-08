@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Job;
-use App\Models\Rate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;

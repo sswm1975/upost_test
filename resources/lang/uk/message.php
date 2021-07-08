@@ -30,4 +30,8 @@ return [
     'type_creator'            => 'Замовник',
     'not_have_permission'     => 'У вас немає дозволу.',
     'already_have_complaint'  => 'Уже є скарга від вас.',
+    'chat_not_found'          => 'Чат не знайдено.',
+    'statement_max_limit'     => 'Було створено максимальну кількість пролонгацій.',
+    'deadline_not_arrived'    => 'Кінцевий термін не надійшов.',
+    'statement_not_found'     => 'Заяву не знайдено.',
 ];

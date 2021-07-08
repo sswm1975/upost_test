@@ -14854,6 +14854,921 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Заявки",
+			"item": [
+				{
+					"name": "Сворення заявки на пролонгацію замовлення (Замовник)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логін: емейл або телефон"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "rate_id",
+									"value": "304",
+									"description": "Код ставки",
+									"type": "text"
+								},
+								{
+									"key": "lang",
+									"value": "ru",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/statements/add",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"statements",
+								"add"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Сворення заявки на пролонгацію замовлення (Замовник) (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rate_id",
+											"value": "304",
+											"description": "Код ставки",
+											"type": "text"
+										},
+										{
+											"key": "lang",
+											"value": "ru",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/statements/add",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"statements",
+										"add"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jul 2021 18:48:11 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "166"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"rate_id\": \"304\",\n        \"user_id\": 19,\n        \"status\": \"active\",\n        \"updated_at\": \"2021-07-08T18:48:11.000000Z\",\n        \"created_at\": \"2021-07-08T18:48:11.000000Z\",\n        \"id\": 6\n    }\n}"
+						},
+						{
+							"name": "Сворення заявки на пролонгацію замовлення (Замовник) (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rate_id",
+											"value": "304",
+											"description": "Код ставки",
+											"type": "text"
+										},
+										{
+											"key": "lang",
+											"value": "ru",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/statements/add",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"statements",
+										"add"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jul 2021 18:46:47 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1132"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Было создано максимальное количество пролонгаций.\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Сворення заявки на пролонгацію замовлення (Виконавець)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логін: емейл або телефон"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "rate_id",
+									"value": "307",
+									"description": "Код ставки",
+									"type": "text"
+								},
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/statements/add",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"statements",
+								"add"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Сворення заявки на пролонгацію замовлення (Виконавець) (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rate_id",
+											"value": "307",
+											"description": "Код ставки",
+											"type": "text"
+										},
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/statements/add",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"statements",
+										"add"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jul 2021 18:49:10 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "166"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"rate_id\": \"307\",\n        \"user_id\": 19,\n        \"status\": \"active\",\n        \"updated_at\": \"2021-07-08T18:49:10.000000Z\",\n        \"created_at\": \"2021-07-08T18:49:10.000000Z\",\n        \"id\": 7\n    }\n}"
+						},
+						{
+							"name": "Сворення заявки на пролонгацію замовлення (Виконавець) (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rate_id",
+											"value": "3070",
+											"description": "Код ставки",
+											"type": "text"
+										},
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/statements/add",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"statements",
+										"add"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jul 2021 18:51:29 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "412"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"У вас немає дозволу.\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Відхилити заявки на пролонгацію замовлення",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"statement_id\", 1);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логін: емейл або телефон"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/statements/{{statement_id}}/reject",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"statements",
+								"{{statement_id}}",
+								"reject"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Відхилити заявки на пролонгацію замовлення (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/statements/{{statement_id}}/reject",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"statements",
+										"{{statement_id}}",
+										"reject"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jul 2021 18:53:45 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "15"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true\n}"
+						},
+						{
+							"name": "Відхилити заявки на пролонгацію замовлення (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/statements/{{statement_id}}/reject",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"statements",
+										"{{statement_id}}",
+										"reject"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jul 2021 18:54:11 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "333"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Statement not found.\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Підтвердити заяву на пролонгацію замовлення",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"statement_id\", 1);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логін: емейл або телефон"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/statements/{{statement_id}}/accept",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"statements",
+								"{{statement_id}}",
+								"accept"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Підтвердити заяву на пролонгацію замовлення (succes)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/statements/{{statement_id}}/accept",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"statements",
+										"{{statement_id}}",
+										"accept"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jul 2021 18:58:40 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "15"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true\n}"
+						},
+						{
+							"name": "Підтвердити заяву на пролонгацію замовлення (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/statements/{{statement_id}}/accept",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"statements",
+										"{{statement_id}}",
+										"accept"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jul 2021 18:56:56 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "332"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Statement not found.\"\n    ]\n}"
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [

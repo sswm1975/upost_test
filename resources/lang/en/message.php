@@ -30,4 +30,9 @@ return [
     'type_creator'            => 'Creator',
     'not_have_permission'     => 'You don\'t have permission.',
     'already_have_complaint'  => 'There is already a complaint from you.',
+    'chat_not_found'          => 'Chat not found.',
+    'exists_active_statement' => 'Exists active statement.',
+    'statement_max_limit'     => 'Was created the maximum number of prolongations.',
+    'deadline_not_arrived'    => 'The deadline has not arrived.',
+    'statement_not_found'     => 'Statement not found.',
 ];

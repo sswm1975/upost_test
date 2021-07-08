@@ -279,3 +279,21 @@ Route::group(
         Route::post('add', 'API\DisputeController@addDispute')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
+
+// Заяви
+Route::group(
+    [
+        'prefix' => 'statements',
+        'middleware' => MIDDLEWARE_AUTH_BASIC,
+    ],
+    function () {
+        # Створення заяви на пролонгацію замовлення
+        Route::post('add', 'API\StatementController@addStatement');
+
+        # Відхилити заяву на пролонгацію замовлення
+        Route::post('{statement_id}/reject', 'API\StatementController@rejectStatement');
+
+        # Підтвердити заяву на пролонгацію замовлення
+        Route::post('{statement_id}/accept', 'API\StatementController@acceptStatement');
+    }
+);
