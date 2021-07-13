@@ -35,4 +35,5 @@ return [
     'statement_max_limit'     => 'Was created the maximum number of prolongations.',
     'deadline_not_arrived'    => 'The deadline has not arrived.',
     'statement_not_found'     => 'Statement not found.',
+    'job_not_found'           => 'Job not found.',
 ];

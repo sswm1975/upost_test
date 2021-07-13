@@ -11752,6 +11752,242 @@
 							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"У вас немає дозволу.\"\n    ]\n}"
 						}
 					]
+				},
+				{
+					"name": "Оплата замовлення (отримання параметрів для Liqpay оплати)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"job_id\", 2);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "PHP-AUTH-USER",
+								"value": "{{email}}",
+								"type": "text",
+								"description": "Логін: емейл або телефон"
+							},
+							{
+								"key": "PHP-AUTH-PW",
+								"value": "{{password_hash}}",
+								"type": "text",
+								"description": "Хеш пароля, результат виконання md5(md5(password))"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/jobs/{{job_id}}/liqpay_params",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"jobs",
+								"{{job_id}}",
+								"liqpay_params"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Оплата замовлення (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/jobs/2/liqpay_params",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"jobs",
+										"2",
+										"liqpay_params"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 13 Jul 2021 02:10:11 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "595"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"data\": \"eyJwdWJsaWNfa2V5Ijoic2FuZGJveF9pNjY2NTE0OTA3ODIiLCJ2ZXJzaW9uIjozLCJhY3Rpb24iOiJwYXkiLCJhbW91bnQiOjUsImN1cnJlbmN5IjoiVUFIIiwiZGVzY3JpcHRpb24iOiJUZXN0IHBheW1lbnQiLCJzZW5kZXJfbGFzdF9uYW1lIjoiXHUwNDFmXHUwNDQzXHUwNDNmXHUwNDNhXHUwNDM4XHUwNDNkIFx1MDQxMlx1MDQzMFx1MDQ0MVx1MDQ0ZiIsImluZm8iOiJleUoxYzJWeVgybGtJam94T1N3aWFtOWlYMmxrSWpveWZRPT0iLCJvcmRlcl9pZCI6IjIwMjEwNzEzMDUxMDExODAxNTM3IiwibGFuZ3VhZ2UiOiJ1ayIsInBheXR5cGVzIjoiY2FyZCIsInJlc3VsdF91cmwiOiJodHRwOlwvXC91cG9zdC50ZXN0XC9hcGlcL2xpcXBheV9yZXN1bHQiLCJzYW5kYm94IjoiMSJ9\",\n        \"signature\": \"ePWoZwsnGYpd2oRh1yuJVF1vkOg=\"\n    }\n}"
+						},
+						{
+							"name": "Оплата замовлення (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/jobs/23/liqpay_params",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"jobs",
+										"23",
+										"liqpay_params"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 13 Jul 2021 02:17:24 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "379"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Завдання не знайдено.\"\n    ]\n}"
+						}
+					]
 				}
 			]
 		},

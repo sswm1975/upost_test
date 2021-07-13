@@ -35,4 +35,5 @@ return [
     'statement_max_limit'     => 'Было создано максимальное количество пролонгаций.',
     'deadline_not_arrived'    => 'Конечный срок не наступил.',
     'statement_not_found'     => 'Заявление не найдено.',
+    'job_not_found'           => 'Задание не найдено.',
 ];

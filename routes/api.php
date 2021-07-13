@@ -2,17 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 const MIDDLEWARE_AUTH_BASIC = 'auth.basic';
 
 // Операції с профілем користувача
@@ -176,7 +165,7 @@ Route::group(
     }
 );
 
-# Загрузка фото і створення мініатюр
+// Загрузка фото і створення мініатюр
 Route::post('upload_photo', 'API\PhotoLoaderController@uploadPhoto')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 // Маршрут
@@ -260,13 +249,19 @@ Route::group(
 
         # Підтвердження правильності покупки (замовник)
         Route::post('accept', 'API\JobController@acceptJob');
+
+        # Оплата замовлення (формування параметрів для Liqpay оплати)
+        Route::post('{rate_id}/liqpay_params', 'API\JobController@createLiqpayParams');
     }
 );
 
-# Парсинг даних
+# Оплата замовлення (отримання результату оплати від Liqpay)
+Route::get('liqpay_result', 'API\JobController@resultLiqpay')->name('api.liqpay.result');
+
+// Парсинг даних
 Route::get('parser', API\ParserController::class)->middleware(MIDDLEWARE_AUTH_BASIC);
 
-# Завантаження файлу
+// Завантаження файлу
 Route::post('upload', 'API\UploadController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 // Спори
