@@ -237,7 +237,7 @@ function strip_unsafe(string $content): string
 
 /**
  * Get SQL.
- * Pre-call \DB::enableQueryLog()
+ * Pre-call DB::enableQueryLog()
  *
  * @param bool $showBindings
  * @return array
@@ -259,7 +259,7 @@ function getSQL(bool $showBindings = false): array
 /**
  * Get format SQL.
  * !Use only if fix Illuminate\Database\Connection and Illuminate\Database\Events\QueryExecuted
- * Pre-call \DB::enableQueryLog()
+ * Pre-call DB::enableQueryLog()
  *
  * @return array
  */
@@ -272,7 +272,7 @@ function getSQLForFixDatabase(): array
             return [
                 'sql' => preg_replace_array('/\?/', $log['bindings'], $log['query']),
                 'time' => $log['time'],
-                'rows' => $log['rows'],
+                'rows' => $log['rows'] ?? null,
             ];
         },
         $logs
