@@ -7,306 +7,14 @@
 	},
 	"item": [
 		{
-			"name": "Профіль",
+			"name": "Аутентифікація",
 			"item": [
-				{
-					"name": "Авторизація",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"description": "Логін: емейл або телефон",
-								"type": "text"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"description": "Хеш пароля, результат виконання md5(md5(password))",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{host}}/{{endpoint}}/users/login",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"{{endpoint}}",
-								"users",
-								"login"
-							],
-							"query": [
-								{
-									"key": "lang",
-									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "Авторизація (success)",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"description": "Логін: емейл або телефон",
-										"type": "text"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"description": "Хеш пароля, результат виконання md5(md5(password))",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/login?lang=uk",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"users",
-										"login"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Tue, 15 Jun 2021 18:56:15 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/7.4.16"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "59"
-								},
-								{
-									"key": "Content-Length",
-									"value": "102"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5, max=100"
-								},
-								{
-									"key": "Connection",
-									"value": "Keep-Alive"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"message\": \"Вхід успішний.\"\n}"
-						},
-						{
-							"name": "Авторизація (errors_1)",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"description": "Логін: емейл або телефон",
-										"type": "text",
-										"disabled": true
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"description": "Хеш пароля, результат виконання md5(md5(password))",
-										"type": "text",
-										"disabled": true
-									}
-								],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/login?lang=uk",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"users",
-										"login"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Tue, 15 Jun 2021 18:56:49 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/7.4.16"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "58"
-								},
-								{
-									"key": "Content-Length",
-									"value": "461"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5, max=100"
-								},
-								{
-									"key": "Connection",
-									"value": "Keep-Alive"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Поле Логін є обов'язковим для заповнення.\",\n        \"Поле Пароль є обов'язковим для заповнення.\"\n    ]\n}"
-						},
-						{
-							"name": "Авторизація (errors_2)",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "test",
-										"description": "Логін: емейл або телефон",
-										"type": "text"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"description": "Хеш пароля, результат виконання md5(md5(password))",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/login?lang=uk",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"users",
-										"login"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Tue, 15 Jun 2021 18:57:53 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/7.4.16"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "59"
-								},
-								{
-									"key": "Content-Length",
-									"value": "314"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5, max=100"
-								},
-								{
-									"key": "Connection",
-									"value": "Keep-Alive"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Вказані облікові дані не збігаються з нашими записами.\"\n    ]\n}"
-						}
-					]
-				},
 				{
 					"name": "Реєстрація",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -339,13 +47,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/users/register",
+							"raw": "{{host}}/{{endpoint}}/auth/register",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{endpoint}}",
-								"users",
+								"auth",
 								"register"
 							],
 							"query": [
@@ -394,13 +102,13 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/register?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/auth/register?lang=uk",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
-										"users",
+										"auth",
 										"register"
 									],
 									"query": [
@@ -495,13 +203,13 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/register?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/auth/register?lang=uk",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
-										"users",
+										"auth",
 										"register"
 									],
 									"query": [
@@ -600,13 +308,13 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/register?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/auth/register?lang=uk",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
-										"users",
+										"auth",
 										"register"
 									],
 									"query": [
@@ -669,6 +377,469 @@
 					]
 				},
 				{
+					"name": "Авторизація",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var CryptoJS = require(\"crypto-js\");\r",
+									"var password = pm.environment.get('password');\r",
+									"var password_hash = CryptoJS.MD5(CryptoJS.MD5(password).toString()).toString();\r",
+									"pm.variables.set(\"password_hash\", password_hash);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable(\"token\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "login",
+									"value": "{{email}}",
+									"description": "Логін: емейл або телефон",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password_hash}}",
+									"description": "Хеш пароля, результат виконання md5(md5(password))",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"auth",
+								"login"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Авторизація (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "login",
+											"value": "{{email}}",
+											"description": "Логін: емейл або телефон",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password_hash}}",
+											"description": "Хеш пароля, результат виконання md5(md5(password))",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"auth",
+										"login"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Jul 2021 18:12:58 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "120"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Login successful.\",\n    \"token\": \"lOoLUg4yZdaFBQ81jqGJfYVvV3DLK4UWRYK8ZktAmjxGh6i9e2edAcQVF2mv4sia\"\n}"
+						},
+						{
+							"name": "Авторизація (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "login",
+											"value": "{{email}}",
+											"description": "Логін: емейл або телефон",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password_hash}}",
+											"description": "Хеш пароля, результат виконання md5(md5(password))",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/auth/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"auth",
+										"login"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Jul 2021 18:17:07 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "70"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"The password field is required.\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Припинення сеансу",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setEnvironmentVariable(\"token\", null);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/auth/logout",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"auth",
+								"logout"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Припинення сеансу (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/auth/logout",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"auth",
+										"logout"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Jul 2021 19:10:15 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "46"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=99"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Logout successful.\"\n}"
+						},
+						{
+							"name": "Припинення сеансу",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/auth/logout",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"auth",
+										"logout"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Jul 2021 19:10:42 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Length",
+									"value": "208"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"The token is incorrect.\"\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Профіль",
+			"item": [
+				{
 					"name": "Отримання інформації про користувача (тільки публічні дані)",
 					"event": [
 						{
@@ -683,20 +854,7 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile",
 							"host": [
@@ -897,20 +1055,7 @@
 					"name": "Отримання інформації про користувача (всі дані)",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/users/profile",
 							"host": [
@@ -1109,20 +1254,7 @@
 					"name": "Зміна даних профілю (тільки публічні дані)",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -1523,20 +1655,7 @@
 					"name": "Зміна даних мов та валют",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -1790,20 +1909,7 @@
 					"name": "Зміна паролю",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -2187,20 +2293,7 @@
 					"name": "Зміна логіну: телефону та/або емейлу",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -2574,20 +2667,7 @@
 					"name": "Зміна даних пластикової картки",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -4163,20 +4243,7 @@
 					"name": "Створення замовлення",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -4354,15 +4421,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -4588,15 +4651,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -4822,15 +4881,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -5061,20 +5116,7 @@
 					"name": "Вивід замовлень",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/orders/show",
 							"host": [
@@ -5193,15 +5235,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -5354,15 +5392,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -5524,20 +5558,7 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": []
@@ -5571,15 +5592,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -5661,15 +5678,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -5761,20 +5774,7 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/selection_route",
 							"host": [
@@ -5804,15 +5804,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -5891,15 +5887,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -5977,18 +5969,7 @@
 					"name": "Пiдтвердити виконання замовлення",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/orders/confirm?chat_id=7&user_id=1",
 							"host": [
@@ -6020,13 +6001,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -6063,13 +6042,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -6336,20 +6313,7 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -6390,15 +6354,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -6488,15 +6448,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -6589,20 +6545,7 @@
 					"name": "Створення маршруту",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -6714,15 +6657,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -6883,15 +6822,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -7061,20 +6996,7 @@
 					"name": "Виведення маршруту",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/routes/show",
 							"host": [
@@ -7187,15 +7109,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -7342,15 +7260,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -7519,20 +7433,7 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -7658,15 +7559,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -7827,15 +7724,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -8019,20 +7912,7 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/delete",
 							"host": [
@@ -8062,15 +7942,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -8153,15 +8029,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -8253,20 +8125,7 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/selection_order",
 							"host": [
@@ -8296,15 +8155,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -8383,15 +8238,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -8695,20 +8546,7 @@
 					"name": "Додати в список обраних",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -8754,15 +8592,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -8856,15 +8690,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -8959,20 +8789,7 @@
 					"name": "Вивести список обраних",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/favorites/show",
 							"host": [
@@ -9007,15 +8824,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -9097,15 +8910,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -9192,20 +9001,7 @@
 					"name": "Зробити ставку",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -9301,15 +9097,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -9444,15 +9236,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -9606,22 +9394,7 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон",
-								"disabled": true
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -9684,15 +9457,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -9799,15 +9568,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -9918,15 +9683,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -10086,15 +9847,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -10177,15 +9934,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -10277,20 +10030,7 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/reject",
 							"host": [
@@ -10320,15 +10060,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -10407,15 +10143,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -10493,20 +10225,7 @@
 					"name": "Отримати ставки",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/show?user_id=16&rate_type=order&order_id=16",
 							"host": [
@@ -10574,15 +10293,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -10697,15 +10412,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -10835,20 +10546,7 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/show",
 							"host": [
@@ -10878,15 +10576,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -10964,15 +10658,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -11061,20 +10751,7 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/accept",
 							"host": [
@@ -11104,15 +10781,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -11191,15 +10864,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -11281,20 +10950,7 @@
 					"name": "Створення завдання",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -11334,15 +10990,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -11423,15 +11075,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -11517,20 +11165,7 @@
 					"name": "Підтвердження правильності покупки (замовник)",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -11568,15 +11203,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -11663,15 +11294,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -11768,20 +11395,7 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -11814,15 +11428,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -11904,15 +11514,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -11998,20 +11604,7 @@
 					"name": "Завантаження фото",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -12056,15 +11649,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -12157,15 +11746,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -12260,15 +11845,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -12365,24 +11946,8 @@
 				{
 					"name": "Додати відгук",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -12429,21 +11994,15 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									},
 									{
 										"key": "Content-Type",
-										"name": "Content-Type",
-										"value": "application/x-www-form-urlencoded",
-										"type": "text"
+										"value": "application/x-www-form-urlencoded"
 									}
 								],
 								"body": {
@@ -12496,21 +12055,15 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									},
 									{
 										"key": "Content-Type",
-										"name": "Content-Type",
-										"value": "application/x-www-form-urlencoded",
-										"type": "text"
+										"value": "application/x-www-form-urlencoded"
 									}
 								],
 								"body": {
@@ -12771,20 +12324,7 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/parser?url={{url_ebay}}",
 							"host": [
@@ -12816,15 +12356,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -12916,20 +12452,7 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/parser?url={{url_rozetka}}",
 							"host": [
@@ -12961,15 +12484,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -13061,20 +12580,7 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/parser?url={{url_amazon}}",
 							"host": [
@@ -13106,15 +12612,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -13206,20 +12708,7 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/parser?url={{url_moyo}}",
 							"host": [
@@ -13251,15 +12740,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -13351,20 +12836,7 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/parser?url={{url_aliexpress}}",
 							"host": [
@@ -13396,15 +12868,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -13488,22 +12956,8 @@
 				{
 					"name": "Додати чат",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -13549,13 +13003,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -13607,13 +13059,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -13663,22 +13113,8 @@
 				{
 					"name": "Отримати чати",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/chats/show",
 							"host": [
@@ -13716,13 +13152,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -13763,13 +13197,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -13820,18 +13252,7 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -13868,13 +13289,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -13911,13 +13330,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -13978,22 +13395,8 @@
 				{
 					"name": "Додати повiдомлення",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -14059,13 +13462,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -14137,13 +13538,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -14213,22 +13612,8 @@
 				{
 					"name": "Отримати повiдомлення",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{host}}/{{endpoint}}/messages/show?user_id=1&chat_id=7&count=1&pages=1&sort=DESC",
 							"host": [
@@ -14271,13 +13656,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -14326,13 +13709,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"url": {
@@ -14379,22 +13760,8 @@
 				{
 					"name": "Підтвердження здійснення покупки (виконавець)",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -14447,13 +13814,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -14548,13 +13913,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -14658,18 +14021,7 @@
 					"name": "Завантажити файли",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -14702,13 +14054,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -14747,13 +14097,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -14798,18 +14146,7 @@
 					"name": "Відкрити спор на завдання",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -14867,13 +14204,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -14982,13 +14317,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -15098,20 +14431,7 @@
 					"name": "Сворення заявки на пролонгацію замовлення (Замовник)",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -15149,15 +14469,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -15244,15 +14560,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -15338,20 +14650,7 @@
 					"name": "Сворення заявки на пролонгацію замовлення (Виконавець)",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -15389,15 +14688,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -15484,15 +14779,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -15589,20 +14880,7 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": []
@@ -15628,15 +14906,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -15711,15 +14985,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -15804,20 +15074,7 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "PHP-AUTH-USER",
-								"value": "{{email}}",
-								"type": "text",
-								"description": "Логін: емейл або телефон"
-							},
-							{
-								"key": "PHP-AUTH-PW",
-								"value": "{{password_hash}}",
-								"type": "text",
-								"description": "Хеш пароля, результат виконання md5(md5(password))"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": []
@@ -15843,15 +15100,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -15926,15 +15179,11 @@
 								"header": [
 									{
 										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
+										"value": "{{email}}"
 									},
 									{
 										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
+										"value": "{{password_hash}}"
 									}
 								],
 								"body": {
@@ -16007,16 +15256,23 @@
 			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"var CryptoJS = require(\"crypto-js\");",
-					"var password = pm.environment.get('password');",
-					"var password_hash = CryptoJS.MD5(CryptoJS.MD5(password).toString()).toString();",
-					"postman.setEnvironmentVariable('password_hash', password_hash);"
+					""
 				]
 			}
 		},
@@ -16028,28 +15284,6 @@
 					""
 				]
 			}
-		}
-	],
-	"variable": [
-		{
-			"key": "host",
-			"value": "https://uapi.tantal-web.top"
-		},
-		{
-			"key": "endpoint",
-			"value": "/api"
-		},
-		{
-			"key": "phone",
-			"value": "+380978800099"
-		},
-		{
-			"key": "email",
-			"value": "test_email@gmail.com"
-		},
-		{
-			"key": "password",
-			"value": "qwerty"
 		}
 	]
 }
