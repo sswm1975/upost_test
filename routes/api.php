@@ -2,7 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 
-const MIDDLEWARE_AUTH_BASIC = 'auth.basic';
+const MIDDLEWARE_AUTH_BASIC = 'auth:api';
+
+// Аутентифікація
+Route::group(
+    [
+        'prefix' => 'auth',
+    ],
+    function () {
+        # Реєстрація
+        Route::post('register', 'API\AuthController@register');
+
+        # Авторизація
+        Route::post('login', 'API\AuthController@login');
+
+        # Припинення сеансу авторизованого користувача
+        Route::post('logout', 'API\AuthController@logout')->middleware(MIDDLEWARE_AUTH_BASIC);
+    }
+);
 
 // Операції с профілем користувача
 Route::group(
@@ -10,17 +27,6 @@ Route::group(
         'prefix' => 'users',
     ],
     function () {
-        # Авторизація
-        Route::get('login', function () {
-            return response()->json([
-                'status'  => true,
-                'message' => __('message.login_successful'),
-            ]);
-        })->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Реєстрація
-        Route::post('register', 'API\ProfileController@register');
-
         # Отримання інформації про користувача (тільки публічні дані)
         Route::get('{user_id}/profile', 'API\ProfileController@getPublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
 
@@ -43,7 +49,7 @@ Route::group(
         Route::post('card/update', 'API\ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Верифікація зміни даних користувача (тільки пароль/логін/картка)
-        Route::get('verification/{token}', 'API\ProfileController@verificationUser');
+        Route::get('verification/{token}', 'API\ProfileController@verificationUser')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
 

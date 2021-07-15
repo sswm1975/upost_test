@@ -17,33 +17,6 @@ use App\Models\UserChange;
 class ProfileController extends Controller
 {
     /**
-     * API Register user.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException|ValidatorException
-     */
-    public function register(Request $request): JsonResponse
-    {
-        $data = validateOrExit([
-            'user_phone'    => ['required', 'phone', 'unique:users'],
-            'user_email'    => ['required', 'email', 'max:30', 'unique:users'],
-            'user_password' => ['required', 'min:6', 'confirmed'],
-        ]);
-
-        User::create([
-            'user_phone'    => $data['user_phone'],
-            'user_email'    => $data['user_email'],
-            'user_password' => getHashPassword($data['user_password']),
-        ]);
-
-        return response()->json([
-            'status'  => true,
-            'message' => __('message.register_successful'),
-        ]);
-    }
-
-    /**
      * Получить приватные данные пользователя.
      *
      * @param Request $request

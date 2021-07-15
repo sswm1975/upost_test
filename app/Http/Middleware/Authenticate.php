@@ -3,19 +3,22 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use App\Exceptions\ErrorException;
+use Illuminate\Http\Request;
 
 class Authenticate extends Middleware
 {
     /**
-     * Get the path the user should be redirected to when they are not authenticated.
+     * Handle an unauthenticated user.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|null
+     * @param Request $request
+     * @param array $guards
+     * @return void
+     *
+     * @throws ErrorException
      */
-    protected function redirectTo($request)
+    protected function unauthenticated($request, array $guards)
     {
-        if (! $request->expectsJson()) {
-            return route('login');
-        }
+        throw new ErrorException(__('message.token_incorrect'));
     }
 }
