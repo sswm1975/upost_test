@@ -31,11 +31,7 @@ class AuthController extends Controller
 
         if (!$user) throw new ErrorException(__('message.auth_failed'));
 
-        $token = Str::random(64);
-
-        $user->forceFill([
-            'api_token' => hash('sha256', $token),
-        ])->save();
+        $token = $this->generateToken($user);
 
         return response()->json([
             'status'  => true,
@@ -99,15 +95,35 @@ class AuthController extends Controller
             'user_password' => ['required', 'min:6', 'confirmed'],
         ]);
 
-        User::create([
+        $user = User::create([
             'user_phone'    => $data['user_phone'],
             'user_email'    => $data['user_email'],
             'user_password' => getHashPassword($data['user_password']),
         ]);
 
+        $token = $this->generateToken($user);
+
         return response()->json([
             'status'  => true,
             'message' => __('message.register_successful'),
+            'token'   => $token,
         ]);
+    }
+
+    /**
+     * Генерация токена.
+     *
+     * @param User $user
+     * @return string
+     */
+    private function generateToken(User $user): string
+    {
+        $token = Str::random(64);
+
+        $user->forceFill([
+            'api_token' => hash('sha256', $token),
+        ])->save();
+
+        return $token;
     }
 }
