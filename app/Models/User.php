@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\CanResetPassword;
 
 class User extends Authenticatable
 {
@@ -105,6 +106,16 @@ class User extends Authenticatable
      * @return string
      */
     public function routeNotificationForMail(Notification $notification): string
+    {
+        return $this->user_email;
+    }
+
+    /**
+     * Get the e-mail address where password reset links are sent.
+     *
+     * @return string
+     */
+    public function getEmailForPasswordReset()
     {
         return $this->user_email;
     }

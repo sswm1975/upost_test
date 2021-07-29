@@ -21,6 +21,20 @@ Route::group(
     }
 );
 
+// Операції по відновленню пароля
+Route::group(
+    [
+        'prefix' => 'password',
+    ],
+    function () {
+        # Відправити запит з емейлом для скидання паролю
+        Route::post('email', 'API\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+
+        # Зміна паролю
+        Route::post('reset', 'API\ResetPasswordController@reset');
+    }
+);
+
 // Операції с профілем користувача
 Route::group(
     [

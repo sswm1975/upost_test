@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Auth\Notifications\ResetPassword;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,6 +33,15 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Schema::defaultStringLength(191);
+
+        /**
+         * Для операции "Сброс пароля" избавляемся от маршрута ниже (для API он не нужен):
+         * # Отобразить форму, содержащая поля email, password, password_confirmation и скрытое поле token.
+         * Route::get('reset/{token}', 'API\ResetPasswordController@showResetForm')->name('password.reset')
+         */
+        ResetPassword::createUrlUsing(function ($user, string $token) {
+            return 'https://uapi.tantal-web.top/api/password/reset?token='.$token;
+        });
 
         /**
          * Валидация: Проверка международного телефонного номера.
