@@ -9,6 +9,7 @@ use App\Models\Route;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -94,7 +95,23 @@ class RouteController extends Controller
             'page'           => 'sometimes|required|integer|min:1',
         ]);
 
+        $lang = app()->getLocale();
+
         $routes = Route::query()
+            ->select(
+                'routes.*',
+                "from_country.country_name_{$lang} AS route_from_country_name",
+                "to_country.country_name_{$lang} AS route_to_country_name",
+                "from_city.city_name_{$lang} AS route_from_city_name",
+                "to_city.city_name_{$lang} AS route_to_city_name",
+                'users.user_name',
+                DB::raw('IFNULL(LENGTH(users.user_favorite_routes) - LENGTH(REPLACE(users.user_favorite_routes, ",", "")) + 1, 0) AS route_favorite')
+            )
+            ->join('users', 'users.user_id', 'routes.user_id')
+            ->leftJoin('country AS from_country', 'from_country.country_id', 'routes.route_from_country')
+            ->leftJoin('country AS to_country', 'to_country.country_id', 'routes.route_to_country')
+            ->leftJoin('city AS from_city', 'from_city.city_id', 'routes.route_from_city')
+            ->leftJoin('city AS to_city', 'to_city.city_id', 'routes.route_to_city')
             ->where('route_status', $request->get('status', 'active'))
             ->when($request->filled('route_id'), function ($query) use ($data) {
                 return $query->whereIn('route_id', $data['route_id']);
