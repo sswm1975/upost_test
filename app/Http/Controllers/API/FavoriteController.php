@@ -36,7 +36,7 @@ class FavoriteController extends Controller
             $favorites[] = $request->get('id');
         }
 
-        $user->$field = implode(',', $favorites);
+        $user->$field = count($favorites) ? implode(',', $favorites) : null;
         $user->save();
 
         return response()->json([
