@@ -37,4 +37,5 @@ return [
     'deadline_not_arrived'    => 'Конечный срок не наступил.',
     'statement_not_found'     => 'Заявление не найдено.',
     'job_not_found'           => 'Задание не найдено.',
+    'image_not_found'         => 'Рисунок не найден.',
 ];

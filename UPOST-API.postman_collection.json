@@ -166,7 +166,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"message\": \"Реєстрація успішна.\"\n}"
+							"body": "{\n    \"status\": true,\n    \"message\": \"Реєстрація успішна.\",\n    \"token\": \"lOoLUg4yZdaFBQ81jqGJfYVvV3DLK4UWRYK8ZktAmjxGh6i9e2edAcQVF2mv4sia\"\n}"
 						},
 						{
 							"name": "Реєстрація (errors_1)",
@@ -831,6 +831,485 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"The token is incorrect.\"\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Відновлення паролю",
+			"item": [
+				{
+					"name": "Скидання паролю",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_email",
+									"value": "sswm@i.ua",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/password/email?lang=uk",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"password",
+								"email"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Скидання паролю (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "user_email",
+											"value": "sswm@i.ua",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/password/email?lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"password",
+										"email"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 29 Jul 2021 03:48:23 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private, must-revalidate"
+								},
+								{
+									"key": "pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "x-ray",
+									"value": "p529:0.254/wn1056:0.250/wa1056:D=247494"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Ми надіслали на Вашу електронну адресу посилання для зміни пароля!\"\n}"
+						},
+						{
+							"name": "Скидання паролю (error)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "user_email",
+											"value": "sswm@i.ua",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/password/email?lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"password",
+										"email"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 29 Jul 2021 03:51:42 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private, must-revalidate"
+								},
+								{
+									"key": "pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "x-ray",
+									"value": "p529:0.120/wn1056:0.110/wa1056:D=111066"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Поле user email є обов'язковим для заповнення.\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Змінити пароль",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_email",
+									"value": "sswm@i.ua",
+									"type": "text"
+								},
+								{
+									"key": "user_password",
+									"value": "testtest",
+									"type": "text"
+								},
+								{
+									"key": "user_password_confirmation",
+									"value": "testtest",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "3000c0445344a3a43799a8e9975f7906acb49ddd5683e4f34c6483942d0dac63",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/password/reset?lang=uk",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"password",
+								"reset"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Змінити пароль (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "user_email",
+											"value": "sswm@i.ua",
+											"type": "text"
+										},
+										{
+											"key": "user_password",
+											"value": "testtest",
+											"type": "text"
+										},
+										{
+											"key": "user_password_confirmation",
+											"value": "testtest",
+											"type": "text"
+										},
+										{
+											"key": "token",
+											"value": "bec2a2e9c9ea61b0401a0762155b67067543a44e80732ef43560af1941d506c3",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/password/reset?lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"password",
+										"reset"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 29 Jul 2021 03:54:30 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private, must-revalidate"
+								},
+								{
+									"key": "pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "x-ray",
+									"value": "p529:0.205/wn1056:0.190/wa1056:D=196580"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Ваш пароль змінено!\"\n}"
+						},
+						{
+							"name": "Змінити пароль (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "user_email",
+											"value": "sswm@i.ua",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "user_password",
+											"value": "testtest",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "user_password_confirmation",
+											"value": "testtest",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "token",
+											"value": "bec2a2e9c9ea61b0401a0762155b67067543a44e80732ef43560af1941d506c3",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/password/reset?lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"password",
+										"reset"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 29 Jul 2021 03:53:40 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private, must-revalidate"
+								},
+								{
+									"key": "pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "x-ray",
+									"value": "p529:0.870/wn1056:0.870/wa1056:D=163663"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Поле token є обов'язковим для заповнення.\",\n        \"Поле user email є обов'язковим для заповнення.\",\n        \"Поле user password є обов'язковим для заповнення.\"\n    ]\n}"
 						}
 					]
 				}
@@ -3103,6 +3582,31 @@
 							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Токен неправильний.\"\n    ]\n}"
 						}
 					]
+				},
+				{
+					"name": "Отримати фото",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/users/download_image?filename=users/15/user_photo.jpg",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"users",
+								"download_image"
+							],
+							"query": [
+								{
+									"key": "filename",
+									"value": "users/15/user_photo.jpg"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -4418,16 +4922,7 @@
 							"name": "Створення замовлення (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -4648,16 +5143,7 @@
 							"name": "Створення замовлення (errors - profile)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -4878,16 +5364,7 @@
 							"name": "Створення замовлення (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -5232,16 +5709,7 @@
 							"name": "Вивід замовлень (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/show?user_id=15&show=2&page=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=usd&lang=uk",
 									"host": [
@@ -5389,16 +5857,7 @@
 							"name": "Вивід замовлень (errors)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/show?user_id=15&show=2&status=test&page=1&date_from=2021h0601&date_to=2021h0605&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=usdw&lang=uk",
 									"host": [
@@ -5589,16 +6048,7 @@
 							"name": "Видалення замовлення (success)",
 							"originalRequest": {
 								"method": "DELETE",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": []
@@ -5675,16 +6125,7 @@
 							"name": "Видалення замовлення (errors)",
 							"originalRequest": {
 								"method": "DELETE",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": []
@@ -5801,16 +6242,7 @@
 							"name": "Підбір маршруту для замовлення (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/25/selection_route",
 									"host": [
@@ -5884,16 +6316,7 @@
 							"name": "Підбір маршруту для замовлення (errors)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/250/selection_route",
 									"host": [
@@ -5998,16 +6421,7 @@
 							"name": "Пiдтвердити виконання замовлення (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/confirm?chat_id=7&user_id=1",
 									"host": [
@@ -6039,16 +6453,7 @@
 							"name": "Пiдтвердити виконання замовлення (error)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/orders/confirm?chat_id=777&user_id=1",
 									"host": [
@@ -6351,16 +6756,7 @@
 							"name": "Скарга на замовлення (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -6445,16 +6841,7 @@
 							"name": "Скарга на замовлення (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -6654,16 +7041,7 @@
 							"name": "Створення маршруту (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -6819,16 +7197,7 @@
 							"name": "Створення маршруту (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -7106,18 +7475,9 @@
 							"name": "Виведення маршруту (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/routes/show?route_id[]=60&route_id[]=64&user_id=15&status=active&date_from=2021-06-01&date_to=2021-07-01&country_from[]=3&city_from[]=4&city_from[]=3&country_to[]=2&city_to[]=2&city_to[]=3&show=4&page=1&lang=uk",
+									"raw": "{{host}}/{{endpoint}}/routes/show",
 									"host": [
 										"{{host}}"
 									],
@@ -7130,77 +7490,92 @@
 										{
 											"key": "route_id[]",
 											"value": "60",
-											"description": "Код маршруту, масив (опційно)"
+											"description": "Код маршруту, масив (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "route_id[]",
 											"value": "64",
-											"description": "Код маршруту, масив (опційно)"
+											"description": "Код маршруту, масив (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "user_id",
 											"value": "15",
-											"description": "Код користувача (опційно)"
+											"description": "Код користувача (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "status",
 											"value": "active",
-											"description": "Статус (active, ban, close) (опційно)"
+											"description": "Статус (active, ban, close) (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "date_from",
 											"value": "2021-06-01",
-											"description": "Дата початку маршруту"
+											"description": "Дата початку маршруту",
+											"disabled": true
 										},
 										{
 											"key": "date_to",
-											"value": "2021-07-01",
-											"description": "Дата кінця маршруту"
+											"value": "2021-05-01",
+											"description": "Дата кінця маршруту",
+											"disabled": true
 										},
 										{
 											"key": "country_from[]",
 											"value": "3",
-											"description": "Код країни початку, масив"
+											"description": "Код країни початку, масив",
+											"disabled": true
 										},
 										{
 											"key": "city_from[]",
 											"value": "4",
-											"description": "Код міста початку, масив (опційно)"
+											"description": "Код міста початку, масив (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "city_from[]",
 											"value": "3",
-											"description": "Код міста початку, масив (опційно)"
+											"description": "Код міста початку, масив (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "country_to[]",
 											"value": "2",
-											"description": "Код краіни кінця, масив (опційно)"
+											"description": "Код краіни кінця, масив (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "city_to[]",
 											"value": "2",
-											"description": "Код міста, масив (опційно)"
+											"description": "Код міста, масив (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "city_to[]",
 											"value": "3",
-											"description": "Код міста, масив (опційно)"
+											"description": "Код міста, масив (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "show",
 											"value": "4",
-											"description": "Кількість маршрутів на сторінці, за замовченням 5  (опційно)"
+											"description": "Кількість маршрутів на сторінці, за замовченням 5  (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "page",
 											"value": "1",
-											"description": "Номер сторінки для виводу, за замовченням 1  (опційно)"
+											"description": "Номер сторінки для виводу, за замовченням 1  (опційно)",
+											"disabled": true
 										},
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
 										}
 									]
 								}
@@ -7211,11 +7586,15 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 16 Jun 2021 17:05:45 GMT"
+									"value": "Fri, 13 Aug 2021 16:07:50 GMT"
 								},
 								{
 									"key": "Server",
 									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
 								},
 								{
 									"key": "X-Powered-By",
@@ -7231,11 +7610,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "59"
+									"value": "58"
 								},
 								{
 									"key": "Content-Length",
-									"value": "737"
+									"value": "2841"
 								},
 								{
 									"key": "Keep-Alive",
@@ -7251,22 +7630,13 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"count\": 2,\n    \"page\": 1,\n    \"pages\": 1,\n    \"result\": [\n        {\n            \"route_id\": 60,\n            \"route_parent\": 0,\n            \"user_id\": 15,\n            \"route_register_date\": \"2021-06-06\",\n            \"route_from_country\": 3,\n            \"route_from_city\": 4,\n            \"route_to_country\": 2,\n            \"route_to_city\": 2,\n            \"route_start\": \"2021-06-01\",\n            \"route_end\": \"2021-07-01\",\n            \"route_points\": \"\",\n            \"route_transport\": \"bus\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0\n        },\n        {\n            \"route_id\": 64,\n            \"route_parent\": 0,\n            \"user_id\": 15,\n            \"route_register_date\": \"2021-06-06\",\n            \"route_from_country\": 3,\n            \"route_from_city\": 4,\n            \"route_to_country\": 2,\n            \"route_to_city\": 2,\n            \"route_start\": \"2021-06-01\",\n            \"route_end\": \"2021-07-01\",\n            \"route_points\": [\n                {\n                    \"country\": \"10\",\n                    \"city\": \"14\",\n                    \"date\": \"2021-08-21\"\n                }\n            ],\n            \"route_transport\": \"bus\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0\n        }\n    ]\n}"
+							"body": "{\n    \"status\": true,\n    \"count\": 48,\n    \"page\": 1,\n    \"pages\": 10,\n    \"result\": [\n        {\n            \"route_id\": 42,\n            \"route_parent\": 0,\n            \"user_id\": 11,\n            \"route_register_date\": \"2021-01-23\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 13,\n            \"route_to_country\": 2,\n            \"route_to_city\": 6,\n            \"route_start\": \"28.01.2021\",\n            \"route_end\": \"30.01.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 11,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"Кременчуг\",\n            \"route_to_city_name\": \"Дніпро\",\n            \"user_name\": \"Катя\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 41,\n            \"route_parent\": 0,\n            \"user_id\": 11,\n            \"route_register_date\": \"2021-01-23\",\n            \"route_from_country\": 8,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"23.01.2021\",\n            \"route_end\": \"31.03.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 5,\n            \"route_from_country_name\": \"США\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Катя\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 39,\n            \"route_parent\": 0,\n            \"user_id\": 10,\n            \"route_register_date\": \"2021-01-18\",\n            \"route_from_country\": 8,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"18.01.2021\",\n            \"route_end\": \"31.03.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"США\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Vasya\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 40,\n            \"route_parent\": 0,\n            \"user_id\": 3,\n            \"route_register_date\": \"2021-01-18\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 0,\n            \"route_to_country\": 8,\n            \"route_to_city\": 0,\n            \"route_start\": \"18.01.2021\",\n            \"route_end\": \"23.10.2020\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"США\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Gleb\",\n            \"route_favorite\": 2\n        },\n        {\n            \"route_id\": 37,\n            \"route_parent\": 0,\n            \"user_id\": 9,\n            \"route_register_date\": \"2021-01-16\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"16.01.2021\",\n            \"route_end\": \"31.01.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Buba\",\n            \"route_favorite\": 0\n        }\n    ]\n}"
 						},
 						{
 							"name": "Виведення маршруту (errors)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/show?date_from=2021-06-01&date_to=2021-05-01&lang=uk",
 									"host": [
@@ -7556,16 +7926,7 @@
 							"name": "Редагування маршруту (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -7721,16 +8082,7 @@
 							"name": "Редагування маршруту (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -7939,16 +8291,7 @@
 							"name": "Видалення маршруту (success)",
 							"originalRequest": {
 								"method": "DELETE",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": []
@@ -8026,16 +8369,7 @@
 							"name": "Видалення маршруту (errors)",
 							"originalRequest": {
 								"method": "DELETE",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": []
@@ -8152,16 +8486,7 @@
 							"name": "Підбір замовлення для маршруту (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/58/selection_order",
 									"host": [
@@ -8235,16 +8560,7 @@
 							"name": "Підбір замовлення для маршруту (errors)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/routes/580/selection_order",
 									"host": [
@@ -8589,16 +8905,7 @@
 							"name": "Додати в список обраних (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -8687,16 +8994,7 @@
 							"name": "Додати в список обраних (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -8821,16 +9119,7 @@
 							"name": "Вивести список обраних (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/favorites/show?type=order&lang=uk",
 									"host": [
@@ -8907,16 +9196,7 @@
 							"name": "Вивести список обраних (errors)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/favorites/show?lang=uk",
 									"host": [
@@ -9094,16 +9374,7 @@
 							"name": "Зробити ставку (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -9233,16 +9504,7 @@
 							"name": "Зробити ставку (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -9454,16 +9716,7 @@
 							"name": "Редагувати ставку (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -9565,16 +9818,7 @@
 							"name": "Редагувати ставку (errors_1)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -9680,16 +9924,7 @@
 							"name": "Редагувати ставку (errors_2)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -9844,16 +10079,7 @@
 							"name": "Видалити ставку (success)",
 							"originalRequest": {
 								"method": "DELETE",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": []
@@ -9931,16 +10157,7 @@
 							"name": "Видалити ставку (errors)",
 							"originalRequest": {
 								"method": "DELETE",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": []
@@ -10057,16 +10274,7 @@
 							"name": "Відхилити ставку (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/304/reject",
 									"host": [
@@ -10140,16 +10348,7 @@
 							"name": "Відхилити ставку (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/304/reject",
 									"host": [
@@ -10290,16 +10489,7 @@
 							"name": "Отримати ставки (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/show?user_id=3&rate_type=route&order_id=2&route_id=49&lang=uk",
 									"host": [
@@ -10409,16 +10599,7 @@
 							"name": "Отримати ставки (errors)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/show",
 									"host": [
@@ -10573,16 +10754,7 @@
 							"name": "Переглянути ставку (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/305/show?lang=uk",
 									"host": [
@@ -10655,16 +10827,7 @@
 							"name": "Переглянути ставку (errors)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/3053/show",
 									"host": [
@@ -10778,16 +10941,7 @@
 							"name": "Прийняти ставку (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/304/accept",
 									"host": [
@@ -10861,16 +11015,7 @@
 							"name": "Прийняти ставку (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/264/accept?lang=uk",
 									"host": [
@@ -10987,16 +11132,7 @@
 							"name": "Створення завдання (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -11072,16 +11208,7 @@
 							"name": "Створення завдання (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -11200,16 +11327,7 @@
 							"name": "Підтвердження правильності покупки (замовник) (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -11291,16 +11409,7 @@
 							"name": "Підтвердження правильності покупки (замовник) (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -11425,16 +11534,7 @@
 							"name": "Оплата замовлення (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -11511,16 +11611,7 @@
 							"name": "Оплата замовлення (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -11646,16 +11737,7 @@
 							"name": "Завантаження фото (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -11743,16 +11825,7 @@
 							"name": "Завантаження фото (errors_1)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -11842,16 +11915,7 @@
 							"name": "Завантаження фото (errors_2)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -11991,20 +12055,7 @@
 							"name": "Додати відгук(success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/x-www-form-urlencoded"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -12052,20 +12103,7 @@
 							"name": "Додати відгук(error)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/x-www-form-urlencoded"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -12353,16 +12391,7 @@
 							"name": "eBay (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/parser?url=https://www.ebay.com/itm/324444618400",
 									"host": [
@@ -12481,16 +12510,7 @@
 							"name": "Rozetka (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/parser?url=https://hard.rozetka.com.ua/dell_210_axrq/p274014238/",
 									"host": [
@@ -12609,16 +12629,7 @@
 							"name": "Amazon (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/parser?url=https://www.amazon.com/Dell-SE2419Hx-23-8-1920x1080-Monitor/dp/B07HKV5RLG/ref=psdc_1292115011_t3_B08BF4CZSV",
 									"host": [
@@ -12737,16 +12748,7 @@
 							"name": "Moyo (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/parser?url=https://www.moyo.ua/noutbuk_hp_15-dw1015ua_2f3g3ea_/477782.html",
 									"host": [
@@ -12865,16 +12867,7 @@
 							"name": "AliExpress (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/parser?url=https://aliexpress.ru/item/4001359505142.html",
 									"host": [
@@ -13000,16 +12993,7 @@
 							"name": "Додати чат (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -13056,16 +13040,7 @@
 							"name": "Додати чат (error)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -13149,16 +13124,7 @@
 							"name": "Отримати чати (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/chats/show?user_id=1&addressee=11&order_id=3",
 									"host": [
@@ -13194,16 +13160,7 @@
 							"name": "Отримати чати (error)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/chats/show?user_id=1999&addressee=11&order_id=3",
 									"host": [
@@ -13286,16 +13243,7 @@
 							"name": "Видалити чат (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/chats/delete?chat_id=12&user_id=1",
 									"host": [
@@ -13327,16 +13275,7 @@
 							"name": "Видалити чат (error)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/chats/delete?chat_id=12999&user_id=1",
 									"host": [
@@ -13459,16 +13398,7 @@
 							"name": "Додати повiдомлення (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -13535,16 +13465,7 @@
 							"name": "Додати повiдомлення (error)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -13653,16 +13574,7 @@
 							"name": "Отримати повiдомлення (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/messages/show?user_id=1&chat_id=7&count=1&pages=1&sort=DESC",
 									"host": [
@@ -13706,16 +13618,7 @@
 							"name": "Отримати повiдомлення (error)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/messages/show?user_id=111&chat_id=7&count=1&pages=1&sort=DESC",
 									"host": [
@@ -13811,16 +13714,7 @@
 							"name": "Підтвердження здійснення покупки (виконавець) (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -13910,16 +13804,7 @@
 							"name": "Підтвердження здійснення покупки (виконавець) (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -14051,16 +13936,7 @@
 							"name": "Завантажити файли (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -14094,16 +13970,7 @@
 							"name": "Завантажити файли (error)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -14201,16 +14068,7 @@
 							"name": "Відкрити спор на завдання (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -14314,16 +14172,7 @@
 							"name": "Відкрити спор на завдання (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -14466,16 +14315,7 @@
 							"name": "Сворення заявки на пролонгацію замовлення (Замовник) (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -14557,16 +14397,7 @@
 							"name": "Сворення заявки на пролонгацію замовлення (Замовник) (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -14685,16 +14516,7 @@
 							"name": "Сворення заявки на пролонгацію замовлення (Виконавець) (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -14776,16 +14598,7 @@
 							"name": "Сворення заявки на пролонгацію замовлення (Виконавець) (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -14903,16 +14716,7 @@
 							"name": "Відхилити заявки на пролонгацію замовлення (success)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": []
@@ -14982,16 +14786,7 @@
 							"name": "Відхилити заявки на пролонгацію замовлення (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": []
@@ -15097,16 +14892,7 @@
 							"name": "Підтвердити заяву на пролонгацію замовлення (succes)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": []
@@ -15176,16 +14962,7 @@
 							"name": "Підтвердити заяву на пролонгацію замовлення (errors)",
 							"originalRequest": {
 								"method": "POST",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "formdata",
 									"formdata": []

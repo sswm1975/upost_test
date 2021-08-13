@@ -37,4 +37,5 @@ return [
     'deadline_not_arrived'    => 'The deadline has not arrived.',
     'statement_not_found'     => 'Statement not found.',
     'job_not_found'           => 'Job not found.',
+    'image_not_found'         => 'Image not found.',
 ];

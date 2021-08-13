@@ -64,6 +64,9 @@ Route::group(
 
         # Верифікація зміни даних користувача (тільки пароль/логін/картка)
         Route::get('verification/{token}', 'API\ProfileController@verificationUser')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Завантажити фотографію
+        Route::get('download_image', 'API\ProfileController@downloadImage');
     }
 );
 

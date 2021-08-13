@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\UserChange;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProfileController extends Controller
 {
@@ -222,6 +223,24 @@ class ProfileController extends Controller
         return response()->json([
             'status' => true
         ]);
+    }
+
+    /**
+     * Скачать фотографию.
+     *
+     * @param Request $request
+     * @return StreamedResponse
+     * @throws ValidationException|ValidatorException|ErrorException
+     */
+    public function downloadImage(Request $request): StreamedResponse
+    {
+        $data = validateOrExit(['filename' => 'required|string']);
+
+        if (!Storage::disk('local')->exists($data['filename'])) {
+            throw new ErrorException(__('message.image_not_found'));
+        }
+
+        return Storage::disk('local')->download($data['filename']);
     }
 
     /**
