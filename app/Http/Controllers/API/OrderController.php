@@ -12,6 +12,7 @@ use App\Models\Route;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Models\Order;
@@ -148,7 +149,25 @@ class OrderController extends Controller
 
         $rate = Option::rate($request->get('currency', 'usd'));
 
+        $lang = app()->getLocale();
+
         $orders = Order::query()
+            ->select(
+                'orders.*',
+                'users.user_name',
+                "categories.cat_name_{$lang} AS order_category_name",
+                "from_country.country_name_{$lang} AS order_from_country_name",
+                "to_country.country_name_{$lang} AS order_to_country_name",
+                "from_city.city_name_{$lang} AS order_from_city_name",
+                "to_city.city_name_{$lang} AS order_to_city_name",
+                DB::raw('IFNULL(LENGTH(users.user_favorite_orders) - LENGTH(REPLACE(users.user_favorite_orders, ",", "")) + 1, 0) AS cnt_favorite_orders')
+            )
+            ->join('users', 'users.user_id', 'orders.user_id')
+            ->join('categories', 'categories.category_id', 'orders.order_category')
+            ->leftJoin('country AS from_country', 'from_country.country_id', 'orders.order_from_country')
+            ->leftJoin('country AS to_country', 'to_country.country_id', 'orders.order_to_country')
+            ->leftJoin('city AS from_city', 'from_city.city_id', 'orders.order_from_city')
+            ->leftJoin('city AS to_city', 'to_city.city_id', 'orders.order_to_city')
             ->when($request->filled('user_id'), function ($query) use ($data) {
                 return $query->where('user_id', $data['user_id']);
             })
