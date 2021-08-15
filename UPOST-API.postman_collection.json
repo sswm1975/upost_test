@@ -5711,7 +5711,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/show?user_id=15&show=2&page=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=usd&lang=uk",
+									"raw": "{{host}}/{{endpoint}}/orders/show",
 									"host": [
 										"{{host}}"
 									],
@@ -5724,12 +5724,14 @@
 										{
 											"key": "user_id",
 											"value": "15",
-											"description": "Код користувача (опціонально)"
+											"description": "Код користувача (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "show",
 											"value": "2",
-											"description": "Кількість замовлень на сторінці, за замовченням 5  (опціонально)"
+											"description": "Кількість замовлень на сторінці, за замовченням 5  (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "status",
@@ -5740,67 +5742,80 @@
 										{
 											"key": "page",
 											"value": "1",
-											"description": "Номер сторінки для виводу, за замовченням 1  (опціонально)"
+											"description": "Номер сторінки для виводу, за замовченням 1  (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "date_from",
 											"value": "2021-06-01",
-											"description": "Дата початку  (опціонально)"
+											"description": "Дата початку  (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "date_to",
 											"value": "2021-06-05",
-											"description": "Кінцева дата  (опціонально)"
+											"description": "Кінцева дата  (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "city_from[]",
 											"value": "4",
-											"description": "Код міста початку, масив (опціонально)"
+											"description": "Код міста початку, масив (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "city_from[]",
 											"value": "3",
-											"description": "Код міста початку, масив (опціонально)"
+											"description": "Код міста початку, масив (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "city_to[]",
 											"value": "2",
-											"description": "Код міста прибуття, масив (опціонально)"
+											"description": "Код міста прибуття, масив (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "city_to[]",
 											"value": "3",
-											"description": "Код міста прибуття, масив (опціонально)"
+											"description": "Код міста прибуття, масив (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "country_from[]",
 											"value": "3",
-											"description": "Код країни початку, масив  (опціонально)"
+											"description": "Код країни початку, масив  (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "country_to[]",
 											"value": "2",
-											"description": "Код каїни прибуття, масив (опціонально)"
+											"description": "Код каїни прибуття, масив (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "price_from",
 											"value": "100",
-											"description": "Ціна Від  (опціонально)"
+											"description": "Ціна Від  (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "price_to",
 											"value": "250",
-											"description": "Ціна По  (опціонально)"
+											"description": "Ціна По  (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "currency",
 											"value": "usd",
-											"description": "Валюта, в якій передається ціна (uah, rub, usd, eur) (опціонально)"
+											"description": "Валюта, в якій передається ціна (uah, rub, usd, eur) (опціонально)",
+											"disabled": true
 										},
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
 										}
 									]
 								}
@@ -5811,11 +5826,15 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 16 Jun 2021 12:08:35 GMT"
+									"value": "Sun, 15 Aug 2021 17:12:26 GMT"
 								},
 								{
 									"key": "Server",
 									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
 								},
 								{
 									"key": "X-Powered-By",
@@ -5835,7 +5854,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "2258"
+									"value": "6735"
 								},
 								{
 									"key": "Keep-Alive",
@@ -5851,7 +5870,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": 200,\n    \"count\": 5,\n    \"page\": 1,\n    \"pages\": 3,\n    \"result\": [\n        {\n            \"order_id\": 27,\n            \"user_id\": 15,\n            \"order_register_date\": \"2021-06-08\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-27\",\n            \"order_category\": 2,\n            \"order_price\": 1456.23,\n            \"order_price_usd\": 250,\n            \"order_currency\": \"$\",\n            \"order_count\": \"1\",\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-01\",\n            \"order_personal_price\": \"1\",\n            \"order_user_price\": \"100\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": \"1\",\n            \"order_user_active\": \"\",\n            \"order_status\": \"\",\n            \"order_look\": 0,\n            \"order_strikes\": 0\n        },\n        {\n            \"order_id\": 26,\n            \"user_id\": 15,\n            \"order_register_date\": \"2021-06-08\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-26\",\n            \"order_category\": 2,\n            \"order_price\": 1456.23,\n            \"order_price_usd\": 250,\n            \"order_currency\": \"$\",\n            \"order_count\": \"1\",\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-01\",\n            \"order_personal_price\": \"1\",\n            \"order_user_price\": \"100\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": \"1\",\n            \"order_user_active\": \"\",\n            \"order_status\": \"\",\n            \"order_look\": 0,\n            \"order_strikes\": 0\n        }\n    ]\n}"
+							"body": "{\n    \"status\": true,\n    \"count\": 24,\n    \"page\": 1,\n    \"pages\": 5,\n    \"result\": [\n        {\n            \"order_id\": 30,\n            \"user_id\": 19,\n            \"order_register_date\": \"2021-06-26\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-30\",\n            \"order_category\": 2,\n            \"order_price\": \"1456.23\",\n            \"order_price_usd\": \"250.00\",\n            \"order_currency\": \"$\",\n            \"order_count\": 1,\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-01\",\n            \"order_personal_price\": 1,\n            \"order_user_price\": \"100.00\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": 1,\n            \"order_user_active\": 0,\n            \"order_status\": \"active\",\n            \"order_look\": 0,\n            \"order_strikes\": \"\",\n            \"user_name\": \"Вася\",\n            \"order_category_name\": \"Electronics\",\n            \"order_from_country_name\": \"Poland\",\n            \"order_to_country_name\": \"Ukraine\",\n            \"order_from_city_name\": \"Krakov\",\n            \"order_to_city_name\": \"Kyiv\",\n            \"cnt_favorite_orders\": 0\n        },\n        {\n            \"order_id\": 27,\n            \"user_id\": 19,\n            \"order_register_date\": \"2021-06-08\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-27\",\n            \"order_category\": 2,\n            \"order_price\": \"1456.23\",\n            \"order_price_usd\": \"250.00\",\n            \"order_currency\": \"$\",\n            \"order_count\": 1,\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-01\",\n            \"order_personal_price\": 1,\n            \"order_user_price\": \"100.00\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": 1,\n            \"order_user_active\": 0,\n            \"order_status\": \"active\",\n            \"order_look\": 0,\n            \"order_strikes\": \"\",\n            \"user_name\": \"Вася\",\n            \"order_category_name\": \"Electronics\",\n            \"order_from_country_name\": \"Poland\",\n            \"order_to_country_name\": \"Ukraine\",\n            \"order_from_city_name\": \"Krakov\",\n            \"order_to_city_name\": \"Kyiv\",\n            \"cnt_favorite_orders\": 0\n        },\n        {\n            \"order_id\": 28,\n            \"user_id\": 3,\n            \"order_register_date\": \"2021-06-08\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-28\",\n            \"order_category\": 2,\n            \"order_price\": \"1456.23\",\n            \"order_price_usd\": \"250.00\",\n            \"order_currency\": \"$\",\n            \"order_count\": 1,\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-11\",\n            \"order_personal_price\": 1,\n            \"order_user_price\": \"100.00\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": 1,\n            \"order_user_active\": 0,\n            \"order_status\": \"active\",\n            \"order_look\": 0,\n            \"order_strikes\": \"\",\n            \"user_name\": \"Gleb\",\n            \"order_category_name\": \"Electronics\",\n            \"order_from_country_name\": \"Poland\",\n            \"order_to_country_name\": \"Ukraine\",\n            \"order_from_city_name\": \"Krakov\",\n            \"order_to_city_name\": \"Kyiv\",\n            \"cnt_favorite_orders\": 0\n        },\n        {\n            \"order_id\": 26,\n            \"user_id\": 19,\n            \"order_register_date\": \"2021-06-08\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-26\",\n            \"order_category\": 2,\n            \"order_price\": \"1456.23\",\n            \"order_price_usd\": \"250.00\",\n            \"order_currency\": \"$\",\n            \"order_count\": 1,\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-01\",\n            \"order_personal_price\": 1,\n            \"order_user_price\": \"100.00\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": 1,\n            \"order_user_active\": 0,\n            \"order_status\": \"active\",\n            \"order_look\": 0,\n            \"order_strikes\": \"\",\n            \"user_name\": \"Вася\",\n            \"order_category_name\": \"Electronics\",\n            \"order_from_country_name\": \"Poland\",\n            \"order_to_country_name\": \"Ukraine\",\n            \"order_from_city_name\": \"Krakov\",\n            \"order_to_city_name\": \"Kyiv\",\n            \"cnt_favorite_orders\": 0\n        },\n        {\n            \"order_id\": 25,\n            \"user_id\": 19,\n            \"order_register_date\": \"2021-06-05\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-25\",\n            \"order_category\": 2,\n            \"order_price\": \"1456.23\",\n            \"order_price_usd\": \"250.00\",\n            \"order_currency\": \"$\",\n            \"order_count\": 1,\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-01\",\n            \"order_personal_price\": 1,\n            \"order_user_price\": \"100.00\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": 1,\n            \"order_user_active\": 0,\n            \"order_status\": \"active\",\n            \"order_look\": 0,\n            \"order_strikes\": \"\",\n            \"user_name\": \"Вася\",\n            \"order_category_name\": \"Electronics\",\n            \"order_from_country_name\": \"Poland\",\n            \"order_to_country_name\": \"Ukraine\",\n            \"order_from_city_name\": \"Krakov\",\n            \"order_to_city_name\": \"Kyiv\",\n            \"cnt_favorite_orders\": 0\n        }\n    ]\n}"
 						},
 						{
 							"name": "Вивід замовлень (errors)",
@@ -7362,7 +7381,7 @@
 					]
 				},
 				{
-					"name": "Виведення маршруту",
+					"name": "Вивід маршрутів",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -7472,7 +7491,7 @@
 					},
 					"response": [
 						{
-							"name": "Виведення маршруту (success)",
+							"name": "Вивід маршрутів (success)",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
@@ -7633,7 +7652,7 @@
 							"body": "{\n    \"status\": true,\n    \"count\": 48,\n    \"page\": 1,\n    \"pages\": 10,\n    \"result\": [\n        {\n            \"route_id\": 42,\n            \"route_parent\": 0,\n            \"user_id\": 11,\n            \"route_register_date\": \"2021-01-23\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 13,\n            \"route_to_country\": 2,\n            \"route_to_city\": 6,\n            \"route_start\": \"28.01.2021\",\n            \"route_end\": \"30.01.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 11,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"Кременчуг\",\n            \"route_to_city_name\": \"Дніпро\",\n            \"user_name\": \"Катя\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 41,\n            \"route_parent\": 0,\n            \"user_id\": 11,\n            \"route_register_date\": \"2021-01-23\",\n            \"route_from_country\": 8,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"23.01.2021\",\n            \"route_end\": \"31.03.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 5,\n            \"route_from_country_name\": \"США\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Катя\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 39,\n            \"route_parent\": 0,\n            \"user_id\": 10,\n            \"route_register_date\": \"2021-01-18\",\n            \"route_from_country\": 8,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"18.01.2021\",\n            \"route_end\": \"31.03.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"США\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Vasya\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 40,\n            \"route_parent\": 0,\n            \"user_id\": 3,\n            \"route_register_date\": \"2021-01-18\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 0,\n            \"route_to_country\": 8,\n            \"route_to_city\": 0,\n            \"route_start\": \"18.01.2021\",\n            \"route_end\": \"23.10.2020\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"США\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Gleb\",\n            \"route_favorite\": 2\n        },\n        {\n            \"route_id\": 37,\n            \"route_parent\": 0,\n            \"user_id\": 9,\n            \"route_register_date\": \"2021-01-16\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"16.01.2021\",\n            \"route_end\": \"31.01.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Buba\",\n            \"route_favorite\": 0\n        }\n    ]\n}"
 						},
 						{
-							"name": "Виведення маршруту (errors)",
+							"name": "Вивід маршрутів (errors)",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
