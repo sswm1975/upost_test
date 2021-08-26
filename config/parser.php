@@ -108,5 +108,10 @@ return [
             'mask' => 'aliexpress',
             'handler' => \App\Modules\Parsers\AliExpress::class,
         ],
+
+        'alibaba' => [
+            'mask' => 'alibaba.com',
+            'handler' => \App\Modules\Parsers\Alibaba::class,
+        ],
     ],
 ];

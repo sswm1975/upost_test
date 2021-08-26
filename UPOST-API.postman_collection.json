@@ -12959,6 +12959,128 @@
 							"body": "{\n    \"status\": true,\n    \"name\": \"CHUWI HiPad X планшет на Android 10, восемь ядер, экран 10,1 дюйма, 4 Гб + 128 ГБ|Планшеты|   | АлиЭкспресс\",\n    \"category\": \"Планшеты\",\n    \"price\": \"13449.7\",\n    \"currency\": \"₽\",\n    \"size\": \"\",\n    \"weight\": \"\",\n    \"image\": \"content/order/19/super_image_60d478bee3615.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://aliexpress.ru\"\n}"
 						}
 					]
+				},
+				{
+					"name": "Alibaba",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"url_alibaba\", \"https://www.alibaba.com/product-detail/7-2inch-M10-Ultra-Smartphone-12GB_1600157443548.html\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/parser?url={{url_alibaba}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"parser"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
+								},
+								{
+									"key": "url",
+									"value": "{{url_alibaba}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Alibaba (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/parser?url={{url_alibaba}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"parser"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										},
+										{
+											"key": "url",
+											"value": "{{url_alibaba}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 26 Aug 2021 10:22:10 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "357"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"name\": \"7.2inch M10 Ultra Smartphone 12GB+512GB Full Screen Mobile Phone Finger/Face Unclock Cellphone\",\n    \"category\": \"Mobile Phones\",\n    \"price\": \"59.20\",\n    \"currency\": \"$\",\n    \"size\": \"21X11X14\",\n    \"weight\": \"0.520\",\n    \"image\": \"content/order/19/super_image_61276b58aa071.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://www.alibaba.com\"\n}"
+						}
+					]
 				}
 			]
 		},
