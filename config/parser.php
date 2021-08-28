@@ -136,5 +136,28 @@ return [
 
             ],
         ],
+
+        'flipkart' => [
+            'mask' => 'flipkart.com',
+            'handler' => \App\Modules\Parsers\DefaultParser::class,
+            'name_selects' => [
+                '//h1/span',
+            ],
+            'category_selects' => [
+                '//div[@class="_3GIHBu"][4]',
+            ],
+            'price_selects' => [
+                '//div[@class="_30jeq3 _16Jk6d"]',
+            ],
+            'image_selects' => [
+                '//div[@class="_3kidJX"]/*/img/@src',
+            ],
+            'size_selects' => [
+
+            ],
+            'weight_selects' => [
+
+            ],
+        ],
     ],
 ];
