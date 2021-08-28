@@ -113,5 +113,28 @@ return [
             'mask' => 'alibaba.com',
             'handler' => \App\Modules\Parsers\Alibaba::class,
         ],
+
+        'bestbuy' => [
+            'mask' => 'bestbuy.com',
+            'handler' => \App\Modules\Parsers\BestBuy::class,
+            'name_selects' => [
+                '//h1[@class]',
+            ],
+            'category_selects' => [
+                '//nav/ol/li[2]',
+            ],
+            'price_selects' => [
+                '//div[@class="priceView-hero-price priceView-customer-price"]/span',
+            ],
+            'image_selects' => [
+                '//img[@class="primary-image"]/@src',
+            ],
+            'size_selects' => [
+
+            ],
+            'weight_selects' => [
+
+            ],
+        ],
     ],
 ];
