@@ -25,7 +25,11 @@ class ProfileController extends Controller
      */
     public function getPrivateData(Request $request): JsonResponse
     {
-        $user = $request->user()->toArray();
+        $user = $request->user();
+
+        $this->linkToUserPhoto($user);
+
+        $user = $user->toArray();
         unset($user['user_password']);
 
         return response()->json([
@@ -49,10 +53,26 @@ class ProfileController extends Controller
 
         if (!$user) throw new ErrorException(__('message.user_not_found'));
 
+        $this->linkToUserPhoto($user);
+
         return response()->json([
             'status' => true,
             'result' => null_to_blank($user->toArray()),
         ]);
+    }
+
+    /**
+     * Формирование ссылки на фото пользователя.
+     *
+     * @param User $user
+     */
+    private function linkToUserPhoto(User &$user)
+    {
+        if (empty($user->user_photo)) {
+            $user->user_photo = 'https://cdn.vanderbilt.edu/vu-web/lab-wpcontent/sites/49/2019/04/04204241/no-photo.png';
+        } else {
+            $user->user_photo =  rtrim(config('app.url'), '/') . '/api/users/download_image?filename=' . $user->user_photo;
+        }
     }
 
     /**
