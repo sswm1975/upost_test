@@ -18,7 +18,8 @@
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
-        "liqpay/liqpay": "^1.2"
+        "liqpay/liqpay": "^1.2",
+        "pavelpage/censorship": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

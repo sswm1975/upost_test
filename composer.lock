@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bfee04acb5fd27aad2e71c30f7b70d6b",
+    "content-hash": "2f5ef9be9a2c635f5145e3cd27ae7c42",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2270,6 +2270,46 @@
                 "source": "https://github.com/opis/closure/tree/3.6.2"
             },
             "time": "2021-04-09T13:42:10+00:00"
+        },
+        {
+            "name": "pavelpage/censorship",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pavelpage/censorship.git",
+                "reference": "e8f7d3b93d656d029c8bb3470f5eb987fc6ce8e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pavelpage/censorship/zipball/e8f7d3b93d656d029c8bb3470f5eb987fc6ce8e3",
+                "reference": "e8f7d3b93d656d029c8bb3470f5eb987fc6ce8e3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Pavelpage\\Censorship\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pavel Ivanov",
+                    "email": "admin@pavelpage.ru"
+                }
+            ],
+            "description": "This package can clean all non-normative lexis from your texts",
+            "support": {
+                "issues": "https://github.com/pavelpage/censorship/issues",
+                "source": "https://github.com/pavelpage/censorship/tree/master"
+            },
+            "time": "2018-04-27T09:40:32+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -5946,7 +5986,8 @@
     "platform": {
         "php": "^7.4",
         "ext-gd": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-zlib": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"

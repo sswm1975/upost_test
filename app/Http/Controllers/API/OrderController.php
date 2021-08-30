@@ -62,7 +62,7 @@ class OrderController extends Controller
     {
         return Validator::make($data,
             [
-                'order_name'           => 'required|string|max:100',
+                'order_name'           => 'required|string|censor|max:100',
                 'order_category'       => 'required|integer|exists:categories,category_id',
                 'order_price'          => 'required|numeric',
                 'order_price_usd'      => 'required|numeric',
@@ -71,7 +71,7 @@ class OrderController extends Controller
                 'order_size'           => 'required|string|max:50',
                 'order_weight'         => 'required|string|max:50',
                 'order_product_link'   => 'sometimes|nullable|string|url',
-                'order_text'           => 'required|string|max:500',
+                'order_text'           => 'required|string|not_phone|censor|max:500',
                 'order_images'         => 'required|array|max:8',
                 'order_from_country'   => 'required|integer|exists:country,country_id',
                 'order_from_city'      => 'sometimes|required|integer|exists:city,city_id,country_id,' . $data['order_from_country'],

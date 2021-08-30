@@ -73,7 +73,7 @@ class ProfileController extends Controller
                 'user_birthday' => 'date',
                 'user_gender'   => 'nullable|in:Мужской,Женский',
                 'user_photo'    => 'nullable|base64_image',
-                'user_resume'   => 'nullable|string',
+                'user_resume'   => 'nullable|string|not_phone|censor',
             ]
         );
     }

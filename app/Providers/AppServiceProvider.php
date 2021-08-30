@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Pavelpage\Censorship\Censor;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -126,6 +127,20 @@ class AppServiceProvider extends ServiceProvider
 
             # число корректно, если сумма равна 10
             return (($sum % 10) == 0);
+        });
+
+        /**
+         * Валидация: Проверка на нецензурные выражения.
+         */
+        Validator::extend('censor', function ($attribute, $value, $parameters) {
+            return !(new Censor())->hasObsceneWords($value);
+        });
+
+        /**
+         * Валидация: Проверка на наличие контактных данных (телефона).
+         */
+        Validator::extend('not_phone', function ($attribute, $value, $parameters) {
+            return !preg_match('/(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?/m', $value);
         });
     }
 }

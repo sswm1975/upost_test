@@ -147,6 +147,14 @@ return [
         'rate_id' => [
             'owner_rate' => 'You don\'t have permission.',
         ],
+        'user_resume' => [
+            'censor' => 'Resume has obscene words.',
+            'not_phone' => 'It is forbidden to leave contact details in resume.',
+        ],
+        'order_text' => [
+            'censor' => 'There are obscene words in the order.',
+            'not_phone' => 'It is forbidden to leave contact details in order.',
+        ],
     ],
 
     /*
