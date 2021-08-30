@@ -257,5 +257,6 @@ return [
         'user_status' => 'Статус',
         'user_surname' => 'Прізвище',
         'who_start' => 'Користувач',
+        'token' => 'Токен',
     ],
 ];

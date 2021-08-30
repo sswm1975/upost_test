@@ -111,6 +111,21 @@ class AuthController extends Controller
     }
 
     /**
+     * Простая проверка токена.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function checkToken(Request $request): JsonResponse
+    {
+        $exists = $request->filled('token') && User::existsToken($request->get('token'));
+
+        return response()->json([
+            'status' => $exists
+        ]);
+    }
+
+    /**
      * Генерация токена.
      *
      * @param User $user

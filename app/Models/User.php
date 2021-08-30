@@ -99,6 +99,13 @@ class User extends Authenticatable
         return $query->select(array_diff($this->getAttributes(), (array) $value));
     }
 
+    public function scopeExistsToken($query, $token = '')
+    {
+        if (empty($token)) return false;
+
+        return (bool) $query->where('api_token', $token)->count();
+    }
+
     /**
      * Route notifications for the mail channel.
      *

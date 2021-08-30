@@ -258,5 +258,6 @@ return [
         'user_status' => 'Статус',
         'user_surname' => 'Фамилия',
         'who_start' => 'Пользователь',
+        'token' => 'Токен',
     ],
 ];

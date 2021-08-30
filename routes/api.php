@@ -18,6 +18,9 @@ Route::group(
 
         # Припинення сеансу авторизованого користувача
         Route::post('logout', 'API\AuthController@logout')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Перевірка токена
+        Route::get('check_token', 'API\AuthController@checkToken');
     }
 );
 
