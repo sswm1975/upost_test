@@ -27,8 +27,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        $this->linkToUserPhoto($user);
-
+        $user->user_photo = $this->linkToUserPhoto($user->user_photo);
         $user = $user->toArray();
         unset($user['user_password']);
 
@@ -53,7 +52,8 @@ class ProfileController extends Controller
 
         if (!$user) throw new ErrorException(__('message.user_not_found'));
 
-        $this->linkToUserPhoto($user);
+
+        $user->user_photo = $this->linkToUserPhoto($user->user_photo);
 
         return response()->json([
             'status' => true,
@@ -64,15 +64,12 @@ class ProfileController extends Controller
     /**
      * Формирование ссылки на фото пользователя.
      *
-     * @param User $user
+     * @param string $photo
+     * @return string
      */
-    private function linkToUserPhoto(User &$user)
+    private function linkToUserPhoto($photo = ''): string
     {
-        if (empty($user->user_photo)) {
-            $user->user_photo = 'https://cdn.vanderbilt.edu/vu-web/lab-wpcontent/sites/49/2019/04/04204241/no-photo.png';
-        } else {
-            $user->user_photo =  rtrim(config('app.url'), '/') . '/api/users/download_image?filename=' . $user->user_photo;
-        }
+         return asset('storage/' . ($photo ?? 'users/no-photo.png'));
     }
 
     /**
@@ -256,11 +253,11 @@ class ProfileController extends Controller
     {
         $data = validateOrExit(['filename' => 'required|string']);
 
-        if (!Storage::disk('local')->exists($data['filename'])) {
+        if (!Storage::disk('public')->exists($data['filename'])) {
             throw new ErrorException(__('message.image_not_found'));
         }
 
-        return Storage::disk('local')->download($data['filename']);
+        return Storage::disk('public')->download($data['filename']);
     }
 
     /**
@@ -280,8 +277,8 @@ class ProfileController extends Controller
         $data = substr($base64_image, strpos($base64_image, ',') + 1);
         $image_file = base64_decode($data);
 
-        Storage::disk('local')->put($path . $image_original_name, $image_file);
-        $storage_path = Storage::disk('local')->path($path);
+        Storage::disk('public')->put($path . $image_original_name, $image_file);
+        $storage_path = Storage::disk('public')->path($path);
 
         $src = imagecreatefromstring($image_file);
         if ($src === false) {
