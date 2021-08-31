@@ -248,7 +248,6 @@ return [
         'user_gender' => 'Пол',
         'user_id' => 'Код',
         'user_lang' => 'Язык',
-        'user_location' => 'Расположение',
         'user_name' => 'Имя',
         'user_password' => 'Пароль',
         'user_password_confirmation' => 'Подтверждение пароля',

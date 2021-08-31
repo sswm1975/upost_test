@@ -21,7 +21,7 @@ class CreateTransactionsTable extends Migration
             $table->decimal('amount', 10)->default(0.00)->comment('Сумма');
             $table->string('description', 255)->nullable()->comment('Описание');
             $table->string('status', 20)->nullable()->comment('Статус');
-            $table->json('response')->nullable();
+            $table->json('response')->nullable()->comment('Ответ от сервиса');
             $table->timestamp('created_at')->nullable()->comment('Дата добавления');
             $table->timestamp('updated_at')->nullable()->comment('Дата обновления');
             $table->timestamp('payed_at')->nullable()->comment('Дата оплаты');

@@ -85,7 +85,6 @@ class ProfileController extends Controller
                 'user_name'     => 'sometimes|string|max:100',
                 'user_surname'  => 'sometimes|string|max:100',
                 'user_city'     => 'integer|exists:city,city_id',
-                'user_location' => 'nullable|integer|exists:city,city_id',
                 'user_status'   => 'in:active,banned,removed',
                 'user_birthday' => 'date',
                 'user_gender'   => 'nullable|in:Мужской,Женский',

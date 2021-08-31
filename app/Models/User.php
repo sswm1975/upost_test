@@ -36,7 +36,6 @@ class User extends Authenticatable
         'user_id',                   # id
         'user_name',                 # ім’я
         'user_surname',              # прізвище
-        'user_location',             # локація
         'user_register_date',        # дата реєстрації
         'user_last_active',          # час останньої активності
         'user_status',               # статус
@@ -57,7 +56,6 @@ class User extends Authenticatable
         'user_name',                 # ім'я
         'user_surname',              # прізвище
         'user_city',                 # код міста проживання
-        'user_location',             # код міста перебування
         'user_status',               # статус
         'user_birthday',             # дата народження
         'user_gender',               # стать
