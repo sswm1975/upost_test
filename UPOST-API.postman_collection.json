@@ -5247,7 +5247,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"url\": \"monitor-27-dell-s2721ds-29\"\n}"
+							"body": "{\n    \"status\": true,\n    \"order_id\": 33,\n    \"url\": \"monitor-27-dell-s2721ds-33\"\n}"
 						},
 						{
 							"name": "Створення замовлення (errors - profile)",

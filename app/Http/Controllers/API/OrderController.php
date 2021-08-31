@@ -47,8 +47,9 @@ class OrderController extends Controller
         $order = Order::create($request->all());
 
         return response()->json([
-            'status'  => true,
-            'url'     => $order->order_url,
+            'status'   => true,
+            'order_id' => $order->order_id,
+            'url'      => $order->order_url,
         ]);
     }
 
