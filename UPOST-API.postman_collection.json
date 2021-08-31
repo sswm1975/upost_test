@@ -1551,7 +1551,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 2,\n        \"user_name\": \"Вася \",\n        \"user_surname\": \"Пупкин\",\n        \"user_location\": \"2 ,2\",\n        \"user_register_date\": \"2020-09-28\",\n        \"user_last_active\": \"2021.01.18 18:28\",\n        \"user_status\": \"В работе\",\n        \"user_birthday\": \"21.04.1995\",\n        \"user_gender\": \"Мужской\",\n        \"user_photo\": \"http://upost.test/storage/users/no-photo.png\",\n        \"user_resume\": \"\",\n        \"user_freelancer_rating\": 0,\n        \"user_creater_rating\": 0\n    }\n}"
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 2,\n        \"user_name\": \"Вася\",\n        \"user_surname\": \"Пупкин\",\n        \"user_register_date\": \"2020-09-28\",\n        \"user_last_active\": \"2021-01-18 18:28\",\n        \"user_status\": \"В работе\",\n        \"user_birthday\": \"1995-04-21\",\n        \"user_gender\": \"Мужской\",\n        \"user_photo\": \"http://upost.test/storage/users/no-photo.png\",\n        \"user_resume\": \"\",\n        \"user_freelancer_rating\": 0,\n        \"user_creater_rating\": 0\n    }\n}"
 						},
 						{
 							"name": "Отримання інформації про користувача (тільки публічні дані) (errors)",
@@ -7759,7 +7759,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"count\": 48,\n    \"page\": 1,\n    \"pages\": 10,\n    \"result\": [\n        {\n            \"route_id\": 42,\n            \"route_parent\": 0,\n            \"user_id\": 11,\n            \"route_register_date\": \"2021-01-23\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 13,\n            \"route_to_country\": 2,\n            \"route_to_city\": 6,\n            \"route_start\": \"28.01.2021\",\n            \"route_end\": \"30.01.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 11,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"Кременчуг\",\n            \"route_to_city_name\": \"Дніпро\",\n            \"user_name\": \"Катя\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 41,\n            \"route_parent\": 0,\n            \"user_id\": 11,\n            \"route_register_date\": \"2021-01-23\",\n            \"route_from_country\": 8,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"23.01.2021\",\n            \"route_end\": \"31.03.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 5,\n            \"route_from_country_name\": \"США\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Катя\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 39,\n            \"route_parent\": 0,\n            \"user_id\": 10,\n            \"route_register_date\": \"2021-01-18\",\n            \"route_from_country\": 8,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"18.01.2021\",\n            \"route_end\": \"31.03.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"США\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Vasya\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 40,\n            \"route_parent\": 0,\n            \"user_id\": 3,\n            \"route_register_date\": \"2021-01-18\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 0,\n            \"route_to_country\": 8,\n            \"route_to_city\": 0,\n            \"route_start\": \"18.01.2021\",\n            \"route_end\": \"23.10.2020\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"США\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Gleb\",\n            \"route_favorite\": 2\n        },\n        {\n            \"route_id\": 37,\n            \"route_parent\": 0,\n            \"user_id\": 9,\n            \"route_register_date\": \"2021-01-16\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"16.01.2021\",\n            \"route_end\": \"31.01.2021\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Buba\",\n            \"route_favorite\": 0\n        }\n    ]\n}"
+							"body": "{\n    \"status\": true,\n    \"count\": 48,\n    \"page\": 1,\n    \"pages\": 10,\n    \"result\": [\n        {\n            \"route_id\": 42,\n            \"route_parent\": 0,\n            \"user_id\": 11,\n            \"route_register_date\": \"2021-01-23\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 13,\n            \"route_to_country\": 2,\n            \"route_to_city\": 6,\n            \"route_start\": \"2021-01-28\",\n            \"route_end\": \"2021-01-30\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 11,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"Кременчуг\",\n            \"route_to_city_name\": \"Дніпро\",\n            \"user_name\": \"Катя\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 41,\n            \"route_parent\": 0,\n            \"user_id\": 11,\n            \"route_register_date\": \"2021-01-23\",\n            \"route_from_country\": 8,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"2021-01-23\",\n            \"route_end\": \"2021-03-31\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 5,\n            \"route_from_country_name\": \"США\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Катя\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 39,\n            \"route_parent\": 0,\n            \"user_id\": 10,\n            \"route_register_date\": \"2021-01-18\",\n            \"route_from_country\": 8,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"2021-01-18\",\n            \"route_end\": \"2021-03-31\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"США\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Vasya\",\n            \"route_favorite\": 0\n        },\n        {\n            \"route_id\": 40,\n            \"route_parent\": 0,\n            \"user_id\": 3,\n            \"route_register_date\": \"2021-01-18\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 0,\n            \"route_to_country\": 8,\n            \"route_to_city\": 0,\n            \"route_start\": \"2021-01-18\",\n            \"route_end\": \"2020-10-23.\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"США\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Gleb\",\n            \"route_favorite\": 2\n        },\n        {\n            \"route_id\": 37,\n            \"route_parent\": 0,\n            \"user_id\": 9,\n            \"route_register_date\": \"2021-01-16\",\n            \"route_from_country\": 2,\n            \"route_from_city\": 0,\n            \"route_to_country\": 2,\n            \"route_to_city\": 0,\n            \"route_start\": \"2021-01-16\",\n            \"route_end\": \"2021-01-31\",\n            \"route_points\": \"\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_look\": 0,\n            \"route_from_country_name\": \"Україна\",\n            \"route_to_country_name\": \"Україна\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"\",\n            \"user_name\": \"Buba\",\n            \"route_favorite\": 0\n        }\n    ]\n}"
 						},
 						{
 							"name": "Вивід маршрутів (errors)",
@@ -10555,7 +10555,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/rates/show?user_id=16&rate_type=order&order_id=16",
+							"raw": "{{host}}/{{endpoint}}/rates/show?user_id=3&rate_type=route&route_id=49",
 							"host": [
 								"{{host}}"
 							],
@@ -10567,24 +10567,24 @@
 							"query": [
 								{
 									"key": "user_id",
-									"value": "16",
+									"value": "3",
 									"description": "Код користувача"
 								},
 								{
 									"key": "rate_type",
-									"value": "order",
+									"value": "route",
 									"description": "Тип сущності: order або route"
 								},
 								{
 									"key": "order_id",
 									"value": "16",
-									"description": "Код замовлення"
+									"description": "Код замовлення",
+									"disabled": true
 								},
 								{
 									"key": "route_id",
 									"value": "49",
-									"description": "Код маршруту",
-									"disabled": true
+									"description": "Код маршруту"
 								},
 								{
 									"key": "rate_id",
@@ -10620,7 +10620,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/show?user_id=3&rate_type=route&order_id=2&route_id=49&lang=uk",
+									"raw": "{{host}}/{{endpoint}}/rates/show?user_id=3&rate_type=route&route_id=49",
 									"host": [
 										"{{host}}"
 									],
@@ -10642,8 +10642,9 @@
 										},
 										{
 											"key": "order_id",
-											"value": "2",
-											"description": "Код замовлення"
+											"value": "16",
+											"description": "Код замовлення",
+											"disabled": true
 										},
 										{
 											"key": "route_id",
@@ -10671,7 +10672,8 @@
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
 										}
 									]
 								}
@@ -10682,11 +10684,15 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Thu, 17 Jun 2021 14:52:29 GMT"
+									"value": "Tue, 31 Aug 2021 15:15:38 GMT"
 								},
 								{
 									"key": "Server",
 									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
 								},
 								{
 									"key": "X-Powered-By",
@@ -10706,7 +10712,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "1276"
+									"value": "786"
 								},
 								{
 									"key": "Keep-Alive",
@@ -10722,7 +10728,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"count\": 2,\n    \"who_start\": 3,\n    \"receiver\": 7,\n    \"parent\": {\n        \"rate_id\": 258,\n        \"parent_id\": 0,\n        \"who_start\": 3,\n        \"user_id\": 3,\n        \"rate_type\": \"route\",\n        \"order_id\": 2,\n        \"route_id\": 49,\n        \"rate_date\": \"22.03.2021 10:03\",\n        \"rate_deadline\": \"11.03.2021\",\n        \"rate_text\": \"Это еще раз Я&nbsp;\",\n        \"rate_price\": \"516\",\n        \"rate_currency\": \"$\",\n        \"rate_status\": \"active\",\n        \"read_rate\": \"true\"\n    },\n    \"result\": [\n        {\n            \"rate_id\": 264,\n            \"parent_id\": 258,\n            \"who_start\": 3,\n            \"user_id\": 3,\n            \"rate_type\": \"route\",\n            \"order_id\": 2,\n            \"route_id\": 49,\n            \"rate_date\": \"22.03.2021 10:03\",\n            \"rate_deadline\": \"18.03.2021\",\n            \"rate_text\": \"Не меняется кнопка сразу после предложенной ставки<div><br></div>\",\n            \"rate_price\": \"2312312\",\n            \"rate_currency\": \"$\",\n            \"rate_status\": \"active\",\n            \"read_rate\": \"1\"\n        },\n        {\n            \"rate_id\": 258,\n            \"parent_id\": 0,\n            \"who_start\": 3,\n            \"user_id\": 3,\n            \"rate_type\": \"route\",\n            \"order_id\": 2,\n            \"route_id\": 49,\n            \"rate_date\": \"22.03.2021 10:03\",\n            \"rate_deadline\": \"11.03.2021\",\n            \"rate_text\": \"Это еще раз Я&nbsp;\",\n            \"rate_price\": \"516\",\n            \"rate_currency\": \"$\",\n            \"rate_status\": \"active\",\n            \"read_rate\": \"true\"\n        }\n    ]\n}"
+							"body": "{\n    \"status\": true,\n    \"count\": 2,\n    \"result\": {\n        \"1\": {\n            \"rate_id\": 258,\n            \"parent_id\": 0,\n            \"who_start\": 3,\n            \"user_id\": 3,\n            \"order_id\": 2,\n            \"route_id\": 49,\n            \"read_rate\": 1,\n            \"rate_type\": \"route\",\n            \"rate_status\": \"active\",\n            \"rate_date\": \"2021-03-22 10:03:00\",\n            \"rate_deadline\": \"2021-06-23\",\n            \"rate_price\": \"516.00\",\n            \"rate_currency\": \"$\",\n            \"rate_text\": \"Это еще раз Я&nbsp;\"\n        },\n        \"2\": {\n            \"rate_id\": 257,\n            \"parent_id\": 0,\n            \"who_start\": 3,\n            \"user_id\": 3,\n            \"order_id\": 9,\n            \"route_id\": 49,\n            \"read_rate\": 1,\n            \"rate_type\": \"route\",\n            \"rate_status\": \"active\",\n            \"rate_date\": \"2021-03-22 10:03:00\",\n            \"rate_deadline\": \"2021-06-23\",\n            \"rate_price\": \"1000.00\",\n            \"rate_currency\": \"$\",\n            \"rate_text\": \"\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\tПривет это Глеб\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\"\n        }\n    }\n}"
 						},
 						{
 							"name": "Отримати ставки (errors)",
@@ -10885,21 +10891,22 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/305/show?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/show",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
 										"rates",
-										"305",
+										"{{rate_id}}",
 										"show"
 									],
 									"query": [
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
 										}
 									]
 								}
@@ -10910,11 +10917,15 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Thu, 17 Jun 2021 14:54:18 GMT"
+									"value": "Tue, 31 Aug 2021 15:17:32 GMT"
 								},
 								{
 									"key": "Server",
 									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
 								},
 								{
 									"key": "X-Powered-By",
@@ -10930,11 +10941,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "58"
+									"value": "59"
 								},
 								{
 									"key": "Content-Length",
-									"value": "350"
+									"value": "301"
 								},
 								{
 									"key": "Keep-Alive",
@@ -10950,7 +10961,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"rate_id\": 305,\n        \"parent_id\": 0,\n        \"who_start\": 3,\n        \"user_id\": 3,\n        \"rate_type\": \"route\",\n        \"order_id\": 2,\n        \"route_id\": 50,\n        \"rate_date\": \"22.03.2021 10:03\",\n        \"rate_deadline\": \"11.03.2021\",\n        \"rate_text\": \"Это еще раз Я&nbsp;\",\n        \"rate_price\": \"516\",\n        \"rate_currency\": \"$\",\n        \"rate_status\": \"active\",\n        \"read_rate\": true\n    }\n}"
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"rate_id\": 304,\n        \"parent_id\": 300,\n        \"who_start\": 19,\n        \"user_id\": 3,\n        \"order_id\": 28,\n        \"route_id\": 67,\n        \"read_rate\": true,\n        \"rate_type\": \"order\",\n        \"rate_status\": \"progress\",\n        \"rate_date\": \"2021-06-13 13:45:00\",\n        \"rate_deadline\": \"2021-07-11\",\n        \"rate_price\": \"80.00\",\n        \"rate_currency\": \"$\",\n        \"rate_text\": \"drdrerere\"\n    }\n}"
 						},
 						{
 							"name": "Переглянути ставку (errors)",
@@ -13627,7 +13638,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/chats/show",
+							"raw": "{{host}}/{{endpoint}}/chats/show?user_id=1&addressee=11&order_id=3",
 							"host": [
 								"{{host}}"
 							],
@@ -13639,18 +13650,15 @@
 							"query": [
 								{
 									"key": "user_id",
-									"value": "1",
-									"disabled": true
+									"value": "1"
 								},
 								{
 									"key": "addressee",
-									"value": "11",
-									"disabled": true
+									"value": "11"
 								},
 								{
 									"key": "order_id",
-									"value": "3",
-									"disabled": true
+									"value": "3"
 								}
 							]
 						}
@@ -13687,10 +13695,57 @@
 									]
 								}
 							},
+							"status": "OK",
+							"code": 200,
 							"_postman_previewlanguage": "json",
-							"header": null,
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 31 Aug 2021 15:19:04 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "449"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"number\": 3,\n    \"result\": [\n        {\n            \"chat_id\": 7,\n            \"rate_id\": 148,\n            \"order_id\": 3,\n            \"user_id\": 1,\n            \"to_user\": 11,\n            \"chat_date\": \"25.01.2021 18:01\",\n            \"chat_status\": \"active\",\n            \"last_sms\": \"\"\n        },\n        {\n            \"chat_id\": 6,\n            \"rate_id\": 104,\n            \"order_id\": 3,\n            \"user_id\": 1,\n            \"to_user\": 9,\n            \"chat_date\": \"18.01.2021 15:01\",\n            \"chat_status\": \"inactive\",\n            \"last_sms\": \"\"\n        },\n        {\n            \"chat_id\": 14,\n            \"rate_id\": 152,\n            \"order_id\": 7,\n            \"user_id\": 1,\n            \"to_user\": 1,\n            \"chat_date\": \"2021-06-30 12:44:02\",\n            \"chat_status\": \"active\",\n            \"last_sms\": \"\"\n        }\n    ]\n}"
+							"body": "{\n    \"status\": true,\n    \"number\": 3,\n    \"result\": [\n        {\n            \"chat_id\": 7,\n            \"rate_id\": 148,\n            \"order_id\": 3,\n            \"user_id\": 1,\n            \"to_user\": 11,\n            \"chat_date\": \"2021-01-25 18:01:00\",\n            \"chat_status\": \"active\",\n            \"last_sms\": \"\"\n        },\n        {\n            \"chat_id\": 6,\n            \"rate_id\": 104,\n            \"order_id\": 3,\n            \"user_id\": 1,\n            \"to_user\": 9,\n            \"chat_date\": \"2021-01-18 15:01:00\",\n            \"chat_status\": \"active\",\n            \"last_sms\": \"\"\n        },\n        {\n            \"chat_id\": 13,\n            \"rate_id\": 307,\n            \"order_id\": 24,\n            \"user_id\": 1,\n            \"to_user\": 19,\n            \"chat_date\": \"2021-04-28 17:04:00\",\n            \"chat_status\": \"active\",\n            \"last_sms\": \"\"\n        }\n    ]\n}"
 						},
 						{
 							"name": "Отримати чати (error)",
@@ -14148,7 +14203,7 @@
 							"_postman_previewlanguage": "json",
 							"header": null,
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"number\": 1,\n    \"result\": [\n        {\n            \"message_id\": 8,\n            \"chat_id\": 7,\n            \"rate_id\": 148,\n            \"order_id\": 3,\n            \"from_user\": 1,\n            \"to_user\": 11,\n            \"message_date\": \"25.01.2021 18:01\",\n            \"message_text\": \"\",\n            \"message_attach\": \"\",\n            \"type\": \"accepting\"\n        }\n    ]\n}"
+							"body": "{\n    \"status\": true,\n    \"number\": 1,\n    \"result\": [\n        {\n            \"message_id\": 8,\n            \"chat_id\": 7,\n            \"rate_id\": 148,\n            \"order_id\": 3,\n            \"from_user\": 1,\n            \"to_user\": 11,\n            \"message_date\": \"2021-01-25 18:01:00\",\n            \"message_text\": \"\",\n            \"message_attach\": \"\",\n            \"type\": \"accepting\"\n        }\n    ]\n}"
 						},
 						{
 							"name": "Отримати повiдомлення (error)",
