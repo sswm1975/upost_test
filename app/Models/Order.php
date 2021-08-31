@@ -34,7 +34,16 @@ class Order extends Model
         static::saved(function ($model) {
             $order_id = $model->order_id ?: DB::getPdo()->lastInsertId();
             $model->order_url = Str::slug($model->order_name . ' ' . $order_id);
-            DB::table($model->table)->where('order_id', $order_id)->update(['order_url' => $model->order_url]);
+
+            $currency = getCurrencyNameBySymbol($model->order_currency);
+            $model->order_price_usd = convertPriceToUsd($model->order_price, $currency);
+
+            DB::table($model->table)
+                ->where('order_id', $order_id)
+                ->update([
+                    'order_url' => $model->order_url,
+                    'order_price_usd' => $model->order_price_usd,
+                ]);
         });
     }
 

@@ -66,7 +66,6 @@ class OrderController extends Controller
                 'order_name'           => 'required|string|censor|max:100',
                 'order_category'       => 'required|integer|exists:categories,category_id',
                 'order_price'          => 'required|numeric',
-                'order_price_usd'      => 'required|numeric',
                 'order_currency'       => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
                 'order_count'          => 'required|integer',
                 'order_size'           => 'required|string|max:50',

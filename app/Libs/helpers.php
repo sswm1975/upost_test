@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\ValidatorException;
+use App\Models\Option;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -33,6 +34,8 @@ function null_to_blank($data = []): array
  * @param string $base64data
  * @param array $allowedMime example ['png', 'jpg', 'jpeg']
  * @param int $maxSize
+ * @param int $maxWidth
+ * @param int $maxHeight
  * @return bool
  */
 function validate_base64(string $base64data, array $allowedMime, int $maxSize, int $maxWidth, int $maxHeight): bool
@@ -109,7 +112,7 @@ function validate_base64(string $base64data, array $allowedMime, int $maxSize, i
  * @param string $verticalAlign
  * @return false|GdImage|resource
  */
-function cropAlign($image, $cropWidth, $cropHeight, $horizontalAlign = 'center', $verticalAlign = 'middle')
+function cropAlign($image, $cropWidth, $cropHeight, string $horizontalAlign = 'center', string $verticalAlign = 'middle')
 {
     $width = imagesx($image);
     $height = imagesy($image);
@@ -125,7 +128,7 @@ function cropAlign($image, $cropWidth, $cropHeight, $horizontalAlign = 'center',
 }
 
 /**
- * Сalculate pixels for align (use function cropAlign).
+ * Calculate pixels for align (use function cropAlign).
  *
  * @param $imageSize
  * @param $cropSize
@@ -153,7 +156,7 @@ function calculatePixelsForAlign($imageSize, $cropSize, $align): array
 }
 
 /**
- * Создать рисунок c пропорциональным измененнем сторон.
+ * Создать рисунок c пропорциональным изменением сторон.
  *
  * @param GdImage $src
  * @param int $size
@@ -324,8 +327,8 @@ function getHashPassword(string $password): string
 }
 
 /**
- * Конвертирование строкового названия валюты в соответстующий символ (знак).
- * Пример: грн => ₴; usd => $ и т.п.
+ * Конвертирование строкового названия валюты в соответствующий символ (знак).
+ * Пример: грн => ₴; uah => ₴; usd => $ и т.п.
  *
  * @param string $currency
  * @return string
@@ -341,4 +344,41 @@ function getCurrencySymbol(string $currency): string
     }
 
     return $currency;
+}
+
+/**
+ * Определение наименования валюты по его символу (знаку).
+ * Пример: ₴ => uah; $ => usd и т.д.
+ *
+ * @param string $symbol Символ (знак) валюты (₴,  $, ₽, €)
+ * @return string
+ */
+function getCurrencyNameBySymbol(string $symbol): string
+{
+    return array_search($symbol, config('app.currencies'));
+}
+
+/**
+ * Возвращает текущий курс для выбранной валюты.
+ *
+ * @param string $currency Наименование валюты (uah, usd, rub, eur)
+ * @return mixed
+ */
+function getCurrencyRate(string $currency = '')
+{
+    return Option::rate($currency);
+}
+
+/**
+ * Конвертация цены выбранной валюты в долларовый эквивалент.
+ *
+ * @param float $price Цена
+ * @param string $currency Наименование валюты (uah, usd, rub, eur)
+ * @return float
+ */
+function convertPriceToUsd(float $price, string $currency): float
+{
+    $rate = getCurrencyRate($currency);
+
+    return $price * $rate;
 }

@@ -1750,7 +1750,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 19,\n        \"user_phone\": \"+380978800099\",\n        \"user_email\": \"test_email@gmail.com\",\n        \"user_hash\": \"\",\n        \"user_ip\": 0,\n        \"user_name\": \"\",\n        \"user_surname\": \"\",\n        \"user_rating\": \"\",\n        \"user_city\": \"\",\n        \"user_location\": \"\",\n        \"user_status\": \"new\",\n        \"user_card_number\": \"\",\n        \"user_card_name\": \"\",\n        \"user_birthday\": \"\",\n        \"user_gender\": \"\",\n        \"user_lang\": \"en\",\n        \"user_currency\": \"₽\",\n        \"user_validation\": \"no_valid\",\n        \"user_register_date\": \"2021-06-15\",\n        \"user_role\": \"client\",\n        \"user_photo\": \"\",\n        \"user_favorite_orders\": \"\",\n        \"user_favorite_routes\": \"\",\n        \"user_last_active\": \"\",\n        \"user_resume\": \"\",\n        \"user_messages_viewed\": \"\",\n        \"user_wallet\": \"\",\n        \"user_creater_rating\": 0,\n        \"user_freelancer_rating\": 0\n    }\n}"
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 19,\n        \"user_phone\": \"+380978800099\",\n        \"user_email\": \"test_email@gmail.com\",\n        \"user_hash\": \"\",\n        \"user_ip\": 0,\n        \"user_name\": \"\",\n        \"user_surname\": \"\",\n        \"user_rating\": \"\",\n        \"user_city\": \"\",\n        \"user_status\": \"new\",\n        \"user_card_number\": \"\",\n        \"user_card_name\": \"\",\n        \"user_birthday\": \"\",\n        \"user_gender\": \"\",\n        \"user_lang\": \"en\",\n        \"user_currency\": \"₽\",\n        \"user_validation\": \"no_valid\",\n        \"user_register_date\": \"2021-06-15\",\n        \"user_role\": \"client\",\n        \"user_photo\": \"\",\n        \"user_favorite_orders\": \"\",\n        \"user_favorite_routes\": \"\",\n        \"user_last_active\": \"\",\n        \"user_resume\": \"\",\n        \"user_messages_viewed\": \"\",\n        \"user_wallet\": \"\",\n        \"user_creater_rating\": 0,\n        \"user_freelancer_rating\": 0\n    }\n}"
 						},
 						{
 							"name": "Отримання інформації про користувача (всі дані) (errors)",
@@ -4880,12 +4880,6 @@
 									"type": "text"
 								},
 								{
-									"key": "order_price_usd",
-									"value": "250",
-									"description": "Ціна в доларах",
-									"type": "text"
-								},
-								{
 									"key": "order_currency",
 									"value": "usd",
 									"description": "Валюта (uah, rub, usd, eur)",
@@ -5008,7 +5002,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/orders/add",
+							"raw": "{{host}}/{{endpoint}}/orders/add?lang=uk",
 							"host": [
 								"{{host}}"
 							],
@@ -5021,8 +5015,7 @@
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-									"disabled": true
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 								}
 							]
 						}
@@ -5052,12 +5045,6 @@
 											"key": "order_price",
 											"value": "1456.23",
 											"description": "Ціна",
-											"type": "text"
-										},
-										{
-											"key": "order_price_usd",
-											"value": "250",
-											"description": "Ціна в доларах",
 											"type": "text"
 										},
 										{
