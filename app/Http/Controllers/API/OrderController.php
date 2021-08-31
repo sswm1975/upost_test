@@ -79,7 +79,7 @@ class OrderController extends Controller
                 'order_to_country'     => 'required|integer|exists:country,country_id',
                 'order_to_city'        => 'sometimes|required|integer|exists:city,city_id,country_id,' . $data['order_to_country'],
                 'order_to_address'     => 'sometimes|nullable|string',
-                'order_start'          => 'required|date',
+                'order_start'          => 'sometimes|required|date',
                 'order_deadline'       => 'required|date|after_or_equal:order_start',
                 'order_personal_price' => 'required|boolean',
                 'order_user_price'     => 'required_if:order_personal_price,1',
