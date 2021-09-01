@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -27,13 +28,21 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
+        # добавляем поле "От даты регистрации прошло Х лет/месяцев/дней"
+        $user->user_register_human =  Carbon::parse($user->user_register_date)->diffForHumans();
+
+        # добавляем поле "От даты последней активности прошло Х лет/месяцев/дней"
+        $user->user_last_active_human =  Carbon::parse($user->user_last_active)->diffForHumans();
+
+        # формируем ссылку на аватар
         $user->user_photo = $this->linkToUserPhoto($user->user_photo);
-        $user = $user->toArray();
-        unset($user['user_password']);
+
+        # удаляем поле с паролем
+        unset($user->user_password);
 
         return response()->json([
             'status' => true,
-            'result' => null_to_blank($user),
+            'result' => null_to_blank($user->toArray()),
         ]);
     }
 
@@ -52,7 +61,13 @@ class ProfileController extends Controller
 
         if (!$user) throw new ErrorException(__('message.user_not_found'));
 
+        # добавляем поле "От даты регистрации прошло Х лет/месяцев/дней"
+        $user->user_register_human =  Carbon::parse($user->user_register_date)->diffForHumans();
 
+        # добавляем поле "От даты последней активности прошло Х лет/месяцев/дней"
+        $user->user_last_active_human =  Carbon::parse($user->user_last_active)->diffForHumans();
+
+        # формируем ссылку на аватар
         $user->user_photo = $this->linkToUserPhoto($user->user_photo);
 
         return response()->json([

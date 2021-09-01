@@ -1436,7 +1436,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.variables.set(\"user_id\", 14);"
+									"pm.variables.set(\"user_id\", 19);"
 								],
 								"type": "text/javascript"
 							}
@@ -1446,7 +1446,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile",
+							"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile?lang=ru",
 							"host": [
 								"{{host}}"
 							],
@@ -1459,9 +1459,8 @@
 							"query": [
 								{
 									"key": "lang",
-									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-									"disabled": true
+									"value": "ru",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 								}
 							]
 						}
@@ -1471,35 +1470,22 @@
 							"name": "Отримання інформації про користувача (тільки публічні дані) (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
-									}
-								],
+								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/2/profile?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile?lang=ru",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
 										"users",
-										"2",
+										"{{user_id}}",
 										"profile"
 									],
 									"query": [
 										{
 											"key": "lang",
-											"value": "uk",
+											"value": "ru",
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 										}
 									]
@@ -1511,11 +1497,15 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 16 Jun 2021 06:06:51 GMT"
+									"value": "Wed, 01 Sep 2021 09:44:12 GMT"
 								},
 								{
 									"key": "Server",
 									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
 								},
 								{
 									"key": "X-Powered-By",
@@ -1531,11 +1521,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "58"
+									"value": "56"
 								},
 								{
 									"key": "Content-Length",
-									"value": "459"
+									"value": "1201"
 								},
 								{
 									"key": "Keep-Alive",
@@ -1551,7 +1541,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 2,\n        \"user_name\": \"Вася\",\n        \"user_surname\": \"Пупкин\",\n        \"user_register_date\": \"2020-09-28\",\n        \"user_last_active\": \"2021-01-18 18:28\",\n        \"user_status\": \"В работе\",\n        \"user_birthday\": \"1995-04-21\",\n        \"user_gender\": \"Мужской\",\n        \"user_photo\": \"http://upost.test/storage/users/no-photo.png\",\n        \"user_resume\": \"\",\n        \"user_freelancer_rating\": 0,\n        \"user_creater_rating\": 0\n    }\n}"
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 19,\n        \"user_name\": \"Вася\",\n        \"user_surname\": \"Пупкин\",\n        \"user_register_date\": \"2021-06-15\",\n        \"user_last_active\": \"2021-09-01 00:52:18\",\n        \"user_status\": \"active\",\n        \"user_birthday\": \"2000-05-13\",\n        \"user_gender\": \"Мужской\",\n        \"user_photo\": \"http://upost.test/storage/users/19/user_photo.jpg\",\n        \"user_resume\": \"<h1>Залогловок</h1>\\n<p class=\\\"foo\\\" >Тестовый текст жирный текст, <i>курсив</i>\\nЭто ссылка</p>\\nЗапрещенный тег div\\n<p >Style attribut</p>\\n<p  >Тег с JS-атрибутом</p>\\n\",\n        \"user_freelancer_rating\": 0,\n        \"user_creator_rating\": 0,\n        \"user_register_human\": \"2 месяца назад\",\n        \"user_last_active_human\": \"11 часов назад\"\n    }\n}"
 						},
 						{
 							"name": "Отримання інформації про користувача (тільки публічні дані) (errors)",
@@ -1647,7 +1637,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/users/profile",
+							"raw": "{{host}}/{{endpoint}}/users/profile?lang=uk",
 							"host": [
 								"{{host}}"
 							],
@@ -1660,8 +1650,7 @@
 								{
 									"key": "lang",
 									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-									"disabled": true
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 								}
 							]
 						}
@@ -1671,20 +1660,7 @@
 							"name": "Отримання інформації про користувача (всі дані) (success)",
 							"originalRequest": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "PHP-AUTH-USER",
-										"value": "{{email}}",
-										"type": "text",
-										"description": "Логін: емейл або телефон"
-									},
-									{
-										"key": "PHP-AUTH-PW",
-										"value": "{{password_hash}}",
-										"type": "text",
-										"description": "Хеш пароля, результат виконання md5(md5(password))"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/users/profile?lang=uk",
 									"host": [
@@ -1710,11 +1686,15 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 16 Jun 2021 06:43:18 GMT"
+									"value": "Wed, 01 Sep 2021 09:43:57 GMT"
 								},
 								{
 									"key": "Server",
 									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
 								},
 								{
 									"key": "X-Powered-By",
@@ -1730,11 +1710,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "59"
+									"value": "57"
 								},
 								{
 									"key": "Content-Length",
-									"value": "640"
+									"value": "1624"
 								},
 								{
 									"key": "Keep-Alive",
@@ -1750,7 +1730,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 19,\n        \"user_phone\": \"+380978800099\",\n        \"user_email\": \"test_email@gmail.com\",\n        \"user_hash\": \"\",\n        \"user_ip\": 0,\n        \"user_name\": \"\",\n        \"user_surname\": \"\",\n        \"user_rating\": \"\",\n        \"user_city\": \"\",\n        \"user_status\": \"new\",\n        \"user_card_number\": \"\",\n        \"user_card_name\": \"\",\n        \"user_birthday\": \"\",\n        \"user_gender\": \"\",\n        \"user_lang\": \"en\",\n        \"user_currency\": \"₽\",\n        \"user_validation\": \"no_valid\",\n        \"user_register_date\": \"2021-06-15\",\n        \"user_role\": \"client\",\n        \"user_photo\": \"\",\n        \"user_favorite_orders\": \"\",\n        \"user_favorite_routes\": \"\",\n        \"user_last_active\": \"\",\n        \"user_resume\": \"\",\n        \"user_messages_viewed\": \"\",\n        \"user_wallet\": \"\",\n        \"user_creater_rating\": 0,\n        \"user_freelancer_rating\": 0\n    }\n}"
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 19,\n        \"user_phone\": \"+380978800099\",\n        \"user_email\": \"test_email@gmail.com\",\n        \"user_name\": \"Вася\",\n        \"user_surname\": \"Пупкин\",\n        \"user_city\": 2,\n        \"user_status\": \"active\",\n        \"user_card_number\": \"5167803207038238\",\n        \"user_card_name\": \"Вася Пупкин\",\n        \"user_birthday\": \"2000-05-13\",\n        \"user_gender\": \"Мужской\",\n        \"user_lang\": \"uk\",\n        \"user_currency\": \"$\",\n        \"user_validation\": \"no_valid\",\n        \"user_register_date\": \"2021-06-15\",\n        \"user_role\": \"user\",\n        \"user_photo\": \"http://upost.test/storage/users/19/user_photo.jpg\",\n        \"user_favorite_orders\": \"\",\n        \"user_favorite_routes\": \"\",\n        \"user_last_active\": \"2021-09-01 00:52:18\",\n        \"user_resume\": \"<h1>Залогловок</h1>\\n<p class=\\\"foo\\\" >Тестовый текст жирный текст, <i>курсив</i>\\nЭто ссылка</p>\\nЗапрещенный тег div\\n<p >Style attribut</p>\\n<p  >Тег с JS-атрибутом</p>\\n\",\n        \"user_wallet\": \"0.00\",\n        \"user_creator_rating\": 0,\n        \"user_freelancer_rating\": 0,\n        \"api_token\": \"beb20c3385a4951dc75f506cbbe092b42d1f5dc08cb5cb194692e346e7c8d7c5\",\n        \"user_register_human\": \"2 місяці тому\",\n        \"user_last_active_human\": \"11 годин тому\"\n    }\n}"
 						},
 						{
 							"name": "Отримання інформації про користувача (всі дані) (errors)",

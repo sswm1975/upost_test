@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -22,6 +23,8 @@ class SetLanguage
             : config('app.default_language');
 
         App::setLocale($lang);
+
+        Carbon::setLocale($lang);
 
         return $next($request);
     }
