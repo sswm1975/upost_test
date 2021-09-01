@@ -95,6 +95,8 @@ class RouteController extends Controller
             'page'           => 'sometimes|required|integer|min:1',
         ]);
 
+        $favorite_routes = $request->user()->user_favorite_routes;
+
         $lang = app()->getLocale();
 
         $routes = Route::query()
@@ -105,7 +107,8 @@ class RouteController extends Controller
                 "from_city.city_name_{$lang} AS route_from_city_name",
                 "to_city.city_name_{$lang} AS route_to_city_name",
                 'users.user_name',
-                DB::raw('IFNULL(LENGTH(users.user_favorite_routes) - LENGTH(REPLACE(users.user_favorite_routes, ",", "")) + 1, 0) AS cnt_favorite_routes')
+                DB::raw('IFNULL(LENGTH(users.user_favorite_routes) - LENGTH(REPLACE(users.user_favorite_routes, ",", "")) + 1, 0) AS cnt_favorite_routes'),
+                DB::raw(empty($favorite_routes) ? '0 AS is_favorite' : "IF(routes.route_id IN ({$favorite_routes}), 1, 0) AS is_favorite")
             )
             ->join('users', 'users.user_id', 'routes.user_id')
             ->leftJoin('country AS from_country', 'from_country.country_id', 'routes.route_from_country')

@@ -149,6 +149,8 @@ class OrderController extends Controller
 
         $rate = Option::rate($request->get('currency', 'usd'));
 
+        $favorite_orders = $request->user()->user_favorite_orders;
+
         $lang = app()->getLocale();
 
         $orders = Order::query()
@@ -160,7 +162,8 @@ class OrderController extends Controller
                 "to_country.country_name_{$lang} AS order_to_country_name",
                 "from_city.city_name_{$lang} AS order_from_city_name",
                 "to_city.city_name_{$lang} AS order_to_city_name",
-                DB::raw('IFNULL(LENGTH(users.user_favorite_orders) - LENGTH(REPLACE(users.user_favorite_orders, ",", "")) + 1, 0) AS cnt_favorite_orders')
+                DB::raw('IFNULL(LENGTH(users.user_favorite_orders) - LENGTH(REPLACE(users.user_favorite_orders, ",", "")) + 1, 0) AS cnt_favorite_orders'),
+                DB::raw(empty($favorite_orders) ? '0 AS is_favorite' : "IF(orders.order_id IN ({$favorite_orders}), 1, 0) AS is_favorite")
             )
             ->join('users', 'users.user_id', 'orders.user_id')
             ->join('categories', 'categories.category_id', 'orders.order_category')
@@ -169,34 +172,34 @@ class OrderController extends Controller
             ->leftJoin('city AS from_city', 'from_city.city_id', 'orders.order_from_city')
             ->leftJoin('city AS to_city', 'to_city.city_id', 'orders.order_to_city')
             ->when($request->filled('user_id'), function ($query) use ($data) {
-                return $query->where('user_id', $data['user_id']);
+                return $query->where('orders.user_id', $data['user_id']);
             })
             ->when($request->filled('status'), function ($query) use ($data) {
-                return $query->where('order_status', $data['status']);
+                return $query->where('orders.order_status', $data['status']);
             })
             ->when($request->filled('date_from'), function ($query) use ($data) {
-                return $query->where('order_start', '>=', $data['date_from']);
+                return $query->where('orders.order_start', '>=', $data['date_from']);
             })
             ->when($request->filled('date_to'), function ($query) use ($data) {
-                return $query->where('order_start', '<=', $data['date_to']);
+                return $query->where('orders.order_start', '<=', $data['date_to']);
             })
             ->when($request->filled('city_from'), function ($query) use ($data) {
-                return $query->whereIn('order_from_city', $data['city_from']);
+                return $query->whereIn('orders.order_from_city', $data['city_from']);
             })
             ->when($request->filled('city_to'), function ($query) use ($data) {
-                return $query->whereIn('order_to_city', $data['city_to']);
+                return $query->whereIn('orders.order_to_city', $data['city_to']);
             })
             ->when($request->filled('country_from'), function ($query) use ($data) {
-                return $query->whereIn('order_from_country', $data['country_from']);
+                return $query->whereIn('orders.order_from_country', $data['country_from']);
             })
             ->when($request->filled('country_to'), function ($query) use ($data) {
-                return $query->whereIn('order_to_country', $data['country_to']);
+                return $query->whereIn('orders.order_to_country', $data['country_to']);
             })
             ->when($request->filled('price_from'), function ($query) use ($data, $rate) {
-                return $query->where('order_price_usd', '>=', $data['price_from'] * $rate);
+                return $query->where('orders.order_price_usd', '>=', $data['price_from'] * $rate);
             })
             ->when($request->filled('price_to'), function ($query) use ($data, $rate) {
-                return $query->where('order_price_usd', '<=', $data['price_to'] * $rate);
+                return $query->where('orders.order_price_usd', '<=', $data['price_to'] * $rate);
             })
             ->orderBy(self::SORT_FIELDS[$data['sort_by'] ?? 'date'], $data['sorting'] ?? self::DEFAULT_SORTING)
             ->paginate($data['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page'] ?? 1)
