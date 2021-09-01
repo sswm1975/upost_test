@@ -27,8 +27,33 @@ class ProfileController extends Controller
      */
     public function getPrivateData(Request $request): JsonResponse
     {
-        $user = $request->user();
+        return $this->getUserData($request->user());
+    }
 
+    /**
+     * Получить публичные данные пользователя.
+     *
+     * @param int $user_id
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function getPublicData(int $user_id): JsonResponse
+    {
+        $user = User::whereUserId($user_id)->first(User::FIELDS_FOR_SHOW);
+
+        if (!$user) throw new ErrorException(__('message.user_not_found'));
+
+        return $this->getUserData($user);
+    }
+
+    /**
+     * Получить дополнительные данные связанные с пользователем.
+     *
+     * @param User $user
+     * @return JsonResponse
+     */
+    private function getUserData(User $user): JsonResponse
+    {
         # добавляем кол-во заказов, как Заказчик и как Исполнитель (фрилансер)
         $user->user_creator_count = Review::getCountReviewsByCreator($user->user_id);
         $user->user_freelancer_count = Review::getCountReviewsByFreelancer($user->user_id);
@@ -53,47 +78,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'status' => true,
-            'result' => null_to_blank($user->toArray()),
-        ]);
-    }
-
-    /**
-     * Получить публичные данные пользователя.
-     *
-     * @param int $user_id
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function getPublicData(int $user_id): JsonResponse
-    {
-        $user = User::query()
-            ->where('user_id', $user_id)
-            ->first(User::FIELDS_FOR_SHOW);
-
-        if (!$user) throw new ErrorException(__('message.user_not_found'));
-
-        # добавляем кол-во заказов, как Заказчик и как Исполнитель (фрилансер)
-        $user->user_creator_count = Review::getCountReviewsByCreator($user->user_id);
-        $user->user_freelancer_count = Review::getCountReviewsByFreelancer($user->user_id);
-
-        # добавляем количество отзывов
-        $user->user_reviews_count = Review::getCountReviews($user->user_id);
-
-        # получить последний отзыв
-        $user->user_last_review = Review::getLastReview($user->user_id);
-
-        # добавляем поле "От даты регистрации прошло Х лет/месяцев/дней"
-        $user->user_register_human =  Carbon::parse($user->user_register_date)->diffForHumans();
-
-        # добавляем поле "От даты последней активности прошло Х лет/месяцев/дней"
-        $user->user_last_active_human =  Carbon::parse($user->user_last_active)->diffForHumans();
-
-        # формируем ссылку на аватар
-        $user->user_photo = $this->linkToUserPhoto($user->user_photo);
-
-        return response()->json([
-            'status' => true,
-            'result' => null_to_blank($user->toArray()),
+            'result' => null_to_blank($user),
         ]);
     }
 
