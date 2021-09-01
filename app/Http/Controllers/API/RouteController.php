@@ -117,25 +117,25 @@ class RouteController extends Controller
                 return $query->whereIn('route_id', $data['route_id']);
             })
             ->when($request->filled('user_id'), function ($query) use ($data) {
-                return $query->where('user_id', $data['user_id']);
+                return $query->where('routes.user_id', $data['user_id']);
             })
             ->when($request->filled('date_from'), function ($query) use ($data) {
-                return $query->where('route_start', '>=', $data['date_from']);
+                return $query->where('routes.route_start', '>=', $data['date_from']);
             })
             ->when($request->filled('date_to'), function ($query) use ($data) {
-                return $query->where('route_end', '<=', $data['date_to']);
+                return $query->where('routes.route_end', '<=', $data['date_to']);
             })
             ->when($request->filled('country_from'), function ($query) use ($data) {
-                return $query->whereIn('route_from_country', $data['country_from']);
+                return $query->whereIn('routes.route_from_country', $data['country_from']);
             })
             ->when($request->filled('city_from'), function ($query) use ($data) {
-                return $query->whereIn('route_from_city', $data['city_from']);
+                return $query->whereIn('routes.route_from_city', $data['city_from']);
             })
             ->when($request->filled('country_to'), function ($query) use ($data) {
-                return $query->whereIn('route_to_country', $data['country_to']);
+                return $query->whereIn('routes.route_to_country', $data['country_to']);
             })
             ->when($request->filled('city_to'), function ($query) use ($data) {
-                return $query->whereIn('route_to_city', $data['city_to']);
+                return $query->whereIn('routes.route_to_city', $data['city_to']);
             })
             ->paginate($data['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page'] ?? 1)
             ->toArray();
