@@ -9,8 +9,23 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Review extends Model
 {
+    public $timestamps = false;
+
     public const TYPE_CREATOR = 0;
     public const TYPE_FREELANCER = 1;
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_at = $model->freshTimestamp();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_at = $model->freshTimestamp();
+        });
+    }
 
     /**
      *
@@ -44,12 +59,16 @@ class Review extends Model
      * Получить количество отзывов по выбранному пользователю и типу пользователя.
      *
      * @param int $user_id
-     * @param int $type
+     * @param int|null $type
      * @return int
      */
-    public static function getCountReviewsByType(int $user_id, int $type): int
+    public static function getCountReviews(int $user_id, int $type = null): int
     {
-        return static::whereUserId($user_id)->whereReviewType($type)->count();
+        return static::whereUserId($user_id)
+            ->when(!is_null($type), function($query) use ($type) {
+                $query->whereReviewType($type);
+            })
+            ->count();
     }
 
     /**
@@ -60,7 +79,7 @@ class Review extends Model
      */
     public static function getCountReviewsByCreator(int $user_id): int
     {
-        return static::getCountReviewsByType($user_id, self::TYPE_CREATOR);
+        return static::getCountReviews($user_id, self::TYPE_CREATOR);
     }
 
     /**
@@ -71,6 +90,19 @@ class Review extends Model
      */
     public static function getCountReviewsByFreelancer(int $user_id): int
     {
-        return static::getCountReviewsByType($user_id, self::TYPE_FREELANCER);
+        return static::getCountReviews($user_id, self::TYPE_FREELANCER);
+    }
+
+    /**
+     * Получить последний отзыв пользователя.
+     *
+     * @param int $user_id
+     * @return mixed
+     */
+    public static function getLastReview(int $user_id)
+    {
+        return static::whereUserId($user_id)
+            ->latest()
+            ->first(['rating', 'comment', 'created_at']);
     }
 }

@@ -29,9 +29,15 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        # добавляем кол-во заказов в роли заказчика и в роли фрилансера
+        # добавляем кол-во заказов, как Заказчик и как Исполнитель (фрилансер)
         $user->user_creator_count = Review::getCountReviewsByCreator($user->user_id);
         $user->user_freelancer_count = Review::getCountReviewsByFreelancer($user->user_id);
+
+        # добавляем количество отзывов
+        $user->user_reviews_count = Review::getCountReviews($user->user_id);
+
+        # получить последний отзыв
+        $user->user_last_review = Review::getLastReview($user->user_id);
 
         # добавляем поле "От даты регистрации прошло Х лет/месяцев/дней"
         $user->user_register_human =  Carbon::parse($user->user_register_date)->diffForHumans();
@@ -66,9 +72,15 @@ class ProfileController extends Controller
 
         if (!$user) throw new ErrorException(__('message.user_not_found'));
 
-        # добавляем кол-во заказов в роли заказчика и в роли фрилансера
-        $user->user_creator_count = Review::getCountReviewsByCreator($user_id);
-        $user->user_freelancer_count = Review::getCountReviewsByFreelancer($user_id);
+        # добавляем кол-во заказов, как Заказчик и как Исполнитель (фрилансер)
+        $user->user_creator_count = Review::getCountReviewsByCreator($user->user_id);
+        $user->user_freelancer_count = Review::getCountReviewsByFreelancer($user->user_id);
+
+        # добавляем количество отзывов
+        $user->user_reviews_count = Review::getCountReviews($user->user_id);
+
+        # получить последний отзыв
+        $user->user_last_review = Review::getLastReview($user->user_id);
 
         # добавляем поле "От даты регистрации прошло Х лет/месяцев/дней"
         $user->user_register_human =  Carbon::parse($user->user_register_date)->diffForHumans();
