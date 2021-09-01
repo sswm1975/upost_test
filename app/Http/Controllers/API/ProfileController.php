@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\Review;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,6 +29,10 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
+        # добавляем кол-во заказов в роли заказчика и в роли фрилансера
+        $user->user_creator_count = Review::getCountReviewsByCreator($user->user_id);
+        $user->user_freelancer_count = Review::getCountReviewsByFreelancer($user->user_id);
+
         # добавляем поле "От даты регистрации прошло Х лет/месяцев/дней"
         $user->user_register_human =  Carbon::parse($user->user_register_date)->diffForHumans();
 
@@ -38,7 +43,7 @@ class ProfileController extends Controller
         $user->user_photo = $this->linkToUserPhoto($user->user_photo);
 
         # удаляем поле с паролем
-        unset($user->user_password);
+        unset($user->user_password, $user->api_token);
 
         return response()->json([
             'status' => true,
@@ -60,6 +65,10 @@ class ProfileController extends Controller
             ->first(User::FIELDS_FOR_SHOW);
 
         if (!$user) throw new ErrorException(__('message.user_not_found'));
+
+        # добавляем кол-во заказов в роли заказчика и в роли фрилансера
+        $user->user_creator_count = Review::getCountReviewsByCreator($user_id);
+        $user->user_freelancer_count = Review::getCountReviewsByFreelancer($user_id);
 
         # добавляем поле "От даты регистрации прошло Х лет/месяцев/дней"
         $user->user_register_human =  Carbon::parse($user->user_register_date)->diffForHumans();

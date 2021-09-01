@@ -1497,7 +1497,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 01 Sep 2021 09:44:12 GMT"
+									"value": "Wed, 01 Sep 2021 12:40:44 GMT"
 								},
 								{
 									"key": "Server",
@@ -1521,11 +1521,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "56"
+									"value": "58"
 								},
 								{
 									"key": "Content-Length",
-									"value": "1201"
+									"value": "1250"
 								},
 								{
 									"key": "Keep-Alive",
@@ -1541,7 +1541,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 19,\n        \"user_name\": \"Вася\",\n        \"user_surname\": \"Пупкин\",\n        \"user_register_date\": \"2021-06-15\",\n        \"user_last_active\": \"2021-09-01 00:52:18\",\n        \"user_status\": \"active\",\n        \"user_birthday\": \"2000-05-13\",\n        \"user_gender\": \"Мужской\",\n        \"user_photo\": \"http://upost.test/storage/users/19/user_photo.jpg\",\n        \"user_resume\": \"<h1>Залогловок</h1>\\n<p class=\\\"foo\\\" >Тестовый текст жирный текст, <i>курсив</i>\\nЭто ссылка</p>\\nЗапрещенный тег div\\n<p >Style attribut</p>\\n<p  >Тег с JS-атрибутом</p>\\n\",\n        \"user_freelancer_rating\": 0,\n        \"user_creator_rating\": 0,\n        \"user_register_human\": \"2 месяца назад\",\n        \"user_last_active_human\": \"11 часов назад\"\n    }\n}"
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 19,\n        \"user_name\": \"Вася\",\n        \"user_surname\": \"Пупкин\",\n        \"user_register_date\": \"2021-06-15\",\n        \"user_last_active\": \"2021-09-01 00:52:18\",\n        \"user_status\": \"active\",\n        \"user_birthday\": \"2000-05-13\",\n        \"user_gender\": \"Мужской\",\n        \"user_photo\": \"http://upost.test/storage/users/19/user_photo.jpg\",\n        \"user_resume\": \"<h1>Залогловок</h1>\\n<p class=\\\"foo\\\" >Тестовый текст жирный текст, <i>курсив</i>\\nЭто ссылка</p>\\nЗапрещенный тег div\\n<p >Style attribut</p>\\n<p  >Тег с JS-атрибутом</p>\\n\",\n        \"user_freelancer_rating\": 0,\n        \"user_creator_rating\": 0,\n        \"user_creator_count\": 2,\n        \"user_freelancer_count\": 1,\n        \"user_register_human\": \"2 месяца назад\",\n        \"user_last_active_human\": \"14 часов назад\"\n    }\n}"
 						},
 						{
 							"name": "Отримання інформації про користувача (тільки публічні дані) (errors)",
@@ -1686,7 +1686,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 01 Sep 2021 09:43:57 GMT"
+									"value": "Wed, 01 Sep 2021 12:46:59 GMT"
 								},
 								{
 									"key": "Server",
@@ -1710,11 +1710,11 @@
 								},
 								{
 									"key": "X-RateLimit-Remaining",
-									"value": "57"
+									"value": "58"
 								},
 								{
 									"key": "Content-Length",
-									"value": "1624"
+									"value": "1594"
 								},
 								{
 									"key": "Keep-Alive",
@@ -1730,7 +1730,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 19,\n        \"user_phone\": \"+380978800099\",\n        \"user_email\": \"test_email@gmail.com\",\n        \"user_name\": \"Вася\",\n        \"user_surname\": \"Пупкин\",\n        \"user_city\": 2,\n        \"user_status\": \"active\",\n        \"user_card_number\": \"5167803207038238\",\n        \"user_card_name\": \"Вася Пупкин\",\n        \"user_birthday\": \"2000-05-13\",\n        \"user_gender\": \"Мужской\",\n        \"user_lang\": \"uk\",\n        \"user_currency\": \"$\",\n        \"user_validation\": \"no_valid\",\n        \"user_register_date\": \"2021-06-15\",\n        \"user_role\": \"user\",\n        \"user_photo\": \"http://upost.test/storage/users/19/user_photo.jpg\",\n        \"user_favorite_orders\": \"\",\n        \"user_favorite_routes\": \"\",\n        \"user_last_active\": \"2021-09-01 00:52:18\",\n        \"user_resume\": \"<h1>Залогловок</h1>\\n<p class=\\\"foo\\\" >Тестовый текст жирный текст, <i>курсив</i>\\nЭто ссылка</p>\\nЗапрещенный тег div\\n<p >Style attribut</p>\\n<p  >Тег с JS-атрибутом</p>\\n\",\n        \"user_wallet\": \"0.00\",\n        \"user_creator_rating\": 0,\n        \"user_freelancer_rating\": 0,\n        \"api_token\": \"beb20c3385a4951dc75f506cbbe092b42d1f5dc08cb5cb194692e346e7c8d7c5\",\n        \"user_register_human\": \"2 місяці тому\",\n        \"user_last_active_human\": \"11 годин тому\"\n    }\n}"
+							"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user_id\": 19,\n        \"user_phone\": \"+380978800099\",\n        \"user_email\": \"test_email@gmail.com\",\n        \"user_name\": \"Вася\",\n        \"user_surname\": \"Пупкин\",\n        \"user_city\": 2,\n        \"user_status\": \"active\",\n        \"user_card_number\": \"5167803207038238\",\n        \"user_card_name\": \"Вася Пупкин\",\n        \"user_birthday\": \"2000-05-13\",\n        \"user_gender\": \"Мужской\",\n        \"user_lang\": \"uk\",\n        \"user_currency\": \"$\",\n        \"user_validation\": \"no_valid\",\n        \"user_register_date\": \"2021-06-15\",\n        \"user_role\": \"user\",\n        \"user_photo\": \"http://upost.test/storage/users/19/user_photo.jpg\",\n        \"user_favorite_orders\": \"\",\n        \"user_favorite_routes\": \"\",\n        \"user_last_active\": \"2021-09-01 00:52:18\",\n        \"user_resume\": \"<h1>Залогловок</h1>\\n<p class=\\\"foo\\\" >Тестовый текст жирный текст, <i>курсив</i>\\nЭто ссылка</p>\\nЗапрещенный тег div\\n<p >Style attribut</p>\\n<p  >Тег с JS-атрибутом</p>\\n\",\n        \"user_wallet\": \"0.00\",\n        \"user_creator_rating\": 0,\n        \"user_freelancer_rating\": 0,\n        \"user_creator_count\": 2,\n        \"user_freelancer_count\": 1,\n        \"user_register_human\": \"2 місяці тому\",\n        \"user_last_active_human\": \"14 годин тому\"\n    }\n}"
 						},
 						{
 							"name": "Отримання інформації про користувача (всі дані) (errors)",
