@@ -103,6 +103,6 @@ class Review extends Model
     {
         return static::whereUserId($user_id)
             ->latest()
-            ->first(['rating', 'comment', 'created_at']);
+            ->first(['rating', 'comment', 'created_at']) ?? [];
     }
 }

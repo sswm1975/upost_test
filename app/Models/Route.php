@@ -44,6 +44,8 @@ class Route extends Model
 
     public function getRoutePointsAttribute($json)
     {
+        if (is_null($json)) return [];
+
         if (is_array($json)) return $json;
 
         return json_decode($json, true);
