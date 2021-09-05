@@ -4,13 +4,10 @@ namespace App\Modules\Parsers;
 
 class AliExpress implements ParserInterface
 {
-    protected string $link;
     protected array $data;
 
     public function __construct($link)
     {
-        $this->link = $link;
-
         $content = file_get_contents($link);
 
         preg_match('/data: ({.+})/', $content, $matches);
@@ -51,13 +48,6 @@ class AliExpress implements ParserInterface
     public function getProductWeight():string
     {
         return '';
-    }
-
-    public function getFavicon(): string
-    {
-        $domain = parse_url($this->link);
-
-        return 'https://www.google.com/s2/favicons?domain=' . $domain['scheme'] . '://' . $domain['host'];
     }
 
     private function getImageToBase64($href):string

@@ -60,9 +60,4 @@ class DefaultParser extends ParserKernel implements ParserInterface
             ? $this->getText($this->config['weight_selects'])
             : '';
     }
-
-    public function getFavicon():string
-    {
-        return parent::getFavicon();
-    }
 }

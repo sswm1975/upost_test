@@ -11,5 +11,4 @@ interface ParserInterface
     public function getProductImage():string;
     public function getProductSize():string;
     public function getProductWeight():string;
-    public function getFavicon():string;
 }

@@ -4,13 +4,10 @@ namespace App\Modules\Parsers;
 
 class Alibaba implements ParserInterface
 {
-    protected string $link;
     protected array $data;
 
     public function __construct($link)
     {
-        $this->link = $link;
-
         $content = file_get_contents($link);
 
         preg_match('/window.detailData = ({.+})/', $content, $matches);
@@ -63,13 +60,6 @@ class Alibaba implements ParserInterface
     public function getProductWeight():string
     {
         return $this->data['globalData']['trade']['logisticInfo']['unitWeight'] ?? '';
-    }
-
-    public function getFavicon(): string
-    {
-        $domain = parse_url($this->link);
-
-        return 'https://www.google.com/s2/favicons?domain=' . $domain['scheme'] . '://' . $domain['host'];
     }
 
     private function getImageToBase64($href):string

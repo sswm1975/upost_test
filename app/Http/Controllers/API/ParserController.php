@@ -22,7 +22,9 @@ class ParserController extends Controller
     {
         validateOrExit(['url' => 'required|url']);
 
-        $parser = (new Parser($request->url))->handler();
+        $url = $request->get('url');
+
+        $parser = (new Parser($url))->handler();
 
         $image_base64 = $parser->getProductImage();
         if ($image_base64) {
@@ -40,7 +42,7 @@ class ParserController extends Controller
             'size'     => $parser->getProductSize(),
             'weight'   => $parser->getProductWeight(),
             'image'    => $image,
-            'favicon'  => $parser->getFavicon(),
+            'favicon'  => getFavicon($url),
         ]);
     }
 }

@@ -87,6 +87,24 @@ function validate_base64(string $base64data, array $allowedMime, int $maxSize, i
 }
 
 /**
+ * Get Favicon from URL.
+ *
+ * @param string $url
+ * @return string
+ */
+function getFavicon(string $url): string
+{
+    $parts = parse_url($url);
+
+    if ($parts === false || empty($parts['host'])) return '';
+
+    $scheme = isset($parts['scheme']) ? $parts['scheme'] . '://' : '';
+    $host = $parts['host'];
+
+    return "https://www.google.com/s2/favicons?domain={$scheme}{$host}";
+}
+
+/**
  * Image crop with configurable alignment.
  * (https://stackoverflow.com/posts/49851547/revisions)
  *

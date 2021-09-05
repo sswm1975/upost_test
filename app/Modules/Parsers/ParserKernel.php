@@ -4,19 +4,15 @@ namespace App\Modules\Parsers;
 
 use DOMDocument;
 use DOMXPath;
-use Illuminate\Support\Str;
 
 class ParserKernel
 {
     const CLEAR_CHARS = " \t\n\r\0\x0B\xC2\xA0";
 
-    protected $domain;
-    protected $xpath;
+    protected DOMXPath $xpath;
 
     public function __construct($link)
     {
-        $this->domain = parse_url($link);
-
         $doc = new DOMDocument('1.0', 'utf-8');
         $doc->preserveWhiteSpace = false;
         $doc->strictErrorChecking = false;
@@ -87,14 +83,6 @@ class ParserKernel
         if (!$href) return '';
 
         return $this->getImageToBase64($href);
-    }
-
-    public function getFavicon(): string
-    {
-        $scheme = $this->domain['scheme'];
-        $host = $this->domain['host'];
-
-        return 'https://www.google.com/s2/favicons?domain=' . $scheme . '://' . $host;
     }
 
     public function getJsonDecode(array $selects):array

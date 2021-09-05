@@ -61,9 +61,4 @@ class Rozetka extends ParserKernel implements ParserInterface
     {
         return '';
     }
-
-    public function getFavicon():string
-    {
-        return parent::getFavicon();
-    }
 }

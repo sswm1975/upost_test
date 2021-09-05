@@ -27,8 +27,6 @@ class BestBuy extends DefaultParser
         ]);
         $content = gzdecode(file_get_contents($link, false, $context));
 
-        $this->domain = parse_url($link);
-
         $doc = new DOMDocument('1.0', 'utf-8');
         $doc->preserveWhiteSpace = false;
         $doc->strictErrorChecking = false;
