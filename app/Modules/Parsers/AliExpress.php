@@ -4,15 +4,16 @@ namespace App\Modules\Parsers;
 
 class AliExpress implements ParserInterface
 {
-    protected array $data;
+    /** @var array|null  */
+    protected $data;
 
     public function __construct($link)
     {
-        $content = file_get_contents($link);
+        $content = @file_get_contents($link);
 
         preg_match('/data: ({.+})/', $content, $matches);
 
-        $this->data = json_decode($matches[1], true);
+        $this->data = !empty($matches[1]) ? json_decode($matches[1], true) : null;
     }
 
     public function getProductName():string
@@ -22,6 +23,10 @@ class AliExpress implements ParserInterface
 
     public function getProductCategory():string
     {
+        if (empty($this->data['crossLinkModule']['breadCrumbPathList'])) {
+            return '';
+        }
+
         return end($this->data['crossLinkModule']['breadCrumbPathList'])['name'] ?? '';
     }
 
@@ -37,6 +42,10 @@ class AliExpress implements ParserInterface
 
     public function getProductImage():string
     {
+        if (empty($this->data['pageModule']['imagePath'])) {
+            return '';
+        }
+
         return $this->getImageToBase64($this->data['pageModule']['imagePath']);
     }
 
