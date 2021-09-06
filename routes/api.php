@@ -171,8 +171,11 @@ Route::group(
         # Створення замовлення
         Route::post('add', 'API\OrderController@addOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-        # Вивід замовлень
+        # Вивід замовлень за фільтром
         Route::get('show', 'API\OrderController@showOrders');
+
+        # Вивід конкретного замовлення
+        Route::get('{order_id}/show', 'API\OrderController@showOrder');
 
         # Видалення замовлення
         Route::delete('{order_id}/delete', 'API\OrderController@deleteOrder')->middleware(MIDDLEWARE_AUTH_BASIC);

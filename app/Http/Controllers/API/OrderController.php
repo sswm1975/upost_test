@@ -9,6 +9,7 @@ use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Route;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,11 +22,12 @@ use App\Models\Option;
 class OrderController extends Controller
 {
     const DEFAULT_PER_PAGE = 5;
-    const DEFAULT_SORTING = 'desc';
     const SORT_FIELDS = [
         'date'  => 'order_register_date',
         'price' => 'order_price_usd',
     ];
+    const DEFAULT_SORT_BY = 'date';
+    const DEFAULT_SORTING = 'desc';
 
     /** @var int Количество страйков, за которое выдается бан (заказ переводится в статус ban) */
     const COUNT_STRIKES_FOR_BAN = 50;
@@ -117,6 +119,48 @@ class OrderController extends Controller
     }
 
     /**
+     * Вывод выбранного заказа.
+     *
+     * @param int $order_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function showOrder(int $order_id, Request $request): JsonResponse
+    {
+        $order = end($this->getOrdersByFilter($request->user(), compact('order_id'))['data']);
+
+        if (!$order) throw new ErrorException(__('message.order_not_found'));
+
+        $similar_orders = $this->getOrdersByFilter(
+            $request->user(),
+            [
+                'without_order_id' => $order['order_id'],
+                'city_from' => [$order['order_from_city']],
+                'city_to' => [$order['order_to_city']],
+                'show' => 3,
+            ]
+        )['data'];
+
+        if (empty($similar_orders)) {
+            $similar_orders = $this->getOrdersByFilter(
+                $request->user(),
+                [
+                    'without_order_id' => $order['order_id'],
+                    'category' => $order['order_category'],
+                    'show' => 3,
+                ]
+            )['data'];
+        }
+
+        return response()->json([
+            'status' => true,
+            'order' => null_to_blank($order),
+            'similar_orders' => null_to_blank($similar_orders),
+        ]);
+    }
+
+    /**
      * Вывод заказов.
      *
      * @param Request $request
@@ -125,7 +169,8 @@ class OrderController extends Controller
      */
     public function showOrders(Request $request): JsonResponse
     {
-        $data = validateOrExit([
+        $filters = validateOrExit([
+            'order_id'       => 'sometimes|required|integer',
             'user_id'        => 'sometimes|required|integer',
             'status'         => 'sometimes|required|in:active,ban',
             'sorting'        => 'sometimes|required|in:asc,desc',
@@ -147,15 +192,35 @@ class OrderController extends Controller
             'currency'       => 'sometimes|required|in:' . implode(',', array_keys(config('app.currencies'))),
         ]);
 
-        $rate = Option::rate($request->get('currency', 'usd'));
+        $orders = $this->getOrdersByFilter($request->user(), $filters);
 
-        $favorite_orders = $request->user()->user_favorite_orders;
+        return response()->json([
+            'status' => true,
+            'count'  => $orders['total'],
+            'page'   => $orders['current_page'],
+            'pages'  => $orders['last_page'],
+            'result' => null_to_blank($orders['data']),
+        ]);
+    }
+
+    /**
+     * Отбор заказов по фильтру.
+     *
+     * @param User $user
+     * @param array $filters
+     * @return array
+     */
+    private function getOrdersByFilter(User $user, array $filters = []): array
+    {
+        $rate = !empty($filters['currency']) ? Option::rate($filters['currency']) : 1;
+
+        $favorite_orders = $user->user_favorite_orders;
 
         $path_to_avatar = asset('storage/');
 
         $lang = app()->getLocale();
 
-        $orders = Order::query()
+        return Order::query()
             ->select(
                 'orders.*',
                 DB::raw('CONCAT(users.user_name, " ", users.user_surname) AS user_name'),
@@ -185,47 +250,48 @@ class OrderController extends Controller
             ->leftJoin('country AS to_country', 'to_country.country_id', 'orders.order_to_country')
             ->leftJoin('city AS from_city', 'from_city.city_id', 'orders.order_from_city')
             ->leftJoin('city AS to_city', 'to_city.city_id', 'orders.order_to_city')
-            ->when($request->filled('user_id'), function ($query) use ($data) {
-                return $query->where('orders.user_id', $data['user_id']);
+            ->when(!empty($filters['order_id']), function ($query) use ($filters) {
+                return $query->where('orders.order_id', $filters['order_id']);
             })
-            ->when($request->filled('status'), function ($query) use ($data) {
-                return $query->where('orders.order_status', $data['status']);
+            ->when(!empty($filters['without_order_id']), function ($query) use ($filters) {
+                return $query->where('orders.order_id', '!=', $filters['without_order_id']);
             })
-            ->when($request->filled('date_from'), function ($query) use ($data) {
-                return $query->where('orders.order_start', '>=', $data['date_from']);
+            ->when(!empty($filters['user_id']), function ($query) use ($filters) {
+                return $query->where('orders.user_id', $filters['user_id']);
             })
-            ->when($request->filled('date_to'), function ($query) use ($data) {
-                return $query->where('orders.order_start', '<=', $data['date_to']);
+            ->when(!empty($filters['category']), function ($query) use ($filters) {
+                return $query->where('orders.order_category', $filters['category']);
             })
-            ->when($request->filled('city_from'), function ($query) use ($data) {
-                return $query->whereIn('orders.order_from_city', $data['city_from']);
+            ->when(!empty($filters['status']), function ($query) use ($filters) {
+                return $query->where('orders.order_status', $filters['status']);
             })
-            ->when($request->filled('city_to'), function ($query) use ($data) {
-                return $query->whereIn('orders.order_to_city', $data['city_to']);
+            ->when(!empty($filters['date_from']), function ($query) use ($filters) {
+                return $query->where('orders.order_start', '>=', $filters['date_from']);
             })
-            ->when($request->filled('country_from'), function ($query) use ($data) {
-                return $query->whereIn('orders.order_from_country', $data['country_from']);
+            ->when(!empty($filters['date_to']), function ($query) use ($filters) {
+                return $query->where('orders.order_start', '<=', $filters['date_to']);
             })
-            ->when($request->filled('country_to'), function ($query) use ($data) {
-                return $query->whereIn('orders.order_to_country', $data['country_to']);
+            ->when(!empty($filters['city_from']), function ($query) use ($filters) {
+                return $query->whereIn('orders.order_from_city', $filters['city_from']);
             })
-            ->when($request->filled('price_from'), function ($query) use ($data, $rate) {
-                return $query->where('orders.order_price_usd', '>=', $data['price_from'] * $rate);
+            ->when(!empty($filters['city_to']), function ($query) use ($filters) {
+                return $query->whereIn('orders.order_to_city', $filters['city_to']);
             })
-            ->when($request->filled('price_to'), function ($query) use ($data, $rate) {
-                return $query->where('orders.order_price_usd', '<=', $data['price_to'] * $rate);
+            ->when(!empty($filters['country_from']), function ($query) use ($filters) {
+                return $query->whereIn('orders.order_from_country', $filters['country_from']);
             })
-            ->orderBy(self::SORT_FIELDS[$data['sort_by'] ?? 'date'], $data['sorting'] ?? self::DEFAULT_SORTING)
-            ->paginate($data['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page'] ?? 1)
+            ->when(!empty($filters['country_to']), function ($query) use ($filters) {
+                return $query->whereIn('orders.order_to_country', $filters['country_to']);
+            })
+            ->when(!empty($filters['price_from']), function ($query) use ($filters, $rate) {
+                return $query->where('orders.order_price_usd', '>=', $filters['price_from'] * $rate);
+            })
+            ->when(!empty($filters['price_to']), function ($query) use ($filters, $rate) {
+                return $query->where('orders.order_price_usd', '<=', $filters['price_to'] * $rate);
+            })
+            ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
+            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page'] ?? 1)
             ->toArray();
-
-        return response()->json([
-            'status' => true,
-            'count'  => $orders['total'],
-            'page'   => $orders['current_page'],
-            'pages'  => $orders['last_page'],
-            'result' => null_to_blank($orders['data']),
-        ]);
     }
 
     /**

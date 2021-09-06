@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
 
         /**
          * Для операции "Сброс пароля" избавляемся от маршрута ниже (для API он не нужен):
-         * # Отобразить форму, содержащая поля email, password, password_confirmation и скрытое поле token.
+         * Отобразить форму, содержащая поля email, password, password_confirmation и скрытое поле token.
          * Route::get('reset/{token}', 'API\ResetPasswordController@showResetForm')->name('password.reset')
          */
         ResetPassword::createUrlUsing(function ($user, string $token) {

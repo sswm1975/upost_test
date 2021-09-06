@@ -5667,7 +5667,197 @@
 					]
 				},
 				{
-					"name": "Вивід замовлень",
+					"name": "Вивід замовлення",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"order_id\", 1);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/show?lang=ru",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"orders",
+								"{{order_id}}",
+								"show"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "ru"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Вивід замовлення (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/show?lang=ru",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"orders",
+										"{{order_id}}",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "ru"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 06 Sep 2021 16:52:53 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"order\": {\n        \"order_id\": 1,\n        \"user_id\": 1,\n        \"order_register_date\": \"2020-09-26\",\n        \"order_name\": \"Universal WiFi IR Remote Controller Hub Voice Control For Air Conditioner TV DVD\",\n        \"order_url\": \"universal-wifi-ir-remote-controller-hub-voice-control-for-air-conditioner-tv-dvd-1\",\n        \"order_category\": 11,\n        \"order_price\": \"18.29\",\n        \"order_price_usd\": \"18.29\",\n        \"order_currency\": \"$\",\n        \"order_count\": 1,\n        \"order_size\": \"ds\",\n        \"order_weight\": \"asd\",\n        \"order_product_link\": \"https://www.ebay.com/itm/Universal-WiFi-IR-Remote-Controller-Hub-Voice-Control-For-Air-Conditioner-TV-DVD/303631047427?_trkparms=aid%3D1110010%26algo%3DHOMESPLICE.DISCCARDS%26ao%3D1%26asc%3D20200220090753%26meid%3D91e97f134b9c4b00b6f9755dbaa62c33%26pid%3D100752%26rk%3D1%26rkt%3D1%26sd%3D133453520467%26itm%3D303631047427%26pmt%3D1%26noa%3D0%26pg%3D2047675%26algv%3Ddefault%26brand%3DUnbranded&_trksid=p2047675.c100752.m1982\",\n        \"order_text\": \"\\n\\t\\t\\t\\t\\t\\t\\t\\t\\n\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t<div class=\\\"content\\\">\\n\\t\\t\\t<div><span>Universal WiFi IR Remote Controller Hub Voice Control For Air Conditioner TV DVD</span></div><div><span><span style=\\\"text-decoration: underline;\\\"><strong>Features:</strong></span><br>Control\\n IR appliances with Tuya Smart App or Smart Life App anywhere anytime. \\nTurning your basic home devices into smart devices and making life \\nsmarter and more convenient.<br>Supports 50,000+ IR (38KHz IR only, no \\nRF) controlled devices, including your Air Conditioner, TV, TV Box, DVD,\\n Audio, Personal Video Recorder, receiver and more.<br>With large IR data base which covers 98% IR remote function, it can update automatically on cloud.<br>Compatible\\n with for Alexa/Echo, Google Home, IFTTT to voice control your TV, STB, \\nAir Conditioner and Fans. The device only support 2.4G WiFi.<br>Learn \\nyour DIY IR remote controller if appliance model is not available. \\nOption to program your devices features if certain cloud data is \\nunavailable.<br>Turn all IR remote controllers into one APP on \\nsmartphone/tablet(The Max. Number of remote controller you can copy is \\nunlimited).<br>You will never be bothered by a missing remote controller, say goodbye to chaos, and maintain an carefree life!<br><br><span style=\\\"text-decoration: underline;\\\"><strong>Specifications:</strong></span><br>Product Name: WiFi-RF Universal Remote Controller<br>Power Input: DC5V/1A<br>IR Frequency: 38K<br>Range Cover: 360°<br>Wireless Standard: 2.4G 802.11 b/g/n<br>The Max. Number of remote controller you can copy: Unlimited<br>Control mode: Mobile APP \\\"Tuya/Smart Life\\\"<br>Platform: for Android, iOS<br>Material: ABS V0<br>Weight: About 120g<br><br><span style=\\\"text-decoration: underline;\\\"><strong>Package List:</strong></span><br>1* WiFi-IR Remote<br>1* USB Cable<br>1* User Manual(English)<br>1* Reset Needle</span></div>\\n\\t\\t</div>\\t\\t\\t\\t\\t\\t\\t\",\n        \"order_images\": [\n            \"universal-wifi-ir-remote-controller-hub-voice-control-for-air-conditioner-tv-dvd-1-831394362-1.jpg\"\n        ],\n        \"order_from_country\": 2,\n        \"order_from_city\": 2,\n        \"order_from_address\": \"\",\n        \"order_to_country\": 2,\n        \"order_to_city\": 13,\n        \"order_to_address\": \"\",\n        \"order_start\": \"2020-10-14\",\n        \"order_deadline\": \"2020-10-31\",\n        \"order_personal_price\": 0,\n        \"order_user_price\": \"123.00\",\n        \"order_user_currency\": \"₴\",\n        \"order_not_more_price\": 1,\n        \"order_user_active\": 0,\n        \"order_status\": \"ban\",\n        \"order_look\": 36,\n        \"order_strikes\": {\n            \"14\": \"1\",\n            \"15\": \"1\",\n            \"19\": \"1\"\n        },\n        \"user_name\": \"Artem \",\n        \"user_photo\": \"http://upost.test/storageusers/no-photo.png\",\n        \"user_creator_rating\": 0,\n        \"order_category_name\": \"Транспорт\",\n        \"order_from_country_name\": \"Украина\",\n        \"order_to_country_name\": \"Украина\",\n        \"order_from_city_name\": \"Киев\",\n        \"order_to_city_name\": \"Кременчуг\",\n        \"cnt_favorite_orders\": 0,\n        \"is_favorite\": 0,\n        \"cnt_rates\": 6\n    },\n    \"similar_orders\": [\n        {\n            \"order_id\": 14,\n            \"user_id\": 7,\n            \"order_register_date\": \"2021-05-18\",\n            \"order_name\": \"Машинка для стрижки волос PHILIPS HC3505/15\",\n            \"order_url\": \"mashinka-dlya-strizhki-volos-philips-hc350515-7\",\n            \"order_category\": 2,\n            \"order_price\": \"599.00\",\n            \"order_price_usd\": \"21.56\",\n            \"order_currency\": \"₴\",\n            \"order_count\": 1,\n            \"order_size\": \"45вфі\",\n            \"order_weight\": \"Тест445\",\n            \"order_product_link\": \"\",\n            \"order_text\": \"<div class=\\\"product-about__block product-delivery ng-star-inserted\\\" style=\\\"margin-bottom: 24px; border: 1px solid rgb(233, 233, 233); font: inherit; vertical-align: baseline; border-radius: 4px;\\\"><div class=\\\"product-about__block-body\\\" style=\\\"padding: 16px; border: 0px; font: inherit; vertical-align: baseline;\\\"><p style=\\\"border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: 14px; line-height: inherit; font-family: inherit; vertical-align: baseline;\\\">Оплата при получении товара, Картой онлайн, Google Pay, Безналичными для юридических лиц, Безналичными для физических лиц, Apple Pay, PrivatPay, Оплата частями, Кредит</p></div></div><div class=\\\"product-about__block product-delivery ng-star-inserted\\\" style=\\\"margin-bottom: 24px; border: 1px solid rgb(233, 233, 233); font: inherit; vertical-align: baseline; border-radius: 4px;\\\"><h4 class=\\\"visible-hidden\\\" style=\\\"border: 0px; font-variant-numeric: inherit; font-variant-east-asian: inherit; font-weight: inherit; font-stretch: inherit; font-size: 10px; line-height: inherit; font-family: Rozetka, BlinkMacSystemFont, -apple-system, Arial, &quot;Segoe UI&quot;, Roboto, Helvetica, sans-serif; vertical-align: baseline; width: 0px; height: 0px; overflow: hidden; visibility: hidden; color: rgb(51, 51, 51);\\\"></h4><div class=\\\"product-about__block-heading product-delivery__heading\\\" style=\\\"padding-right: 16px; padding-left: 16px; border-width: 0px 0px 1px; border-top-style: initial; border-right-style: initial; border-bottom-style: solid; border-left-style: initial; border-top-color: initial; border-right-color: initial; border-bottom-color: rgb(233, 233, 233); border-left-color: initial; border-image: initial; font-variant-numeric: inherit; font-variant-east-asian: inherit; font-stretch: inherit; font-size: 16px; line-height: inherit; font-family: BlinkMacSystemFont, -apple-system, Arial, &quot;Segoe UI&quot;, Roboto, Helvetica, sans-serif; vertical-align: baseline; display: flex; flex-direction: row; justify-content: space-between; align-items: center; height: 40px; color: rgb(51, 51, 51);\\\"></div></div>\\n\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\",\n            \"order_images\": [\n                \"mashinka-dlya-strizhki-volos-philips-hc350515-7-1.jpg\"\n            ],\n            \"order_from_country\": 2,\n            \"order_from_city\": 2,\n            \"order_from_address\": \"Kiev\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 13,\n            \"order_to_address\": \"Садовая 5\",\n            \"order_start\": \"2021-05-27\",\n            \"order_deadline\": \"2021-05-31\",\n            \"order_personal_price\": 0,\n            \"order_user_price\": \"150.00\",\n            \"order_user_currency\": \"₴\",\n            \"order_not_more_price\": 1,\n            \"order_user_active\": 0,\n            \"order_status\": \"active\",\n            \"order_look\": 2,\n            \"order_strikes\": [],\n            \"user_name\": \"Новий Вася\",\n            \"user_photo\": \"http://upost.test/storageusers/no-photo.png\",\n            \"user_creator_rating\": 0,\n            \"order_category_name\": \"Электроника\",\n            \"order_from_country_name\": \"Украина\",\n            \"order_to_country_name\": \"Украина\",\n            \"order_from_city_name\": \"Киев\",\n            \"order_to_city_name\": \"Кременчуг\",\n            \"cnt_favorite_orders\": 0,\n            \"is_favorite\": 0,\n            \"cnt_rates\": 0\n        },\n        {\n            \"order_id\": 6,\n            \"user_id\": 7,\n            \"order_register_date\": \"2020-11-04\",\n            \"order_name\": \"Серія: iPhone 12 Apple iPhone 12 64GB Black (MGJ53)\",\n            \"order_url\": \"seriya-iphone-12-apple-iphone-12-64gb-black-mgj53-1\",\n            \"order_category\": 3,\n            \"order_price\": \"1200.00\",\n            \"order_price_usd\": \"1200.00\",\n            \"order_currency\": \"$\",\n            \"order_count\": 1,\n            \"order_size\": \"150 гр\",\n            \"order_weight\": \"15см*15см\",\n            \"order_product_link\": \"\",\n            \"order_text\": \"\\n\\t\\t\\t\\t\\t\\t\\t\\tиаівиаівиа авиврарварм вавіаміврма іавм&nbsp; ґ і ваоівава віао івтаолітвалоіва г\\t\\t\\t\\t\\t\\t\\t\",\n            \"order_images\": [\n                \"seriya-iphone-12-apple-iphone-12-64gb-black-mgj53-1-1.jpg\",\n                \"seriya-iphone-12-apple-iphone-12-64gb-black-mgj53-1-2.jpg\",\n                \"seriya-iphone-12-apple-iphone-12-64gb-black-mgj53-1-3.jpg\"\n            ],\n            \"order_from_country\": 2,\n            \"order_from_city\": 2,\n            \"order_from_address\": \"\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 13,\n            \"order_to_address\": \"\",\n            \"order_start\": \"2021-01-17\",\n            \"order_deadline\": \"2021-01-31\",\n            \"order_personal_price\": 1,\n            \"order_user_price\": \"0.00\",\n            \"order_user_currency\": \"\",\n            \"order_not_more_price\": 0,\n            \"order_user_active\": 0,\n            \"order_status\": \"active\",\n            \"order_look\": 114,\n            \"order_strikes\": [],\n            \"user_name\": \"Новий Вася\",\n            \"user_photo\": \"http://upost.test/storageusers/no-photo.png\",\n            \"user_creator_rating\": 0,\n            \"order_category_name\": \"Техника\",\n            \"order_from_country_name\": \"Украина\",\n            \"order_to_country_name\": \"Украина\",\n            \"order_from_city_name\": \"Киев\",\n            \"order_to_city_name\": \"Кременчуг\",\n            \"cnt_favorite_orders\": 0,\n            \"is_favorite\": 0,\n            \"cnt_rates\": 1\n        }\n    ]\n}"
+						},
+						{
+							"name": "Вивід замовлення (error)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/show?lang=ru",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"orders",
+										"{{order_id}}",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "ru"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 06 Sep 2021 16:53:22 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "876"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Заказ не найден.\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Вивід замовлень по фільтру",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -7666,7 +7856,7 @@
 					]
 				},
 				{
-					"name": "Вивід маршрутів",
+					"name": "Вивід маршрутів по фільтру",
 					"request": {
 						"method": "GET",
 						"header": [],
