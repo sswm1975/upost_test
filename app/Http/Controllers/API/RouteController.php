@@ -7,6 +7,7 @@ use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Route;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,6 +69,40 @@ class RouteController extends Controller
     }
 
     /**
+     * Вывод выбранного маршрута.
+     *
+     * @param int $route_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function showRoute(int $route_id, Request $request): JsonResponse
+    {
+        $route = end($this->getRoutesByFilter(
+            $request->user(),
+            ['route_id' => [$route_id]]
+        )['data']);
+
+        if (!$route) throw new ErrorException(__('message.route_not_found'));
+
+        $similar_routes = $this->getRoutesByFilter(
+            $request->user(),
+            [
+                'without_route_id' => $route['route_id'],
+                'city_from' => [$route['route_from_city']],
+                'city_to' => [$route['route_to_city']],
+                'show' => 3,
+            ]
+        )['data'];
+
+        return response()->json([
+            'status' => true,
+            'order' => null_to_blank($route),
+            'similar_routes' => null_to_blank($similar_routes),
+        ]);
+    }
+
+    /**
      * Вывод маршрутов.
      *
      * @param Request $request
@@ -76,7 +111,7 @@ class RouteController extends Controller
      */
     public function showRoutes(Request $request): JsonResponse
     {
-        $data = validateOrExit([
+        $filters = validateOrExit([
             'route_id'       => 'sometimes|required|array',
             'route_id.*'     => 'required|integer',
             'user_id'        => 'sometimes|required|integer',
@@ -95,13 +130,33 @@ class RouteController extends Controller
             'page'           => 'sometimes|required|integer|min:1',
         ]);
 
-        $favorite_routes = $request->user()->user_favorite_routes;
+        $routes = $this->getRoutesByFilter($request->user(), $filters);
+
+        return response()->json([
+            'status' => true,
+            'count'  => $routes['total'],
+            'page'   => $routes['current_page'],
+            'pages'  => $routes['last_page'],
+            'result' => null_to_blank($routes['data']),
+        ]);
+    }
+
+    /**
+     * Отбор маршрутов по фильтру.
+     *
+     * @param User $user
+     * @param array $filters
+     * @return array
+     */
+    private function getRoutesByFilter(User $user, array $filters = []): array
+    {
+        $favorite_routes = $user->user_favorite_routes;
 
         $path_to_avatar = asset('storage/');
 
         $lang = app()->getLocale();
 
-        $routes = Route::query()
+        return Route::query()
             ->select(
                 'routes.*',
                 "from_country.country_name_{$lang} AS route_from_country_name",
@@ -129,41 +184,37 @@ class RouteController extends Controller
             ->leftJoin('country AS to_country', 'to_country.country_id', 'routes.route_to_country')
             ->leftJoin('city AS from_city', 'from_city.city_id', 'routes.route_from_city')
             ->leftJoin('city AS to_city', 'to_city.city_id', 'routes.route_to_city')
-            ->where('route_status', $request->get('status', 'active'))
-            ->when($request->filled('route_id'), function ($query) use ($data) {
-                return $query->whereIn('route_id', $data['route_id']);
+            ->where('route_status', $filters['status'] ?? 'active')
+            ->when(!empty($filters['route_id']), function ($query) use ($filters) {
+                return $query->whereIn('routes.route_id', $filters['route_id']);
             })
-            ->when($request->filled('user_id'), function ($query) use ($data) {
-                return $query->where('routes.user_id', $data['user_id']);
+            ->when(!empty($filters['without_route_id']), function ($query) use ($filters) {
+                return $query->where('routes.route_id', '!=', $filters['without_route_id']);
             })
-            ->when($request->filled('date_from'), function ($query) use ($data) {
-                return $query->where('routes.route_start', '>=', $data['date_from']);
+            ->when(!empty($filters['user_id']), function ($query) use ($filters) {
+                return $query->where('routes.user_id', $filters['user_id']);
             })
-            ->when($request->filled('date_to'), function ($query) use ($data) {
-                return $query->where('routes.route_end', '<=', $data['date_to']);
+            ->when(!empty($filters['date_from']), function ($query) use ($filters) {
+                return $query->where('routes.route_start', '>=', $filters['date_from']);
             })
-            ->when($request->filled('country_from'), function ($query) use ($data) {
-                return $query->whereIn('routes.route_from_country', $data['country_from']);
+            ->when(!empty($filters['date_to']), function ($query) use ($filters) {
+                return $query->where('routes.route_end', '<=', $filters['date_to']);
             })
-            ->when($request->filled('city_from'), function ($query) use ($data) {
-                return $query->whereIn('routes.route_from_city', $data['city_from']);
+            ->when(!empty($filters['country_from']), function ($query) use ($filters) {
+                return $query->whereIn('routes.route_from_country', $filters['country_from']);
             })
-            ->when($request->filled('country_to'), function ($query) use ($data) {
-                return $query->whereIn('routes.route_to_country', $data['country_to']);
+            ->when(!empty($filters['city_from']), function ($query) use ($filters) {
+                return $query->whereIn('routes.route_from_city', $filters['city_from']);
             })
-            ->when($request->filled('city_to'), function ($query) use ($data) {
-                return $query->whereIn('routes.route_to_city', $data['city_to']);
+            ->when(!empty($filters['country_to']), function ($query) use ($filters) {
+                return $query->whereIn('routes.route_to_country', $filters['country_to']);
             })
-            ->paginate($data['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page'] ?? 1)
+            ->when(!empty($filters['city_to']), function ($query) use ($filters) {
+                return $query->whereIn('routes.route_to_city', $filters['city_to']);
+            })
+            ->orderBy('routes.route_id', 'desc')
+            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page'] ?? 1)
             ->toArray();
-
-        return response()->json([
-            'status' => true,
-            'count'  => $routes['total'],
-            'page'   => $routes['current_page'],
-            'pages'  => $routes['last_page'],
-            'result' => null_to_blank($routes['data']),
-        ]);
     }
 
     /**

@@ -7856,6 +7856,196 @@
 					]
 				},
 				{
+					"name": "Вивід маршрута",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"route_id\", 21);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/show?lang=ru",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"routes",
+								"{{route_id}}",
+								"show"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "ru"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Вивід маршрута (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/show?lang=ru",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"routes",
+										"{{route_id}}",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "ru"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 06 Sep 2021 18:24:05 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1517"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"order\": {\n        \"route_id\": 21,\n        \"route_parent\": 0,\n        \"user_id\": 1,\n        \"route_from_country\": 4,\n        \"route_from_city\": 0,\n        \"route_to_country\": 10,\n        \"route_to_city\": 14,\n        \"route_look\": 9,\n        \"route_register_date\": \"2020-12-26\",\n        \"route_start\": \"2020-12-26\",\n        \"route_end\": \"2020-12-31\",\n        \"route_transport\": \"car\",\n        \"route_type\": \"route\",\n        \"route_status\": \"active\",\n        \"route_points\": [],\n        \"route_from_country_name\": \"Беларусь\",\n        \"route_to_country_name\": \"Канада\",\n        \"route_from_city_name\": \"\",\n        \"route_to_city_name\": \"Ванкувер\",\n        \"user_name\": \"Artem \",\n        \"user_photo\": \"http://upost.test/storageusers/no-photo.png\",\n        \"user_creator_rating\": 0,\n        \"cnt_favorite_routes\": 11,\n        \"is_favorite\": 0,\n        \"cnt_rates\": 1\n    },\n    \"similar_routes\": [\n        {\n            \"route_id\": 56,\n            \"route_parent\": 0,\n            \"user_id\": 7,\n            \"route_from_country\": 10,\n            \"route_from_city\": 0,\n            \"route_to_country\": 10,\n            \"route_to_city\": 14,\n            \"route_look\": 2,\n            \"route_register_date\": \"2021-05-18\",\n            \"route_start\": \"2021-05-28\",\n            \"route_end\": \"2021-06-02\",\n            \"route_transport\": \"bus\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_points\": [],\n            \"route_from_country_name\": \"Канада\",\n            \"route_to_country_name\": \"Канада\",\n            \"route_from_city_name\": \"\",\n            \"route_to_city_name\": \"Ванкувер\",\n            \"user_name\": \"Новий Вася\",\n            \"user_photo\": \"http://upost.test/storageusers/no-photo.png\",\n            \"user_creator_rating\": 0,\n            \"cnt_favorite_routes\": 0,\n            \"is_favorite\": 0,\n            \"cnt_rates\": 0\n        }\n    ]\n}"
+						},
+						{
+							"name": "Вивід маршрута (error)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/show?lang=ru",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"routes",
+										"{{route_id}}",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "ru"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 06 Sep 2021 18:31:21 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "835"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Маршрут не найден.\"\n    ]\n}"
+						}
+					]
+				},
+				{
 					"name": "Вивід маршрутів по фільтру",
 					"request": {
 						"method": "GET",
