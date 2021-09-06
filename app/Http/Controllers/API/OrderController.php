@@ -151,19 +151,33 @@ class OrderController extends Controller
 
         $favorite_orders = $request->user()->user_favorite_orders;
 
+        $path_to_avatar = asset('storage/');
+
         $lang = app()->getLocale();
 
         $orders = Order::query()
             ->select(
                 'orders.*',
-                'users.user_name',
+                DB::raw('CONCAT(users.user_name, " ", users.user_surname) AS user_name'),
+                DB::raw("REPLACE(CONCAT('$path_to_avatar', IF(ISNULL(user_photo), 'users/no-photo.png', user_photo)), 'user_photo.jpg', 'user_photo-thumb.jpg') AS user_photo"),
+                "users.user_creator_rating",
                 "categories.cat_name_{$lang} AS order_category_name",
                 "from_country.country_name_{$lang} AS order_from_country_name",
                 "to_country.country_name_{$lang} AS order_to_country_name",
                 "from_city.city_name_{$lang} AS order_from_city_name",
                 "to_city.city_name_{$lang} AS order_to_city_name",
                 DB::raw('IFNULL(LENGTH(users.user_favorite_orders) - LENGTH(REPLACE(users.user_favorite_orders, ",", "")) + 1, 0) AS cnt_favorite_orders'),
-                DB::raw(empty($favorite_orders) ? '0 AS is_favorite' : "IF(orders.order_id IN ({$favorite_orders}), 1, 0) AS is_favorite")
+                DB::raw(empty($favorite_orders) ? '0 AS is_favorite' : "IF(orders.order_id IN ({$favorite_orders}), 1, 0) AS is_favorite"),
+                DB::raw('(
+                    SELECT COUNT(1)
+                    FROM rate r
+                    WHERE r.order_id = orders.order_id
+                    AND (
+                        r.who_start = orders.user_id AND r.parent_id = 0
+                        OR
+                        r.user_id = orders.user_id AND r.parent_id <> 0
+                    )
+                 ) AS cnt_rates')
             )
             ->join('users', 'users.user_id', 'orders.user_id')
             ->join('categories', 'categories.category_id', 'orders.order_category')

@@ -18,7 +18,7 @@ class Order extends Model
     public $timestamps = false;
     protected $casts = [
         'order_images' => 'array',
-        'order_strikes' => 'json',
+        'order_strikes' => 'array',
     ];
 
     public static function boot()
@@ -45,6 +45,15 @@ class Order extends Model
                     'order_price_usd' => $model->order_price_usd,
                 ]);
         });
+    }
+
+    public function getOrderStrikesAttribute($json)
+    {
+        if (is_null($json)) return [];
+
+        if (is_array($json)) return $json;
+
+        return json_decode($json, true);
     }
 
     public function setOrderNameAttribute($value)
