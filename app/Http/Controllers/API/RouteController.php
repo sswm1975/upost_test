@@ -97,6 +97,8 @@ class RouteController extends Controller
 
         $favorite_routes = $request->user()->user_favorite_routes;
 
+        $path_to_avatar = asset('storage/');
+
         $lang = app()->getLocale();
 
         $routes = Route::query()
@@ -106,9 +108,21 @@ class RouteController extends Controller
                 "to_country.country_name_{$lang} AS route_to_country_name",
                 "from_city.city_name_{$lang} AS route_from_city_name",
                 "to_city.city_name_{$lang} AS route_to_city_name",
-                'users.user_name',
+                DB::raw('CONCAT(users.user_name, " ", users.user_surname) AS user_name'),
+                DB::raw("REPLACE(CONCAT('$path_to_avatar', IF(ISNULL(user_photo), 'users/no-photo.png', user_photo)), 'user_photo.jpg', 'user_photo-thumb.jpg') AS user_photo"),
+                "users.user_creator_rating",
                 DB::raw('IFNULL(LENGTH(users.user_favorite_routes) - LENGTH(REPLACE(users.user_favorite_routes, ",", "")) + 1, 0) AS cnt_favorite_routes'),
-                DB::raw(empty($favorite_routes) ? '0 AS is_favorite' : "IF(routes.route_id IN ({$favorite_routes}), 1, 0) AS is_favorite")
+                DB::raw(empty($favorite_routes) ? '0 AS is_favorite' : "IF(routes.route_id IN ({$favorite_routes}), 1, 0) AS is_favorite"),
+                DB::raw('(
+                    SELECT COUNT(1)
+                    FROM rate r
+                    WHERE r.route_id = routes.route_id
+                    AND (
+                        r.who_start = routes.user_id AND r.parent_id = 0
+                        OR
+                        r.user_id = routes.user_id AND r.parent_id <> 0
+                    )
+                 ) AS cnt_rates')
             )
             ->join('users', 'users.user_id', 'routes.user_id')
             ->leftJoin('country AS from_country', 'from_country.country_id', 'routes.route_from_country')
