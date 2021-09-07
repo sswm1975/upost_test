@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if ($this->app->isLocal()) {
+            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+        }
+
         require_once __DIR__.'/../Libs/helpers.php';
     }
 
@@ -29,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (app()->environment('local') || config('app.debug')) {
+        if ($this->app->isLocal() || config('app.debug')) {
             DB::enableQueryLog();
         }
 

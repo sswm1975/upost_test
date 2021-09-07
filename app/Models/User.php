@@ -8,6 +8,72 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 
+/**
+ * App\Models\User
+ *
+ * @property int $user_id Код
+ * @property string $user_phone Телефон
+ * @property string $user_email Емейл
+ * @property string $user_password Пароль
+ * @property string|null $user_name Имя пользователя
+ * @property string|null $user_surname Фамилия пользователя
+ * @property int|null $user_city Код города
+ * @property string $user_status Статус
+ * @property string|null $user_card_number Номер банковской карты
+ * @property string|null $user_card_name Наименование банковской карты
+ * @property string|null $user_birthday Дата рождения
+ * @property string|null $user_gender Пол
+ * @property string|null $user_lang Язык для системы
+ * @property string|null $user_currency Валюта
+ * @property string|null $user_validation Признак проверки пользователя
+ * @property string|null $user_register_date Дата регистрации
+ * @property string|null $user_role Роль
+ * @property string|null $user_photo Ссылка на фотографию (аватар)
+ * @property string|null $user_favorite_orders Список избранных заказов
+ * @property string|null $user_favorite_routes Список избранных маршрутов
+ * @property string|null $user_last_active Дата и время последней активности
+ * @property string|null $user_resume Биография/Резюме
+ * @property string $user_wallet Баланс в долларах
+ * @property int $user_creator_rating Рейтинг заказчика
+ * @property int $user_freelancer_rating Рейтинг исполнителя
+ * @property string|null $api_token Токен для работы через API
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
+ * @property-read int|null $rates_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User exclude($value = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|User existsToken($token = '')
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereApiToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserBirthday($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCardName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCardNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCreatorRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserFavoriteOrders($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserFavoriteRoutes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserFreelancerRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserLang($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserLastActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserPassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserPhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserPhoto($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserRegisterDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserResume($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserSurname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserValidation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUserWallet($value)
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable
 {
     use Notifiable;

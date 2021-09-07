@@ -4,6 +4,44 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Route
+ *
+ * @property int $route_id Код
+ * @property int $route_parent Код родителя
+ * @property int $user_id Код пользователя
+ * @property int|null $route_from_country Код страны старта
+ * @property int|null $route_from_city Код города старта
+ * @property int|null $route_to_country Код страны окончания
+ * @property int|null $route_to_city Код города окончания
+ * @property int $route_look Количество просмотров
+ * @property string|null $route_register_date Дата регистрации маршрута
+ * @property string|null $route_start Дата начала маршрута
+ * @property string|null $route_end Дата окончания маршрута
+ * @property string|null $route_transport Вид транспорта
+ * @property string $route_type Тип маршрута
+ * @property string $route_status Статус маршрута
+ * @property object|null $route_points Смежные точки маршрута
+ * @method static \Illuminate\Database\Eloquent\Builder|Route newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Route newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Route query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteEnd($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteFromCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteFromCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteLook($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteParent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRoutePoints($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteRegisterDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteStart($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteToCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteToCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteTransport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Route extends Model
 {
     const STATUS_ACTIVE = 'active';

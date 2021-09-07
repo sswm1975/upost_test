@@ -7,6 +7,77 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+/**
+ * App\Models\Order
+ *
+ * @property int $order_id Код
+ * @property int $user_id Код пользователя
+ * @property string $order_register_date Дата регистрации
+ * @property string|null $order_name Наименование
+ * @property string|null $order_url Слаг
+ * @property int|null $order_category Код категории
+ * @property string $order_price Цена
+ * @property string $order_price_usd Цена в долларах
+ * @property string|null $order_currency Валюта
+ * @property int|null $order_count Количество товаров
+ * @property string|null $order_size Размер товара
+ * @property string|null $order_weight Вес товара
+ * @property string|null $order_product_link Ссылка на товар на чужом сайте
+ * @property string|null $order_text Описание заказа
+ * @property array|null $order_images Фотографии заказа
+ * @property int|null $order_from_country Код страны начала заказа
+ * @property int|null $order_from_city Код города начала заказа
+ * @property string|null $order_from_address Точный адрес старта заказа
+ * @property int|null $order_to_country Код страны окончания заказа
+ * @property int|null $order_to_city Код города окончания заказа
+ * @property string|null $order_to_address Точный адрес прибытия заказа
+ * @property string|null $order_start Дата начала заказа
+ * @property string|null $order_deadline Дата окончания заказа
+ * @property int $order_personal_price Признак персонального вознаграждения
+ * @property string $order_user_price Сумма персонального вознаграждения
+ * @property string|null $order_user_currency Валюта персонального вознаграждения
+ * @property int $order_not_more_price Признак
+ * @property int $order_user_active Признак активности пользователя
+ * @property string $order_status Статус заказа
+ * @property int $order_look Количество просмотров
+ * @property array|null $order_strikes Жалобы
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderCategory($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderFromAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderFromCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderFromCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderImages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderLook($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderNotMorePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderPersonalPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderPriceUsd($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderProductLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderRegisterDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderStart($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderStrikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderToAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderToCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderToCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderUserActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderUserCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderUserPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderWeight($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Order extends Model
 {
     const STATUS_ACTIVE = 'active';

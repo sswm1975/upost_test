@@ -6,6 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * App\Models\Country
+ *
+ * @property int $country_id Код
+ * @property string|null $country_name_uk Наименование на украинском
+ * @property string|null $country_name_ru Наименование на русском
+ * @property string|null $country_name_en Наименование на английском
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\City[] $cities
+ * @property-read int|null $cities_count
+ * @method static Builder|Country language(string $lang = 'en')
+ * @method static Builder|Country newModelQuery()
+ * @method static Builder|Country newQuery()
+ * @method static Builder|Country query()
+ * @method static Builder|Country whereCountryId($value)
+ * @method static Builder|Country whereCountryNameEn($value)
+ * @method static Builder|Country whereCountryNameRu($value)
+ * @method static Builder|Country whereCountryNameUk($value)
+ * @mixin \Eloquent
+ */
 class Country extends Model
 {
     protected $table = 'country';

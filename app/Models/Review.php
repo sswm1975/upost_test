@@ -5,7 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property boolean review_type
+ * App\Models\Review
+ *
+ * @property int $review_id Код
+ * @property int $user_id Код пользователя
+ * @property int $job_id Код задания
+ * @property int $rating Рейтинг
+ * @property int $review_type Кто оставил отзыв: заказчик или исполнитель
+ * @property string $comment Комментарий
+ * @property string $created_at Дата добавления
+ * @property string|null $updated_at Дата изменения
+ * @method static \Illuminate\Database\Eloquent\Builder|Review newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereJobId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereReviewId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereReviewType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereUserId($value)
+ * @mixin \Eloquent
  */
 class Review extends Model
 {
