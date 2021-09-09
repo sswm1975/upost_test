@@ -264,6 +264,9 @@ Route::group(
         # Переглянути ставку
         Route::get('{rate_id}/show', 'API\RateController@showRate')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+        # Вивід ставок для конкретного заказу
+        Route::get('order/{order_id}/show', 'API\RateController@showRatesByOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
         # Прийняти ставку
         Route::post('{rate_id}/accept', 'API\RateController@acceptRate')->middleware(MIDDLEWARE_AUTH_BASIC);
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Route
@@ -89,4 +90,44 @@ class Route extends Model
         return json_decode($json, true);
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function from_country(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(Country::class, 'route_from_country', 'country_id')
+            ->select(['country_id', "country_name_{$lang} as country_name"])
+            ->withDefault();
+    }
+
+    public function from_city(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(City::class, 'route_from_city', 'city_id')
+            ->select(['city_id', "city_name_{$lang} as city_name"])
+            ->withDefault();
+    }
+
+    public function to_country(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(Country::class, 'route_to_country', 'country_id')
+            ->select(['country_id', "country_name_{$lang} as country_name"])
+            ->withDefault();
+    }
+
+    public function to_city(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(City::class, 'route_to_city', 'city_id')
+            ->select(['city_id', "city_name_{$lang} as city_name"])
+            ->withDefault();
+    }
 }

@@ -420,6 +420,56 @@ class RateController extends Controller
     }
 
     /**
+     * Получить ставки по выбранному заказу.
+     *
+     * @param int $order_id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function showRatesByOrder(int $order_id, Request $request):JsonResponse
+    {
+        $new_rates = Rate::newRatesByOrder($order_id)
+            ->with([
+                'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
+                'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating',
+                "route.from_country",
+                'route.from_city',
+                "route.to_country",
+                'route.to_city',
+            ])
+            ->get();
+
+        $read_rates = Rate::readRatesByOrder($order_id)
+            ->with([
+                'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
+                'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating',
+                "route.from_country",
+                'route.from_city',
+                "route.to_country",
+                'route.to_city',
+            ])
+            ->get();
+
+        $exists_child_rates = Rate::existsChildRatesByOrder($order_id)
+            ->with([
+                'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
+                'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating',
+                "route.from_country",
+                'route.from_city',
+                "route.to_country",
+                'route.to_city',
+            ])
+            ->get();
+
+        return response()->json([
+            'status' => true,
+            'new_rates' => null_to_blank($new_rates),
+            'read_rates' => null_to_blank($read_rates),
+            'exists_child_rates' => null_to_blank($exists_child_rates),
+        ]);
+    }
+
+    /**
      * Получить ставку.
      *
      * @param int $rate_id

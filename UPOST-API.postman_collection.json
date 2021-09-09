@@ -11311,6 +11311,193 @@
 					]
 				},
 				{
+					"name": "Прийняти ставку",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"rate_id\", 306);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/accept",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"rates",
+								"{{rate_id}}",
+								"accept"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "uk",
+									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Прийняти ставку (success)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/304/accept",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"304",
+										"accept"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 17 Jun 2021 14:58:26 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "43"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"result\": [\n        \"Rate accepted.\"\n    ]\n}"
+						},
+						{
+							"name": "Прийняти ставку (errors)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/264/accept?lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"264",
+										"accept"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 17 Jun 2021 14:55:16 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Content-Length",
+									"value": "129"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Ставка не прийнята.\"\n    ]\n}"
+						}
+					]
+				},
+				{
 					"name": "Отримати ставки",
 					"request": {
 						"method": "GET",
@@ -11801,66 +11988,52 @@
 					]
 				},
 				{
-					"name": "Прийняти ставку",
+					"name": "Вивід маршрутів для конкретного заказу",
 					"event": [
 						{
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.variables.set(\"rate_id\", 306);"
+									"pm.variables.set(\"order_id\", 10);"
 								],
 								"type": "text/javascript"
 							}
 						}
 					],
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/accept",
+							"raw": "{{host}}/{{endpoint}}/rates/order/{{order_id}}/show",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"{{endpoint}}",
 								"rates",
-								"{{rate_id}}",
-								"accept"
-							],
-							"query": [
-								{
-									"key": "lang",
-									"value": "uk",
-									"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-									"disabled": true
-								}
+								"order",
+								"{{order_id}}",
+								"show"
 							]
 						}
 					},
 					"response": [
 						{
-							"name": "Прийняти ставку (success)",
+							"name": "Вивід маршрутів для конкретного заказу (success_1)",
 							"originalRequest": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/304/accept",
+									"raw": "{{host}}/{{endpoint}}/rates/order/{{order_id}}/show",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
 										"rates",
-										"304",
-										"accept"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
-										}
+										"order",
+										"{{order_id}}",
+										"show"
 									]
 								}
 							},
@@ -11870,11 +12043,15 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Thu, 17 Jun 2021 14:58:26 GMT"
+									"value": "Thu, 09 Sep 2021 14:38:26 GMT"
 								},
 								{
 									"key": "Server",
 									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
 								},
 								{
 									"key": "X-Powered-By",
@@ -11894,7 +12071,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "43"
+									"value": "1633"
 								},
 								{
 									"key": "Keep-Alive",
@@ -11910,44 +12087,42 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"result\": [\n        \"Rate accepted.\"\n    ]\n}"
+							"body": "{\n    \"status\": true,\n    \"new_rates\": [],\n    \"read_rates\": [\n        {\n            \"rate_id\": 305,\n            \"parent_id\": 0,\n            \"who_start\": 3,\n            \"user_id\": 3,\n            \"order_id\": 2,\n            \"route_id\": 50,\n            \"read_rate\": 1,\n            \"rate_type\": \"route\",\n            \"rate_status\": \"active\",\n            \"rate_date\": \"2021-03-22 10:03:00\",\n            \"rate_deadline\": \"2021-06-23\",\n            \"rate_price\": \"516.00\",\n            \"rate_currency\": \"$\",\n            \"rate_text\": \"Это еще раз Я&nbsp;\",\n            \"route\": {\n                \"route_id\": 50,\n                \"user_id\": 1,\n                \"route_from_country\": 2,\n                \"route_from_city\": 13,\n                \"route_to_country\": 2,\n                \"route_to_city\": 6,\n                \"route_look\": 1,\n                \"user\": {\n                    \"user_id\": 1,\n                    \"user_name\": \"Artem\",\n                    \"user_surname\": \"\",\n                    \"user_creator_rating\": 0,\n                    \"user_freelancer_rating\": 0\n                },\n                \"from_country\": {\n                    \"country_id\": 2,\n                    \"country_name\": \"Ukraine\"\n                },\n                \"from_city\": {\n                    \"city_id\": 13,\n                    \"city_name\": \"Kremenchug\"\n                },\n                \"to_country\": {\n                    \"country_id\": 2,\n                    \"country_name\": \"Ukraine\"\n                },\n                \"to_city\": {\n                    \"city_id\": 6,\n                    \"city_name\": \"Dnipro\"\n                }\n            }\n        }\n    ],\n    \"exists_child_rates\": [\n        {\n            \"rate_id\": 258,\n            \"parent_id\": 0,\n            \"who_start\": 3,\n            \"user_id\": 3,\n            \"order_id\": 2,\n            \"route_id\": 49,\n            \"read_rate\": 1,\n            \"rate_type\": \"route\",\n            \"rate_status\": \"active\",\n            \"rate_date\": \"2021-03-22 10:03:00\",\n            \"rate_deadline\": \"2021-06-23\",\n            \"rate_price\": \"516.00\",\n            \"rate_currency\": \"$\",\n            \"rate_text\": \"Это еще раз Я&nbsp;\",\n            \"last_message_from\": 3,\n            \"route\": {\n                \"route_id\": 49,\n                \"user_id\": 7,\n                \"route_from_country\": 3,\n                \"route_from_city\": 0,\n                \"route_to_country\": 2,\n                \"route_to_city\": 0,\n                \"route_look\": 20,\n                \"user\": {\n                    \"user_id\": 7,\n                    \"user_name\": \"Новий\",\n                    \"user_surname\": \"Вася\",\n                    \"user_creator_rating\": 0,\n                    \"user_freelancer_rating\": 0\n                },\n                \"from_country\": {\n                    \"country_id\": 3,\n                    \"country_name\": \"Poland\"\n                },\n                \"from_city\": [],\n                \"to_country\": {\n                    \"country_id\": 2,\n                    \"country_name\": \"Ukraine\"\n                },\n                \"to_city\": []\n            }\n        }\n    ]\n}"
 						},
 						{
-							"name": "Прийняти ставку (errors)",
+							"name": "Вивід маршрутів для конкретного заказу (sucess_2)",
 							"originalRequest": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/264/accept?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/rates/order/{{order_id}}/show",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
 										"rates",
-										"264",
-										"accept"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
-										}
+										"order",
+										"{{order_id}}",
+										"show"
 									]
 								}
 							},
-							"status": "Not Found",
-							"code": 404,
+							"status": "OK",
+							"code": 200,
 							"_postman_previewlanguage": "json",
 							"header": [
 								{
 									"key": "Date",
-									"value": "Thu, 17 Jun 2021 14:55:16 GMT"
+									"value": "Thu, 09 Sep 2021 14:38:55 GMT"
 								},
 								{
 									"key": "Server",
 									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
 								},
 								{
 									"key": "X-Powered-By",
@@ -11967,7 +12142,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "129"
+									"value": "1607"
 								},
 								{
 									"key": "Keep-Alive",
@@ -11983,7 +12158,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": false,\n    \"errors\": [\n        \"Ставка не прийнята.\"\n    ]\n}"
+							"body": "{\n    \"status\": true,\n    \"new_rates\": [\n        {\n            \"rate_id\": 266,\n            \"parent_id\": 0,\n            \"who_start\": 3,\n            \"user_id\": 3,\n            \"order_id\": 10,\n            \"route_id\": 48,\n            \"read_rate\": 0,\n            \"rate_type\": \"route\",\n            \"rate_status\": \"active\",\n            \"rate_date\": \"2021-03-22 18:03:00\",\n            \"rate_deadline\": \"2021-06-23\",\n            \"rate_price\": \"431413.00\",\n            \"rate_currency\": \"$\",\n            \"rate_text\": \"выафвыа\",\n            \"route\": {\n                \"route_id\": 48,\n                \"user_id\": 7,\n                \"route_from_country\": 2,\n                \"route_from_city\": 0,\n                \"route_to_country\": 2,\n                \"route_to_city\": 0,\n                \"route_look\": 0,\n                \"user\": {\n                    \"user_id\": 7,\n                    \"user_name\": \"Новий\",\n                    \"user_surname\": \"Вася\",\n                    \"user_creator_rating\": 0,\n                    \"user_freelancer_rating\": 0\n                },\n                \"from_country\": {\n                    \"country_id\": 2,\n                    \"country_name\": \"Ukraine\"\n                },\n                \"from_city\": [],\n                \"to_country\": {\n                    \"country_id\": 2,\n                    \"country_name\": \"Ukraine\"\n                },\n                \"to_city\": []\n            }\n        },\n        {\n            \"rate_id\": 295,\n            \"parent_id\": 0,\n            \"who_start\": 3,\n            \"user_id\": 3,\n            \"order_id\": 10,\n            \"route_id\": 55,\n            \"read_rate\": 0,\n            \"rate_type\": \"route\",\n            \"rate_status\": \"active\",\n            \"rate_date\": \"2021-05-19 09:05:00\",\n            \"rate_deadline\": \"2021-06-23\",\n            \"rate_price\": \"321345.00\",\n            \"rate_currency\": \"₴\",\n            \"rate_text\": \"dsfadsfasdfasd asdf adsdaf sadf\",\n            \"route\": {\n                \"route_id\": 55,\n                \"user_id\": 7,\n                \"route_from_country\": 2,\n                \"route_from_city\": 2,\n                \"route_to_country\": 2,\n                \"route_to_city\": 13,\n                \"route_look\": 4,\n                \"user\": {\n                    \"user_id\": 7,\n                    \"user_name\": \"Новий\",\n                    \"user_surname\": \"Вася\",\n                    \"user_creator_rating\": 0,\n                    \"user_freelancer_rating\": 0\n                },\n                \"from_country\": {\n                    \"country_id\": 2,\n                    \"country_name\": \"Ukraine\"\n                },\n                \"from_city\": {\n                    \"city_id\": 2,\n                    \"city_name\": \"Kyiv\"\n                },\n                \"to_country\": {\n                    \"country_id\": 2,\n                    \"country_name\": \"Ukraine\"\n                },\n                \"to_city\": {\n                    \"city_id\": 13,\n                    \"city_name\": \"Kremenchug\"\n                }\n            }\n        }\n    ],\n    \"read_rates\": [],\n    \"exists_child_rates\": []\n}"
 						}
 					]
 				}

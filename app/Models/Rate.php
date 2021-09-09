@@ -27,6 +27,9 @@ use Carbon\Carbon;
  * @property-read \App\Models\Route $route
  * @method static \Illuminate\Database\Eloquent\Builder|Rate deadlineTermExpired(int $days = 0)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate deadlineToday()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate newRatesByOrder(int $order_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate readRatesByOrder(int $order_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate existsChildRatesByOrder(int $order_id)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate query()
@@ -53,6 +56,9 @@ class Rate extends Model
     public const STATUS_DISPUTE = 'dispute';
     public const STATUS_SUCCESSFUL = 'successful';
     public const STATUS_BAN = 'ban';
+
+    public const TYPE_ORDER = 'order';
+    public const TYPE_ROUTE = 'route';
 
     protected $table = 'rate';
     protected $primaryKey = 'rate_id';
@@ -103,5 +109,84 @@ class Rate extends Model
     {
         return $query->where('rate_status', self::STATUS_ACTIVE)
             ->where('rate_deadline', '>=', Carbon::today()->addDays($days)->toDateString());
+    }
+
+    /**
+     * Новые ставки по выбранному заказу.
+     * Условия:
+     * - order_id = параметр КОД ЗАКАЗА
+     * - parent_id = 0
+     * - read_rate = 0
+     * - rate_status = active
+     * - rate_type = route
+     * - нет дочерних ставок
+     *
+     * @param $query
+     * @param int $order_id
+     * @return mixed
+     */
+    function scopeNewRatesByOrder($query, int $order_id)
+    {
+        return $query->where([
+            'order_id' => $order_id,
+            'parent_id' => 0,
+            'read_rate' => 0,
+            'rate_status' => self::STATUS_ACTIVE,
+            'rate_type' => self::TYPE_ROUTE,
+        ])->whereNotExists(function ($query) {
+            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
+        });
+    }
+
+    /**
+     * Просмотренные ставки по выбранному заказу.
+     * Условия:
+     * - order_id = параметр КОД ЗАКАЗА
+     * - parent_id = 0
+     * - read_rate = 1
+     * - rate_status = active
+     * - rate_type = route
+     * - нет дочерних ставок
+     *
+     * @param $query
+     * @param int $order_id
+     * @return mixed
+     */
+    function scopeReadRatesByOrder($query, int $order_id)
+    {
+        return $query->where([
+            'order_id' => $order_id,
+            'parent_id' => 0,
+            'read_rate' => 1,
+            'rate_status' => self::STATUS_ACTIVE,
+            'rate_type' => self::TYPE_ROUTE,
+        ])->whereNotExists(function ($query) {
+            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
+        });
+    }
+
+    /**
+     * Ставки с наличием дочерних ставок по выбранному заказу.
+     * Условия:
+     * - order_id = параметр КОД ЗАКАЗА
+     * - parent_id = 0
+     * - rate_status = active
+     * - rate_type = route
+     * - есть дочерние ставки
+     *
+     * @param $query
+     * @param int $order_id
+     * @return mixed
+     */
+    function scopeExistsChildRatesByOrder($query, int $order_id)
+    {
+        return $query->where([
+            'order_id' => $order_id,
+            'parent_id' => 0,
+            'rate_status' => self::STATUS_ACTIVE,
+            'rate_type' => self::TYPE_ROUTE,
+        ])->whereExists(function ($query) {
+            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
+        })->selectRaw('rate.*, (select rm.user_id from rate as rm where rm.parent_id = rate.rate_id order by rate_id desc limit 1) as last_message_from');
     }
 }
