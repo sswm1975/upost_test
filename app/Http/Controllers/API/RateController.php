@@ -432,9 +432,9 @@ class RateController extends Controller
             ->with([
                 'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
                 'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating',
-                "route.from_country",
+                'route.from_country',
                 'route.from_city',
-                "route.to_country",
+                'route.to_country',
                 'route.to_city',
             ])
             ->get();
@@ -443,9 +443,9 @@ class RateController extends Controller
             ->with([
                 'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
                 'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating',
-                "route.from_country",
+                'route.from_country',
                 'route.from_city',
-                "route.to_country",
+                'route.to_country',
                 'route.to_city',
             ])
             ->get();

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -171,5 +172,83 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(Category::class, 'order_category', 'category_id')
+            ->select(['category_id', "cat_name_{$lang} as category_name"])
+            ->withDefault();
+    }
+
+    public function from_country(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(Country::class, 'order_from_country', 'country_id')
+            ->select(['country_id', "country_name_{$lang} as country_name"])
+            ->withDefault();
+    }
+
+    public function from_city(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(City::class, 'order_from_city', 'city_id')
+            ->select(['city_id', "city_name_{$lang} as city_name"])
+            ->withDefault();
+    }
+
+    public function to_country(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(Country::class, 'order_to_country', 'country_id')
+            ->select(['country_id', "country_name_{$lang} as country_name"])
+            ->withDefault();
+    }
+
+    public function to_city(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(City::class, 'order_to_city', 'city_id')
+            ->select(['city_id', "city_name_{$lang} as city_name"])
+            ->withDefault();
+    }
+
+    public function rates(): HasMany
+    {
+        return $this->hasMany(Rate::class, 'order_id', 'order_id');
+    }
+
+    /**
+     * Получить список избранных заказов авторизированного пользователя.
+     *
+     * @return array|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFavorites()
+    {
+        $user = request()->user();
+
+        if (empty($user->user_favorite_orders)) {
+            return [];
+        }
+
+        return static::whereIn('order_id', explode(',', $user->user_favorite_orders))
+            ->with([
+                'user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating',
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+            ])
+            ->withCount(['rates' => function ($query) use ($user) {
+                $query->where('parent_id', 0)->where('user_id', $user->user_id);
+            }])
+            ->addSelect(DB::raw('1 as is_favorite'))
+            ->get();
     }
 }

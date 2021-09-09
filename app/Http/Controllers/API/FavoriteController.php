@@ -4,10 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
-use App\Models\Order;
-use App\Models\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class FavoriteController extends Controller
@@ -48,31 +47,20 @@ class FavoriteController extends Controller
     /**
      * Получить список избранных заказов или маршрутов.
      *
-     * @param Request $request
      * @return JsonResponse
      * @throws ValidatorException|ValidationException
      */
-    public function showFavorites(Request $request): JsonResponse
+    public function showFavorites(): JsonResponse
     {
-        validateOrExit([
-            'type' => 'required|in:order,route',
-        ]);
+        $params = validateOrExit(['type' => 'required|in:order,route']);
 
-        $type = $request->get('type');
-        $field = 'user_favorite_' . $type . 's';
-        $favorites = $request->user()->$field ? explode(',', $request->user()->$field) : [];
+        $model = 'App\\Models\\' . Str::title($params['type']);
 
-        if ($type == 'order') {
-            $rows = Order::whereIn('order_id', $favorites)->get()->toArray();
-        } elseif ($type == 'route') {
-            $rows = Route::whereIn('route_id', $favorites)->get()->toArray();
-        } else {
-            $rows = [];
-        }
+        $rows = $model::getFavorites();
 
         return response()->json([
             'status' => true,
-            'type'   => $type,
+            'type'   => $params['type'],
             'result' => null_to_blank($rows),
         ]);
     }

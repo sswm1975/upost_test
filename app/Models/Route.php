@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Route
@@ -129,5 +131,39 @@ class Route extends Model
         return $this->belongsTo(City::class, 'route_to_city', 'city_id')
             ->select(['city_id', "city_name_{$lang} as city_name"])
             ->withDefault();
+    }
+
+    public function rates(): HasMany
+    {
+        return $this->hasMany(Rate::class, 'route_id', 'route_id');
+    }
+
+    /**
+     * Получить список избранных маршрутов авторизированного пользователя.
+     *
+     * @return array|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+
+    public static function getFavorites()
+    {
+        $user = request()->user();
+
+        if (empty($user->user_favorite_routes)) {
+            return [];
+        }
+
+        return static::whereIn('route_id', explode(',', $user->user_favorite_routes))
+            ->with([
+                'user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating',
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+            ])
+            ->withCount(['rates' => function ($query) use ($user) {
+                $query->where('parent_id', 0)->where('user_id', $user->user_id);
+            }])
+            ->addSelect(DB::raw('1 as is_favorite'))
+            ->get();
     }
 }

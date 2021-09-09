@@ -9979,7 +9979,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/{{endpoint}}/favorites/show",
+							"raw": "{{host}}/{{endpoint}}/favorites/show?type=order",
 							"host": [
 								"{{host}}"
 							],
@@ -9992,8 +9992,7 @@
 								{
 									"key": "type",
 									"value": "order",
-									"description": "Тип сущності: order або route",
-									"disabled": true
+									"description": "Тип сущності: order або route"
 								},
 								{
 									"key": "lang",
@@ -10006,12 +10005,12 @@
 					},
 					"response": [
 						{
-							"name": "Вивести список обраних (success)",
+							"name": "Вивести список обраних заказів (success)",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/favorites/show?type=order&lang=uk",
+									"raw": "{{host}}/{{endpoint}}/favorites/show?type=order",
 									"host": [
 										"{{host}}"
 									],
@@ -10029,7 +10028,8 @@
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
 										}
 									]
 								}
@@ -10040,11 +10040,15 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 16 Jun 2021 15:12:29 GMT"
+									"value": "Thu, 09 Sep 2021 18:55:22 GMT"
 								},
 								{
 									"key": "Server",
 									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
 								},
 								{
 									"key": "X-Powered-By",
@@ -10064,7 +10068,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "1149"
+									"value": "2602"
 								},
 								{
 									"key": "Keep-Alive",
@@ -10080,7 +10084,89 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"type\": \"order\",\n    \"result\": [\n        {\n            \"order_id\": 27,\n            \"user_id\": 19,\n            \"order_register_date\": \"2021-06-08\",\n            \"order_name\": \"Монитор 27\\\" Dell S2721DS\",\n            \"order_url\": \"monitor-27-dell-s2721ds-27\",\n            \"order_category\": 2,\n            \"order_price\": 1456.23,\n            \"order_price_usd\": 250,\n            \"order_currency\": \"$\",\n            \"order_count\": \"1\",\n            \"order_size\": \"45см\",\n            \"order_weight\": \"5кг\",\n            \"order_product_link\": \"https://hard.rozetka.com.ua/dell_210_axkw/p295768083/\",\n            \"order_text\": \"Крутой монитор\",\n            \"order_images\": [\n                \"monitor-27-dell-s2721ds-1.jpg\",\n                \"monitor-27-dell-s2721ds-2.jpg\"\n            ],\n            \"order_from_country\": 3,\n            \"order_from_city\": 4,\n            \"order_from_address\": \"ул.Киевская, 34\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 2,\n            \"order_to_address\": \"ул.Березовая, 67\",\n            \"order_start\": \"2021-06-01\",\n            \"order_deadline\": \"2021-07-01\",\n            \"order_personal_price\": \"1\",\n            \"order_user_price\": \"100\",\n            \"order_user_currency\": \"$\",\n            \"order_not_more_price\": \"1\",\n            \"order_user_active\": \"\",\n            \"order_status\": \"active\",\n            \"order_look\": 0,\n            \"order_strikes\": 0\n        }\n    ]\n}"
+							"body": "{\n    \"status\": true,\n    \"type\": \"order\",\n    \"result\": [\n        {\n            \"order_id\": 2,\n            \"user_id\": 3,\n            \"order_register_date\": \"2020-09-28\",\n            \"order_name\": \"xcvvasdvasdv\",\n            \"order_url\": \"xcvvasdvasdv-3-793577947\",\n            \"order_category\": 2,\n            \"order_price\": \"123123.00\",\n            \"order_price_usd\": \"4432.43\",\n            \"order_currency\": \"₴\",\n            \"order_count\": 1,\n            \"order_size\": \"31231\",\n            \"order_weight\": \"2312\",\n            \"order_product_link\": \"\",\n            \"order_text\": \"\\n\\t\\t\\t\\t\\t\\t\\t\\tadfadfadfadfadsfadfadfasdfasdfas adf adf asdf asdf asd as as\\t\\t\\t\\t\\t\\t\\t\",\n            \"order_images\": [\n                \"xcvvasdvasdv-3-793577947-1.jpg\"\n            ],\n            \"order_from_country\": 2,\n            \"order_from_city\": 2,\n            \"order_from_address\": \"fasdfadfa\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 6,\n            \"order_to_address\": \"asdfasdfasdfa\",\n            \"order_start\": \"2021-01-19\",\n            \"order_deadline\": \"2021-01-31\",\n            \"order_personal_price\": 1,\n            \"order_user_price\": \"0.00\",\n            \"order_user_currency\": \"\",\n            \"order_not_more_price\": 0,\n            \"order_user_active\": 0,\n            \"order_status\": \"active\",\n            \"order_look\": 88,\n            \"order_strikes\": [],\n            \"rates_count\": 0,\n            \"is_favorite\": 1,\n            \"user\": {\n                \"user_id\": 3,\n                \"user_name\": \"Gleb\",\n                \"user_surname\": \"Sitnichenko\",\n                \"user_creator_rating\": 0,\n                \"user_freelancer_rating\": 0\n            },\n            \"from_country\": {\n                \"country_id\": 2,\n                \"country_name\": \"Ukraine\"\n            },\n            \"from_city\": {\n                \"city_id\": 2,\n                \"city_name\": \"Kyiv\"\n            },\n            \"to_country\": {\n                \"country_id\": 2,\n                \"country_name\": \"Ukraine\"\n            },\n            \"to_city\": {\n                \"city_id\": 6,\n                \"city_name\": \"Dnipro\"\n            }\n        },\n        {\n            \"order_id\": 11,\n            \"user_id\": 5,\n            \"order_register_date\": \"2021-03-14\",\n            \"order_name\": \"She has her did in\",\n            \"order_url\": \"she-has-her-did-in-5\",\n            \"order_category\": 2,\n            \"order_price\": \"456.00\",\n            \"order_price_usd\": \"16.42\",\n            \"order_currency\": \"₴\",\n            \"order_count\": 1,\n            \"order_size\": \"34\",\n            \"order_weight\": \"75\",\n            \"order_product_link\": \"\",\n            \"order_text\": \"\\n\\t\\t\\t\\t\\t\\t\\t\\t\\n\\t\\t\\t\\t\\t\\t\\t\\tDid he had did hug and inch she's she\\n\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\",\n            \"order_images\": [\n                \"she-has-her-did-in-5-1.jpg\",\n                \"she-has-her-did-in-5-2.jpg\",\n                \"she-has-her-did-in-5-3.jpg\"\n            ],\n            \"order_from_country\": 2,\n            \"order_from_city\": 2,\n            \"order_from_address\": \"Будьонного 2/62\",\n            \"order_to_country\": 2,\n            \"order_to_city\": 6,\n            \"order_to_address\": \"\",\n            \"order_start\": \"2021-03-25\",\n            \"order_deadline\": \"2021-03-28\",\n            \"order_personal_price\": 0,\n            \"order_user_price\": \"56.00\",\n            \"order_user_currency\": \"₴\",\n            \"order_not_more_price\": 0,\n            \"order_user_active\": 0,\n            \"order_status\": \"active\",\n            \"order_look\": 22,\n            \"order_strikes\": [],\n            \"rates_count\": 0,\n            \"is_favorite\": 1,\n            \"user\": {\n                \"user_id\": 5,\n                \"user_name\": \"Meow\",\n                \"user_surname\": \"Myauricio\",\n                \"user_creator_rating\": 0,\n                \"user_freelancer_rating\": 0\n            },\n            \"from_country\": {\n                \"country_id\": 2,\n                \"country_name\": \"Ukraine\"\n            },\n            \"from_city\": {\n                \"city_id\": 2,\n                \"city_name\": \"Kyiv\"\n            },\n            \"to_country\": {\n                \"country_id\": 2,\n                \"country_name\": \"Ukraine\"\n            },\n            \"to_city\": {\n                \"city_id\": 6,\n                \"city_name\": \"Dnipro\"\n            }\n        }\n    ]\n}"
+						},
+						{
+							"name": "Вивести список обраних маршрутів (success)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/favorites/show?type=route",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"favorites",
+										"show"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "route",
+											"description": "Тип сущності: order або route"
+										},
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 09 Sep 2021 18:56:27 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.4.16"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Content-Length",
+									"value": "767"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"type\": \"route\",\n    \"result\": [\n        {\n            \"route_id\": 42,\n            \"route_parent\": 0,\n            \"user_id\": 11,\n            \"route_from_country\": 2,\n            \"route_from_city\": 13,\n            \"route_to_country\": 2,\n            \"route_to_city\": 6,\n            \"route_look\": 11,\n            \"route_register_date\": \"2021-01-23\",\n            \"route_start\": \"2021-01-28\",\n            \"route_end\": \"2021-01-30\",\n            \"route_transport\": \"car\",\n            \"route_type\": \"route\",\n            \"route_status\": \"active\",\n            \"route_points\": [],\n            \"rates_count\": 0,\n            \"is_favorite\": 1,\n            \"user\": {\n                \"user_id\": 11,\n                \"user_name\": \"Катя\",\n                \"user_surname\": \"Ткачик\",\n                \"user_creator_rating\": 0,\n                \"user_freelancer_rating\": 0\n            },\n            \"from_country\": {\n                \"country_id\": 2,\n                \"country_name\": \"Ukraine\"\n            },\n            \"from_city\": {\n                \"city_id\": 13,\n                \"city_name\": \"Kremenchug\"\n            },\n            \"to_country\": {\n                \"country_id\": 2,\n                \"country_name\": \"Ukraine\"\n            },\n            \"to_city\": {\n                \"city_id\": 6,\n                \"city_name\": \"Dnipro\"\n            }\n        }\n    ]\n}"
 						},
 						{
 							"name": "Вивести список обраних (errors)",
