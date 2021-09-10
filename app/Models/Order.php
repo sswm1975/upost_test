@@ -84,6 +84,7 @@ class Order extends Model
     const STATUS_ACTIVE = 'active';
     const STATUS_CLOSED = 'closed';
     const STATUS_BAN = 'ban';
+    const STATUS_SUCCESSFUL = 'successful';
 
     protected $primaryKey = 'order_id';
     protected $guarded = ['order_id'];
@@ -91,6 +92,9 @@ class Order extends Model
     protected $casts = [
         'order_images' => 'array',
         'order_strikes' => 'array',
+    ];
+    protected $appends = [
+        'order_is_favorite',
     ];
 
     public static function boot()
@@ -127,6 +131,17 @@ class Order extends Model
         if (is_array($json)) return $json;
 
         return json_decode($json, true);
+    }
+
+    public function getOrderIsFavoriteAttribute(): bool
+    {
+        $user = request()->user();
+
+        if (empty($user->user_favorite_orders)) {
+            return false;
+        }
+
+        return in_array($this->order_id, explode(',', $user->user_favorite_orders));
     }
 
     public function setOrderNameAttribute($value)
@@ -168,6 +183,8 @@ class Order extends Model
     {
         $this->attributes['order_user_currency'] = config('app.currencies')[$value];
     }
+
+    ### LINKS ###
 
     public function user(): BelongsTo
     {
@@ -224,6 +241,13 @@ class Order extends Model
         return $this->hasMany(Rate::class, 'order_id', 'order_id');
     }
 
+    ### SCOPES ###
+
+    public function scopeSuccessful($query)
+    {
+        return $query->where('order_status', self::STATUS_SUCCESSFUL);
+    }
+
     /**
      * Получить список избранных заказов авторизированного пользователя.
      *
@@ -239,7 +263,20 @@ class Order extends Model
 
         return static::whereIn('order_id', explode(',', $user->user_favorite_orders))
             ->with([
-                'user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating',
+                'user' => function ($query) {
+                    $query->select([
+                        'user_id',
+                        'user_name',
+                        'user_surname',
+                        'user_creator_rating',
+                        'user_freelancer_rating',
+                        'user_photo',
+                        'user_favorite_orders',
+                        'user_favorite_routes',
+                        DB::raw('(select count(*) from `orders` where `users`.`user_id` = `orders`.`user_id` and `order_status` = "successful") as user_successful_orders')
+                    ]);
+                },
+                'category',
                 'from_country',
                 'from_city',
                 'to_country',
@@ -248,7 +285,6 @@ class Order extends Model
             ->withCount(['rates' => function ($query) use ($user) {
                 $query->where('parent_id', 0)->where('user_id', $user->user_id);
             }])
-            ->addSelect(DB::raw('1 as is_favorite'))
             ->get();
     }
 }

@@ -174,6 +174,9 @@ Route::group(
         # Вивід замовлень за фільтром
         Route::get('show', 'API\OrderController@showOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+        # Вивід моїх замовлень
+        Route::get('my/show', 'API\OrderController@showMyOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
+
         # Вивід конкретного замовлення
         Route::get('{order_id}/show', 'API\OrderController@showOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
@@ -205,6 +208,9 @@ Route::group(
     function () {
         # Створення маршруту
         Route::post('add', 'API\RouteController@addRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Вивід моїх маршрутів
+        Route::get('my/show', 'API\RouteController@showMyRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Виведення маршруту за фільтром
         Route::get('show', 'API\RouteController@showRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);

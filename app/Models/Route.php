@@ -50,6 +50,7 @@ class Route extends Model
     const STATUS_ACTIVE = 'active';
     const STATUS_CLOSED = 'closed';
     const STATUS_BAN = 'ban';
+    const STATUS_SUCCESSFUL = 'successful';
 
     protected $table = 'routes';
     protected $primaryKey = 'route_id';
@@ -57,6 +58,9 @@ class Route extends Model
     public $timestamps = false;
     protected $casts = [
         'route_points' => 'object',
+    ];
+    protected $appends = [
+        'route_is_favorite',
     ];
 
     public static function boot()
@@ -71,6 +75,17 @@ class Route extends Model
             $model->route_look = 0;
             $model->route_register_date = date('Y-m-d');
         });
+    }
+
+    public function getRouteIsFavoriteAttribute(): bool
+    {
+        $user = request()->user();
+
+        if (empty($user->user_favorite_routes)) {
+            return false;
+        }
+
+        return in_array($this->route_id, explode(',', $user->user_favorite_routes));
     }
 
     public function setRouteFromCityAttribute($value)
@@ -138,6 +153,13 @@ class Route extends Model
         return $this->hasMany(Rate::class, 'route_id', 'route_id');
     }
 
+    ### SCOPES ###
+
+    public function scopeSuccessful($query)
+    {
+        return $query->where('route_status', self::STATUS_SUCCESSFUL);
+    }
+
     /**
      * Получить список избранных маршрутов авторизированного пользователя.
      *
@@ -154,7 +176,19 @@ class Route extends Model
 
         return static::whereIn('route_id', explode(',', $user->user_favorite_routes))
             ->with([
-                'user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating',
+                'user' => function ($query) {
+                    $query->select([
+                        'user_id',
+                        'user_name',
+                        'user_surname',
+                        'user_creator_rating',
+                        'user_freelancer_rating',
+                        'user_photo',
+                        'user_favorite_orders',
+                        'user_favorite_routes',
+                        DB::raw('(select count(*) from `orders` where `users`.`user_id` = `orders`.`user_id` and `order_status` = "successful") as user_successful_orders')
+                    ]);
+                },
                 'from_country',
                 'from_city',
                 'to_country',
@@ -163,7 +197,6 @@ class Route extends Model
             ->withCount(['rates' => function ($query) use ($user) {
                 $query->where('parent_id', 0)->where('user_id', $user->user_id);
             }])
-            ->addSelect(DB::raw('1 as is_favorite'))
             ->get();
     }
 }

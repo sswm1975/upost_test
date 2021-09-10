@@ -92,6 +92,12 @@ class User extends Authenticatable
     protected $primaryKey = 'user_id';
     protected $guarded = ['user_id'];
     public $timestamps = false;
+    protected $appends = [
+        'user_photo_thumb',
+        'user_photo_original',
+        'user_favorite_orders_count',
+        'user_favorite_routes_count',
+    ];
 
     /**
      * Список полей пользователя для просмотра.
@@ -143,6 +149,50 @@ class User extends Authenticatable
         });
     }
 
+    ### SETTERS ###
+
+    public function setUserCurrencyAttribute($value)
+    {
+        $this->attributes['user_currency'] = config('app.currencies')[$value];
+    }
+
+    ### GETTERS ###
+
+    public function getUserPhotoAttribute($value): string
+    {
+        if (is_null($value)) {
+            return asset('storage/users/no-photo.png');
+        }
+
+        return asset('storage/' . $value);
+    }
+
+    public function getUserPhotoThumbAttribute(): string
+    {
+        return str_replace('user_photo.jpg', 'user_photo-thumb.jpg', $this->user_photo);
+    }
+
+    public function getUserPhotoOriginalAttribute(): string
+    {
+        return str_replace('user_photo.jpg', 'user_photo-original.jpg', $this->user_photo);
+    }
+
+    public function getUserFavoriteOrdersCountAttribute(): int
+    {
+        if (is_null($this->user_favorite_orders)) return 0;
+
+        return substr_count($this->user_favorite_orders, ',') + 1;
+    }
+
+    public function getUserFavoriteRoutesCountAttribute(): int
+    {
+        if (is_null($this->user_favorite_routes)) return 0;
+
+        return substr_count($this->user_favorite_routes, ',') + 1;
+    }
+
+    ### LINKS ###
+
     public function rates(): HasMany
     {
         return $this->hasMany(Rate::class, 'user_id', 'user_id');
@@ -153,10 +203,12 @@ class User extends Authenticatable
         return $this->rates()->deadlineToday();
     }
 
-    public function setUserCurrencyAttribute($value)
+    public function orders()
     {
-        $this->attributes['user_currency'] = config('app.currencies')[$value];
+        return $this->hasMany(Order::class, 'user_id', 'user_id');
     }
+
+    ### SCOPES ###
 
     public function scopeExclude($query, $value = [])
     {

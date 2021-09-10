@@ -161,6 +161,25 @@ class OrderController extends Controller
     }
 
     /**
+     * Вывод моих заказов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function showMyOrders(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $orders = $this->getOrdersByFilter($user, ['user_id' => $user->user_id])['data'];
+
+        return response()->json([
+            'status' => true,
+            'orders' => null_to_blank($orders),
+            'sql' => getSQLForFixDatabase()
+        ]);
+    }
+
+    /**
      * Вывод заказов.
      *
      * @param Request $request
@@ -214,42 +233,36 @@ class OrderController extends Controller
     {
         $rate = !empty($filters['currency']) ? Option::rate($filters['currency']) : 1;
 
-        $favorite_orders = $user->user_favorite_orders;
-
-        $path_to_avatar = asset('storage/');
-
-        $lang = app()->getLocale();
-
         return Order::query()
-            ->select(
-                'orders.*',
-                DB::raw('CONCAT(users.user_name, " ", users.user_surname) AS user_name'),
-                DB::raw("REPLACE(CONCAT('$path_to_avatar', IF(ISNULL(user_photo), 'users/no-photo.png', user_photo)), 'user_photo.jpg', 'user_photo-thumb.jpg') AS user_photo"),
-                "users.user_creator_rating",
-                "categories.cat_name_{$lang} AS order_category_name",
-                "from_country.country_name_{$lang} AS order_from_country_name",
-                "to_country.country_name_{$lang} AS order_to_country_name",
-                "from_city.city_name_{$lang} AS order_from_city_name",
-                "to_city.city_name_{$lang} AS order_to_city_name",
-                DB::raw('IFNULL(LENGTH(users.user_favorite_orders) - LENGTH(REPLACE(users.user_favorite_orders, ",", "")) + 1, 0) AS cnt_favorite_orders'),
-                DB::raw(empty($favorite_orders) ? '0 AS is_favorite' : "IF(orders.order_id IN ({$favorite_orders}), 1, 0) AS is_favorite"),
-                DB::raw('(
-                    SELECT COUNT(1)
-                    FROM rate r
-                    WHERE r.order_id = orders.order_id
-                    AND (
-                        r.who_start = orders.user_id AND r.parent_id = 0
-                        OR
-                        r.user_id = orders.user_id AND r.parent_id <> 0
-                    )
-                 ) AS cnt_rates')
-            )
-            ->join('users', 'users.user_id', 'orders.user_id')
-            ->join('categories', 'categories.category_id', 'orders.order_category')
-            ->leftJoin('country AS from_country', 'from_country.country_id', 'orders.order_from_country')
-            ->leftJoin('country AS to_country', 'to_country.country_id', 'orders.order_to_country')
-            ->leftJoin('city AS from_city', 'from_city.city_id', 'orders.order_from_city')
-            ->leftJoin('city AS to_city', 'to_city.city_id', 'orders.order_to_city')
+            ->with([
+                'user' => function ($query) {
+                    $query->select([
+                        'user_id',
+                        'user_name',
+                        'user_surname',
+                        'user_creator_rating',
+                        'user_freelancer_rating',
+                        'user_photo',
+                        'user_favorite_orders',
+                        'user_favorite_routes',
+                        DB::raw('(select count(*) from `orders` where `users`.`user_id` = `orders`.`user_id` and `order_status` = "successful") as user_successful_orders')
+                    ]);
+                },
+                'category',
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+            ])
+            ->withCount(['rates as rates_all_count' => function ($query) use ($user) {
+                $query->where('parent_id', 0)->where('user_id', $user->user_id);
+            }])
+            ->withCount(['rates as rates_read_count' => function ($query) use ($user) {
+                $query->where('read_rate', 0)->where('user_id', $user->user_id);
+            }])
+            ->withCount(['rates as is_in_rate' => function ($query) use ($user) {
+                $query->typeOrder()->where('user_id', $user->user_id);
+            }])
             ->when(!empty($filters['order_id']), function ($query) use ($filters) {
                 return $query->where('orders.order_id', $filters['order_id']);
             })

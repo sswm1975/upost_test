@@ -97,6 +97,16 @@ class Rate extends Model
         return $this->belongsTo(Route::class, 'route_id', 'route_id');
     }
 
+    function scopeTypeOrder($query)
+    {
+        return $query->where('rate_type', self::TYPE_ORDER);
+    }
+
+    function scopeTypeRoute($query)
+    {
+        return $query->where('rate_type', self::TYPE_ROUTE);
+    }
+
     function scopeDeadlineToday($query)
     {
         return $query->where([
