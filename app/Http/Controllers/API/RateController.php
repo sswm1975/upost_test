@@ -371,11 +371,11 @@ class RateController extends Controller
                 if (!$parent) {
                     $parent = Rate::find($rates[0]->parent_id);
                 }
-                $receiver = Order::where('order_id', $parent->order_id)->first('user_id')->user_id;
+                $receiver = Order::where('order_id', $parent->order_id)->first('user_id');
                 $data = [
                     'count'     => $rates->count(),
                     'who_start' => $parent->who_start ?? 0,
-                    'receiver'  => $receiver ?? 0,
+                    'receiver'  => $receiver->user_id ?? 0,
                     'parent'    => $parent ?? [],
                     'result'    => $rates,
                 ];
