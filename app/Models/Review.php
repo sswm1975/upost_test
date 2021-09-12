@@ -34,6 +34,10 @@ class Review extends Model
 
     public const TYPE_CREATOR = 0;
     public const TYPE_FREELANCER = 1;
+    public const TYPES = [
+        'creator' => self::TYPE_CREATOR,
+        'freelancer' => self::TYPE_FREELANCER,
+    ];
 
     public static function boot()
     {

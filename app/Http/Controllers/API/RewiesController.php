@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class RewiesController extends Controller
 {
@@ -103,21 +104,24 @@ class RewiesController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException
+     * @throws ValidationException|ValidatorException
      */
     public function showReviews(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            ['user_id' => 'required|integer|exists:users,user_id']
-        );
-         validateOrExit($validator);
+        $filters = validateOrExit([
+            'user_id'     => 'required|integer|exists:users,user_id',
+            'review_type' => 'sometimes|required|in:creator,freelancer',
+        ]);
 
-        $jobs = Job::whereHas('rate', function ($q) use ($request) {
-            return $q->where(['user_id' => $request->get('user_id')]);
+        $jobs = Job::whereHas('rate', function ($q) use ($filters) {
+            return $q->whereUserId($filters['user_id']);
         })->get()->pluck('job_id');
 
-        $reviews = Review::whereIn('job_id', $jobs)->get()->toArray();
-
+        $reviews = Review::whereIn('job_id', $jobs)
+            ->when(isset($filters['review_type']), function ($q) use ($filters) {
+                return $q->whereReviewType(Review::TYPES[$filters['review_type']]);
+            })
+            ->get();
 
         return response()->json([
             'status' => true,

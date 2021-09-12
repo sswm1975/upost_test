@@ -258,5 +258,6 @@ return [
         'user_surname' => 'Фамилия',
         'who_start' => 'Пользователь',
         'token' => 'Токен',
+        'review_type' => 'Тип отзывов',
     ],
 ];

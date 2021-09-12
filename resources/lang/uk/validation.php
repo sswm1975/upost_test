@@ -257,5 +257,6 @@ return [
         'user_surname' => 'Прізвище',
         'who_start' => 'Користувач',
         'token' => 'Токен',
+        'review_type' => 'Тип відгуків',
     ],
 ];
