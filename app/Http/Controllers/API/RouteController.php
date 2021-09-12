@@ -97,7 +97,7 @@ class RouteController extends Controller
 
         return response()->json([
             'status' => true,
-            'order' => null_to_blank($route),
+            'route' => null_to_blank($route),
             'similar_routes' => null_to_blank($similar_routes),
         ]);
     }
