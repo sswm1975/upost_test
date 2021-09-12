@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
@@ -97,6 +98,8 @@ class User extends Authenticatable
         'user_photo_original',
         'user_favorite_orders_count',
         'user_favorite_routes_count',
+        'user_register_date_human',
+        'user_last_active_human',
     ];
 
     /**
@@ -175,6 +178,26 @@ class User extends Authenticatable
     public function getUserPhotoOriginalAttribute(): string
     {
         return str_replace('user_photo.jpg', 'user_photo-original.jpg', $this->user_photo);
+    }
+
+    /**
+     * Поле "От даты регистрации прошло Х лет/месяцев/дней".
+     *
+     * @return string
+     */
+    public function getUserRegisterDateHumanAttribute(): string
+    {
+        return Carbon::parse($this->user_register_date)->diffForHumans();
+    }
+
+    /**
+     * Поле "От даты последней активности прошло Х лет/месяцев/дней".
+     *
+     * @return string
+     */
+    public function getUserLastActiveHumanAttribute(): string
+    {
+        return Carbon::parse($this->user_last_active)->diffForHumans();
     }
 
     public function getUserFavoriteOrdersCountAttribute(): int

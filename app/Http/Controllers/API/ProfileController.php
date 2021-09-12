@@ -64,15 +64,6 @@ class ProfileController extends Controller
         # получить последний отзыв
         $user->user_last_review = Review::getLastReview($user->user_id);
 
-        # добавляем поле "От даты регистрации прошло Х лет/месяцев/дней"
-        $user->user_register_human =  Carbon::parse($user->user_register_date)->diffForHumans();
-
-        # добавляем поле "От даты последней активности прошло Х лет/месяцев/дней"
-        $user->user_last_active_human =  Carbon::parse($user->user_last_active)->diffForHumans();
-
-        # формируем ссылку на аватар
-        $user->user_photo = $this->linkToUserPhoto($user->user_photo);
-
         # удаляем поле с паролем
         unset($user->user_password, $user->api_token);
 
@@ -80,17 +71,6 @@ class ProfileController extends Controller
             'status' => true,
             'result' => null_to_blank($user),
         ]);
-    }
-
-    /**
-     * Формирование ссылки на фото пользователя.
-     *
-     * @param string $photo
-     * @return string
-     */
-    private function linkToUserPhoto($photo = ''): string
-    {
-         return asset('storage/' . ($photo ?? 'users/no-photo.png'));
     }
 
     /**
