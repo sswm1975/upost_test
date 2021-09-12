@@ -6,7 +6,6 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Review;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -74,7 +73,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Валидатор для проверки данных пользователя при обновлении публичные данных.
+     * Валидатор для проверки данных пользователя при их обновлении (только публичные).
      *
      * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
@@ -96,7 +95,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Обновить данные пользователя (только публичные данные).
+     * Обновить данные пользователя (только публичные).
      *
      * @param Request $request
      * @return JsonResponse
