@@ -131,13 +131,12 @@ class Rate extends Model
      * - rate_type = route
      * - нет дочерних ставок
      *
-     * @param $query
      * @param int $order_id
      * @return mixed
      */
-    function scopeNewRatesByOrder($query, int $order_id)
+    public static function getNewRatesByOrder(int $order_id)
     {
-        return $query->where([
+        return static::where([
             'order_id' => $order_id,
             'parent_id' => 0,
             'read_rate' => 0,
@@ -145,7 +144,14 @@ class Rate extends Model
             'rate_type' => self::TYPE_ROUTE,
         ])->whereNotExists(function ($query) {
             $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
-        });
+        })->with([
+            'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
+            'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'route.from_country',
+            'route.from_city',
+            'route.to_country',
+            'route.to_city',
+        ])->get();
     }
 
     /**
@@ -158,13 +164,12 @@ class Rate extends Model
      * - rate_type = route
      * - нет дочерних ставок
      *
-     * @param $query
      * @param int $order_id
      * @return mixed
      */
-    function scopeReadRatesByOrder($query, int $order_id)
+    public static function getReadRatesByOrder(int $order_id)
     {
-        return $query->where([
+        return static::where([
             'order_id' => $order_id,
             'parent_id' => 0,
             'read_rate' => 1,
@@ -172,7 +177,14 @@ class Rate extends Model
             'rate_type' => self::TYPE_ROUTE,
         ])->whereNotExists(function ($query) {
             $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
-        });
+        })->with([
+            'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
+            'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'route.from_country',
+            'route.from_city',
+            'route.to_country',
+            'route.to_city',
+        ])->get();
     }
 
     /**
@@ -184,19 +196,124 @@ class Rate extends Model
      * - rate_type = route
      * - есть дочерние ставки
      *
-     * @param $query
      * @param int $order_id
      * @return mixed
      */
-    function scopeExistsChildRatesByOrder($query, int $order_id)
+    public static function getExistsChildRatesByOrder(int $order_id)
     {
-        return $query->where([
+        return static::where([
             'order_id' => $order_id,
             'parent_id' => 0,
             'rate_status' => self::STATUS_ACTIVE,
             'rate_type' => self::TYPE_ROUTE,
         ])->whereExists(function ($query) {
             $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
-        })->selectRaw('rate.*, (select rm.user_id from rate as rm where rm.parent_id = rate.rate_id order by rate_id desc limit 1) as last_message_from');
+        })->selectRaw('rate.*, (select rm.user_id from rate as rm where rm.parent_id = rate.rate_id order by rate_id desc limit 1) as last_message_from')
+        ->with([
+            'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
+            'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            "route.from_country",
+            'route.from_city',
+            "route.to_country",
+            'route.to_city',
+        ])->get();
+    }
+
+    /**
+     * Новые ставки по выбранному маршруту.
+     * Условия:
+     * - route_id = параметр КОД МАРШРУТА
+     * - parent_id = 0
+     * - read_rate = 0
+     * - rate_status = active
+     * - rate_type = order
+     * - нет дочерних ставок
+     *
+     * @param int $route_id
+     * @return mixed
+     */
+    public static function getNewRatesByRoute(int $route_id)
+    {
+        return static::where([
+            'route_id'    => $route_id,
+            'parent_id'   => 0,
+            'read_rate'   => 0,
+            'rate_status' => self::STATUS_ACTIVE,
+            'rate_type'   => self::TYPE_ORDER,
+        ])->whereNotExists(function ($query) {
+            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
+        })->with([
+            'order:order_id,user_id,order_from_country,order_from_city,order_to_country,order_to_city,order_look',
+            'order.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'order.from_country',
+            'order.from_city',
+            'order.to_country',
+            'order.to_city',
+        ])->get();
+    }
+
+    /**
+     * Просмотренные ставки по выбранному маршруту.
+     * Условия:
+     * - route_id = параметр КОД МАРШРУТА
+     * - parent_id = 0
+     * - read_rate = 1
+     * - rate_status = active
+     * - rate_type = order
+     * - нет дочерних ставок
+     *
+     * @param int $route_id
+     * @return mixed
+     */
+    public static function getReadRatesByRoute(int $route_id)
+    {
+        return static::where([
+            'route_id'    => $route_id,
+            'parent_id'   => 0,
+            'read_rate'   => 1,
+            'rate_status' => self::STATUS_ACTIVE,
+            'rate_type'   => self::TYPE_ORDER,
+        ])->whereNotExists(function ($query) {
+            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
+        })->with([
+            'order:order_id,user_id,order_from_country,order_from_city,order_to_country,order_to_city,order_look',
+            'order.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'order.from_country',
+            'order.from_city',
+            'order.to_country',
+            'order.to_city',
+        ])->get();
+    }
+
+    /**
+     * Ставки с наличием дочерних ставок по выбранному маршруту.
+     * Условия:
+     * - route_id = параметр КОД МАРШРУТА
+     * - parent_id = 0
+     * - rate_status = active
+     * - rate_type = order
+     * - есть дочерние ставки
+     *
+     * @param int $route_id
+     * @return mixed
+     */
+    public static function getExistsChildRatesByRoute(int $route_id)
+    {
+        return static::where([
+            'route_id' => $route_id,
+            'parent_id' => 0,
+            'rate_status' => self::STATUS_ACTIVE,
+            'rate_type' => self::TYPE_ORDER,
+        ])->whereExists(function ($query) {
+            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
+        })->selectRaw('rate.*, (select rm.user_id from rate as rm where rm.parent_id = rate.rate_id order by rate_id desc limit 1) as last_message_from')
+        ->with([
+            'order:order_id,user_id,order_from_country,order_from_city,order_to_country,order_to_city,order_look',
+            'order.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'order.from_country',
+            'order.from_city',
+            'order.to_country',
+            'order.to_city',
+        ])->get();
     }
 }
