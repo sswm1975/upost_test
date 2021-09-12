@@ -7,7 +7,9 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Chat;
+use App\Models\Country;
 use App\Models\Route;
 use App\Models\User;
 use Exception;
@@ -430,7 +432,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Увеличить счетчик просмотров заказа.
+     * Увеличить счётчик просмотров заказа.
      *
      * @param int $order_id
      * @param Request $request
@@ -454,6 +456,37 @@ class OrderController extends Controller
         return response()->json([
             'status' => true,
             'looks'  => $order->order_look,
+        ]);
+    }
+
+    /**
+     * Получить список справочников для фильтра.
+     * (Страны; Страны с городами; Минимальная и максимальная цены; Категории товаров)
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getFilters(Request $request): JsonResponse
+    {
+        if ($request->has('currency')) {
+            $currency = getCurrencySymbol($request->get('currency'));
+
+            $prices = Order::toBase()
+                ->where('order_currency', $currency)
+                ->selectRaw('MIN(order_price) AS price_min, MAX(order_price) AS price_max')
+                ->first();
+        } else {
+            $prices = Order::toBase()
+                ->selectRaw('MIN(order_price_usd) AS price_min, MAX(order_price_usd) AS price_max')
+                ->first();
+        }
+
+        return response()->json([
+            'status'                => true,
+            'countries'             => Country::getCountries(),
+            'countries_with_cities' => Country::getCountriesWithCities(),
+            'prices'                => $prices,
+            'categories'            => Category::getCategories(),
         ]);
     }
 }

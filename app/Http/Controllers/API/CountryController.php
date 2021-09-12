@@ -39,14 +39,9 @@ class CountryController extends Controller
      */
     public function getCountries(): JsonResponse
     {
-        $countries = Country::language(App::getLocale())
-            ->addSelect('country_id')
-            ->oldest('country_id')
-            ->get();
-
         return response()->json([
             'status' => true,
-            'result' => $countries,
+            'result' => Country::getCountries(),
         ]);
     }
 
@@ -72,33 +67,16 @@ class CountryController extends Controller
     }
 
     /**
-     * Получить список всех городов по всем странам или выбранной стране.
+     * Получить список всех стран или выбранной страны с городами.
      *
      * @param int $country_id
      * @return JsonResponse
      */
     public function getCities(int $country_id = 0): JsonResponse
     {
-        $countries = Country::language(App::getLocale())
-            ->with('cities:country_id,city_id,city_name_' . App::getLocale() . ' as city_name' )
-            ->when($country_id, function ($query) use ($country_id) {
-                return $query->where('country_id', $country_id);
-            })
-            ->addSelect('country_id')
-            ->oldest('country_id')
-            ->get()
-            ->toArray();
-
-        foreach ($countries as $country_key => $country) {
-            foreach ($country['cities'] as $city_key => $city) {
-                unset($city['country_id']);
-                $countries[$country_key]['cities'][$city_key] = $city;
-            }
-        }
-
         return response()->json([
             'status' => true,
-            'result' => $countries,
+            'result' => Country::getCountriesWithCities($country_id),
         ]);
     }
 }

@@ -194,6 +194,9 @@ Route::group(
 
         # Скарга на замовлення
         Route::post('{order_id}/strike', 'API\OrderController@strikeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Список довідників для фільтру на сторінці Замовлення
+        Route::get('filters', 'API\OrderController@getFilters');
     }
 );
 

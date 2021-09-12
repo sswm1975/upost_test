@@ -19,17 +19,9 @@ class CategoryController extends Controller
      */
     public function getCategories(int $category_id = 0): JsonResponse
     {
-        $categories = Category::query()
-            ->when(!empty($category_id), function ($query) use ($category_id) {
-                return $query->where('category_id', $category_id);
-            })
-            ->language(App::getLocale())
-            ->addSelect('category_id')
-            ->oldest('category_id')
-            ->get()
-            ->toArray();
+        $categories = Category::getCategories($category_id);
 
-        if (!$categories) throw new ErrorException(__('message.category_not_found'));
+        if (empty($categories)) throw new ErrorException(__('message.category_not_found'));
 
         return response()->json([
             'status' => true,

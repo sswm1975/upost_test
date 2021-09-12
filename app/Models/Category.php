@@ -44,4 +44,23 @@ class Category extends Model
     {
         return $query->select('cat_name_' . $lang . ' as category_name');
     }
+
+    /**
+     * Получить список всех категорий или выбранной категории.
+     *
+     * @param int $category_id
+     * @return array
+     */
+    public static function getCategories(int $category_id = 0): array
+    {
+        return static::query()
+            ->when(!empty($category_id), function ($query) use ($category_id) {
+                return $query->where('category_id', $category_id);
+            })
+            ->language(app()->getLocale())
+            ->addSelect('category_id')
+            ->oldest('category_id')
+            ->get()
+            ->toArray();
+    }
 }
