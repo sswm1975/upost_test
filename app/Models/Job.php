@@ -33,7 +33,7 @@ class Job extends Model
 
     public function rate()
     {
-        return $this->belongsTo(Rate::class, 'rate_id');
+        return $this->belongsTo(Rate::class, 'rate_id')->withDefault();
     }
 
     public function getUserId()

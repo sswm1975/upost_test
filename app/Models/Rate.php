@@ -89,12 +89,12 @@ class Rate extends Model
 
     function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class, 'order_id', 'order_id');
+        return $this->belongsTo(Order::class, 'order_id', 'order_id')->withDefault();
     }
 
     function route(): BelongsTo
     {
-        return $this->belongsTo(Route::class, 'route_id', 'route_id');
+        return $this->belongsTo(Route::class, 'route_id', 'route_id')->withDefault();
     }
 
     function scopeTypeOrder($query)
