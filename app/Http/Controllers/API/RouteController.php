@@ -166,7 +166,7 @@ class RouteController extends Controller
      * @param array $filters
      * @return array
      */
-    private function getRoutesByFilter(User $user, array $filters = []): array
+    public function getRoutesByFilter(User $user, array $filters = []): array
     {
         return Route::query()
             ->with([

@@ -66,6 +66,18 @@ class ProfileController extends Controller
         # удаляем поле с паролем
         unset($user->user_password, $user->api_token);
 
+        # добавляем последние 2 заказа, созданные пользователем
+        $user->orders = (new OrderController)->getOrdersByFilter($user, [
+            'user_id' => $user->user_id,
+            'show' => 2,
+        ])['data'] ?? "";
+
+        # добавляем последние 2 маршрута, созданные пользователем
+        $user->routes = (new RouteController)->getRoutesByFilter($user, [
+            'user_id' => $user->user_id,
+            'show' => 2,
+        ])['data'] ?? "";
+
         return response()->json([
             'status' => true,
             'result' => null_to_blank($user),

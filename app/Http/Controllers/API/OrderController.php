@@ -231,7 +231,7 @@ class OrderController extends Controller
      * @param array $filters
      * @return array
      */
-    private function getOrdersByFilter(User $user, array $filters = []): array
+    public function getOrdersByFilter(User $user, array $filters = []): array
     {
         $rate = !empty($filters['currency']) ? Option::rate($filters['currency']) : 1;
 
