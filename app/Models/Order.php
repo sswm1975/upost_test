@@ -124,6 +124,13 @@ class Order extends Model
         });
     }
 
+    public function getOrderImagesAttribute($value)
+    {
+        if (is_null($value)) return [];
+
+        return $value;
+    }
+
     public function getOrderStrikesAttribute($json)
     {
         if (is_null($json)) return [];
