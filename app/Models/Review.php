@@ -126,8 +126,10 @@ class Review extends Model
      */
     public static function getLastReview(int $user_id)
     {
-        return static::whereUserId($user_id)
+        $review = static::whereUserId($user_id)
             ->latest()
-            ->first(['rating', 'comment', 'created_at']) ?? [];
+            ->first(['rating', 'comment', 'created_at']);
+
+        return !empty($review) ? $review : '';
     }
 }
