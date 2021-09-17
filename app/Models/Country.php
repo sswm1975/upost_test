@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Country extends Model
 {
-    protected $table = 'country';
+    protected $table = 'countries';
     protected $primaryKey = 'country_id';
     protected $fillable  = ['country_name_uk', 'country_name_ru', 'country_name_en'];
     public $timestamps = false;

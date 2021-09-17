@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class City extends Model
 {
-    protected $table = 'city';
+    protected $table = 'cities';
     protected $primaryKey = 'city_id';
     protected $fillable  = ['city_name_uk', 'city_name_ru', 'city_name_en'];
     public $timestamps = false;

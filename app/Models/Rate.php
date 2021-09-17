@@ -60,7 +60,7 @@ class Rate extends Model
     public const TYPE_ORDER = 'order';
     public const TYPE_ROUTE = 'route';
 
-    protected $table = 'rate';
+    protected $table = 'rates';
     protected $primaryKey = 'rate_id';
     protected $guarded = ['rate_id'];
     public $timestamps = false;
