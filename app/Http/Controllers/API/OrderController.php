@@ -324,7 +324,6 @@ class OrderController extends Controller
         }
 
         $routes = Route::query()
-            ->where('user_id', $request->user()->user_id)
             ->where('route_status', Route::STATUS_ACTIVE)
             ->where('route_from_country', $order->order_from_country)
             ->where('route_start', '>=', $order->order_start)
