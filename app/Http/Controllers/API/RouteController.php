@@ -29,13 +29,21 @@ class RouteController extends Controller
     {
         if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
-        validateOrExit($this->validator($request->all()));
+        $data = validateOrExit($this->validator($request->all()));
 
-        $route = Route::create($request->all());
+        $route = Route::create($data);
+
+        if (isset($data['route_points'])) {
+            $route_points = $route->route_points()->createMany($data['route_points']);
+        }
+
+        $route = Route::with('route_points:route_id,country,city,date')
+            ->find($route->route_id)
+            ->toArray();
 
         return response()->json([
             'status' => true,
-            'result' => null_to_blank($route->toArray()),
+            'result' => null_to_blank($route),
         ]);
     }
 
@@ -58,7 +66,7 @@ class RouteController extends Controller
             'route_points'       => 'sometimes|nullable|array',
         ];
 
-        for($i = 0; $i < count($data['route_points'] ?? []); $i++) {
+        for ($i = 0; $i < count($data['route_points'] ?? []); $i++) {
             $country_id = (int)($data['route_points'][$i]['country'] ?? 0);
             $rules["route_points.{$i}.country"] = 'sometimes|required|integer|exists:countries,country_id';
             $rules["route_points.{$i}.city"]    = 'sometimes|required|integer|exists:cities,city_id,country_id,' . $country_id;
@@ -187,6 +195,8 @@ class RouteController extends Controller
                 'from_city',
                 'to_country',
                 'to_city',
+                'route_points.country',
+                'route_points.city'
             ])
             ->withCount(['rates as rates_all_count' => function ($query) use ($user) {
                 $query->where('parent_id', 0)->where('user_id', $user->user_id);
@@ -199,31 +209,31 @@ class RouteController extends Controller
             }])
             ->where('route_status', $filters['status'] ?? 'active')
             ->when(!empty($filters['route_id']), function ($query) use ($filters) {
-                return $query->whereIn('routes.route_id', $filters['route_id']);
+                return $query->whereIn('route_id', $filters['route_id']);
             })
             ->when(!empty($filters['without_route_id']), function ($query) use ($filters) {
-                return $query->where('routes.route_id', '!=', $filters['without_route_id']);
+                return $query->where('route_id', '!=', $filters['without_route_id']);
             })
             ->when(!empty($filters['user_id']), function ($query) use ($filters) {
-                return $query->where('routes.user_id', $filters['user_id']);
+                return $query->where('user_id', $filters['user_id']);
             })
             ->when(!empty($filters['date_from']), function ($query) use ($filters) {
-                return $query->where('routes.route_start', '>=', $filters['date_from']);
+                return $query->where('route_start', '>=', $filters['date_from']);
             })
             ->when(!empty($filters['date_to']), function ($query) use ($filters) {
-                return $query->where('routes.route_end', '<=', $filters['date_to']);
+                return $query->where('route_end', '<=', $filters['date_to']);
             })
             ->when(!empty($filters['country_from']), function ($query) use ($filters) {
-                return $query->whereIn('routes.route_from_country', $filters['country_from']);
+                return $query->existsCountryInFromCountry($filters['country_from']);
             })
             ->when(!empty($filters['city_from']), function ($query) use ($filters) {
-                return $query->whereIn('routes.route_from_city', $filters['city_from']);
+                return $query->existsCityInFromCity($filters['city_from']);
             })
             ->when(!empty($filters['country_to']), function ($query) use ($filters) {
-                return $query->whereIn('routes.route_to_country', $filters['country_to']);
+                return $query->existsCountryInToCountry($filters['country_to']);
             })
             ->when(!empty($filters['city_to']), function ($query) use ($filters) {
-                return $query->whereIn('routes.route_to_city', $filters['city_to']);
+                return $query->existsCityInToCity($filters['city_to']);
             })
             ->orderBy('routes.route_id', 'desc')
             ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page'] ?? 1)

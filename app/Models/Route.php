@@ -107,6 +107,8 @@ class Route extends Model
         return json_decode($json, true);
     }
 
+    ### LINKS ###
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id')->withDefault();
@@ -153,6 +155,11 @@ class Route extends Model
         return $this->hasMany(Rate::class, 'route_id', 'route_id');
     }
 
+    public function route_points(): HasMany
+    {
+        return $this->hasMany(RoutePoint::class, 'route_id', 'route_id');
+    }
+
     ### SCOPES ###
 
     public function scopeSuccessful($query)
@@ -161,11 +168,82 @@ class Route extends Model
     }
 
     /**
+     * Универсальный скоуп для поиска страны или города в поле начала маршрута или окончания маршрута, а также в смежных маршрутах.
+     *
+     * @param $query
+     * @param string $routes_field        - одно из полей таблицы route: route_from_country, route_to_country
+     * @param string $route_points_field  - одно из полей таблицы route_points: country, city
+     * @param array $rows                 - массив кодов стран или городов, например [1,4,78].
+     * @return mixed
+     */
+    public function scopeExistsCountryOrCity($query, string $routes_field, string $route_points_field, array $rows)
+    {
+        return $query->where(function ($query) use ($routes_field, $route_points_field, $rows) {
+            return $query->whereIn($routes_field, $rows)
+                ->orWhereExists(function($query) use ($route_points_field, $rows) {
+                    $query->selectRaw(1)
+                        ->from('route_points')
+                        ->whereRaw('route_points.route_id = routes.route_id')
+                        ->whereIn($route_points_field, $rows);
+                });
+        });
+    }
+
+    /**
+     * Существует страна/ы в начальном маршруте или смежных маршрутах.
+     *
+     * @param $query
+     * @param array $countries - массив кодов стран, например [1,4,78].
+     * @return mixed
+     */
+    public function scopeExistsCountryInFromCountry($query, array $countries)
+    {
+        return $query->existsCountryOrCity('route_from_country', 'country', $countries);
+    }
+
+    /**
+     * Существует страна/ы в конечном маршруте или смежных маршрутах.
+     *
+     * @param $query
+     * @param array $countries - массив кодов стран, например [1,4,78].
+     * @return mixed
+     */
+    public function scopeExistsCountryInToCountry($query, array $countries)
+    {
+        return $query->existsCountryOrCity('route_to_country', 'country', $countries);
+    }
+
+    /**
+     * Существует город/а в начальном маршруте или смежных маршрутах.
+     *
+     * @param $query
+     * @param array $cities - массив кодов городов, например [1,4,78].
+     * @return mixed
+     */
+    public function scopeExistsCityInFromCity($query, array $cities)
+    {
+        return $query->existsCountryOrCity('route_from_city', 'city', $cities);
+    }
+
+    /**
+     * Существует город/а в конечном маршруте или смежных маршрутах.
+     *
+     * @param $query
+     * @param array $cities - массив кодов городов, например [1,4,78].
+     * @return mixed
+     */
+    public function scopeExistsCityInToCity($query, array $cities)
+    {
+        return $query->existsCountryOrCity('route_to_city', 'city', $cities);
+    }
+
+    ### QUERIES ###
+
+    /**
      * Получить список избранных маршрутов авторизированного пользователя.
      *
      * @return array|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-
     public static function getFavorites()
     {
         $user = request()->user();
