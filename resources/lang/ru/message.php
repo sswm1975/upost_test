@@ -16,7 +16,7 @@ return [
     'order_not_found'         => 'Заказ не найден.',
     'route_not_found'         => 'Маршрут не найден.',
     'rate_not_found'          => 'Ставка не найдена.',
-    'who_start_incorrect'     => 'Поле who_start не корректен.',
+    'who_start_incorrect'     => 'Поле Пользователь не корректен.',
     'one_rate_per_order'      => 'Может быть только одна базовая ставка на заказ.',
     'three_rate_per_route'    => 'Может быть максимум три базовые ставки на маршрут.',
     'differs_from_basic_rate' => 'Параметр отличается от базовой ставки.',
