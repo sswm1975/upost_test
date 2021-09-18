@@ -48,10 +48,10 @@ class RouteController extends Controller
     protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
-            'route_from_country' => 'required|integer|exists:country,country_id',
-            'route_from_city'    => 'required_with:route_from_country|integer|exists:city,city_id,country_id,' . ($data['route_from_country'] ?? '0'),
-            'route_to_country'   => 'required|integer|exists:country,country_id',
-            'route_to_city'      => 'required_with:route_to_country|integer|exists:city,city_id,country_id,' . ($data['route_to_country'] ?? '0'),
+            'route_from_country' => 'required|integer|exists:countries,country_id',
+            'route_from_city'    => 'required_with:route_from_country|integer|exists:cities,city_id,country_id,' . ($data['route_from_country'] ?? '0'),
+            'route_to_country'   => 'required|integer|exists:countries,country_id',
+            'route_to_city'      => 'required_with:route_to_country|integer|exists:cities,city_id,country_id,' . ($data['route_to_country'] ?? '0'),
             'route_start'        => 'required|date',
             'route_end'          => 'required|date|after_or_equal:route_start',
             'route_transport'    => 'required|in:car,bus,walk,train,plane',
@@ -60,8 +60,8 @@ class RouteController extends Controller
 
         for($i = 0; $i < count($data['route_points'] ?? []); $i++) {
             $country_id = (int)($data['route_points'][$i]['country'] ?? 0);
-            $rules["route_points.{$i}.country"] = 'sometimes|required|integer|exists:country,country_id';
-            $rules["route_points.{$i}.city"]    = 'sometimes|required|integer|exists:city,city_id,country_id,' . $country_id;
+            $rules["route_points.{$i}.country"] = 'sometimes|required|integer|exists:countries,country_id';
+            $rules["route_points.{$i}.city"]    = 'sometimes|required|integer|exists:cities,city_id,country_id,' . $country_id;
             $rules["route_points.{$i}.date"]    = 'sometimes|required|date';
         }
 
