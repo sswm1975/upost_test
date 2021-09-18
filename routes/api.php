@@ -31,10 +31,10 @@ Route::group(
     ],
     function () {
         # Відправити запит з емейлом для скидання паролю
-        Route::post('email', 'API\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+        Route::post('email', 'API\PasswordController@sendResetLinkEmail')->name('password.email');
 
         # Зміна паролю
-        Route::post('reset', 'API\ResetPasswordController@reset');
+        Route::post('reset', 'API\PasswordController@reset');
     }
 );
 
@@ -100,7 +100,7 @@ Route::group(
         Route::post('add', 'API\ChatsController@addChat')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Отримати чат
-        Route::get('show', 'API\ChatsController@showChats')->middleware(MIDDLEWARE_AUTH_BASIC);;
+        Route::get('show', 'API\ChatsController@showChats')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Видалити чат
         Route::post('delete', 'API\ChatsController@deleteChat')->middleware(MIDDLEWARE_AUTH_BASIC);
@@ -306,7 +306,7 @@ Route::group(
 Route::get('liqpay_result', 'API\JobController@resultLiqpay')->name('api.liqpay.result');
 
 // Парсинг даних
-Route::get('parser', API\ParserController::class)->middleware(MIDDLEWARE_AUTH_BASIC);
+Route::get('parser', 'API\ParserController')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 // Завантаження файлу
 Route::post('upload', 'API\UploadController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
