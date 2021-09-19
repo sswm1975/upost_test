@@ -38,7 +38,20 @@ return [
     'job_not_found'           => 'Завдання не знайдено.',
     'image_not_found'         => 'Зображення не знайдено.',
 
-    'male'                    => 'Чоловічий',
-    'female'                  => 'Жіночий',
-    'unknown'                 => 'Невідомий',
+    # User's attribute
+    'user' => [
+        # Gender
+        'male'    => 'Чоловічий',
+        'female'  => 'Жіночий',
+        'unknown' => 'Невідомий',
+
+        # User verification
+        'valid'    => 'Перевірений',
+        'no_valid' => 'Не перевірений',
+
+        # Statuses
+        'active'  => 'Активний',
+        'banned'  => 'Заборонений',
+        'removed' => 'Видалений',
+    ],
 ];

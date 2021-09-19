@@ -56,14 +56,14 @@ class ProfileController extends Controller
         unset($user->password, $user->api_token);
 
         # добавляем кол-во заказов, как Заказчик и как Исполнитель (фрилансер)
-        $user->user_creator_count = Review::getCountReviewsByCreator($user->id);
-        $user->user_freelancer_count = Review::getCountReviewsByFreelancer($user->id);
+        $user->creator_count = Review::getCountReviewsByCreator($user->id);
+        $user->freelancer_count = Review::getCountReviewsByFreelancer($user->id);
 
         # добавляем количество отзывов
-        $user->user_reviews_count = Review::getCountReviews($user->id);
+        $user->reviews_count = Review::getCountReviews($user->id);
 
         # получить последний отзыв
-        $user->user_last_review = Review::getLastReview($user->id);
+        $user->last_review = Review::getLastReview($user->id);
 
         # добавляем последние 2 заказа, созданные пользователем
         $user->last_orders = (new OrderController)->getOrdersByFilter($user, [
@@ -168,10 +168,11 @@ class ProfileController extends Controller
     public function updatePassword(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'old_password'  => ['required', function ($attribute, $value, $fail) {
+            'old_password' => ['required', function ($attribute, $value, $fail) {
                 if (getHashPassword($value) !== request()->user()->password) {
                     return $fail(__('message.old_password_incorrect'));
                 }
+                return true;
             }],
             'password' => ['required', 'min:6', 'confirmed'],
         ]);

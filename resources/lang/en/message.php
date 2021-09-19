@@ -39,7 +39,20 @@ return [
     'job_not_found'           => 'Job not found.',
     'image_not_found'         => 'Image not found.',
 
-    'male'                    => 'Male',
-    'female'                  => 'Female',
-    'unknown'                 => 'Unknown',
+    # User's attribute
+    'user' => [
+        # Gender
+        'male'    => 'Male',
+        'female'  => 'Female',
+        'unknown' => 'Unknown',
+
+        # User verification
+        'valid'    => 'Verified',
+        'no_valid' => 'Not verified',
+
+        # Statuses
+        'active'  => 'Active',
+        'banned'  => 'Banned',
+        'removed' => 'Removed',
+    ],
 ];

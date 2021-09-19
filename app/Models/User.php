@@ -112,6 +112,7 @@ class User extends Authenticatable
         'register_date_human',
         'last_active_human',
         'city_name',
+        'age',
     ];
 
     /**
@@ -133,6 +134,7 @@ class User extends Authenticatable
         'freelancer_rating',    # рейтинг фрілансера
         'creator_rating',       # рейтинг виконавця
         'city_id',              # місто
+        'validation',           # статус верифікації даних користувача
     ];
 
     /**
@@ -181,7 +183,22 @@ class User extends Authenticatable
 
     public function getGenderAttribute($value): string
     {
-        return __("message.$value");
+        return __("message.user.$value");
+    }
+
+    public function getValidationAttribute($value): string
+    {
+        return __("message.user.$value");
+    }
+
+    public function getStatusAttribute($value): string
+    {
+        return __("message.user.$value");
+    }
+
+    public function getAgeAttribute(): string
+    {
+        return Carbon::parse($this->birthday)->age;
     }
 
     public function getCityNameAttribute(): string
@@ -211,13 +228,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Поле "От даты регистрации прошло Х лет/месяцев/дней".
+     * Поле "На сервисе Х лет/месяцев/дней".
      *
      * @return string
      */
     public function getRegisterDateHumanAttribute(): string
     {
-        return Carbon::parse($this->register_date)->diffForHumans();
+        return Carbon::parse($this->register_date)->diffForHumans(null, true);
     }
 
     /**
