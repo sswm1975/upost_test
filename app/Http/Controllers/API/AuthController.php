@@ -104,7 +104,6 @@ class AuthController extends Controller
             'status'  => true,
             'message' => __('message.register_successful'),
             'token'   => $token,
-            'sql' => getSQLForFixDatabase()
         ]);
     }
 

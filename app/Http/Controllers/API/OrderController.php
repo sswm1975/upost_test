@@ -177,7 +177,6 @@ class OrderController extends Controller
         return response()->json([
             'status' => true,
             'orders' => null_to_blank($orders),
-            'sql' => getSQLForFixDatabase()
         ]);
     }
 
