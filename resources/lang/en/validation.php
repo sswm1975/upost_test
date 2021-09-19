@@ -138,20 +138,20 @@ return [
         'photo' => [
             'base64_image' => 'Image invalid format.',
         ],
-        'user_phone' => [
+        'phone' => [
             'phone' => 'Phone is incorrect.',
         ],
-        'user_card_number' => [
+        'card_number' => [
             'bankcard' => 'Card number is incorrect.',
         ],
         'rate_id' => [
             'owner_rate' => 'You don\'t have permission.',
         ],
-        'user_resume' => [
+        'resume' => [
             'censor' => 'Resume has obscene words.',
             'not_phone' => 'It is forbidden to leave contact details in resume.',
         ],
-        'order_text' => [
+        'text' => [
             'censor' => 'There are obscene words in the order.',
             'not_phone' => 'It is forbidden to leave contact details in order.',
         ],
