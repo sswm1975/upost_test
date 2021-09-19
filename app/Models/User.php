@@ -184,11 +184,11 @@ class User extends Authenticatable
         return __("message.$value");
     }
 
-    public function getCityNameAttribute($value): string
+    public function getCityNameAttribute(): string
     {
         if (empty($this->city_id)) return '';
 
-        return City::language()->find($this->city_id)->name;
+        return City::language()->find($this->city_id)->name ?? '';
     }
 
     public function getPhotoAttribute($value): string
