@@ -21,7 +21,7 @@ class PasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request): JsonResponse
     {
-        $credentials = validateOrExit(['user_email' => 'required|email']);
+        $credentials = validateOrExit(['email' => 'required|email']);
 
         $status = Password::sendResetLink($credentials);
 
@@ -42,19 +42,12 @@ class PasswordController extends Controller
     {
         $credentials = validateOrExit([
             'token'         => 'required',
-            'user_email'    => 'required|email',
-            'user_password' => 'required|min:6|confirmed',
+            'email'    => 'required|email',
+            'password' => 'required|min:6|confirmed',
         ]);
 
-        $credentials['password'] = $credentials['user_password'];
-        unset($credentials['user_password']);
-
         $status = Password::reset($credentials, function ($user, $password) {
-            $user->forceFill([
-                'user_password' => getHashPassword($password)
-            ]);
-
-            $user->save();
+            $user->forceFill(['password' => getHashPassword($password)])->save();
 
             event(new PasswordReset($user));
         });

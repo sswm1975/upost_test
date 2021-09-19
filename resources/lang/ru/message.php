@@ -38,4 +38,8 @@ return [
     'statement_not_found'     => 'Заявление не найдено.',
     'job_not_found'           => 'Задание не найдено.',
     'image_not_found'         => 'Рисунок не найден.',
+
+    'male'                    => 'Мужской',
+    'female'                  => 'Женский',
+    'unknown'                 => 'Неизвестный',
 ];

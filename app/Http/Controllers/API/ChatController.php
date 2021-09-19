@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class ChatsController extends Controller
+class ChatController extends Controller
 {
     /**
      * Добавить чат.
@@ -26,15 +26,13 @@ class ChatsController extends Controller
     public function addChat(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'rate_id'   => 'required|integer|exists:rate,rate_id',
-            'order_id'  => 'required|integer|exists:orders,order_id',
-            'to_user'   => 'required|integer|exists:users,user_id',
-            'user_id'   => 'required|integer|exists:users,user_id',
+            'rate_id'   => 'required|integer|exists:rate,id',
+            'order_id'  => 'required|integer|exists:orders,id',
+            'to_user'   => 'required|integer|exists:users,id',
+            'user_id'   => 'required|integer|exists:users,id',
         ]);
 
-        validateOrExit($validator);
-
-        $data = $request->all();
+        $data = validateOrExit($validator);
 
         try {
             $this->addExtValidate($data);
@@ -44,9 +42,6 @@ class ChatsController extends Controller
                 'order_id'    => $data['order_id'],
                 'user_id'     => $data['user_id'],
                 'to_user'     => $data['to_user'],
-                'chat_date'   => Carbon::now(),
-                'chat_status' => 'active',
-                'last_sms'    => '',
             ]);
 
             return response()->json([
@@ -68,21 +63,15 @@ class ChatsController extends Controller
      */
     public function showChats(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'user_id'   => 'required|integer|exists:users,user_id',
-                'addressee' => 'integer|exists:users,user_id',
-                'order_id'  => 'integer|exists:orders,order_id',
-            ]
-        );
-
-        validateOrExit($validator);
-
-        $data = $request->post();
+        $data = validateOrExit([
+            'user_id'   => 'required|integer|exists:users,id',
+            'addressee' => 'integer|exists:users,id',
+            'order_id'  => 'integer|exists:orders,id',
+        ]);
 
         try {
-
-            $query = Chat::query()->where('user_id', $data['user_id'])
+            $query = Chat::query()
+                ->where('user_id', $data['user_id'])
                 ->orWhere('to_user', $data['user_id']);
 
             if(isset($data['addressee'])) {
@@ -97,9 +86,9 @@ class ChatsController extends Controller
 
             $res = [];
             foreach ($chats as $chat) {
-                if($chat['chat_status'] == "active") {
+                if($chat['status'] == Chat::STATUS_ACTIVE) {
                     $res[] = $chat;
-                } elseif($chat["user_id"] == $data["user_id"]) {
+                } elseif($chat['user_id'] == $data['user_id']) {
                     $res[] = $chat;
                 }
             }
@@ -125,23 +114,16 @@ class ChatsController extends Controller
      */
     public function deleteChat(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'chat_id'  => 'required|integer|exists:chats,chat_id',
-                'user_id'   => 'required|integer|exists:users,user_id',
-            ]
-        );
-
-        validateOrExit($validator);
-
-        $data = $request->all();
+        $data = validateOrExit([
+            'chat_id' => 'required|integer|exists:chats,id',
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
 
         try {
-
             $this->deleteExtValidate($data);
 
             $affected = DB::table('chats')
-                ->where('chat_id', $data['chat_id'])
+                ->where('id', $data['chat_id'])
                 ->where('user_id', $data['user_id'])
                 ->delete();
         }
@@ -162,23 +144,20 @@ class ChatsController extends Controller
     private function addExtValidate(array $data): bool
     {
         // Check rate_id
-        $query = (new Rate())->newQuery();
-        $count = $query->where('rate_id', $data['rate_id'])
-            ->where('order_id', $data['order_id'])
-            ->count();
+        $count = Rate::whereId($data['rate_id'])->whereOrderId($data['order_id'])->count();
 
-        if($count == 0) {
+        if ($count == 0) {
             throw new Exception("This rate belongs to other order");
         }
 
         // Check user_id
-        $query = (new Rate())->newQuery();
-        $count = $query->where('rate_id', $data['rate_id'])
+        $count = Rate()->query()
+            ->where('id', $data['rate_id'])
             ->where('who_start', $data['user_id'])
             ->where('user_id', $data['to_user'])
             ->count();
 
-        if($count == 0) {
+        if ($count == 0) {
             throw new Exception("This User not have permissions for rate");
         }
 
@@ -195,24 +174,20 @@ class ChatsController extends Controller
     private function deleteExtValidate(array $data): bool
     {
         $query = (new Chat())->newQuery();
-        $count = $query->where('chat_id', $data['chat_id'])
-            ->where('chat_status', '<>', 'active')
+        $count = $query->where('id', $data['chat_id'])
+            ->where('status', '<>', Chat::STATUS_ACTIVE)
             ->count();
 
-        if($count == 0) {
+        if ($count == 0) {
             throw new Exception("This chat now is active. Can not delete chat.");
         }
 
-        $query = (new Chat())->newQuery();
-        $count = $query->where('chat_id', $data['chat_id'])
-            ->where('user_id', $data['user_id'])
-            ->count();
+        $count = Chat::whereId($data['chat_id'])->whereUserId($data['user_id'])->count();
 
-        if($count == 0) {
+        if ($count == 0) {
             throw new Exception("This chat created by other user. Can not delete chat.");
         }
 
         return true;
-
     }
 }

@@ -34,10 +34,10 @@ class RouteController extends Controller
         $route = Route::create($data);
 
         if (isset($data['route_points'])) {
-            $route_points = $route->route_points()->createMany($data['route_points']);
+            $route->route_points()->createMany($data['route_points']);
         }
 
-        $route = Route::with('route_points:route_id,country,city,date')
+        $route = Route::with('route_points:route_id,country_id,city_id,date')
             ->find($route->route_id)
             ->toArray();
 
@@ -56,21 +56,21 @@ class RouteController extends Controller
     protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
-            'route_from_country' => 'required|integer|exists:countries,country_id',
-            'route_from_city'    => 'required_with:route_from_country|integer|exists:cities,city_id,country_id,' . ($data['route_from_country'] ?? '0'),
-            'route_to_country'   => 'required|integer|exists:countries,country_id',
-            'route_to_city'      => 'required_with:route_to_country|integer|exists:cities,city_id,country_id,' . ($data['route_to_country'] ?? '0'),
-            'route_start'        => 'required|date',
-            'route_end'          => 'required|date|after_or_equal:route_start',
-            'route_transport'    => 'required|in:car,bus,walk,train,plane',
-            'route_points'       => 'sometimes|nullable|array',
+            'from_country_id' => 'required|integer|exists:countries,id',
+            'from_city_id'    => 'required_with:from_country_id|integer|exists:cities,id,country_id,' . ($data['from_country_id'] ?? '0'),
+            'to_country_id'   => 'required|integer|exists:countries,id',
+            'to_city_id'      => 'required_with:to_country|integer|exists:cities,id,country_id,' . ($data['to_country_id'] ?? '0'),
+            'fromdate'        => 'required|date',
+            'tilldate'        => 'required|date|after_or_equal:fromdate',
+            'transport'       => 'required|in:car,bus,walk,train,plane',
+            'route_points'    => 'sometimes|nullable|array',
         ];
 
         for ($i = 0; $i < count($data['route_points'] ?? []); $i++) {
             $country_id = (int)($data['route_points'][$i]['country'] ?? 0);
-            $rules["route_points.{$i}.country"] = 'sometimes|required|integer|exists:countries,country_id';
-            $rules["route_points.{$i}.city"]    = 'sometimes|required|integer|exists:cities,city_id,country_id,' . $country_id;
-            $rules["route_points.{$i}.date"]    = 'sometimes|required|date';
+            $rules["route_points.{$i}.country_id"] = 'sometimes|required|integer|exists:countries,id';
+            $rules["route_points.{$i}.city_id"]    = 'sometimes|required|integer|exists:cities,id,country_id,' . $country_id;
+            $rules["route_points.{$i}.date"]       = 'sometimes|required|date';
         }
 
         return Validator::make($data, $rules);
@@ -88,7 +88,7 @@ class RouteController extends Controller
     {
         $route = end($this->getRoutesByFilter(
             $request->user(),
-            ['route_id' => [$route_id]]
+            ['id' => [$route_id]]
         )['data']);
 
         if (!$route) throw new ErrorException(__('message.route_not_found'));
@@ -96,9 +96,9 @@ class RouteController extends Controller
         $similar_routes = $this->getRoutesByFilter(
             $request->user(),
             [
-                'without_route_id' => $route['route_id'],
-                'city_from' => [$route['route_from_city']],
-                'city_to' => [$route['route_to_city']],
+                'without_route_id' => $route['id'],
+                'city_from' => [$route['from_city_id']],
+                'city_to' => [$route['to_city_id']],
                 'show' => 3,
             ]
         )['data'];
@@ -120,7 +120,7 @@ class RouteController extends Controller
     {
         $user = $request->user();
 
-        $routes = $this->getRoutesByFilter($user, ['user_id' => $user->user_id])['data'];
+        $routes = $this->getRoutesByFilter($user, ['user_id' => $user->id])['data'];
 
         return response()->json([
             'status' => true,
@@ -138,22 +138,22 @@ class RouteController extends Controller
     public function showRoutes(Request $request): JsonResponse
     {
         $filters = validateOrExit([
-            'route_id'       => 'sometimes|required|array',
-            'route_id.*'     => 'required|integer',
-            'user_id'        => 'sometimes|required|integer',
-            'status'         => 'sometimes|required|in:active,ban,close',
-            'date_from'      => 'sometimes|required|date',
-            'date_to'        => 'sometimes|required|date|after_or_equal:date_from',
-            'country_from'   => 'sometimes|required|array',
-            'country_from.*' => 'required|integer',
-            'city_from'      => 'sometimes|required|array',
-            'city_from.*'    => 'required|integer',
-            'country_to'     => 'sometimes|required|array',
-            'country_to.*'   => 'required|integer',
-            'city_to'        => 'sometimes|required|array',
-            'city_to.*'      => 'required|integer',
-            'show'           => 'sometimes|required|integer|min:1',
-            'page'           => 'sometimes|required|integer|min:1',
+            'id'                => 'sometimes|required|array',
+            'id.*'              => 'required|integer',
+            'user_id'           => 'sometimes|required|integer',
+            'status'            => 'sometimes|required|in:active,ban,close',
+            'fromdate'          => 'sometimes|required|date',
+            'tilldate'          => 'sometimes|required|date|after_or_equal:fromdate',
+            'from_country_id'   => 'sometimes|required|array',
+            'from_country_id.*' => 'required|integer',
+            'from_city_id'      => 'sometimes|required|array',
+            'from_city_id.*'    => 'required|integer',
+            'to_country_id'     => 'sometimes|required|array',
+            'to_country_id.*'   => 'required|integer',
+            'to_city_id'        => 'sometimes|required|array',
+            'to_city_id.*'      => 'required|integer',
+            'show'              => 'sometimes|required|integer|min:1',
+            'page'              => 'sometimes|required|integer|min:1',
         ]);
 
         $routes = $this->getRoutesByFilter($request->user(), $filters);
@@ -180,15 +180,15 @@ class RouteController extends Controller
             ->with([
                 'user' => function ($query) {
                     $query->select([
-                        'user_id',
-                        'user_name',
-                        'user_surname',
-                        'user_creator_rating',
-                        'user_freelancer_rating',
-                        'user_photo',
-                        'user_favorite_orders',
-                        'user_favorite_routes',
-                        DB::raw('(select count(*) from `orders` where `users`.`user_id` = `orders`.`user_id` and `order_status` = "successful") as user_successful_orders')
+                        'id',
+                        'name',
+                        'surname',
+                        'creator_rating',
+                        'freelancer_rating',
+                        'photo',
+                        'favorite_orders',
+                        'favorite_routes',
+                        DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders')
                     ]);
                 },
                 'from_country',
@@ -199,43 +199,43 @@ class RouteController extends Controller
                 'route_points.city'
             ])
             ->withCount(['rates as rates_all_count' => function ($query) use ($user) {
-                $query->where('parent_id', 0)->where('user_id', $user->user_id);
+                $query->where('parent_id', 0)->where('user_id', $user->id);
             }])
             ->withCount(['rates as rates_read_count' => function ($query) use ($user) {
-                $query->where('read_rate', 0)->where('user_id', $user->user_id);
+                $query->where('is_read', 0)->where('user_id', $user->id);
             }])
             ->withCount(['rates as is_in_rate' => function ($query) use ($user) {
-                $query->typeOrder()->where('user_id', $user->user_id);
+                $query->typeOrder()->where('user_id', $user->id);
             }])
-            ->where('route_status', $filters['status'] ?? 'active')
-            ->when(!empty($filters['route_id']), function ($query) use ($filters) {
-                return $query->whereIn('route_id', $filters['route_id']);
+            ->where('status', $filters['status'] ?? 'active')
+            ->when(!empty($filters['id']), function ($query) use ($filters) {
+                return $query->whereIn('id', $filters['id']);
             })
-            ->when(!empty($filters['without_route_id']), function ($query) use ($filters) {
-                return $query->where('route_id', '!=', $filters['without_route_id']);
+            ->when(!empty($filters['without_id']), function ($query) use ($filters) {
+                return $query->where('id', '!=', $filters['without_id']);
             })
             ->when(!empty($filters['user_id']), function ($query) use ($filters) {
                 return $query->where('user_id', $filters['user_id']);
             })
-            ->when(!empty($filters['date_from']), function ($query) use ($filters) {
-                return $query->where('route_start', '>=', $filters['date_from']);
+            ->when(!empty($filters['fromdate']), function ($query) use ($filters) {
+                return $query->where('fromdate', '>=', $filters['fromdate']);
             })
-            ->when(!empty($filters['date_to']), function ($query) use ($filters) {
-                return $query->where('route_end', '<=', $filters['date_to']);
+            ->when(!empty($filters['tilldate']), function ($query) use ($filters) {
+                return $query->where('tilldate', '<=', $filters['tilldate']);
             })
-            ->when(!empty($filters['country_from']), function ($query) use ($filters) {
-                return $query->existsCountryInFromCountry($filters['country_from']);
+            ->when(!empty($filters['from_country_id']), function ($query) use ($filters) {
+                return $query->existsCountryInFromCountry($filters['from_country_id']);
             })
-            ->when(!empty($filters['city_from']), function ($query) use ($filters) {
-                return $query->existsCityInFromCity($filters['city_from']);
+            ->when(!empty($filters['from_city_id']), function ($query) use ($filters) {
+                return $query->existsCityInFromCity($filters['from_city_id']);
             })
-            ->when(!empty($filters['country_to']), function ($query) use ($filters) {
-                return $query->existsCountryInToCountry($filters['country_to']);
+            ->when(!empty($filters['to_country_id']), function ($query) use ($filters) {
+                return $query->existsCountryInToCountry($filters['to_country_id']);
             })
-            ->when(!empty($filters['city_to']), function ($query) use ($filters) {
-                return $query->existsCityInToCity($filters['city_to']);
+            ->when(!empty($filters['to_city_id']), function ($query) use ($filters) {
+                return $query->existsCityInToCity($filters['to_city_id']);
             })
-            ->orderBy('routes.route_id', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page'] ?? 1)
             ->toArray();
     }
@@ -254,9 +254,9 @@ class RouteController extends Controller
 
         # Ищем маршрут по его коду, он должен принадлежать авторизированному пользователю и быть активным
         $route = Route::query()
-            ->where('route_id', $route_id)
-            ->where('user_id', $request->user()->user_id)
-            ->where('route_status', 'active')
+            ->where('id', $route_id)
+            ->where('user_id', $request->user()->id)
+            ->where('status', 'active')
             ->first();
 
         if (!$route) throw new ErrorException(__('message.route_not_found'));
@@ -283,9 +283,9 @@ class RouteController extends Controller
     {
         # Ищем маршрут по его коду, он должен принадлежать авторизированному пользователю и быть в одном из разрешенных статусов
         $route = Route::query()
-            ->where('route_id', $route_id)
-            ->where('user_id',  $request->user()->user_id)
-            ->whereIn('route_status', [
+            ->where('id', $route_id)
+            ->where('user_id',  $request->user()->id)
+            ->whereIn('status', [
                 Route::STATUS_ACTIVE,
                 Route::STATUS_BAN,
                 Route::STATUS_CLOSED,
@@ -314,11 +314,11 @@ class RouteController extends Controller
         }
 
         $orders = Order::query()
-            ->where('user_id',  $request->user()->user_id)
-            ->where('order_status', Order::STATUS_ACTIVE)
-            ->where('order_from_country', $route->route_from_country)
-            ->where('order_start', '>=', $route->route_start)
-            ->where('order_deadline', '<=', $route->route_end)
+            ->where('user_id',  $request->user()->id)
+            ->where('status', Order::STATUS_ACTIVE)
+            ->where('from_country', $route->route_from_country)
+            ->where('fromdate', '>=', $route->fromdate)
+            ->where('tilldate', '<=', $route->tilldate)
             ->get()
             ->toArray();
 
@@ -330,7 +330,7 @@ class RouteController extends Controller
     }
 
     /**
-     * Увеличить счетчик просмотров маршрута.
+     * Увеличить счётчик просмотров маршрута.
      *
      * @param int $route_id
      * @param Request $request
@@ -339,21 +339,19 @@ class RouteController extends Controller
      */
     public function addLook(int $route_id, Request $request): JsonResponse
     {
-        validateOrExit([
-            'user_id' => 'required|integer|exists:users,user_id',
-        ]);
+        validateOrExit(['user_id' => 'required|integer|exists:users,id']);
 
         if (!$route = Route::find($route_id)) {
             throw new ErrorException(__('message.route_not_found'));
         }
 
         if ($route->user_id <> $request->get('user_id')) {
-            $route->increment('route_look');
+            $route->increment('looks');
         }
 
         return response()->json([
             'status'  => true,
-            'looks'   => $route->route_look,
+            'looks'   => $route->looks,
         ]);
     }
 }

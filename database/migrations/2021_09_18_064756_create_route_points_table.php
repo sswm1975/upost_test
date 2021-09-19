@@ -16,8 +16,8 @@ class CreateRoutePointsTable extends Migration
         Schema::create('route_points', function (Blueprint $table) {
             $table->increments('id')->comment('Код');
             $table->unsignedInteger('route_id')->comment('Код маршрута');
-            $table->unsignedInteger('country')->comment('Код страны');
-            $table->unsignedInteger('city')->comment('Код города');
+            $table->unsignedInteger('country_id')->comment('Код страны');
+            $table->unsignedInteger('city_id')->comment('Код города');
             $table->date('date')->comment('Дата нахождения');
 
             $table->foreign('route_id')

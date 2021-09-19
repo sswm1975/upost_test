@@ -69,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
 
             if (!$rate) return false;
 
-            return in_array(request()->user()->user_id, [$rate->order->user_id, $rate->route->user_id]);
+            return in_array(request()->user()->id, [$rate->order->user_id, $rate->route->user_id]);
         });
 
         /**

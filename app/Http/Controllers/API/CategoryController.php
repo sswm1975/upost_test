@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\App;
 use App\Models\Category;
 
 class CategoryController extends Controller

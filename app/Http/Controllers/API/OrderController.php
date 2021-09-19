@@ -19,14 +19,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Models\Order;
-use App\Models\Option;
+use App\Models\CurrencyRate;
 
 class OrderController extends Controller
 {
     const DEFAULT_PER_PAGE = 5;
     const SORT_FIELDS = [
-        'date'  => 'order_register_date',
-        'price' => 'order_price_usd',
+        'date'  => 'register_date',
+        'price' => 'price_usd',
     ];
     const DEFAULT_SORT_BY = 'date';
     const DEFAULT_SORTING = 'desc';
@@ -46,14 +46,14 @@ class OrderController extends Controller
     {
         if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
-        validateOrExit($this->validator($request->all()));
+        $data = validateOrExit($this->validator($request->all()));
 
-        $order = Order::create($request->all());
+        $order = Order::create($data);
 
         return response()->json([
             'status'   => true,
-            'order_id' => $order->order_id,
-            'url'      => $order->order_url,
+            'order_id' => $order->id,
+            'url'      => $order->slug,
         ]);
     }
 
@@ -67,28 +67,28 @@ class OrderController extends Controller
     {
         return Validator::make($data,
             [
-                'order_name'           => 'required|string|censor|max:100',
-                'order_category'       => 'required|integer|exists:categories,category_id',
-                'order_price'          => 'required|numeric',
-                'order_currency'       => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
-                'order_count'          => 'required|integer',
-                'order_size'           => 'required|string|max:50',
-                'order_weight'         => 'required|string|max:50',
-                'order_product_link'   => 'sometimes|nullable|string|url',
-                'order_text'           => 'required|string|not_phone|censor|max:500',
-                'order_images'         => 'required|array|max:8',
-                'order_from_country'   => 'required|integer|exists:countries,country_id',
-                'order_from_city'      => 'sometimes|required|integer|exists:cities,city_id,country_id,' . $data['order_from_country'],
-                'order_from_address'   => 'sometimes|nullable|string',
-                'order_to_country'     => 'required|integer|exists:countries,country_id',
-                'order_to_city'        => 'sometimes|required|integer|exists:cities,city_id,country_id,' . $data['order_to_country'],
-                'order_to_address'     => 'sometimes|nullable|string',
-                'order_start'          => 'sometimes|required|date',
-                'order_deadline'       => 'required|date|after_or_equal:order_start',
-                'order_personal_price' => 'required|boolean',
-                'order_user_price'     => 'required_if:order_personal_price,1',
-                'order_user_currency'  => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
-                'order_not_more_price' => 'required|boolean',
+                'name'           => 'required|string|censor|max:100',
+                'category_id'    => 'required|integer|exists:categories,id',
+                'price'          => 'required|numeric',
+                'currency'       => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
+                'products_count' => 'required|integer',
+                'size'           => 'required|string|max:50',
+                'weight'         => 'required|string|max:50',
+                'product_link'   => 'sometimes|nullable|string|url',
+                'description'    => 'required|string|not_phone|censor|max:500',
+                'images'         => 'required|array|max:8',
+                'from_country_id'=> 'required|integer|exists:countries,id',
+                'from_city_id'   => 'sometimes|required|integer|exists:cities,id,country_id,' . $data['order_from_country'],
+                'from_address'   => 'sometimes|nullable|string',
+                'to_country_id'  => 'required|integer|exists:countries,country_id',
+                'to_city_id'     => 'sometimes|required|integer|exists:cities,id,country_id,' . $data['order_to_country'],
+                'to_address'     => 'sometimes|nullable|string',
+                'fromdate'       => 'sometimes|required|date',
+                'tilldate'       => 'required|date|after_or_equal:fromdate',
+                'personal_price' => 'required|boolean',
+                'user_price'     => 'required_if:personal_price,1',
+                'user_currency'  => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
+                'not_more_price' => 'required|boolean',
             ]
         );
     }
@@ -105,7 +105,7 @@ class OrderController extends Controller
     {
         $order = Order::query()
             ->where('order_id', $order_id)
-            ->where('user_id', $request->user()->user_id)
+            ->where('user_id', $request->user()->id)
             ->whereIn('order_status', [
                 Order::STATUS_ACTIVE,
                 Order::STATUS_BAN,
@@ -137,9 +137,9 @@ class OrderController extends Controller
         $similar_orders = $this->getOrdersByFilter(
             $request->user(),
             [
-                'without_order_id' => $order['order_id'],
-                'city_from' => [$order['order_from_city']],
-                'city_to' => [$order['order_to_city']],
+                'without_order_id' => $order['id'],
+                'city_from' => [$order['from_city_id']],
+                'city_to' => [$order['to_city_id']],
                 'show' => 3,
             ]
         )['data'];
@@ -148,8 +148,8 @@ class OrderController extends Controller
             $similar_orders = $this->getOrdersByFilter(
                 $request->user(),
                 [
-                    'without_order_id' => $order['order_id'],
-                    'category' => $order['order_category'],
+                    'without_order_id' => $order['id'],
+                    'category_id' => $order['category_id'],
                     'show' => 3,
                 ]
             )['data'];
@@ -172,7 +172,7 @@ class OrderController extends Controller
     {
         $user = $request->user();
 
-        $orders = $this->getOrdersByFilter($user, ['user_id' => $user->user_id])['data'];
+        $orders = $this->getOrdersByFilter($user, ['user_id' => $user->id])['data'];
 
         return response()->json([
             'status' => true,
@@ -233,21 +233,21 @@ class OrderController extends Controller
      */
     public function getOrdersByFilter(User $user, array $filters = []): array
     {
-        $rate = !empty($filters['currency']) ? Option::rate($filters['currency']) : 1;
+        $rate = !empty($filters['currency']) ? CurrencyRate::rate($filters['currency']) : 1;
 
         return Order::query()
             ->with([
                 'user' => function ($query) {
                     $query->select([
-                        'user_id',
-                        'user_name',
-                        'user_surname',
-                        'user_creator_rating',
-                        'user_freelancer_rating',
-                        'user_photo',
-                        'user_favorite_orders',
-                        'user_favorite_routes',
-                        DB::raw('(select count(*) from `orders` where `users`.`user_id` = `orders`.`user_id` and `order_status` = "successful") as user_successful_orders')
+                        'id',
+                        'name',
+                        'surname',
+                        'creator_rating',
+                        'freelancer_rating',
+                        'photo',
+                        'favorite_orders',
+                        'favorite_routes',
+                        DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders')
                     ]);
                 },
                 'category',
@@ -257,52 +257,52 @@ class OrderController extends Controller
                 'to_city',
             ])
             ->withCount(['rates as rates_all_count' => function ($query) use ($user) {
-                $query->where('parent_id', 0)->where('user_id', $user->user_id);
+                $query->where('parent_id', 0)->where('user_id', $user->id);
             }])
             ->withCount(['rates as rates_read_count' => function ($query) use ($user) {
-                $query->where('read_rate', 0)->where('user_id', $user->user_id);
+                $query->where('is_read', 0)->where('user_id', $user->id);
             }])
             ->withCount(['rates as is_in_rate' => function ($query) use ($user) {
-                $query->typeOrder()->where('user_id', $user->user_id);
+                $query->typeOrder()->where('user_id', $user->id);
             }])
             ->when(!empty($filters['order_id']), function ($query) use ($filters) {
-                return $query->where('orders.order_id', $filters['order_id']);
+                return $query->where('orders.id', $filters['order_id']);
             })
             ->when(!empty($filters['without_order_id']), function ($query) use ($filters) {
-                return $query->where('orders.order_id', '!=', $filters['without_order_id']);
+                return $query->where('orders.id', '!=', $filters['without_order_id']);
             })
             ->when(!empty($filters['user_id']), function ($query) use ($filters) {
                 return $query->where('orders.user_id', $filters['user_id']);
             })
             ->when(!empty($filters['category']), function ($query) use ($filters) {
-                return $query->where('orders.order_category', $filters['category']);
+                return $query->where('orders.category_id', $filters['category']);
             })
             ->when(!empty($filters['status']), function ($query) use ($filters) {
-                return $query->where('orders.order_status', $filters['status']);
+                return $query->where('orders.status', $filters['status']);
             })
             ->when(!empty($filters['date_from']), function ($query) use ($filters) {
-                return $query->where('orders.order_start', '>=', $filters['date_from']);
+                return $query->where('orders.fromdate', '>=', $filters['date_from']);
             })
             ->when(!empty($filters['date_to']), function ($query) use ($filters) {
-                return $query->where('orders.order_start', '<=', $filters['date_to']);
+                return $query->where('orders.tilldate', '<=', $filters['date_to']);
             })
             ->when(!empty($filters['city_from']), function ($query) use ($filters) {
-                return $query->whereIn('orders.order_from_city', $filters['city_from']);
+                return $query->whereIn('orders.from_city_id', $filters['city_from']);
             })
             ->when(!empty($filters['city_to']), function ($query) use ($filters) {
-                return $query->whereIn('orders.order_to_city', $filters['city_to']);
+                return $query->whereIn('orders.to_city_id', $filters['city_to']);
             })
             ->when(!empty($filters['country_from']), function ($query) use ($filters) {
-                return $query->whereIn('orders.order_from_country', $filters['country_from']);
+                return $query->whereIn('orders.from_country_id', $filters['country_from']);
             })
             ->when(!empty($filters['country_to']), function ($query) use ($filters) {
-                return $query->whereIn('orders.order_to_country', $filters['country_to']);
+                return $query->whereIn('orders.to_country_id', $filters['country_to']);
             })
             ->when(!empty($filters['price_from']), function ($query) use ($filters, $rate) {
-                return $query->where('orders.order_price_usd', '>=', $filters['price_from'] * $rate);
+                return $query->where('orders.price_usd', '>=', $filters['price_from'] * $rate);
             })
             ->when(!empty($filters['price_to']), function ($query) use ($filters, $rate) {
-                return $query->where('orders.order_price_usd', '<=', $filters['price_to'] * $rate);
+                return $query->where('orders.price_usd', '<=', $filters['price_to'] * $rate);
             })
             ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
             ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page'] ?? 1)
@@ -348,15 +348,10 @@ class OrderController extends Controller
      */
     public function confirmOrder(Request $request): JsonResponse
     {
-        $validator = Validator::make(request()->all(),
-            [
-                'chat_id'        => 'required|integer|exists:chats,chat_id',
-                'user_id'        => 'required|integer|exists:users,user_id',
-            ]
-        );
-        validateOrExit($validator);
-
-        $data = $request->all();
+        $data = validateOrExit([
+            'chat_id'        => 'required|integer|exists:chats,chat_id',
+            'user_id'        => 'required|integer|exists:users,id',
+        ]);
 
         try {
             $this->confirmExtValidate($data);
@@ -441,7 +436,7 @@ class OrderController extends Controller
     public function addLook(int $order_id, Request $request): JsonResponse
     {
         validateOrExit([
-            'user_id' => 'required|integer|exists:users,user_id',
+            'user_id' => 'required|integer|exists:users,id',
         ]);
 
         if (!$order = Order::find($order_id)) {
@@ -471,12 +466,12 @@ class OrderController extends Controller
             $currency = getCurrencySymbol($request->get('currency'));
 
             $prices = Order::toBase()
-                ->where('order_currency', $currency)
-                ->selectRaw('MIN(order_price) AS price_min, MAX(order_price) AS price_max')
+                ->where('currency', $currency)
+                ->selectRaw('MIN(price) AS price_min, MAX(price) AS price_max')
                 ->first();
         } else {
             $prices = Order::toBase()
-                ->selectRaw('MIN(order_price_usd) AS price_min, MAX(order_price_usd) AS price_max')
+                ->selectRaw('MIN(price_usd) AS price_min, MAX(price_usd) AS price_max')
                 ->first();
         }
 

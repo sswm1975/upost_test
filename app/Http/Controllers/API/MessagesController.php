@@ -27,20 +27,20 @@ class MessagesController extends Controller
     {
         $data = validateOrExit(
             [
-                'chat_id'           => 'required|integer|exists:chats,chat_id',
-                'rate_id'           => 'required|integer|exists:rate,rate_id',
-                'order_id'          => 'required|integer|exists:orders,order_id',
-                'from_user'         => 'required|integer|exists:users,user_id',
-                'to_user'           => 'sometimes|required|integer|exists:users,user_id',
-                'message_text'      => 'required|string',
-                'message_attach'    => 'required|array|max:8',
-                'message_attach.*'  => 'required|string',
-                'type'              => 'sometimes|required|in:' . implode(',', Message::TYPES),
+                'chat_id'    => 'required|integer|exists:chats,id',
+                'rate_id'    => 'required|integer|exists:rate,id',
+                'order_id'   => 'required|integer|exists:orders,id',
+                'from_user'  => 'required|integer|exists:users,id',
+                'to_user'    => 'sometimes|required|integer|exists:users,id',
+                'text'       => 'required|string',
+                'files'      => 'required|array|max:8',
+                'files.*'    => 'required|string',
+                'type'       => 'sometimes|required|in:' . implode(',', Message::TYPES),
             ]
         );
 
-        $user_id = $request->user()->user_id;
-        $chat_user_id = Chat::where('chat_id', $data['chat_id'])->first()->user_id;
+        $user_id = $request->user()->id;
+        $chat_user_id = Chat::find($data['chat_id'])->user_id;
 
         if ($chat_user_id != $user_id && $data['to_user'] != $user_id) {
             throw new ErrorException(__('message.not_have_permission'));
@@ -63,8 +63,8 @@ class MessagesController extends Controller
     public function showMessages(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'user_id' => 'required|integer|exists:users,user_id',
-            'chat_id' => 'required|integer|exists:chats,chat_id',
+            'user_id' => 'required|integer|exists:users,id',
+            'chat_id' => 'required|integer|exists:chats,id',
             'count'   => 'integer',
             'page'    => 'integer',
             'sorting' => 'integer',
@@ -72,8 +72,8 @@ class MessagesController extends Controller
 
         $rows = Message::query()
             ->where('from_user', $data['user_id'])
-            ->where('chat_id', $data['chat_id'])
-            ->orderBy('message_date', $data['sorting'] ?? self::DEFAULT_SORTING)
+            ->where('id', $data['chat_id'])
+            ->orderBy('created_by', $data['sorting'] ?? self::DEFAULT_SORTING)
             ->paginate($data['count'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page'] ?? 1)
             ->toArray();
 
@@ -96,19 +96,17 @@ class MessagesController extends Controller
     public function acceptShoppingByPerformer(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'chat_id'  => 'required|integer|exists:chats,chat_id',
-            'photos'   => 'required|array|max:8',
-            'photos.*' => 'required|string',
+            'chat_id' => 'required|integer|exists:chats,id',
+            'files'   => 'required|array|max:8',
+            'files.*' => 'required|string',
         ]);
 
-        $chat = Chat::query()
-            ->with('rate')
-            ->where('chat_id', $request->chat_id)
-            ->first();
+        $chat = Chat::with('rate')->find($request->chat_id);
+
 
         if (!$chat) throw new ErrorException(__('message.chat_not_found'));
 
-        $user_id = $request->user()->user_id;
+        $user_id = $request->user()->id;
 
         # запрещено создавать задание, если пользователь к этой ставке не имеет отношения
         if ($chat->rate->who_start <> $user_id && $chat->rate->user_id <> $user_id) {
@@ -116,9 +114,9 @@ class MessagesController extends Controller
         }
 
         Message::create([
-            'chat_id'        => $data['chat_id'],
-            'message_attach' => $data['photos'],
-            'type'           => Message::TYPE_PRODUCT_CONFIRMATION,
+            'chat_id' => $data['chat_id'],
+            'files'   => $data['files'],
+            'type'    => Message::TYPE_PRODUCT_CONFIRMATION,
         ]);
 
         return response()->json([

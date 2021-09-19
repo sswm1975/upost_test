@@ -10,7 +10,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\UserChange;
@@ -38,7 +37,7 @@ class ProfileController extends Controller
      */
     public function getPublicData(int $user_id): JsonResponse
     {
-        $user = User::whereUserId($user_id)->first(User::FIELDS_FOR_SHOW);
+        $user = User::find($user_id, User::FIELDS_FOR_SHOW);
 
         if (!$user) throw new ErrorException(__('message.user_not_found'));
 
@@ -53,28 +52,28 @@ class ProfileController extends Controller
      */
     private function getUserData(User $user): JsonResponse
     {
+        # удаляем поля с паролем и токеном
+        unset($user->password, $user->api_token);
+
         # добавляем кол-во заказов, как Заказчик и как Исполнитель (фрилансер)
-        $user->user_creator_count = Review::getCountReviewsByCreator($user->user_id);
-        $user->user_freelancer_count = Review::getCountReviewsByFreelancer($user->user_id);
+        $user->user_creator_count = Review::getCountReviewsByCreator($user->id);
+        $user->user_freelancer_count = Review::getCountReviewsByFreelancer($user->id);
 
         # добавляем количество отзывов
-        $user->user_reviews_count = Review::getCountReviews($user->user_id);
+        $user->user_reviews_count = Review::getCountReviews($user->id);
 
         # получить последний отзыв
-        $user->user_last_review = Review::getLastReview($user->user_id);
-
-        # удаляем поле с паролем
-        unset($user->user_password, $user->api_token);
+        $user->user_last_review = Review::getLastReview($user->id);
 
         # добавляем последние 2 заказа, созданные пользователем
-        $user->orders = (new OrderController)->getOrdersByFilter($user, [
-            'user_id' => $user->user_id,
+        $user->last_orders = (new OrderController)->getOrdersByFilter($user, [
+            'user_id' => $user->id,
             'show' => 2,
         ])['data'] ?? "";
 
         # добавляем последние 2 маршрута, созданные пользователем
-        $user->routes = (new RouteController)->getRoutesByFilter($user, [
-            'user_id' => $user->user_id,
+        $user->last_routes = (new RouteController)->getRoutesByFilter($user, [
+            'user_id' => $user->id,
             'show' => 2,
         ])['data'] ?? "";
 
@@ -94,14 +93,14 @@ class ProfileController extends Controller
     {
         return Validator::make($data,
             [
-                'user_name'     => 'sometimes|string|max:100',
-                'user_surname'  => 'sometimes|string|max:100',
-                'user_city'     => 'integer|exists:city,city_id',
-                'user_status'   => 'in:active,banned,removed',
-                'user_birthday' => 'date',
-                'user_gender'   => 'nullable|in:Мужской,Женский',
-                'user_photo'    => 'nullable|base64_image',
-                'user_resume'   => 'nullable|string|not_phone|censor',
+                'name'     => 'sometimes|string|max:100',
+                'surname'  => 'sometimes|string|max:100',
+                'city'     => 'integer|exists:cities,id',
+                'status'   => 'in:active,banned,removed',
+                'birthday' => 'date',
+                'gender'   => 'nullable|in:male,female,unknown',
+                'photo'    => 'nullable|base64_image',
+                'resume'   => 'nullable|string|not_phone|censor',
             ]
         );
     }
@@ -120,15 +119,15 @@ class ProfileController extends Controller
         $user = $request->user();
 
         if ($request->has('remove_photo')) {
-            $data['user_photo'] = null;
+            $data['photo'] = null;
         }
 
-        if ($request->filled('user_photo')) {
-            $data['user_photo'] = $this->saveImage($data['user_photo'], $user->user_id);
+        if ($request->filled('photo')) {
+            $data['photo'] = $this->saveImage($data['photo'], $user->id);
         }
 
-        if ($request->filled('user_resume')) {
-            $data['user_resume'] = $this->processResume($data['user_resume']);
+        if ($request->filled('resume')) {
+            $data['resume'] = $this->processResume($data['resume']);
         }
 
         $user->update($data);
@@ -150,8 +149,8 @@ class ProfileController extends Controller
     public function updateLanguage(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'user_lang'     => 'required_without:user_currency|in:' . implode(',', config('app.languages')),
-            'user_currency' => 'required_without:user_lang|in:' . implode(',', array_keys(config('app.currencies'))),
+            'lang'     => 'required_without:currency|in:' . implode(',', config('app.languages')),
+            'currency' => 'required_without:lang|in:' . implode(',', array_keys(config('app.currencies'))),
         ]);
 
         $request->user()->fill($data)->save();
@@ -170,11 +169,11 @@ class ProfileController extends Controller
     {
         $data = validateOrExit([
             'old_password'  => ['required', function ($attribute, $value, $fail) {
-                if (getHashPassword($value) !== request()->user()->user_password) {
+                if (getHashPassword($value) !== request()->user()->password) {
                     return $fail(__('message.old_password_incorrect'));
                 }
             }],
-            'user_password' => ['required', 'min:6', 'confirmed'],
+            'password' => ['required', 'min:6', 'confirmed'],
         ]);
 
         return response()->json([
@@ -193,8 +192,8 @@ class ProfileController extends Controller
     public function updateLogin(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'user_phone'    => ['required_without:user_email', 'phone', 'unique:users,user_phone'],
-            'user_email'    => ['required_without:user_phone', 'email', 'max:30', 'unique:users,user_email'],
+            'phone' => 'required_without:email|phone|unique:users,phone',
+            'email' => 'required_without:phone|email|max:30|unique:users,email',
         ]);
 
         return response()->json([
@@ -213,8 +212,8 @@ class ProfileController extends Controller
     public function updateCard(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'user_card_number' => ['required_without:user_card_name', 'bankcard'],
-            'user_card_name'   => ['required_without:user_card_number', 'max:50'],
+            'card_number' => 'required_without:card_name|bankcard',
+            'card_name'   => 'required_without:card_number|max:50',
         ]);
 
         return response()->json([
@@ -230,9 +229,10 @@ class ProfileController extends Controller
      * @return JsonResponse
      * @throws ErrorException
      */
-    public function verificationUser(string $token): JsonResponse
+    public function verificationUserChanges(string $token): JsonResponse
     {
         $user_change = UserChange::whereToken($token)->first();
+
         if (!$user_change) throw new ErrorException(__('message.token_incorrect'));
 
         $user = User::find($user_change->user_id);
@@ -240,7 +240,7 @@ class ProfileController extends Controller
 
         $data = [];
         foreach($user_change->getAttributes() as $key => $value) {
-            if (!is_null($value) && $key != 'user_id' && Str::startsWith($key, 'user_')) {
+            if (in_array($key, $user_change->getFillable()) && !is_null($value)) {
                 $data[$key] = $value;
             }
         }
@@ -249,7 +249,7 @@ class ProfileController extends Controller
         $user_change->delete();
 
         return response()->json([
-            'status' => true
+            'status' => true,
         ]);
     }
 
@@ -281,9 +281,9 @@ class ProfileController extends Controller
     protected function saveImage(string $base64_image, int $user_id): string
     {
         $path = 'users/' . $user_id . '/';
-        $image_original_name = 'user_photo-original.jpg';
-        $image_main_name     = 'user_photo.jpg';
-        $image_thumb_name    = 'user_photo-thumb.jpg';
+        $image_original_name = 'photo-original.jpg';
+        $image_main_name     = 'photo.jpg';
+        $image_thumb_name    = 'photo-thumb.jpg';
 
         $data = substr($base64_image, strpos($base64_image, ',') + 1);
         $image_file = base64_decode($data);

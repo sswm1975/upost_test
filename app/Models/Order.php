@@ -11,72 +11,82 @@ use Illuminate\Support\Str;
 /**
  * App\Models\Order
  *
- * @property int $order_id Код
+ * @property int $id Код
  * @property int $user_id Код пользователя
- * @property string $order_register_date Дата регистрации
- * @property string|null $order_name Наименование
- * @property string|null $order_url Слаг
- * @property int|null $order_category Код категории
- * @property string $order_price Цена
- * @property string $order_price_usd Цена в долларах
- * @property string|null $order_currency Валюта
- * @property int|null $order_count Количество товаров
- * @property string|null $order_size Размер товара
- * @property string|null $order_weight Вес товара
- * @property string|null $order_product_link Ссылка на товар на чужом сайте
- * @property string|null $order_text Описание заказа
- * @property array|null $order_images Фотографии заказа
- * @property int|null $order_from_country Код страны начала заказа
- * @property int|null $order_from_city Код города начала заказа
- * @property string|null $order_from_address Точный адрес старта заказа
- * @property int|null $order_to_country Код страны окончания заказа
- * @property int|null $order_to_city Код города окончания заказа
- * @property string|null $order_to_address Точный адрес прибытия заказа
- * @property string|null $order_start Дата начала заказа
- * @property string|null $order_deadline Дата окончания заказа
- * @property int $order_personal_price Признак персонального вознаграждения
- * @property string $order_user_price Сумма персонального вознаграждения
- * @property string|null $order_user_currency Валюта персонального вознаграждения
- * @property int $order_not_more_price Признак
- * @property int $order_user_active Признак активности пользователя
- * @property string $order_status Статус заказа
- * @property int $order_look Количество просмотров
- * @property array|null $order_strikes Жалобы
+ * @property string $register_date Дата регистрации
+ * @property string $name Наименование
+ * @property string $slug Слаг
+ * @property int|null $category_id Код категории
+ * @property string $price Цена
+ * @property string $price_usd Цена в долларах
+ * @property string|null $currency Валюта
+ * @property int|null $products_count Количество товаров
+ * @property string|null $size Размер товара
+ * @property string|null $weight Вес товара
+ * @property string|null $product_link Ссылка на товар на чужом сайте
+ * @property string|null $description Описание заказа
+ * @property array $images Фотографии заказа
+ * @property int|null $from_country_id Код страны начала заказа
+ * @property int|null $from_city_id Код города начала заказа
+ * @property string|null $from_address_from Точный адрес старта заказа
+ * @property int|null $to_country_id Код страны окончания заказа
+ * @property int|null $to_city_id Код города окончания заказа
+ * @property string|null $to_address Точный адрес прибытия заказа
+ * @property string|null $fromdate Дата начала заказа
+ * @property string|null $tilldate Дата окончания заказа
+ * @property int $personal_price Признак персонального вознаграждения
+ * @property string $user_price Сумма персонального вознаграждения
+ * @property string|null $user_currency Валюта персонального вознаграждения
+ * @property int $not_more_price Признак
+ * @property int $is_user_active Признак активности пользователя
+ * @property int $looks Количество просмотров
+ * @property string $status Статус заказа
+ * @property array|null $strikes Жалобы
+ * @property-read \App\Models\Category|null $category
+ * @property-read \App\Models\City|null $from_city
+ * @property-read \App\Models\Country|null $from_country
+ * @property-read bool $is_favorite
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
+ * @property-read int|null $rates_count
+ * @property-write mixed $from_address
+ * @property-read \App\Models\City|null $to_city
+ * @property-read \App\Models\Country|null $to_country
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order query()
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderCategory($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderCount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderCurrency($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderDeadline($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderFromAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderFromCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderFromCountry($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderImages($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderLook($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderNotMorePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderPersonalPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderPriceUsd($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderProductLink($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderRegisterDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderSize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderStart($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderStrikes($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderText($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderToAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderToCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderToCountry($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderUserActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderUserCurrency($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderUserPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereOrderWeight($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order successful()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromAddressFrom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereImages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereIsUserActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereLooks($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereNotMorePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePersonalPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePriceUsd($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereProductLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereProductsCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereRegisterDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereStrikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereTilldate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereToAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereToCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereToCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereWeight($value)
  * @mixin \Eloquent
  */
 class Order extends Model
@@ -86,15 +96,15 @@ class Order extends Model
     const STATUS_BAN = 'ban';
     const STATUS_SUCCESSFUL = 'successful';
 
-    protected $primaryKey = 'order_id';
-    protected $guarded = ['order_id'];
+    protected $primaryKey = 'id';
+    protected $guarded = ['id'];
     public $timestamps = false;
     protected $casts = [
-        'order_images' => 'array',
-        'order_strikes' => 'array',
+        'images' => 'array',
+        'strikes' => 'array',
     ];
     protected $appends = [
-        'order_is_favorite',
+        'is_favorite',
     ];
 
     public static function boot()
@@ -103,28 +113,28 @@ class Order extends Model
 
         static::creating(function ($model) {
             $model->user_id = request()->user()->user_id;
-            $model->order_look = 0;
-            $model->order_status = self::STATUS_ACTIVE;
-            $model->order_register_date = $model->freshTimestamp();
+            $model->looks = 0;
+            $model->status = self::STATUS_ACTIVE;
+            $model->register_date = $model->freshTimestamp();
         });
 
         static::saved(function ($model) {
-            $order_id = $model->order_id ?: DB::getPdo()->lastInsertId();
-            $model->order_url = Str::slug($model->order_name . ' ' . $order_id);
+            $id = $model->id ?: DB::getPdo()->lastInsertId();
+            $model->slug = Str::slug($model->name . ' ' . $id);
 
-            $currency = getCurrencyNameBySymbol($model->order_currency);
-            $model->order_price_usd = convertPriceToUsd($model->order_price, $currency);
+            $currency = getCurrencyNameBySymbol($model->currency);
+            $model->price_usd = convertPriceToUsd($model->price, $currency);
 
             DB::table($model->table)
-                ->where('order_id', $order_id)
+                ->where('id', $id)
                 ->update([
-                    'order_url' => $model->order_url,
-                    'order_price_usd' => $model->order_price_usd,
+                    'slug' => $model->slug,
+                    'price_usd' => $model->price_usd,
                 ]);
         });
     }
 
-    public function getOrderImagesAttribute($value): array
+    public function getImagesAttribute($value): array
     {
         if (is_null($value)) return [];
 
@@ -133,7 +143,7 @@ class Order extends Model
         return json_decode($value);
     }
 
-    public function getOrderStrikesAttribute($json)
+    public function getStrikesAttribute($json)
     {
         if (is_null($json)) return [];
 
@@ -142,55 +152,55 @@ class Order extends Model
         return json_decode($json, true);
     }
 
-    public function getOrderIsFavoriteAttribute(): bool
+    public function getIsFavoriteAttribute(): bool
     {
         $user = request()->user();
 
-        if (empty($user->user_favorite_orders)) {
+        if (empty($user->favorite_orders)) {
             return false;
         }
 
-        return in_array($this->order_id, explode(',', $user->user_favorite_orders));
+        return in_array($this->id, explode(',', $user->favorite_orders));
     }
 
-    public function setOrderNameAttribute($value)
+    public function setNameAttribute($value)
     {
-        $this->attributes['order_name'] = strip_tags(strip_unsafe($value));
+        $this->attributes['name'] = strip_tags(strip_unsafe($value));
     }
 
-    public function setOrderSizeAttribute($value)
+    public function setSizeAttribute($value)
     {
-        $this->attributes['order_size'] = strip_tags(strip_unsafe($value));
+        $this->attributes['size'] = strip_tags(strip_unsafe($value));
     }
 
-    public function setOrderWeightAttribute($value)
+    public function setWeightAttribute($value)
     {
-        $this->attributes['order_weight'] = strip_tags(strip_unsafe($value));
+        $this->attributes['weight'] = strip_tags(strip_unsafe($value));
     }
 
-    public function setOrderTextAttribute($value)
+    public function setDescriptionAttribute($value)
     {
-        $this->attributes['order_text'] = strip_tags(strip_unsafe($value), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+        $this->attributes['description'] = strip_tags(strip_unsafe($value), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
     }
 
-    public function setOrderFromAddressAttribute($value)
+    public function setFromAddressAttribute($value)
     {
-        $this->attributes['order_from_address'] = strip_tags(strip_unsafe($value));
+        $this->attributes['from_address'] = strip_tags(strip_unsafe($value));
     }
 
-    public function setOrderToAddressAttribute($value)
+    public function setToAddressAttribute($value)
     {
-        $this->attributes['order_to_address'] = strip_tags(strip_unsafe($value));
+        $this->attributes['to_address'] = strip_tags(strip_unsafe($value));
     }
 
-    public function setOrderCurrencyAttribute($value)
+    public function setCurrencyAttribute($value)
     {
-        $this->attributes['order_currency'] = config('app.currencies')[$value];
+        $this->attributes['currency'] = config('app.currencies')[$value];
     }
 
-    public function setOrderUserCurrencyAttribute($value)
+    public function setUserCurrencyAttribute($value)
     {
-        $this->attributes['order_user_currency'] = config('app.currencies')[$value];
+        $this->attributes['user_currency'] = config('app.currencies')[$value];
     }
 
     ### LINKS ###
@@ -204,8 +214,8 @@ class Order extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(Category::class, 'order_category', 'category_id')
-            ->select(['category_id', "cat_name_{$lang} as category_name"])
+        return $this->belongsTo(Category::class, 'category_id', 'id')
+            ->select(['id', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -213,8 +223,8 @@ class Order extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(Country::class, 'order_from_country', 'country_id')
-            ->select(['country_id', "country_name_{$lang} as country_name"])
+        return $this->belongsTo(Country::class, 'from_country_id', 'id')
+            ->select(['id', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -222,8 +232,8 @@ class Order extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(City::class, 'order_from_city', 'city_id')
-            ->select(['city_id', "city_name_{$lang} as city_name"])
+        return $this->belongsTo(City::class, 'from_city_id', 'id')
+            ->select(['id', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -231,8 +241,8 @@ class Order extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(Country::class, 'order_to_country', 'country_id')
-            ->select(['country_id', "country_name_{$lang} as country_name"])
+        return $this->belongsTo(Country::class, 'to_country_id', 'id')
+            ->select(['id', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -240,21 +250,21 @@ class Order extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(City::class, 'order_to_city', 'city_id')
-            ->select(['city_id', "city_name_{$lang} as city_name"])
+        return $this->belongsTo(City::class, 'to_city_id', 'id')
+            ->select(['id', "name_{$lang} as name"])
             ->withDefault();
     }
 
     public function rates(): HasMany
     {
-        return $this->hasMany(Rate::class, 'order_id', 'order_id');
+        return $this->hasMany(Rate::class, 'order_id', 'id');
     }
 
     ### SCOPES ###
 
     public function scopeSuccessful($query)
     {
-        return $query->where('order_status', self::STATUS_SUCCESSFUL);
+        return $query->whereStatus(self::STATUS_SUCCESSFUL);
     }
 
     /**
@@ -266,23 +276,23 @@ class Order extends Model
     {
         $user = request()->user();
 
-        if (empty($user->user_favorite_orders)) {
+        if (empty($user->favorite_orders)) {
             return [];
         }
 
-        return static::whereIn('order_id', explode(',', $user->user_favorite_orders))
+        return static::whereIn('id', explode(',', $user->favorite_orders))
             ->with([
                 'user' => function ($query) {
                     $query->select([
-                        'user_id',
-                        'user_name',
-                        'user_surname',
-                        'user_creator_rating',
-                        'user_freelancer_rating',
-                        'user_photo',
-                        'user_favorite_orders',
-                        'user_favorite_routes',
-                        DB::raw('(select count(*) from `orders` where `users`.`user_id` = `orders`.`user_id` and `order_status` = "successful") as user_successful_orders')
+                        'id',
+                        'name',
+                        'surname',
+                        'creator_rating',
+                        'freelancer_rating',
+                        'photo',
+                        'favorite_orders',
+                        'favorite_routes',
+                        DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders')
                     ]);
                 },
                 'category',
@@ -292,7 +302,7 @@ class Order extends Model
                 'to_city',
             ])
             ->withCount(['rates' => function ($query) use ($user) {
-                $query->where('parent_id', 0)->where('user_id', $user->user_id);
+                $query->whereParentId(0)->whereUserId($user->id);
             }])
             ->get();
     }

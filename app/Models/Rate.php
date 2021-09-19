@@ -9,42 +9,41 @@ use Carbon\Carbon;
 /**
  * App\Models\Rate
  *
- * @property int $rate_id Код
+ * @property int $id Код
  * @property int $parent_id Код родителя
  * @property int $who_start Код пользователя (Кто)
  * @property int $user_id Код пользователя (Кому)
  * @property int $order_id Код заказа
  * @property int $route_id Код маршрута
- * @property int $read_rate Признак прочтения ставки
- * @property string $rate_type Тип ставки
- * @property string $rate_status Статус ставки
- * @property string $rate_date Дата ставки
- * @property string|null $rate_deadline Дата выполнения
- * @property string $rate_price Цена ставки
- * @property string $rate_currency Валюта ставки
- * @property string|null $rate_text Текст ставки
+ * @property string $type Тип ставки
+ * @property string $deadline Дата выполнения
+ * @property string $price Цена ставки
+ * @property string $currency Валюта ставки
+ * @property string|null $text Текст ставки
+ * @property int $is_read Признак прочтения ставки
+ * @property string $status Статус ставки
+ * @property string $created_at Дата ставки
  * @property-read \App\Models\Order $order
  * @property-read \App\Models\Route $route
  * @method static \Illuminate\Database\Eloquent\Builder|Rate deadlineTermExpired(int $days = 0)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate deadlineToday()
- * @method static \Illuminate\Database\Eloquent\Builder|Rate newRatesByOrder(int $order_id)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate readRatesByOrder(int $order_id)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate existsChildRatesByOrder(int $order_id)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate typeOrder()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate typeRoute()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereIsRead($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereOrderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRateCurrency($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRateDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRateDeadline($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRateId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRatePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRateStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRateText($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRateType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereReadRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRouteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereWhoStart($value)
  * @mixin \Eloquent
@@ -61,8 +60,8 @@ class Rate extends Model
     public const TYPE_ROUTE = 'route';
 
     protected $table = 'rates';
-    protected $primaryKey = 'rate_id';
-    protected $guarded = ['rate_id'];
+    protected $primaryKey = 'id';
+    protected $guarded = ['id'];
     public $timestamps = false;
 
     public static function boot()
@@ -70,55 +69,55 @@ class Rate extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->user_id = request()->user()->user_id;
-            $model->rate_status = self::STATUS_ACTIVE;
-            $model->read_rate = 0;
-            $model->rate_date  = date('Y-m-d H:i');
+            $model->user_id = request()->user()->id;
+            $model->status = self::STATUS_ACTIVE;
+            $model->is_read = 0;
+            $model->created_at  = $this->freshTimestamp();
         });
     }
 
-    public function setRateTextAttribute($value)
+    public function setTextAttribute($value)
     {
-        $this->attributes['rate_text'] = strip_tags(strip_unsafe($value), ['br']);
+        $this->attributes['text'] = strip_tags(strip_unsafe($value), ['br']);
     }
 
-    public function setRateCurrencyAttribute($value)
+    public function setCurrencyAttribute($value)
     {
-        $this->attributes['rate_currency'] = config('app.currencies')[$value];
+        $this->attributes['currency'] = config('app.currencies')[$value];
     }
 
     function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class, 'order_id', 'order_id')->withDefault();
+        return $this->belongsTo(Order::class, 'order_id', 'id')->withDefault();
     }
 
     function route(): BelongsTo
     {
-        return $this->belongsTo(Route::class, 'route_id', 'route_id')->withDefault();
+        return $this->belongsTo(Route::class, 'route_id', 'id')->withDefault();
     }
 
     function scopeTypeOrder($query)
     {
-        return $query->where('rate_type', self::TYPE_ORDER);
+        return $query->where('type', self::TYPE_ORDER);
     }
 
     function scopeTypeRoute($query)
     {
-        return $query->where('rate_type', self::TYPE_ROUTE);
+        return $query->where('type', self::TYPE_ROUTE);
     }
 
     function scopeDeadlineToday($query)
     {
         return $query->where([
-            'rate_deadline' => Carbon::today()->toDateString(),
-            'rate_status'   => self::STATUS_ACTIVE,
+            'deadline' => Carbon::today()->toDateString(),
+            'status'   => self::STATUS_ACTIVE,
         ]);
     }
 
     function scopeDeadlineTermExpired($query, int $days = 0)
     {
-        return $query->where('rate_status', self::STATUS_ACTIVE)
-            ->where('rate_deadline', '>=', Carbon::today()->addDays($days)->toDateString());
+        return $query->where('status', self::STATUS_ACTIVE)
+            ->where('deadline', '>=', Carbon::today()->addDays($days)->toDateString());
     }
 
     /**
@@ -126,9 +125,9 @@ class Rate extends Model
      * Условия:
      * - order_id = параметр КОД ЗАКАЗА
      * - parent_id = 0
-     * - read_rate = 0
-     * - rate_status = active
-     * - rate_type = route
+     * - is_read = 0
+     * - status = active
+     * - type = route
      * - нет дочерних ставок
      *
      * @param int $order_id
@@ -139,14 +138,14 @@ class Rate extends Model
         return static::where([
             'order_id' => $order_id,
             'parent_id' => 0,
-            'read_rate' => 0,
-            'rate_status' => self::STATUS_ACTIVE,
-            'rate_type' => self::TYPE_ROUTE,
+            'is_read' => 0,
+            'status' => self::STATUS_ACTIVE,
+            'type' => self::TYPE_ROUTE,
         ])->whereNotExists(function ($query) {
-            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
+            $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
         })->with([
-            'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
-            'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'route:id,user_id,from_country_id,from_city_id,to_country_id,to_city_id,looks',
+            'route.user:id,name,surname,creator_rating,freelancer_rating,register_date,last_active,photo',
             'route.from_country',
             'route.from_city',
             'route.to_country',
@@ -159,9 +158,9 @@ class Rate extends Model
      * Условия:
      * - order_id = параметр КОД ЗАКАЗА
      * - parent_id = 0
-     * - read_rate = 1
-     * - rate_status = active
-     * - rate_type = route
+     * - is_read = 1
+     * - status = active
+     * - type = route
      * - нет дочерних ставок
      *
      * @param int $order_id
@@ -172,14 +171,14 @@ class Rate extends Model
         return static::where([
             'order_id' => $order_id,
             'parent_id' => 0,
-            'read_rate' => 1,
-            'rate_status' => self::STATUS_ACTIVE,
-            'rate_type' => self::TYPE_ROUTE,
+            'is_read' => 1,
+            'status' => self::STATUS_ACTIVE,
+            'type' => self::TYPE_ROUTE,
         ])->whereNotExists(function ($query) {
-            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
+            $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
         })->with([
-            'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
-            'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'route:id,user_id,from_country_id,from_city_id,to_country_id,to_city_id,looks',
+            'route.user:id,name,surname,creator_rating,freelancer_rating,register_date,last_active,photo',
             'route.from_country',
             'route.from_city',
             'route.to_country',
@@ -192,8 +191,8 @@ class Rate extends Model
      * Условия:
      * - order_id = параметр КОД ЗАКАЗА
      * - parent_id = 0
-     * - rate_status = active
-     * - rate_type = route
+     * - status = active
+     * - type = route
      * - есть дочерние ставки
      *
      * @param int $order_id
@@ -204,14 +203,14 @@ class Rate extends Model
         return static::where([
             'order_id' => $order_id,
             'parent_id' => 0,
-            'rate_status' => self::STATUS_ACTIVE,
-            'rate_type' => self::TYPE_ROUTE,
+            'status' => self::STATUS_ACTIVE,
+            'type' => self::TYPE_ROUTE,
         ])->whereExists(function ($query) {
-            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
-        })->selectRaw('rate.*, (select rm.user_id from rate as rm where rm.parent_id = rate.rate_id order by rate_id desc limit 1) as last_message_from')
+            $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
+        })->selectRaw('rates.*, (select rm.user_id from rates as rm where rm.parent_id = rates.id order by id desc limit 1) as last_message_from')
         ->with([
-            'route:route_id,user_id,route_from_country,route_from_city,route_to_country,route_to_city,route_look',
-            'route.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'route:id,user_id,from_country_id,from_city_id,to_country_id,to_city_id,looks',
+            'route.user:id,name,surname,creator_rating,freelancer_rating,register_date,last_active,photo',
             "route.from_country",
             'route.from_city',
             "route.to_country",
@@ -224,9 +223,9 @@ class Rate extends Model
      * Условия:
      * - route_id = параметр КОД МАРШРУТА
      * - parent_id = 0
-     * - read_rate = 0
-     * - rate_status = active
-     * - rate_type = order
+     * - is_read = 0
+     * - status = active
+     * - type = order
      * - нет дочерних ставок
      *
      * @param int $route_id
@@ -235,16 +234,16 @@ class Rate extends Model
     public static function getNewRatesByRoute(int $route_id)
     {
         return static::where([
-            'route_id'    => $route_id,
-            'parent_id'   => 0,
-            'read_rate'   => 0,
-            'rate_status' => self::STATUS_ACTIVE,
-            'rate_type'   => self::TYPE_ORDER,
+            'route_id'        => $route_id,
+            'parent_id' => 0,
+            'is_read'   => 0,
+            'status'    => self::STATUS_ACTIVE,
+            'type'      => self::TYPE_ORDER,
         ])->whereNotExists(function ($query) {
-            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
+            $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
         })->with([
-            'order:order_id,user_id,order_from_country,order_from_city,order_to_country,order_to_city,order_look',
-            'order.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'order:id,user_id,from_country_id,from_city_id,to_country_id,to_city_id,looks',
+            'order.user:id,name,surname,creator_rating,freelancer_rating,register_date,last_active,photo',
             'order.from_country',
             'order.from_city',
             'order.to_country',
@@ -257,9 +256,9 @@ class Rate extends Model
      * Условия:
      * - route_id = параметр КОД МАРШРУТА
      * - parent_id = 0
-     * - read_rate = 1
-     * - rate_status = active
-     * - rate_type = order
+     * - is_read = 1
+     * - status = active
+     * - type = order
      * - нет дочерних ставок
      *
      * @param int $route_id
@@ -270,14 +269,14 @@ class Rate extends Model
         return static::where([
             'route_id'    => $route_id,
             'parent_id'   => 0,
-            'read_rate'   => 1,
-            'rate_status' => self::STATUS_ACTIVE,
-            'rate_type'   => self::TYPE_ORDER,
+            'is_read'     => 1,
+            'status'    => self::STATUS_ACTIVE,
+            'type'        => self::TYPE_ORDER,
         ])->whereNotExists(function ($query) {
-            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
+            $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
         })->with([
-            'order:order_id,user_id,order_from_country,order_from_city,order_to_country,order_to_city,order_look',
-            'order.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'order:id,user_id,from_country_id,from_city_id,to_country_id,to_city_id,looks',
+            'order.user:id,name,surname,creator_rating,freelancer_rating,register_date,last_active,photo',
             'order.from_country',
             'order.from_city',
             'order.to_country',
@@ -290,8 +289,8 @@ class Rate extends Model
      * Условия:
      * - route_id = параметр КОД МАРШРУТА
      * - parent_id = 0
-     * - rate_status = active
-     * - rate_type = order
+     * - status = active
+     * - type = order
      * - есть дочерние ставки
      *
      * @param int $route_id
@@ -300,16 +299,16 @@ class Rate extends Model
     public static function getExistsChildRatesByRoute(int $route_id)
     {
         return static::where([
-            'route_id' => $route_id,
+            'route_id'  => $route_id,
             'parent_id' => 0,
-            'rate_status' => self::STATUS_ACTIVE,
-            'rate_type' => self::TYPE_ORDER,
+            'status'    => self::STATUS_ACTIVE,
+            'type'      => self::TYPE_ORDER,
         ])->whereExists(function ($query) {
-            $query->selectRaw(1)->from('rate as rc')->whereRaw('rc.parent_id = rate.rate_id');
-        })->selectRaw('rate.*, (select rm.user_id from rate as rm where rm.parent_id = rate.rate_id order by rate_id desc limit 1) as last_message_from')
+            $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
+        })->selectRaw('rates.*, (select rm.user_id from rates as rm where rm.parent_id = rates.id order by id desc limit 1) as last_message_from')
         ->with([
-            'order:order_id,user_id,order_from_country,order_from_city,order_to_country,order_to_city,order_look',
-            'order.user:user_id,user_name,user_surname,user_creator_rating,user_freelancer_rating,user_register_date,user_last_active,user_photo',
+            'order:id,user_id,from_country_id,from_city_id,to_country_id,to_city_id,looks',
+            'order.user:id,name,surname,creator_rating,freelancer_rating,register_date,last_active,photo',
             'order.from_country',
             'order.from_city',
             'order.to_country',

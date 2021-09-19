@@ -8,41 +8,42 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\Category
  *
- * @property int $category_id Код
- * @property int $category_parent Код родителя
- * @property string|null $cat_name_uk Наименование на украинском
- * @property string|null $cat_name_ru Наименование на русском
- * @property string|null $cat_name_en Наименование на английском
- * @property string|null $cat_syn Описание
- * @method static Builder|Category language(string $lang = 'en')
+ * @property int $id Код
+ * @property int $parent_id Код родителя
+ * @property string $name_uk Наименование на украинском
+ * @property string $name_ru Наименование на русском
+ * @property string $name_en Наименование на английском
+ * @property string|null $description Описание
+ * @method static Builder|Category language()
  * @method static Builder|Category newModelQuery()
  * @method static Builder|Category newQuery()
  * @method static Builder|Category query()
- * @method static Builder|Category whereCatNameEn($value)
- * @method static Builder|Category whereCatNameRu($value)
- * @method static Builder|Category whereCatNameUk($value)
- * @method static Builder|Category whereCatSyn($value)
- * @method static Builder|Category whereCategoryId($value)
- * @method static Builder|Category whereCategoryParent($value)
+ * @method static Builder|Category whereDescription($value)
+ * @method static Builder|Category whereId($value)
+ * @method static Builder|Category whereNameEn($value)
+ * @method static Builder|Category whereNameRu($value)
+ * @method static Builder|Category whereNameUk($value)
+ * @method static Builder|Category whereParentId($value)
  * @mixin \Eloquent
  */
 class Category extends Model
 {
     protected $table = 'categories';
-    protected $primaryKey = 'category_id';
-    protected $fillable = ['cat_name_uk', 'cat_name_ru', 'cat_name_en'];
+    protected $primaryKey = 'id';
+    protected $fillable = ['name_uk', 'name_ru', 'name_en', 'description'];
     public $timestamps = false;
 
     /**
      * Scope a query for selecting the column name depending on the specified language.
      *
      * @param Builder $query
-     * @param string $lang
      * @return Builder
      */
-    public function scopeLanguage(Builder $query, string $lang = 'en')
+    public function scopeLanguage(Builder $query): Builder
     {
-        return $query->select('cat_name_' . $lang . ' as category_name');
+        $lang = app()->getLocale();
+
+        return $query->select("name_$lang as name");
     }
 
     /**
@@ -55,11 +56,11 @@ class Category extends Model
     {
         return static::query()
             ->when(!empty($category_id), function ($query) use ($category_id) {
-                return $query->where('category_id', $category_id);
+                return $query->whereKey($category_id);
             })
-            ->language(app()->getLocale())
-            ->addSelect('category_id')
-            ->oldest('category_id')
+            ->language()
+            ->addSelect('id')
+            ->oldest('id')
             ->get()
             ->toArray();
     }

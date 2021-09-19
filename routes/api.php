@@ -66,7 +66,7 @@ Route::group(
         Route::post('card/update', 'API\ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Верифікація зміни даних користувача (тільки пароль/логін/картка)
-        Route::get('verification/{token}', 'API\ProfileController@verificationUser')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('verification/{token}', 'API\ProfileController@verificationUserChanges')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Завантажити фотографію
         Route::get('download_image', 'API\ProfileController@downloadImage');
@@ -80,13 +80,13 @@ Route::group(
     ],
     function () {
         # Додати відгук
-        Route::post('add', 'API\RewiesController@addReview')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('add', 'API\ReviewController@addReview')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Отримати відгуки
-        Route::get('show', 'API\RewiesController@showReviews');
+        Route::get('show', 'API\ReviewController@showReviews');
 
         # Отримати рейтинг користувача
-        Route::get('rating', 'API\RewiesController@getRating');
+        Route::get('rating', 'API\ReviewController@getRating');
     }
 );
 
@@ -97,13 +97,13 @@ Route::group(
     ],
     function () {
         # Додати чат
-        Route::post('add', 'API\ChatsController@addChat')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('add', 'API\ChatController@addChat')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Отримати чат
-        Route::get('show', 'API\ChatsController@showChats')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('show', 'API\ChatController@showChats')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Видалити чат
-        Route::post('delete', 'API\ChatsController@deleteChat')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('delete', 'API\ChatController@deleteChat')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
 

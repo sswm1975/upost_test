@@ -7,6 +7,7 @@ use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
@@ -49,17 +50,15 @@ class AuthController extends Controller
     protected function attemptLogin(array $credentials = []): ?User
     {
         $login = $credentials['login'];
-        $password = $credentials['password'];
 
         $is_email = Str::contains($login, '@');
 
-        return User::query()
-            ->where('user_password', $password)
+        return User::wherePassword($credentials['password'])
             ->when($is_email, function ($query) use ($login) {
-                return $query->where('user_email', $login);
+                return $query->whereEmail($login);
             })
             ->when(!$is_email, function ($query) use ($login) {
-                return $query->where('user_phone', $login);
+                return $query->wherePhone($login);
             })
             ->first();
     }
@@ -72,7 +71,9 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->update(['token' => null]);
+        $request->user()
+            ->forceFill(['api_token' => null])
+            ->save();
 
         return response()->json([
             'status'  => true,
@@ -90,16 +91,12 @@ class AuthController extends Controller
     public function register(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'user_phone'    => ['required', 'phone', 'unique:users'],
-            'user_email'    => ['required', 'email', 'max:30', 'unique:users'],
-            'user_password' => ['required', 'min:6', 'confirmed'],
+            'phone'    => ['required', 'phone', 'unique:users'],
+            'email'    => ['required', 'email', 'max:30', 'unique:users'],
+            'password' => ['required', 'min:6', 'confirmed'],
         ]);
 
-        $user = User::create([
-            'user_phone'    => $data['user_phone'],
-            'user_email'    => $data['user_email'],
-            'user_password' => getHashPassword($data['user_password']),
-        ]);
+        $user = User::create($data);
 
         $token = $this->generateToken($user);
 
@@ -107,6 +104,7 @@ class AuthController extends Controller
             'status'  => true,
             'message' => __('message.register_successful'),
             'token'   => $token,
+            'sql' => getSQLForFixDatabase()
         ]);
     }
 
@@ -118,10 +116,10 @@ class AuthController extends Controller
      */
     public function checkToken(Request $request): JsonResponse
     {
-        $exists = $request->filled('token') && User::existsToken($request->get('token'));
+        $exists = $request->filled('token') && User::existsToken(hash('sha256', $request->get('token')));
 
         return response()->json([
-            'status' => $exists
+            'status' => $exists,
         ]);
     }
 
@@ -136,7 +134,8 @@ class AuthController extends Controller
         $token = Str::random(64);
 
         $user->forceFill([
-            'api_token' => hash('sha256', $token),
+            'api_token'   => hash('sha256', $token),
+            'last_active' => Date::now(),
         ])->save();
 
         return $token;

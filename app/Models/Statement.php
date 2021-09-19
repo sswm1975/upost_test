@@ -37,7 +37,7 @@ class Statement extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->user_id = request()->user()->user_id;
+            $model->user_id = request()->user()->id;
             $model->status = self::STATUS_ACTIVE;
         });
     }

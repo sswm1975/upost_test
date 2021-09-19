@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\App;
 use App\Models\Country;
 use App\Models\City;
 
@@ -20,15 +19,13 @@ class CountryController extends Controller
      */
     public function getCountry(int $country_id): JsonResponse
     {
-        $country = Country::language(App::getLocale())
-            ->where('country_id', $country_id)
-            ->first();
+        $country = Country::getCountries($country_id);
 
         if (!$country) throw new ErrorException(__('message.country_not_found'));
 
         return response()->json([
             'status' => true,
-            'result' => $country->country_name,
+            'result' => $country,
         ]);
     }
 
@@ -54,15 +51,13 @@ class CountryController extends Controller
      */
     public function getCity(int $city_id): JsonResponse
     {
-        $city = City::language(App::getLocale())
-            ->where('city_id', $city_id)
-            ->first();
+        $city = City::language()->addSelect('id')->find($city_id);
 
         if (!$city) throw new ErrorException(__('message.city_not_found'));
 
         return response()->json([
             'status' => true,
-            'result' => $city->city_name,
+            'result' => $city,
         ]);
     }
 

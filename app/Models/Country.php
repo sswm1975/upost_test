@@ -9,27 +9,27 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * App\Models\Country
  *
- * @property int $country_id Код
- * @property string|null $country_name_uk Наименование на украинском
- * @property string|null $country_name_ru Наименование на русском
- * @property string|null $country_name_en Наименование на английском
+ * @property int $id Код
+ * @property string $name_uk Наименование на украинском
+ * @property string $name_ru Наименование на русском
+ * @property string $name_en Наименование на английском
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\City[] $cities
  * @property-read int|null $cities_count
- * @method static Builder|Country language(string $lang = 'en')
+ * @method static Builder|Country language()
  * @method static Builder|Country newModelQuery()
  * @method static Builder|Country newQuery()
  * @method static Builder|Country query()
- * @method static Builder|Country whereCountryId($value)
- * @method static Builder|Country whereCountryNameEn($value)
- * @method static Builder|Country whereCountryNameRu($value)
- * @method static Builder|Country whereCountryNameUk($value)
+ * @method static Builder|Country whereId($value)
+ * @method static Builder|Country whereNameEn($value)
+ * @method static Builder|Country whereNameRu($value)
+ * @method static Builder|Country whereNameUk($value)
  * @mixin \Eloquent
  */
 class Country extends Model
 {
     protected $table = 'countries';
-    protected $primaryKey = 'country_id';
-    protected $fillable  = ['country_name_uk', 'country_name_ru', 'country_name_en'];
+    protected $primaryKey = 'id';
+    protected $fillable  = ['name_uk', 'name_ru', 'name_en'];
     public $timestamps = false;
 
     /**
@@ -37,19 +37,23 @@ class Country extends Model
      */
     public function cities(): HasMany
     {
-        return $this->hasMany(City::class, 'country_id');
+        $lang = app()->getLocale();
+
+        return $this->hasMany(City::class, 'country_id')
+            ->select(['id', "name_{$lang} as name", 'country_id']);
     }
 
     /**
      * Scope a query for selecting the column name depending on the specified language.
      *
      * @param Builder $query
-     * @param string $lang
      * @return Builder
      */
-    public function scopeLanguage(Builder $query, string $lang = 'en')
+    public function scopeLanguage(Builder $query): Builder
     {
-        return $query->select('country_name_' . $lang . ' as country_name');
+        $lang = app()->getLocale();
+
+        return $query->select("name_$lang as name");
     }
 
     /**
@@ -57,11 +61,15 @@ class Country extends Model
      *
      * @return array
      */
-    public static function getCountries(): array
+    public static function getCountries(int $country_id = 0): array
     {
-        return static::language(app()->getLocale())
-            ->addSelect('country_id')
-            ->oldest('country_id')
+        return static::query()
+            ->when(!empty($country_id), function ($query) use ($country_id) {
+                return $query->whereKey($country_id);
+            })
+            ->language()
+            ->addSelect('id')
+            ->oldest('id')
             ->get()
             ->toArray();
     }
@@ -74,23 +82,14 @@ class Country extends Model
      */
     public static function getCountriesWithCities(int $country_id = 0): array
     {
-        $countries = static::language(app()->getLocale())
-            ->with('cities:country_id,city_id,city_name_' . app()->getLocale() . ' as city_name' )
+        return static::with('cities')
             ->when($country_id, function ($query) use ($country_id) {
-                return $query->where('country_id', $country_id);
+                return $query->whereKey($country_id);
             })
-            ->addSelect('country_id')
-            ->oldest('country_id')
+            ->language()
+            ->addSelect('id')
+            ->oldest('id')
             ->get()
             ->toArray();
-
-        foreach ($countries as $country_key => $country) {
-            foreach ($country['cities'] as $city_key => $city) {
-                unset($city['country_id']);
-                $countries[$country_key]['cities'][$city_key] = $city;
-            }
-        }
-
-        return $countries;
     }
 }

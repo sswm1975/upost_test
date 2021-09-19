@@ -5,43 +5,58 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Route
  *
- * @property int $route_id Код
- * @property int $route_parent Код родителя
+ * @property int $id Код
+ * @property int $parent_id Код родителя
  * @property int $user_id Код пользователя
- * @property int|null $route_from_country Код страны старта
- * @property int|null $route_from_city Код города старта
- * @property int|null $route_to_country Код страны окончания
- * @property int|null $route_to_city Код города окончания
- * @property int $route_look Количество просмотров
- * @property string|null $route_register_date Дата регистрации маршрута
- * @property string|null $route_start Дата начала маршрута
- * @property string|null $route_end Дата окончания маршрута
- * @property string|null $route_transport Вид транспорта
- * @property string $route_type Тип маршрута
- * @property string $route_status Статус маршрута
- * @property object|null $route_points Смежные точки маршрута
+ * @property int|null $from_country_id Код страны старта
+ * @property int|null $from_city_id Код города старта
+ * @property int|null $to_country_id Код страны окончания
+ * @property int|null $to_city_id Код города окончания
+ * @property int $looks Количество просмотров
+ * @property string|null $fromdate Дата начала маршрута
+ * @property string|null $tilldate Дата окончания маршрута
+ * @property string|null $transport Вид транспорта
+ * @property string $type Тип маршрута
+ * @property string $status Статус маршрута
+ * @property string $register_date Дата регистрации маршрута
+ * @property-read \App\Models\City|null $from_city
+ * @property-read \App\Models\Country|null $from_country
+ * @property-read bool $is_favorite
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
+ * @property-read int|null $rates_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\RoutePoint[] $route_points
+ * @property-read int|null $route_points_count
+ * @property-read \App\Models\City|null $to_city
+ * @property-read \App\Models\Country|null $to_country
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Route existsCityInFromCity(array $cities)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route existsCityInToCity(array $cities)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryInFromCountry(array $countries)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryInToCountry(array $countries)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryOrCity(string $routes_field, string $route_points_field, array $rows)
  * @method static \Illuminate\Database\Eloquent\Builder|Route newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Route newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Route query()
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteEnd($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteFromCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteFromCountry($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteLook($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteParent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRoutePoints($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteRegisterDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteStart($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteToCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteToCountry($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteTransport($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRouteType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route successful()
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereLooks($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereRegisterDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereTilldate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereToCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereToCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereTransport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereUserId($value)
  * @mixin \Eloquent
  */
@@ -53,14 +68,11 @@ class Route extends Model
     const STATUS_SUCCESSFUL = 'successful';
 
     protected $table = 'routes';
-    protected $primaryKey = 'route_id';
-    protected $guarded = ['route_id'];
+    protected $primaryKey = 'id';
+    protected $guarded = ['id'];
     public $timestamps = false;
-    protected $casts = [
-        'route_points' => 'object',
-    ];
     protected $appends = [
-        'route_is_favorite',
+        'is_favorite',
     ];
 
     public static function boot()
@@ -68,43 +80,34 @@ class Route extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->user_id = request()->user()->user_id;
-            $model->route_parent = 0;
-            $model->route_type = 'route';
-            $model->route_status = self::STATUS_ACTIVE;
-            $model->route_look = 0;
-            $model->route_register_date = date('Y-m-d');
+            $model->user_id = request()->user()->id;
+            $model->parent_id = 0;
+            $model->type = 'route';
+            $model->status = self::STATUS_ACTIVE;
+            $model->looks = 0;
+            $model->register_date = Date::now();
         });
     }
 
-    public function getRouteIsFavoriteAttribute(): bool
+    public function getIsFavoriteAttribute(): bool
     {
         $user = request()->user();
 
-        if (empty($user->user_favorite_routes)) {
+        if (empty($user->favorite_routes)) {
             return false;
         }
 
-        return in_array($this->route_id, explode(',', $user->user_favorite_routes));
+        return in_array($this->id, explode(',', $user->favorite_routes));
     }
 
-    public function setRouteFromCityAttribute($value)
+    public function setFromCityIdAttribute($value)
     {
-        $this->attributes['route_from_city'] = is_null($value) ? 0 : $value;
+        $this->attributes['from_city_id'] = is_null($value) ? 0 : $value;
     }
 
-    public function setRouteToCityAttribute($value)
+    public function setToCityIdAttribute($value)
     {
-        $this->attributes['route_to_city'] = is_null($value) ? 0 : $value;
-    }
-
-    public function getRoutePointsAttribute($json)
-    {
-        if (is_null($json)) return [];
-
-        if (is_array($json)) return $json;
-
-        return json_decode($json, true);
+        $this->attributes['to_city_id'] = is_null($value) ? 0 : $value;
     }
 
     ### LINKS ###
@@ -118,8 +121,8 @@ class Route extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(Country::class, 'route_from_country', 'country_id')
-            ->select(['country_id', "country_name_{$lang} as country_name"])
+        return $this->belongsTo(Country::class, 'from_country_id', 'id')
+            ->select(['id', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -127,8 +130,8 @@ class Route extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(City::class, 'route_from_city', 'city_id')
-            ->select(['city_id', "city_name_{$lang} as city_name"])
+        return $this->belongsTo(City::class, 'from_city_id', 'id')
+            ->select(['id', "name_{$lang} as city_name"])
             ->withDefault();
     }
 
@@ -136,8 +139,8 @@ class Route extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(Country::class, 'route_to_country', 'country_id')
-            ->select(['country_id', "country_name_{$lang} as country_name"])
+        return $this->belongsTo(Country::class, 'to_country_id', 'id')
+            ->select(['id', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -145,34 +148,34 @@ class Route extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(City::class, 'route_to_city', 'city_id')
-            ->select(['city_id', "city_name_{$lang} as city_name"])
+        return $this->belongsTo(City::class, 'to_city_id', 'id')
+            ->select(['id', "name_{$lang} as name"])
             ->withDefault();
     }
 
     public function rates(): HasMany
     {
-        return $this->hasMany(Rate::class, 'route_id', 'route_id');
+        return $this->hasMany(Rate::class, 'route_id', 'id');
     }
 
     public function route_points(): HasMany
     {
-        return $this->hasMany(RoutePoint::class, 'route_id', 'route_id');
+        return $this->hasMany(RoutePoint::class, 'route_id', 'id');
     }
 
     ### SCOPES ###
 
     public function scopeSuccessful($query)
     {
-        return $query->where('route_status', self::STATUS_SUCCESSFUL);
+        return $query->whereStatus(self::STATUS_SUCCESSFUL);
     }
 
     /**
      * Универсальный скоуп для поиска страны или города в поле начала маршрута или окончания маршрута, а также в смежных маршрутах.
      *
      * @param $query
-     * @param string $routes_field        - одно из полей таблицы route: route_from_country, route_to_country
-     * @param string $route_points_field  - одно из полей таблицы route_points: country, city
+     * @param string $routes_field        - одно из полей таблицы route: from_country_id, to_country_id
+     * @param string $route_points_field  - одно из полей таблицы route_points: country_id, city_id
      * @param array $rows                 - массив кодов стран или городов, например [1,4,78].
      * @return mixed
      */
@@ -183,7 +186,7 @@ class Route extends Model
                 ->orWhereExists(function($query) use ($route_points_field, $rows) {
                     $query->selectRaw(1)
                         ->from('route_points')
-                        ->whereRaw('route_points.route_id = routes.route_id')
+                        ->whereRaw('route_points.route_id = routes.id')
                         ->whereIn($route_points_field, $rows);
                 });
         });
@@ -198,7 +201,7 @@ class Route extends Model
      */
     public function scopeExistsCountryInFromCountry($query, array $countries)
     {
-        return $query->existsCountryOrCity('route_from_country', 'country', $countries);
+        return $query->existsCountryOrCity('from_country_id', 'country_id', $countries);
     }
 
     /**
@@ -210,7 +213,7 @@ class Route extends Model
      */
     public function scopeExistsCountryInToCountry($query, array $countries)
     {
-        return $query->existsCountryOrCity('route_to_country', 'country', $countries);
+        return $query->existsCountryOrCity('to_country_id', 'country_id', $countries);
     }
 
     /**
@@ -222,7 +225,7 @@ class Route extends Model
      */
     public function scopeExistsCityInFromCity($query, array $cities)
     {
-        return $query->existsCountryOrCity('route_from_city', 'city', $cities);
+        return $query->existsCountryOrCity('from_city_id', 'city_id', $cities);
     }
 
     /**
@@ -234,7 +237,7 @@ class Route extends Model
      */
     public function scopeExistsCityInToCity($query, array $cities)
     {
-        return $query->existsCountryOrCity('route_to_city', 'city', $cities);
+        return $query->existsCountryOrCity('to_city_id', 'city_id', $cities);
     }
 
     ### QUERIES ###
@@ -248,23 +251,23 @@ class Route extends Model
     {
         $user = request()->user();
 
-        if (empty($user->user_favorite_routes)) {
+        if (empty($user->favorite_routes)) {
             return [];
         }
 
-        return static::whereIn('route_id', explode(',', $user->user_favorite_routes))
+        return static::whereIn('id', explode(',', $user->favorite_routes))
             ->with([
                 'user' => function ($query) {
                     $query->select([
-                        'user_id',
-                        'user_name',
-                        'user_surname',
-                        'user_creator_rating',
-                        'user_freelancer_rating',
-                        'user_photo',
-                        'user_favorite_orders',
-                        'user_favorite_routes',
-                        DB::raw('(select count(*) from `orders` where `users`.`user_id` = `orders`.`user_id` and `order_status` = "successful") as user_successful_orders')
+                        'id',
+                        'name',
+                        'surname',
+                        'creator_rating',
+                        'freelancer_rating',
+                        'photo',
+                        'favorite_orders',
+                        'favorite_routes',
+                        DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders')
                     ]);
                 },
                 'from_country',
@@ -273,7 +276,7 @@ class Route extends Model
                 'to_city',
             ])
             ->withCount(['rates' => function ($query) use ($user) {
-                $query->where('parent_id', 0)->where('user_id', $user->user_id);
+                $query->whereParentId(0)->whereUserId($user->id);
             }])
             ->get();
     }

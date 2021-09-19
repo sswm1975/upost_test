@@ -5,9 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * App\Models\RoutePoint
+ *
+ * @property int $id Код
+ * @property int $route_id Код маршрута
+ * @property int $country_id Код страны
+ * @property int $city_id Код города
+ * @property string $date Дата нахождения
+ * @property-read \App\Models\City $city
+ * @property-read \App\Models\Country $country
+ * @method static \Illuminate\Database\Eloquent\Builder|RoutePoint newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RoutePoint newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RoutePoint query()
+ * @method static \Illuminate\Database\Eloquent\Builder|RoutePoint whereCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RoutePoint whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RoutePoint whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RoutePoint whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RoutePoint whereRouteId($value)
+ * @mixin \Eloquent
+ */
 class RoutePoint extends Model
 {
-    protected $fillable = ['country', 'city', 'date'];
+    protected $fillable = ['country_id', 'city_id', 'date'];
     public $timestamps = false;
 
     ### LINKS ###
@@ -16,8 +36,8 @@ class RoutePoint extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(Country::class, 'country', 'country_id')
-            ->select(['country_id', "country_name_{$lang} as country_name"])
+        return $this->belongsTo(Country::class, 'country_id', 'id')
+            ->select(['id', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -25,8 +45,8 @@ class RoutePoint extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(City::class, 'city', 'city_id')
-            ->select(['city_id', "city_name_{$lang} as city_name"])
+        return $this->belongsTo(City::class, 'city_id', 'id')
+            ->select(['id', "name_{$lang} as name", 'country_id'])
             ->withDefault();
     }
 }

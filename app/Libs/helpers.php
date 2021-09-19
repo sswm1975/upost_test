@@ -1,7 +1,7 @@
 <?php
 
 use App\Exceptions\ValidatorException;
-use App\Models\Option;
+use App\Models\CurrencyRate;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -384,7 +384,7 @@ function getCurrencyNameBySymbol(string $symbol): string
  */
 function getCurrencyRate(string $currency = '')
 {
-    return Option::rate($currency);
+    return CurrencyRate::rate($currency);
 }
 
 /**

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,34 +13,44 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 /**
  * App\Models\User
  *
- * @property int $user_id Код
- * @property string $user_phone Телефон
- * @property string $user_email Емейл
- * @property string $user_password Пароль
- * @property string|null $user_name Имя пользователя
- * @property string|null $user_surname Фамилия пользователя
- * @property int|null $user_city Код города
- * @property string $user_status Статус
- * @property string|null $user_card_number Номер банковской карты
- * @property string|null $user_card_name Наименование банковской карты
- * @property string|null $user_birthday Дата рождения
- * @property string|null $user_gender Пол
- * @property string|null $user_lang Язык для системы
- * @property string|null $user_currency Валюта
- * @property string|null $user_validation Признак проверки пользователя
- * @property string|null $user_register_date Дата регистрации
- * @property string|null $user_role Роль
- * @property string|null $user_photo Ссылка на фотографию (аватар)
- * @property string|null $user_favorite_orders Список избранных заказов
- * @property string|null $user_favorite_routes Список избранных маршрутов
- * @property string|null $user_last_active Дата и время последней активности
- * @property string|null $user_resume Биография/Резюме
- * @property string $user_wallet Баланс в долларах
- * @property int $user_creator_rating Рейтинг заказчика
- * @property int $user_freelancer_rating Рейтинг исполнителя
+ * @property int $id Код
+ * @property string $phone Телефон
+ * @property string $email Емейл
+ * @property string $password Пароль
+ * @property string|null $name Имя пользователя
+ * @property string|null $surname Фамилия пользователя
+ * @property int|null $city_id Код города
+ * @property string $status Статус
+ * @property string|null $card_number Номер банковской карты
+ * @property string|null $card_name Наименование банковской карты
+ * @property string|null $birthday Дата рождения
+ * @property string $gender Пол
+ * @property string|null $lang Язык для системы
+ * @property string|null $currency Валюта
+ * @property string|null $validation Признак проверки пользователя
+ * @property string|null $register_date Дата регистрации
+ * @property string|null $role Роль
+ * @property string $photo Ссылка на фотографию (аватар)
+ * @property string|null $favorite_orders Список избранных заказов
+ * @property string|null $favorite_routes Список избранных маршрутов
+ * @property string|null $last_active Дата и время последней активности
+ * @property string|null $resume Биография/Резюме
+ * @property string $wallet Баланс в долларах
+ * @property int $creator_rating Рейтинг заказчика
+ * @property int $freelancer_rating Рейтинг исполнителя
  * @property string|null $api_token Токен для работы через API
+ * @property-read \App\Models\City|null $city
+ * @property-read string $city_name
+ * @property-read int $favorite_orders_count
+ * @property-read int $favorite_routes_count
+ * @property-read string $last_active_human
+ * @property-read string $photo_original
+ * @property-read string $photo_thumb
+ * @property-read string $register_date_human
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
+ * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
  * @method static \Illuminate\Database\Eloquent\Builder|User exclude($value = [])
@@ -48,31 +59,31 @@ use Illuminate\Contracts\Auth\CanResetPassword;
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereApiToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserBirthday($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCardName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCardNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCreatorRating($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserCurrency($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserFavoriteOrders($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserFavoriteRoutes($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserFreelancerRating($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserLang($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserLastActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserPassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserPhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserPhoto($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserRegisterDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserResume($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserRole($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserSurname($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserValidation($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserWallet($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereBirthday($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCardName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCardNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatorRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFavoriteOrders($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFavoriteRoutes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFreelancerRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLang($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLastActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePhoto($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRegisterDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereResume($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereSurname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereValidation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereWallet($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -90,16 +101,17 @@ class User extends Authenticatable
     const ROLE_SUPER_ADMIN = 'super_admin';
     const ROLE_MODERATOR = 'moderator';
 
-    protected $primaryKey = 'user_id';
-    protected $guarded = ['user_id'];
+    protected $guarded = ['id'];
     public $timestamps = false;
+
     protected $appends = [
-        'user_photo_thumb',
-        'user_photo_original',
-        'user_favorite_orders_count',
-        'user_favorite_routes_count',
-        'user_register_date_human',
-        'user_last_active_human',
+        'photo_thumb',
+        'photo_original',
+        'favorite_orders_count',
+        'favorite_routes_count',
+        'register_date_human',
+        'last_active_human',
+        'city_name',
     ];
 
     /**
@@ -108,18 +120,19 @@ class User extends Authenticatable
      * @var array
      */
     const FIELDS_FOR_SHOW = [
-        'user_id',                   # id
-        'user_name',                 # ім’я
-        'user_surname',              # прізвище
-        'user_register_date',        # дата реєстрації
-        'user_last_active',          # час останньої активності
-        'user_status',               # статус
-        'user_birthday',             # день народження
-        'user_gender',               # стать
-        'user_photo',                # фото
-        'user_resume',               # біографія
-        'user_freelancer_rating',    # рейтинг фрілансера
-        'user_creator_rating',       # рейтинг виконавця
+        'id',                   # id
+        'name',                 # ім’я
+        'surname',              # прізвище
+        'register_date',        # дата реєстрації
+        'last_active',          # час останньої активності
+        'status',               # статус
+        'birthday',             # день народження
+        'gender',               # стать
+        'photo',                # фото
+        'resume',               # біографія
+        'freelancer_rating',    # рейтинг фрілансера
+        'creator_rating',       # рейтинг виконавця
+        'city_id',              # місто
     ];
 
     /**
@@ -128,14 +141,14 @@ class User extends Authenticatable
      * @var array
      */
     const FIELDS_FOR_EDIT = [
-        'user_name',                 # ім'я
-        'user_surname',              # прізвище
-        'user_city',                 # код міста проживання
-        'user_status',               # статус
-        'user_birthday',             # дата народження
-        'user_gender',               # стать
-        'user_photo',                # фото
-        'user_resume',               # біографія
+        'name',                 # ім'я
+        'surname',              # прізвище
+        'city',                 # код міста проживання
+        'status',               # статус
+        'birthday',             # дата народження
+        'gender',               # стать
+        'photo',                # фото
+        'resume',               # біографія
     ];
 
     public static function boot()
@@ -143,25 +156,42 @@ class User extends Authenticatable
         parent::boot();
 
         static::creating(function ($model) {
-            $model->user_register_date = $model->freshTimestamp();
-            $model->user_status = self::STATUS_ACTIVE;
-            $model->user_validation = self::VALIDATION_STATUS_NO_VALID;
-            $model->user_lang = config('user.default.lang');
-            $model->user_currency = config('user.default.currency');
-            $model->user_role = self::ROLE_USER;
+            $model->register_date = $model->freshTimestamp();
+            $model->status = self::STATUS_ACTIVE;
+            $model->validation = self::VALIDATION_STATUS_NO_VALID;
+            $model->lang = config('user.default.lang');
+            $model->currency = config('user.default.currency');
+            $model->role = self::ROLE_USER;
         });
     }
 
     ### SETTERS ###
 
-    public function setUserCurrencyAttribute($value)
+    public function setCurrencyAttribute($value)
     {
-        $this->attributes['user_currency'] = config('app.currencies')[$value];
+        $this->attributes['currency'] = config('app.currencies')[$value];
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = getHashPassword($value);
     }
 
     ### GETTERS ###
 
-    public function getUserPhotoAttribute($value): string
+    public function getGenderAttribute($value): string
+    {
+        return __("message.$value");
+    }
+
+    public function getCityNameAttribute($value): string
+    {
+        if (empty($this->city_id)) return '';
+
+        return City::language()->find($this->city_id)->name;
+    }
+
+    public function getPhotoAttribute($value): string
     {
         if (is_null($value)) {
             return asset('storage/users/no-photo.png');
@@ -170,14 +200,14 @@ class User extends Authenticatable
         return asset('storage/' . $value);
     }
 
-    public function getUserPhotoThumbAttribute(): string
+    public function getPhotoThumbAttribute(): string
     {
-        return str_replace('user_photo.jpg', 'user_photo-thumb.jpg', $this->user_photo);
+        return str_replace('photo.jpg', 'photo-thumb.jpg', $this->photo);
     }
 
-    public function getUserPhotoOriginalAttribute(): string
+    public function getPhotoOriginalAttribute(): string
     {
-        return str_replace('user_photo.jpg', 'user_photo-original.jpg', $this->user_photo);
+        return str_replace('photo.jpg', 'photo-original.jpg', $this->photo);
     }
 
     /**
@@ -185,9 +215,9 @@ class User extends Authenticatable
      *
      * @return string
      */
-    public function getUserRegisterDateHumanAttribute(): string
+    public function getRegisterDateHumanAttribute(): string
     {
-        return Carbon::parse($this->user_register_date)->diffForHumans();
+        return Carbon::parse($this->register_date)->diffForHumans();
     }
 
     /**
@@ -195,30 +225,38 @@ class User extends Authenticatable
      *
      * @return string
      */
-    public function getUserLastActiveHumanAttribute(): string
+    public function getLastActiveHumanAttribute(): string
     {
-        return Carbon::parse($this->user_last_active)->diffForHumans();
+        return Carbon::parse($this->last_active)->diffForHumans();
     }
 
-    public function getUserFavoriteOrdersCountAttribute(): int
+    public function getFavoriteOrdersCountAttribute(): int
     {
-        if (is_null($this->user_favorite_orders)) return 0;
+        if (is_null($this->favorite_orders)) return 0;
 
-        return substr_count($this->user_favorite_orders, ',') + 1;
+        return substr_count($this->favorite_orders, ',') + 1;
     }
 
-    public function getUserFavoriteRoutesCountAttribute(): int
+    public function getFavoriteRoutesCountAttribute(): int
     {
-        if (is_null($this->user_favorite_routes)) return 0;
+        if (is_null($this->favorite_routes)) return 0;
 
-        return substr_count($this->user_favorite_routes, ',') + 1;
+        return substr_count($this->favorite_routes, ',') + 1;
     }
 
     ### LINKS ###
 
+    public function city(): HasOne
+    {
+        $lang = app()->getLocale();
+
+        return $this->hasOne(City::class, 'id', 'city_id')
+            ->select(['id', "name_{$lang} as name"]);
+    }
+
     public function rates(): HasMany
     {
-        return $this->hasMany(Rate::class, 'user_id', 'user_id');
+        return $this->hasMany(Rate::class, 'user_id', 'id');
     }
 
     public function ratesDeadlineToday()
@@ -228,7 +266,7 @@ class User extends Authenticatable
 
     public function orders()
     {
-        return $this->hasMany(Order::class, 'user_id', 'user_id');
+        return $this->hasMany(Order::class, 'user_id', 'id');
     }
 
     ### SCOPES ###
@@ -238,31 +276,10 @@ class User extends Authenticatable
         return $query->select(array_diff($this->getAttributes(), (array) $value));
     }
 
-    public function scopeExistsToken($query, $token = '')
+    public function scopeExistsToken($query, $token = ''): bool
     {
         if (empty($token)) return false;
 
         return (bool) $query->where('api_token', $token)->count();
-    }
-
-    /**
-     * Route notifications for the mail channel.
-     *
-     * @param  Notification  $notification
-     * @return string
-     */
-    public function routeNotificationForMail(Notification $notification): string
-    {
-        return $this->user_email;
-    }
-
-    /**
-     * Get the e-mail address where password reset links are sent.
-     *
-     * @return string
-     */
-    public function getEmailForPasswordReset()
-    {
-        return $this->user_email;
     }
 }

@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\Review
  *
- * @property int $review_id Код
+ * @property int $id Код
  * @property int $user_id Код пользователя
  * @property int $job_id Код задания
  * @property int $rating Рейтинг
- * @property int $review_type Кто оставил отзыв: заказчик или исполнитель
+ * @property int $type Кто оставил отзыв: заказчик или исполнитель
  * @property string $comment Комментарий
  * @property string $created_at Дата добавления
  * @property string|null $updated_at Дата изменения
@@ -20,10 +20,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Review query()
  * @method static \Illuminate\Database\Eloquent\Builder|Review whereComment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Review whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Review whereJobId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Review whereRating($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Review whereReviewId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Review whereReviewType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Review whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Review whereUserId($value)
  * @mixin \Eloquent
@@ -57,7 +57,7 @@ class Review extends Model
      * @return array|mixed
      * @var mixed
      */
-    public static function getReviewTypeNames($type = null)
+    public static function getTypeNames($type = null)
     {
         $list = [
             self::TYPE_CREATOR    => __('message.type_creator'),
@@ -73,11 +73,11 @@ class Review extends Model
 
 
     //
-    protected $fillable = ['user_id', 'job_id', 'rating', 'comment', 'review_type'];
+    protected $fillable = ['user_id', 'job_id', 'rating', 'comment', 'type'];
 
-    public function getReviewTypeAttribute($value)
+    public function getTypeAttribute($value)
     {
-        return static::getReviewTypeNames($value);
+        return static::getTypeNames($value);
     }
 
     /**
@@ -91,7 +91,7 @@ class Review extends Model
     {
         return static::whereUserId($user_id)
             ->when(!is_null($type), function($query) use ($type) {
-                $query->whereReviewType($type);
+                $query->whereType($type);
             })
             ->count();
     }
