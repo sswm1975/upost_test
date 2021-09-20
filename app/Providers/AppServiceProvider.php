@@ -63,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
          */
         Validator::extend('owner_rate', function($attribute, $value, $parameters) {
             $rate = Rate::query()
-                ->with('route:route,user_id', 'order:id,user_id')
+                ->with('route:id,user_id', 'order:id,user_id')
                 ->find($value, ['id', 'route_id', 'order_id']);
 
             if (!$rate) return false;
