@@ -63,9 +63,8 @@ class AppServiceProvider extends ServiceProvider
          */
         Validator::extend('owner_rate', function($attribute, $value, $parameters) {
             $rate = Rate::query()
-                ->with('route:route_id,user_id', 'order:order_id,user_id')
-                ->where('rate_id', $value)
-                ->first(['rate_id', 'route_id', 'order_id']);
+                ->with('route:route,user_id', 'order:id,user_id')
+                ->find($value, ['id', 'route_id', 'order_id']);
 
             if (!$rate) return false;
 
