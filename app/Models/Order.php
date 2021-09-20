@@ -112,8 +112,9 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->user_id = request()->user()->user_id;
+            $model->user_id = request()->user()->id;
             $model->looks = 0;
+            $model->slug = Str::slug($model->name);
             $model->status = self::STATUS_ACTIVE;
             $model->register_date = $model->freshTimestamp();
         });

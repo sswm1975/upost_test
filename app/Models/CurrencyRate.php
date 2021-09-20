@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate query()
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate rate($currency = 'usd')
  * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereUpdatedAt($value)
@@ -26,8 +25,8 @@ class CurrencyRate extends Model
     protected $guarded = ['id'];
     public $timestamps = false;
 
-    public function scopeRate($query, $currency = 'usd')
+    public static function getRate($currency = 'usd')
     {
-        return $query->whereKey($currency)->rate ?? 1;
+        return static::find($currency)->rate ?? 1;
     }
 }

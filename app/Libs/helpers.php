@@ -384,7 +384,7 @@ function getCurrencyNameBySymbol(string $symbol): string
  */
 function getCurrencyRate(string $currency = '')
 {
-    return CurrencyRate::rate($currency);
+    return CurrencyRate::getRate($currency);
 }
 
 /**

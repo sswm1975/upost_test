@@ -66,8 +66,8 @@ class Message extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->created_at = $model->freshTimestamp();
             $model->from_user = request()->user()->id;
+            $model->created_at = $model->freshTimestamp();
         });
     }
 }
