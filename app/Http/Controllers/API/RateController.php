@@ -496,8 +496,8 @@ class RateController extends Controller
     {
         $rate = Rate::query()
             ->with('route:id,user_id', 'order:id,user_id')
-            ->where('id', $rate_id)
-            ->where('status', 'active')
+            ->whereKey($rate_id)
+            ->whereStatus(Rate::STATUS_ACTIVE)
             ->first();
 
         if (!$rate) throw new ErrorException(__('message.rate_not_found'));

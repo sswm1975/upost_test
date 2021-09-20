@@ -179,17 +179,8 @@ class RouteController extends Controller
         return Route::query()
             ->with([
                 'user' => function ($query) {
-                    $query->select([
-                        'id',
-                        'name',
-                        'surname',
-                        'creator_rating',
-                        'freelancer_rating',
-                        'photo',
-                        'favorite_orders',
-                        'favorite_routes',
-                        DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders')
-                    ]);
+                        $query->select(User::FIELDS_FOR_SHOW)
+                            ->addSelect(DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders'));
                 },
                 'from_country',
                 'from_city',
