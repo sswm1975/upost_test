@@ -38,7 +38,7 @@ class ReviewController extends Controller
                 'job_id'  => [
                     'required',
                     'integer',
-                    'exists:jobs,job_id',
+                    'exists:jobs,id',
                     Rule::unique('reviews', 'job_id')->where(function ($query) use ($userId) {
                         return $query->where('user_id', $userId);
                     }),
