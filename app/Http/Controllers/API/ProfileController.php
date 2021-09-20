@@ -84,12 +84,12 @@ class ProfileController extends Controller
     }
 
     /**
-     * Валидатор для проверки данных пользователя при их обновлении (только публичные).
+     * Валидатор для проверки данных пользователя при их обновлении.
      *
      * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator4add(array $data): \Illuminate\Contracts\Validation\Validator
+    protected function validator4update(array $data): \Illuminate\Contracts\Validation\Validator
     {
         return Validator::make($data,
             [
@@ -114,7 +114,7 @@ class ProfileController extends Controller
      */
     public function updatePublicData(Request $request): JsonResponse
     {
-        $data = validateOrExit($this->validator($request->only(User::FIELDS_FOR_EDIT)));
+        $data = validateOrExit($this->validator4update($request->only(User::FIELDS_FOR_EDIT)));
 
         $user = $request->user();
 
