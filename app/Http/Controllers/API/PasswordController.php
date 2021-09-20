@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use App\Exceptions\ValidatorException;
 use Illuminate\Auth\Events\PasswordReset;
@@ -17,13 +18,18 @@ class PasswordController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException|ValidatorException
+     * @throws ValidationException|ValidatorException|ErrorException
      */
     public function sendResetLinkEmail(Request $request): JsonResponse
     {
         $credentials = validateOrExit(['email' => 'required|email']);
 
-        $status = Password::sendResetLink($credentials);
+        try {
+            $status = Password::sendResetLink($credentials);
+        }
+        catch (\Exception $e) {
+            throw new ErrorException($e->getMessage());
+        }
 
         return response()->json([
             'status'  => $status === Password::RESET_LINK_SENT,
