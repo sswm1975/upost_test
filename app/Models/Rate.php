@@ -72,7 +72,7 @@ class Rate extends Model
             $model->user_id = request()->user()->id;
             $model->status = self::STATUS_ACTIVE;
             $model->is_read = 0;
-            $model->created_at  = $this->freshTimestamp();
+            $model->created_at  = $model->freshTimestamp();
         });
     }
 
