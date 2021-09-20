@@ -318,15 +318,15 @@ class OrderController extends Controller
      */
     public function selectionRoute(int $order_id, Request $request):JsonResponse
     {
-        if (!$order = Order::find($order_id)) {
+        if (!$order = Order::find($order_id, ['from_country_id', 'fromdate', 'tilldate'])) {
             throw new ErrorException(__('message.order_not_found'));
         }
 
         $routes = Route::query()
-            ->where('route_status', Route::STATUS_ACTIVE)
-            ->where('route_from_country', $order->order_from_country)
-            ->where('route_start', '>=', $order->order_start)
-            ->where('route_end', '<=', $order->order_deadline)
+            ->where('status', Route::STATUS_ACTIVE)
+            ->where('from_country_id', $order->from_country_id)
+            ->where('fromdate', '>=', $order->fromdate)
+            ->where('tilldate', '<=', $order->tilldate)
             ->get()
             ->toArray();
 
