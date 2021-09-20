@@ -63,23 +63,23 @@ class ProfileController extends Controller
         $user->reviews_count = Review::getCountReviews($user->id);
 
         # получить последний отзыв
-        $user->last_review = Review::getLastReview($user->id);
+        $last_review = Review::getLastReview($user->id);
 
         # добавляем последние 2 заказа, созданные пользователем
-        $user->last_orders = (new OrderController)->getOrdersByFilter($user, [
+        $last_orders = (new OrderController)->getOrdersByFilter($user, [
             'user_id' => $user->id,
             'show' => 2,
-        ])['data'] ?? "";
+        ])['data'] ?? '';
 
         # добавляем последние 2 маршрута, созданные пользователем
-        $user->last_routes = (new RouteController)->getRoutesByFilter($user, [
+        $last_routes = (new RouteController)->getRoutesByFilter($user, [
             'user_id' => $user->id,
             'show' => 2,
-        ])['data'] ?? "";
+        ])['data'] ?? '';
 
         return response()->json([
             'status' => true,
-            'result' => null_to_blank($user),
+            'result' => null_to_blank(compact('user', 'last_review', 'last_orders', 'last_routes')),
         ]);
     }
 
@@ -89,7 +89,7 @@ class ProfileController extends Controller
      * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
+    protected function validator4add(array $data): \Illuminate\Contracts\Validation\Validator
     {
         return Validator::make($data,
             [
