@@ -67,7 +67,7 @@ class RouteController extends Controller
         ];
 
         for ($i = 0; $i < count($data['route_points'] ?? []); $i++) {
-            $country_id = (int)($data['route_points'][$i]['country'] ?? 0);
+            $country_id = (int)($data['route_points'][$i]['country_id'] ?? 0);
             $rules["route_points.{$i}.country_id"] = 'sometimes|required|integer|exists:countries,id';
             $rules["route_points.{$i}.city_id"]    = 'sometimes|required|integer|exists:cities,id,country_id,' . $country_id;
             $rules["route_points.{$i}.date"]       = 'sometimes|required|date';
