@@ -80,7 +80,7 @@ class OrderController extends Controller
                 'from_country_id'=> 'required|integer|exists:countries,id',
                 'from_city_id'   => 'sometimes|required|integer|exists:cities,id,country_id,' . $data['from_country_id'],
                 'from_address'   => 'sometimes|nullable|string',
-                'to_country_id'  => 'required|integer|exists:countries,country_id',
+                'to_country_id'  => 'required|integer|exists:countries,id',
                 'to_city_id'     => 'sometimes|required|integer|exists:cities,id,country_id,' . $data['to_country_id'],
                 'to_address'     => 'sometimes|nullable|string',
                 'fromdate'       => 'sometimes|required|date',
