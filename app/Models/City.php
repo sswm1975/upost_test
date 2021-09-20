@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\City
@@ -41,6 +43,16 @@ class City extends Model
     {
         $lang = app()->getLocale();
 
-        return $query->select("name_$lang as name");
+        return $query->select(["name_$lang as name"]);
+    }
+
+    ### LINKS ###
+
+    public function country(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(Country::class, 'country_id', 'id')
+            ->select(['id', "name_{$lang} as name"]);
     }
 }

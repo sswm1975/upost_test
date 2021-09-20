@@ -55,6 +55,8 @@ class ProfileController extends Controller
         # удаляем поля с паролем и токеном
         unset($user->password, $user->api_token);
 
+        $user->load(['city.country']);
+
         # добавляем кол-во заказов, как Заказчик и как Исполнитель (фрилансер)
         $user->creator_count = Review::getCountReviewsByCreator($user->id);
         $user->freelancer_count = Review::getCountReviewsByFreelancer($user->id);

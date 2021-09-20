@@ -111,7 +111,6 @@ class User extends Authenticatable
         'favorite_routes_count',
         'register_date_human',
         'last_active_human',
-        'city_name',
         'age',
     ];
 
@@ -201,13 +200,6 @@ class User extends Authenticatable
         return Carbon::parse($this->birthday)->age;
     }
 
-    public function getCityNameAttribute(): string
-    {
-        if (empty($this->city_id)) return '';
-
-        return City::language()->find($this->city_id)->name ?? '';
-    }
-
     public function getPhotoAttribute($value): string
     {
         if (is_null($value)) {
@@ -268,7 +260,7 @@ class User extends Authenticatable
         $lang = app()->getLocale();
 
         return $this->hasOne(City::class, 'id', 'city_id')
-            ->select(['id', "name_{$lang} as name"]);
+            ->select(['id', "name_{$lang} as name", 'country_id']);
     }
 
     public function rates(): HasMany
