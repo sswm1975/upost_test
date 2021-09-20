@@ -330,7 +330,7 @@ function isProfileNotFilled(): bool
         return false;
     };
 
-    return (empty($user->user_name) || empty($user->user_surname) || empty($user->user_birthday));
+    return (empty($user->name) || empty($user->surname) || empty($user->birthday));
 }
 
 /**
