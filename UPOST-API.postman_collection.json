@@ -79,7 +79,101 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "Авторизація",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "login",
+													"value": "{{email}}",
+													"description": "Логін: емейл або телефон",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "{{password_hash}}",
+													"description": "Хеш пароля, результат виконання md5(md5(password))",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{host}}/{{endpoint}}/auth/login?lang=uk",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"{{endpoint}}",
+												"auth",
+												"login"
+											],
+											"query": [
+												{
+													"key": "lang",
+													"value": "uk",
+													"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 19 Sep 2021 09:46:57 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "private, must-revalidate"
+										},
+										{
+											"key": "pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "expires",
+											"value": "-1"
+										},
+										{
+											"key": "X-RateLimit-Limit",
+											"value": "60"
+										},
+										{
+											"key": "X-RateLimit-Remaining",
+											"value": "59"
+										},
+										{
+											"key": "x-ray",
+											"value": "p529:0.660/wn1056:0.660/wa1056:D=657283"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": true,\n    \"message\": \"Вхід успішний.\",\n    \"token\": \"I3Hggz19IOlNDF5JEGG8xnugRWTYbjiIPJmufpkEYd6xwJMDaqPLmqoC5Ax9zTER\"\n}"
+								}
+							]
 						}
 					]
 				},
@@ -142,7 +236,113 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "Реєстрація",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "phone",
+													"value": "+380978820044",
+													"description": "Телефон",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "sswm@i.ua",
+													"description": "Емейл",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "123456",
+													"description": "Пароль",
+													"type": "text"
+												},
+												{
+													"key": "password_confirmation",
+													"value": "123456",
+													"description": "Підтвердження паролю",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{host}}/{{endpoint}}/auth/register?lang=uk",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"{{endpoint}}",
+												"auth",
+												"register"
+											],
+											"query": [
+												{
+													"key": "lang",
+													"value": "uk",
+													"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 19 Sep 2021 10:06:26 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "private, must-revalidate"
+										},
+										{
+											"key": "pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "expires",
+											"value": "-1"
+										},
+										{
+											"key": "X-RateLimit-Limit",
+											"value": "60"
+										},
+										{
+											"key": "X-RateLimit-Remaining",
+											"value": "58"
+										},
+										{
+											"key": "x-ray",
+											"value": "p529:0.120/wn1056:0.130/wa1056:D=125764"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": true,\n    \"message\": \"Реєстрація успішна.\",\n    \"token\": \"388lu0PbXKkKNRy0LQ8ZkdvLv7pP9OWHZluyrfqoh3D94Kr9AXM9dskiOkeDk7ii\"\n}"
+								}
+							]
 						}
 					]
 				},
@@ -186,7 +386,94 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "Скидання паролю",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "email",
+													"value": "sswm@i.ua",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{host}}/{{endpoint}}/password/email?lang=uk",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"{{endpoint}}",
+												"password",
+												"email"
+											],
+											"query": [
+												{
+													"key": "lang",
+													"value": "uk",
+													"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 19 Sep 2021 10:15:33 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "private, must-revalidate"
+										},
+										{
+											"key": "pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "expires",
+											"value": "-1"
+										},
+										{
+											"key": "X-RateLimit-Limit",
+											"value": "60"
+										},
+										{
+											"key": "X-RateLimit-Remaining",
+											"value": "59"
+										},
+										{
+											"key": "x-ray",
+											"value": "p529:1.460/wn1056:1.460/wa1056:D=1455759"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": true,\n    \"message\": \"Ми надіслали на Вашу електронну адресу посилання для зміни пароля!\"\n}"
+								}
+							]
 						},
 						{
 							"name": "Змінити пароль",
@@ -216,7 +503,7 @@
 										},
 										{
 											"key": "token",
-											"value": "3000c0445344a3a43799a8e9975f7906acb49ddd5683e4f34c6483942d0dac63",
+											"value": "0c33952c381cdf37faae3453585c2f085fc7033121deb49b5665cf7f69373501",
 											"type": "text"
 										}
 									]
@@ -240,7 +527,109 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "Змінити пароль",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "email",
+													"value": "sswm@i.ua",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "testtest",
+													"type": "text"
+												},
+												{
+													"key": "password_confirmation",
+													"value": "testtest",
+													"type": "text"
+												},
+												{
+													"key": "token",
+													"value": "0c33952c381cdf37faae3453585c2f085fc7033121deb49b5665cf7f69373501",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{host}}/{{endpoint}}/password/reset?lang=uk",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"{{endpoint}}",
+												"password",
+												"reset"
+											],
+											"query": [
+												{
+													"key": "lang",
+													"value": "uk",
+													"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 19 Sep 2021 10:17:15 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "private, must-revalidate"
+										},
+										{
+											"key": "pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "expires",
+											"value": "-1"
+										},
+										{
+											"key": "X-RateLimit-Limit",
+											"value": "60"
+										},
+										{
+											"key": "X-RateLimit-Remaining",
+											"value": "59"
+										},
+										{
+											"key": "x-ray",
+											"value": "p529:0.210/wn1056:0.200/wa1056:D=201501"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": true,\n    \"message\": \"Ваш пароль змінено!\"\n}"
+								}
+							]
 						}
 					]
 				},
@@ -254,7 +643,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"user_id\", 1);"
+											"pm.variables.set(\"user_id\", 12);"
 										],
 										"type": "text/javascript"
 									}
@@ -264,7 +653,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile?lang=ru",
+									"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile?lang=uk",
 									"host": [
 										"{{host}}"
 									],
@@ -277,7 +666,7 @@
 									"query": [
 										{
 											"key": "lang",
-											"value": "ru",
+											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 										}
 									]
@@ -302,20 +691,19 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile?lang=ru",
+									"raw": "{{host}}/{{endpoint}}/users/profile?lang=uk",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
 										"users",
-										"{{user_id}}",
 										"profile"
 									],
 									"query": [
 										{
 											"key": "lang",
-											"value": "ru",
+											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 										}
 									]

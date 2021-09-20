@@ -38,7 +38,7 @@ class RouteController extends Controller
         }
 
         $route = Route::with('route_points:route_id,country_id,city_id,date')
-            ->find($route->route_id)
+            ->find($route->id)
             ->toArray();
 
         return response()->json([
