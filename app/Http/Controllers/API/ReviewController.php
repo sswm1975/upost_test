@@ -70,13 +70,13 @@ class ReviewController extends Controller
             // Заказчик
             if ($userId === $creatorId) {
                 $user = User::find($freelancerId);
-                $user->user_freelancer_rating += $data['rating'];
+                $user->freelancer_rating += $data['rating'];
                 $type = Review::TYPE_CREATOR;
             }
             // Исполнитель
             else {
                 $user = User::find($creatorId);
-                $user->user_creator_rating += $data['rating'];
+                $user->creator_rating += $data['rating'];
                 $type = Review::TYPE_FREELANCER;
             }
             $user->save();
