@@ -59,8 +59,8 @@ class PhotoLoaderController extends Controller
         $data = substr($base64_image, strpos($base64_image, ',') + 1);
         $image_file = base64_decode($data);
 
-        Storage::disk('local')->put($path . $image_original_name, $image_file);
-        $storage_path = Storage::disk('local')->path($path);
+        Storage::disk('public')->put($path . $image_original_name, $image_file);
+        $storage_path = Storage::disk('public')->path($path);
 
         $src = imagecreatefromstring($image_file);
         if ($src === false) {
@@ -95,8 +95,8 @@ class PhotoLoaderController extends Controller
 
         $image_file = base64_decode(substr($base64_image, strpos($base64_image, ',') + 1));
 
-        Storage::disk('local')->put($path . $image_original_name, $image_file);
-        $storage_path = Storage::disk('local')->path($path);
+        Storage::disk('public')->put($path . $image_original_name, $image_file);
+        $storage_path = Storage::disk('public')->path($path);
 
         $src = imagecreatefromstring($image_file);
         if ($src === false) {
