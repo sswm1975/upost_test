@@ -306,7 +306,7 @@ Route::group(
 Route::get('liqpay_result', 'API\JobController@resultLiqpay')->name('api.liqpay.result');
 
 // Парсинг даних
-Route::get('parser', 'API\ParserController')->middleware(MIDDLEWARE_AUTH_BASIC);
+Route::get('parser', 'API\ParserController');
 
 // Завантаження файлу
 Route::post('upload', 'API\UploadController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
