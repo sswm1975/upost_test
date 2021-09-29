@@ -151,7 +151,7 @@ Route::group(
 // Категорії
 Route::group(
     [
-        'prefix' => 'сategories',
+        'prefix' => 'categories',
     ],
     function () {
         # Отримання всіх категорій
