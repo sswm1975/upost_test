@@ -13,12 +13,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name_uk Наименование на украинском
  * @property string $name_ru Наименование на русском
  * @property string $name_en Наименование на английском
- * @property string|null $description Описание
+ * @property string|null $synonyms Синонимы для категории
  * @method static Builder|Category language()
  * @method static Builder|Category newModelQuery()
  * @method static Builder|Category newQuery()
  * @method static Builder|Category query()
- * @method static Builder|Category whereDescription($value)
+ * @method static Builder|Category whereSynonyms($value)
  * @method static Builder|Category whereId($value)
  * @method static Builder|Category whereNameEn($value)
  * @method static Builder|Category whereNameRu($value)
@@ -30,7 +30,7 @@ class Category extends Model
 {
     protected $table = 'categories';
     protected $primaryKey = 'id';
-    protected $fillable = ['name_uk', 'name_ru', 'name_en', 'description'];
+    protected $fillable = ['name_uk', 'name_ru', 'name_en', 'synonyms'];
     public $timestamps = false;
 
     /**
@@ -43,7 +43,7 @@ class Category extends Model
     {
         $lang = app()->getLocale();
 
-        return $query->select("name_$lang as name");
+        return $query->select("name_$lang as name", "synonyms");
     }
 
     /**
