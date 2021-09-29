@@ -45,7 +45,7 @@ Route::group(
     ],
     function () {
         # Отримання інформації про користувача (тільки публічні дані)
-        Route::get('{user_id}/profile', 'API\ProfileController@getPublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('{user_id}/profile', 'API\ProfileController@getPublicData');
 
         # Отримання інформації про користувача (всі дані)
         Route::get('profile', 'API\ProfileController@getPrivateData')->middleware(MIDDLEWARE_AUTH_BASIC);
