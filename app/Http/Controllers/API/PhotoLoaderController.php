@@ -37,7 +37,7 @@ class PhotoLoaderController extends Controller
 
         return response()->json([
             'status' => true,
-            'image' => call_user_func([self::class, $method], $request->get('photo'), $request->user()->user_id),
+            'image' => call_user_func([self::class, $method], $request->get('photo'), $request->user()->id),
         ]);
     }
 
