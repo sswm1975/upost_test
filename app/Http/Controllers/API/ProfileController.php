@@ -55,6 +55,9 @@ class ProfileController extends Controller
         # удаляем поля с паролем и токеном
         unset($user->password, $user->api_token);
 
+        $orders_count = $user->orders->count();
+        $routes_count = $user->routes->count();
+
         $user->load(['city.country']);
 
         # добавляем кол-во заказов, как Заказчик и как Исполнитель (фрилансер)
@@ -81,7 +84,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'status' => true,
-            'result' => null_to_blank(compact('user', 'last_review', 'last_orders', 'last_routes')),
+            'result' => null_to_blank(compact('user','orders_count', 'routes_count', 'last_review', 'last_orders', 'last_routes')),
         ]);
     }
 

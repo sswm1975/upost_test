@@ -274,9 +274,20 @@ class User extends Authenticatable
         return $this->rates()->deadlineToday();
     }
 
-    public function orders()
+    /**
+     * @return HasMany
+     */
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function routes(): HasMany
+    {
+        return $this->hasMany(Route::class, 'user_id', 'id');
     }
 
     ### SCOPES ###
