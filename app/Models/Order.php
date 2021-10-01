@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -259,6 +260,11 @@ class Order extends Model
     public function rates(): HasMany
     {
         return $this->hasMany(Rate::class, 'order_id', 'id');
+    }
+
+    public function review(): MorphOne
+    {
+        return $this->morphOne(Review::class, 'reviewable');
     }
 
     ### SCOPES ###
