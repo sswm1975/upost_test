@@ -10,82 +10,6 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 
-/**
- * App\Models\User
- *
- * @property int $id Код
- * @property string $phone Телефон
- * @property string $email Емейл
- * @property string $password Пароль
- * @property string|null $name Имя пользователя
- * @property string|null $surname Фамилия пользователя
- * @property int|null $city_id Код города
- * @property string $status Статус
- * @property string|null $card_number Номер банковской карты
- * @property string|null $card_name Наименование банковской карты
- * @property string|null $birthday Дата рождения
- * @property string $gender Пол
- * @property string|null $lang Язык для системы
- * @property string|null $currency Валюта
- * @property string|null $validation Признак проверки пользователя
- * @property string|null $register_date Дата регистрации
- * @property string|null $role Роль
- * @property string $photo Ссылка на фотографию (аватар)
- * @property string|null $favorite_orders Список избранных заказов
- * @property string|null $favorite_routes Список избранных маршрутов
- * @property string|null $last_active Дата и время последней активности
- * @property string|null $resume Биография/Резюме
- * @property string $wallet Баланс в долларах
- * @property int $creator_rating Рейтинг заказчика
- * @property int $freelancer_rating Рейтинг исполнителя
- * @property string|null $api_token Токен для работы через API
- * @property-read \App\Models\City|null $city
- * @property-read string $city_name
- * @property-read int $favorite_orders_count
- * @property-read int $favorite_routes_count
- * @property-read string $last_active_human
- * @property-read string $photo_original
- * @property-read string $photo_thumb
- * @property-read string $register_date_human
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
- * @property-read int|null $orders_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
- * @property-read int|null $rates_count
- * @method static \Illuminate\Database\Eloquent\Builder|User exclude($value = [])
- * @method static \Illuminate\Database\Eloquent\Builder|User existsToken($token = '')
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
- * @method static \Illuminate\Database\Eloquent\Builder|User whereApiToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereBirthday($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCardName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCardNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCityId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatorRating($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCurrency($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereFavoriteOrders($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereFavoriteRoutes($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereFreelancerRating($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereLang($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereLastActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePhoto($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereRegisterDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereResume($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereSurname($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereValidation($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereWallet($value)
- * @mixin \Eloquent
- */
 class User extends Authenticatable
 {
     use Notifiable;
@@ -113,6 +37,8 @@ class User extends Authenticatable
         'register_date_human',
         'last_active_human',
         'age',
+        'orders_count',
+        'routes_count',
     ];
 
     /**
@@ -252,6 +178,16 @@ class User extends Authenticatable
         if (is_null($this->favorite_routes)) return 0;
 
         return substr_count($this->favorite_routes, ',') + 1;
+    }
+
+    public function getOrdersCountAttribute(): int
+    {
+        return $this->orders->count();
+    }
+
+    public function getRoutesCountAttribute(): int
+    {
+        return $this->routes->count();
     }
 
     ### LINKS ###
