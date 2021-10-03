@@ -30,6 +30,9 @@ class User extends Authenticatable
     public $timestamps = false;
 
     protected $appends = [
+        'status_name',
+        'gender_name',
+        'validation_name',
         'photo_thumb',
         'photo_original',
         'favorite_orders_count',
@@ -107,19 +110,19 @@ class User extends Authenticatable
 
     ### GETTERS ###
 
-    public function getGenderAttribute($value): string
+    public function getGenderNameAttribute(): string
     {
-        return __("message.user.$value");
+        return __("message.user.$this->gender");
     }
 
-    public function getValidationAttribute($value): string
+    public function getValidationNameAttribute($value): string
     {
-        return __("message.user.$value");
+        return __("message.user.$this->validation");
     }
 
-    public function getStatusAttribute($value): string
+    public function getStatusNameAttribute(): string
     {
-        return __("message.user.$value");
+        return __("message.user.$this->status");
     }
 
     public function getAgeAttribute(): string
