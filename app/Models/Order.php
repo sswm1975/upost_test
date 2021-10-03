@@ -167,32 +167,34 @@ class Order extends Model
 
     public function setNameAttribute($value)
     {
-        $this->attributes['name'] = strip_tags(strip_unsafe($value));
+        $this->attributes['name'] = !empty($value) ? strip_tags(strip_unsafe($value)) : null;
     }
 
     public function setSizeAttribute($value)
     {
-        $this->attributes['size'] = strip_tags(strip_unsafe($value));
+        $this->attributes['size'] = !empty($value) ? strip_tags(strip_unsafe($value)) : null;
     }
 
     public function setWeightAttribute($value)
     {
-        $this->attributes['weight'] = strip_tags(strip_unsafe($value));
+        $this->attributes['weight'] = !empty($value) ? strip_tags(strip_unsafe($value)) : null;
     }
 
     public function setDescriptionAttribute($value)
     {
-        $this->attributes['description'] = strip_tags(strip_unsafe($value), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+        $this->attributes['description'] = !empty($value)
+            ? strip_tags(strip_unsafe($value), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+            : null;
     }
 
     public function setFromAddressAttribute($value)
     {
-        $this->attributes['from_address'] = strip_tags(strip_unsafe($value));
+        $this->attributes['from_address'] = !empty($value) ? strip_tags(strip_unsafe($value)) : null;
     }
 
     public function setToAddressAttribute($value)
     {
-        $this->attributes['to_address'] = strip_tags(strip_unsafe($value));
+        $this->attributes['to_address'] = !empty($value) ? strip_tags(strip_unsafe($value)) : null;
     }
 
     ### LINKS ###
