@@ -97,7 +97,7 @@ class ProfileController extends Controller
             [
                 'name'     => 'sometimes|string|max:100',
                 'surname'  => 'sometimes|string|max:100',
-                'city'     => 'integer|exists:cities,id',
+                'city_id'  => 'integer|exists:cities,id',
                 'status'   => 'in:active,banned,removed',
                 'birthday' => 'date',
                 'gender'   => 'nullable|in:male,female,unknown',
