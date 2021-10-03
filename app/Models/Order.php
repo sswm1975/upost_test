@@ -197,6 +197,11 @@ class Order extends Model
         $this->attributes['to_address'] = !empty($value) ? strip_tags(strip_unsafe($value)) : null;
     }
 
+    public function setUserPriceAttribute($value)
+    {
+        $this->attributes['user_price'] = !empty($value) ? $value : 0;
+    }
+
     ### LINKS ###
 
     public function user(): BelongsTo

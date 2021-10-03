@@ -643,7 +643,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"user_id\", 12);"
+											"pm.variables.set(\"user_id\", 29);"
 										],
 										"type": "text/javascript"
 									}
@@ -2154,139 +2154,139 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "order_name",
+											"key": "name",
 											"value": "Монитор 27\" Dell S2721DS",
 											"description": "Назва",
 											"type": "text"
 										},
 										{
-											"key": "order_category",
+											"key": "category_id",
 											"value": "2",
 											"description": "Код категорії",
 											"type": "text"
 										},
 										{
-											"key": "order_price",
+											"key": "price",
 											"value": "1456.23",
 											"description": "Ціна",
 											"type": "text"
 										},
 										{
-											"key": "order_currency",
+											"key": "currency",
 											"value": "usd",
 											"description": "Валюта (uah, rub, usd, eur)",
 											"type": "text"
 										},
 										{
-											"key": "order_count",
+											"key": "products_count",
 											"value": "1",
 											"description": "Кількість товарів",
 											"type": "text"
 										},
 										{
-											"key": "order_size",
+											"key": "size",
 											"value": "45см",
 											"description": "Розмір товару",
 											"type": "text"
 										},
 										{
-											"key": "order_weight",
+											"key": "weight",
 											"value": "5кг",
 											"description": "Вага",
 											"type": "text"
 										},
 										{
-											"key": "order_product_link",
+											"key": "product_link",
 											"value": "https://hard.rozetka.com.ua/dell_210_axkw/p295768083/",
 											"description": "Посилання на сторонній сайт (опціонально)",
 											"type": "text"
 										},
 										{
-											"key": "order_text",
+											"key": "description",
 											"value": "Крутой монитор",
 											"description": "Опис замовлення",
 											"type": "text"
 										},
 										{
-											"key": "order_from_country",
+											"key": "from_country_id",
 											"value": "3",
 											"description": "Код країни з якої починається замовлення",
 											"type": "text"
 										},
 										{
-											"key": "order_from_city",
+											"key": "from_city_id",
 											"value": "4",
 											"description": "Код міста початку (опційно)",
 											"type": "text"
 										},
 										{
-											"key": "order_from_address",
+											"key": "from_address",
 											"value": "ул.Киевская, 34",
 											"description": "Точна адреса початку (опційно)",
 											"type": "text"
 										},
 										{
-											"key": "order_to_country",
+											"key": "to_country_id",
 											"value": "2",
 											"description": "Код краіни кінця замовлення",
 											"type": "text"
 										},
 										{
-											"key": "order_to_city",
+											"key": "to_city_id",
 											"value": "2",
 											"description": "Код міста прибуття (опційно)",
 											"type": "text"
 										},
 										{
-											"key": "order_to_address",
+											"key": "to_address",
 											"value": "ул.Березовая, 67",
 											"description": "Адреса прибуття (опційно)",
 											"type": "text"
 										},
 										{
-											"key": "order_start",
+											"key": "fromdate",
 											"value": "2021-06-01",
 											"description": "Дата початку замовлення",
 											"type": "text"
 										},
 										{
-											"key": "order_deadline",
+											"key": "tilldate",
 											"value": "2021-07-01",
 											"description": "Дата закінчення замовлення",
 											"type": "text"
 										},
 										{
-											"key": "order_personal_price",
+											"key": "personal_price",
 											"value": "1",
 											"description": "Флаг персональної винагороди (1/0) (опційно)",
 											"type": "text"
 										},
 										{
-											"key": "order_user_price",
+											"key": "user_price",
 											"value": "100",
 											"description": "Сума персональної винагороди (обов'язкове при order_personal_price = 1)",
 											"type": "text"
 										},
 										{
-											"key": "order_user_currency",
+											"key": "user_currency",
 											"value": "usd",
 											"description": "Валюта винагороди (uah, rub, usd, eur)",
 											"type": "text"
 										},
 										{
-											"key": "order_not_more_price",
+											"key": "not_more_price",
 											"value": "1",
 											"description": "1/0",
 											"type": "text"
 										},
 										{
-											"key": "order_images[]",
+											"key": "images[]",
 											"value": "monitor-27-dell-s2721ds-1.jpg",
 											"description": "Масив назв картинок, завантажених в замовлення",
 											"type": "text"
 										},
 										{
-											"key": "order_images[]",
+											"key": "images[]",
 											"value": "monitor-27-dell-s2721ds-2.jpg",
 											"description": "Масив назв картинок, завантажених в замовлення",
 											"type": "text"
@@ -3215,7 +3215,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/auth/check_token?token=NFMmqhT9fvpHc1EnjWVZNEawXRWVNrBXcRa9qcPlYhc31z7VhU7m1v1qTdCQNNkZ",
+									"raw": "{{host}}/{{endpoint}}/auth/check_token?lang=ru&token=NFMmqhT9fvpHc1EnjWVZNEawXRWVNrBXcRa9qcPlYhc31z7VhU7m1v1qTdCQNNkZ",
 									"host": [
 										"{{host}}"
 									],
@@ -3227,8 +3227,7 @@
 									"query": [
 										{
 											"key": "lang",
-											"value": "ru",
-											"disabled": true
+											"value": "ru"
 										},
 										{
 											"key": "token",
@@ -3349,7 +3348,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"user_id\", 19);"
+											"pm.variables.set(\"user_id\", 12);"
 										],
 										"type": "text/javascript"
 									}
@@ -3359,7 +3358,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile?lang=ru",
+									"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile?lang=uk",
 									"host": [
 										"{{host}}"
 									],
@@ -3372,7 +3371,7 @@
 									"query": [
 										{
 											"key": "lang",
-											"value": "ru",
+											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 										}
 									]
@@ -3416,13 +3415,13 @@
 									"formdata": [
 										{
 											"key": "name",
-											"value": "Вася",
+											"value": "Исполнитель",
 											"description": "Ім’я",
 											"type": "text"
 										},
 										{
 											"key": "surname",
-											"value": "Пупкин",
+											"value": "Freelancer",
 											"description": "Прізвище",
 											"type": "text"
 										},
@@ -4575,87 +4574,87 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "route_from_country",
+											"key": "from_country_id",
 											"value": "3",
 											"description": "Код країни старту",
 											"type": "text"
 										},
 										{
-											"key": "route_from_city",
+											"key": "from_city_id",
 											"value": "4",
 											"description": "Код міста старту",
 											"type": "text"
 										},
 										{
-											"key": "route_to_country",
+											"key": "to_country_id",
 											"value": "2",
 											"description": "Код країни закінчення",
 											"type": "text"
 										},
 										{
-											"key": "route_to_city",
+											"key": "to_city_id",
 											"value": "2",
 											"description": "Код міста закінчення",
 											"type": "text"
 										},
 										{
-											"key": "route_start",
-											"value": "2021-06-01",
+											"key": "fromdate",
+											"value": "2021-09-01",
 											"description": "Дата початку маршруту",
 											"type": "text"
 										},
 										{
-											"key": "route_end",
-											"value": "2021-07-01",
+											"key": "tilldate",
+											"value": "2021-10-01",
 											"description": "Дата закінчення маршруту",
 											"type": "text"
 										},
 										{
-											"key": "route_transport",
+											"key": "transport",
 											"value": "bus",
 											"description": "Кот транспорту (car, bus, walk, train, plane)",
 											"type": "text"
 										},
 										{
-											"key": "route_points[0][country]",
+											"key": "route_points[0][country_id]",
 											"value": "10",
 											"description": "Точки опційно: Код країни",
 											"type": "text"
 										},
 										{
-											"key": "route_points[0][city]",
+											"key": "route_points[0][city_id]",
 											"value": "14",
 											"description": "Точки опційно: Код міста",
 											"type": "text"
 										},
 										{
 											"key": "route_points[0][date]",
-											"value": "2021-08-21",
+											"value": "2021-09-21",
 											"description": "Точки опційно: Дата",
 											"type": "text"
 										},
 										{
-											"key": "route_points[1][country]",
+											"key": "route_points[1][country_id]",
 											"value": "4",
 											"description": "Точки опційно: Код країни",
 											"type": "text"
 										},
 										{
-											"key": "route_points[1][city]",
+											"key": "route_points[1][city_id]",
 											"value": "10",
 											"description": "Точки опційно: Код міста",
 											"type": "text"
 										},
 										{
 											"key": "route_points[1][date]",
-											"value": "2021-08-22",
+											"value": "2021-09-22",
 											"description": "Точки опційно: Дата",
 											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/routes/add",
+									"raw": "{{host}}/{{endpoint}}/routes/add?lang=uk",
 									"host": [
 										"{{host}}"
 									],
@@ -4668,8 +4667,7 @@
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 										}
 									]
 								}
@@ -5582,71 +5580,61 @@
 											"key": "parent_id",
 											"value": "0",
 											"description": "Код основної ставки",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
 											"key": "who_start",
-											"value": "19",
+											"value": "29",
 											"description": "Код користувача, який створив основну ставку",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
 											"key": "rate_type",
 											"value": "order",
 											"description": "Тип сущності: order або route",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
 											"key": "order_id",
-											"value": "28",
+											"value": "19",
 											"description": "Код замовлення",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
 											"key": "route_id",
-											"value": "71",
+											"value": "61",
 											"description": "Код маршруту",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
-											"key": "rate_price",
+											"key": "price",
 											"value": "100",
 											"description": "Ціна ставки",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
-											"key": "rate_currency",
+											"key": "currency",
 											"value": "usd",
 											"description": "Валюта (uah, rub, usd, eur)",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
-											"key": "rate_text",
+											"key": "text",
 											"value": "test",
 											"description": "Текст ставки",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
-											"key": "rate_deadline",
+											"key": "deadline",
 											"value": "2021-05-06",
 											"description": "Дата виконання",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
 											"key": "lang",
 											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										}
 									]
 								},
@@ -6018,17 +6006,15 @@
 									"formdata": [
 										{
 											"key": "rate_id",
-											"value": "3043",
+											"value": "3",
 											"description": "Код ставки",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
 											"key": "lang",
 											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										}
 									]
 								},
@@ -6187,17 +6173,17 @@
 									"formdata": [
 										{
 											"key": "job_id",
-											"value": "1",
+											"value": "2",
 											"type": "text"
 										},
 										{
 											"key": "rating",
-											"value": "3",
+											"value": "5",
 											"type": "text"
 										},
 										{
 											"key": "comment",
-											"value": " Привет, примеров и описаний. Для того чтобы лучше понимать что такое\n                 laravel,eloquent , настоятельно рекомендую прочитать все из категории <a class=\"cl-terms  \" href=\"/category/famworks-fremvorki\" target=\"_blank\"> Фреймворки. Famworks ( программная платформа)</a>",
+											"value": "Круто, спасибо.",
 											"type": "text"
 										}
 									]
