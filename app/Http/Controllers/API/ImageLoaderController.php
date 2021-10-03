@@ -88,10 +88,10 @@ class ImageLoaderController extends Controller
 
         $path = "content/order/{$user_id}/";
 
-        $image_original_name = "super_image-original_$uniqid.jpg";
-        $image_main_name     = "super_image_$uniqid.jpg";
-        $image_medium_name   = "super_image-medium_$uniqid.jpg";
-        $image_thumb_name    = "super_image-thumb_$uniqid.jpg";
+        $image_original_name = "image-original_$uniqid.jpg";
+        $image_main_name     = "image_$uniqid.jpg";
+        $image_medium_name   = "image-medium_$uniqid.jpg";
+        $image_thumb_name    = "image-thumb_$uniqid.jpg";
 
         $image_file = base64_decode(substr($base64_image, strpos($base64_image, ',') + 1));
 
