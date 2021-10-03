@@ -67,16 +67,15 @@ class OrderController extends Controller
     {
         return Validator::make($data,
             [
+                'product_link'   => 'sometimes|nullable|string|url',
                 'name'           => 'required|string|censor|max:100',
                 'category_id'    => 'required|integer|exists:categories,id',
                 'price'          => 'required|numeric',
-                'currency'       => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
+                'currency'       => 'required|in:' . implode(',', config('app.currencies')),
                 'products_count' => 'required|integer',
                 'size'           => 'required|string|max:50',
                 'weight'         => 'required|string|max:50',
-                'product_link'   => 'sometimes|nullable|string|url',
                 'description'    => 'required|string|not_phone|censor|max:500',
-                'images'         => 'required|array|max:8',
                 'from_country_id'=> 'required|integer|exists:countries,id',
                 'from_city_id'   => 'sometimes|required|integer|exists:cities,id,country_id,' . $data['from_country_id'],
                 'from_address'   => 'sometimes|nullable|string',
@@ -87,8 +86,9 @@ class OrderController extends Controller
                 'tilldate'       => 'required|date|after_or_equal:fromdate',
                 'personal_price' => 'required|boolean',
                 'user_price'     => 'required_if:personal_price,1',
-                'user_currency'  => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
+                'user_currency'  => 'required|in:' . implode(',', config('app.currencies')),
                 'not_more_price' => 'required|boolean',
+                'images'         => 'required|array|max:8',
             ]
         );
     }
@@ -104,9 +104,9 @@ class OrderController extends Controller
     public function deleteOrder(int $order_id, Request $request): JsonResponse
     {
         $order = Order::query()
-            ->where('order_id', $order_id)
+            ->where('id', $order_id)
             ->where('user_id', $request->user()->id)
-            ->whereIn('order_status', [
+            ->whereIn('status', [
                 Order::STATUS_ACTIVE,
                 Order::STATUS_BAN,
                 Order::STATUS_CLOSED,

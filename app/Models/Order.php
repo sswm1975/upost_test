@@ -195,16 +195,6 @@ class Order extends Model
         $this->attributes['to_address'] = strip_tags(strip_unsafe($value));
     }
 
-    public function setCurrencyAttribute($value)
-    {
-        $this->attributes['currency'] = config('app.currencies')[$value];
-    }
-
-    public function setUserCurrencyAttribute($value)
-    {
-        $this->attributes['user_currency'] = config('app.currencies')[$value];
-    }
-
     ### LINKS ###
 
     public function user(): BelongsTo
