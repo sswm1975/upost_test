@@ -86,7 +86,7 @@ class OrderController extends Controller
                 'tilldate'       => 'required|date|after_or_equal:fromdate',
                 'personal_price' => 'required|boolean',
                 'user_price'     => 'required_if:personal_price,1',
-                'user_currency'  => 'required_if:personal_price,1|in:' . implode(',', config('app.currencies')),
+                'user_currency'  => 'required_if:personal_price,1|sometimes|nullable|in:' . implode(',', config('app.currencies')),
                 'not_more_price' => 'required|boolean',
                 'images'         => 'required|array|max:8',
             ]
