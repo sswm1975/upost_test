@@ -71,7 +71,7 @@ class User extends Authenticatable
     const FIELDS_FOR_EDIT = [
         'name',                 # ім'я
         'surname',              # прізвище
-        'city',                 # код міста проживання
+        'city_id',              # код міста проживання
         'status',               # статус
         'birthday',             # дата народження
         'gender',               # стать
