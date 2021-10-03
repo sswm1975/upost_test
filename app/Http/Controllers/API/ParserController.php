@@ -28,7 +28,7 @@ class ParserController extends Controller
 
         $image_base64 = $parser->getProductImage();
         if ($image_base64) {
-            $image = (new PhotoLoaderController)->uploadPhoto4Order($image_base64, $request->user()->id);
+            $image = (new ImageLoaderController)->uploadImage4Order($image_base64, $request->user()->id);
         } else {
             $image = '';
         }

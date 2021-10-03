@@ -201,7 +201,7 @@ Route::group(
 );
 
 // Загрузка фото і створення мініатюр
-Route::post('upload_photo', 'API\PhotoLoaderController@uploadPhoto')->middleware(MIDDLEWARE_AUTH_BASIC);
+Route::post('upload_image', 'API\ImageLoaderController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 // Маршрут
 Route::group(

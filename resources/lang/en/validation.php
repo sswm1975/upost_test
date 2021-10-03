@@ -135,7 +135,7 @@ return [
     */
 
     'custom' => [
-        'photo' => [
+        'image' => [
             'base64_image' => 'Image invalid format.',
         ],
         'phone' => [

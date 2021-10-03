@@ -10,23 +10,23 @@ use App\Exceptions\ValidatorException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 
-class PhotoLoaderController extends Controller
+class ImageLoaderController extends Controller
 {
     /**
-     * Загрузить фото.
+     * Загрузить рисунок.
      *
      * @param Request $request
      * @return JsonResponse
      * @throws ValidatorException|ValidationException
      */
-    public function uploadPhoto(Request $request):JsonResponse
+    public function upload(Request $request):JsonResponse
     {
-        validateOrExit([
-            'photo_type' => 'required|in:user,order',
-            'photo'      => 'required|base64_image',
+        $data = validateOrExit([
+            'type'   => 'required|in:user,order',
+            'image'  => 'required|base64_image',
         ]);
 
-        $method = 'uploadPhoto4' . Str::title($request->get('photo_type'));
+        $method = 'uploadImage4' . Str::title($data['type']);
 
         if (!method_exists(self::class, $method)) {
             return response()->json([
@@ -37,7 +37,7 @@ class PhotoLoaderController extends Controller
 
         return response()->json([
             'status' => true,
-            'image' => call_user_func([self::class, $method], $request->get('photo'), $request->user()->id),
+            'image'  => call_user_func([self::class, $method], $data['image'], $request->user()->id),
         ]);
     }
 
@@ -48,7 +48,7 @@ class PhotoLoaderController extends Controller
      * @param int $user_id
      * @return string
      */
-    public function uploadPhoto4User(string $base64_image, int $user_id): string
+    public function uploadImage4User(string $base64_image, int $user_id): string
     {
         $path = 'users/' . $user_id . '/';
 
@@ -82,7 +82,7 @@ class PhotoLoaderController extends Controller
      * @param int $user_id
      * @return string
      */
-    public function uploadPhoto4Order(string $base64_image, int $user_id): string
+    public function uploadImage4Order(string $base64_image, int $user_id): string
     {
         $uniqid = uniqid();
 

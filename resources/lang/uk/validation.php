@@ -124,7 +124,7 @@ return [
     'uuid'                 => 'Поле :attribute має бути коректним UUID ідентифікатором.',
 
     'custom' => [
-        'photo' => [
+        'image' => [
             'base64_image' => 'Хибний формат зображення.',
         ],
         'phone' => [
