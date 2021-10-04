@@ -2,7 +2,6 @@
 
 use App\Exceptions\ValidatorException;
 use App\Models\CurrencyRate;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -16,12 +15,13 @@ use Illuminate\Validation\ValidationException;
  */
 function null_to_blank($data = []): array
 {
-    if ($data instanceof Arrayable) {
-        $data = $data->toArray();
-    }
+    # конвертация всех объектов в массивы
+    $json  = json_encode($data);
+    $data = json_decode($json, true);
 
+    # рекурсивно все null-значения меняем на пустую строку
     array_walk_recursive($data, function (&$item) {
-        $item = $item === null ? '' : $item;
+        if (is_null($item)) $item = '';
     });
 
     return $data;

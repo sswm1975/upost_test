@@ -65,7 +65,7 @@ class ProfileController extends Controller
         $user->reviews_count = Review::getCountReviews($user->id);
 
         # получить последний отзыв
-        $last_review = Review::getLastReview($user->id);
+        $last_review = Review::getLastReview($user->id)->toArray();
 
         # добавляем последние 2 заказа, созданные пользователем
         $last_orders = (new OrderController)->getOrdersByFilter($user, [
@@ -78,6 +78,8 @@ class ProfileController extends Controller
             'user_id' => $user->id,
             'show' => 2,
         ])['data'] ?? '';
+
+        $user = $user->toArray();
 
         return response()->json([
             'status' => true,
