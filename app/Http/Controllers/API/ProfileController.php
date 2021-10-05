@@ -65,7 +65,7 @@ class ProfileController extends Controller
         $user->reviews_count = Review::getCountReviews($user->id);
 
         # получить последний отзыв
-        $last_review = Review::getLastReview($user->id)->toArray();
+        $last_review = Review::getLastReview($user->id);
 
         # добавляем последние 2 заказа, созданные пользователем
         $last_orders = (new OrderController)->getOrdersByFilter($user, [
