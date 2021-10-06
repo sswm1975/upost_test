@@ -170,11 +170,11 @@ class RouteController extends Controller
     /**
      * Отбор маршрутов по фильтру.
      *
-     * @param User $user
+     * @param User|null $user
      * @param array $filters
      * @return array
      */
-    public function getRoutesByFilter(User $user, array $filters = []): array
+    public function getRoutesByFilter(?User $user, array $filters = []): array
     {
         return Route::query()
             ->with([
