@@ -216,10 +216,10 @@ Route::group(
         Route::get('my/show', 'API\RouteController@showMyRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Виведення маршруту за фільтром
-        Route::get('show', 'API\RouteController@showRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('show', 'API\RouteController@showRoutes');
 
         # Вивід конкретного маршруту
-        Route::get('{route_id}/show', 'API\RouteController@showRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('{route_id}/show', 'API\RouteController@showRoute');
 
         # Редагування маршруту
         Route::post('{route_id}/update', 'API\RouteController@updateRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
