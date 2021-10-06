@@ -190,13 +190,22 @@ class RouteController extends Controller
                 'route_points.city'
             ])
             ->withCount(['rates as rates_all_count' => function ($query) use ($user) {
-                $query->where('parent_id', 0)->where('user_id', $user->id);
+                $query->where('parent_id', 0)
+                    ->when(!is_null($user), function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    });
             }])
             ->withCount(['rates as rates_read_count' => function ($query) use ($user) {
-                $query->where('is_read', 0)->where('user_id', $user->id);
+                $query->where('is_read', 0)
+                    ->when(!is_null($user), function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    });
             }])
             ->withCount(['rates as is_in_rate' => function ($query) use ($user) {
-                $query->typeOrder()->where('user_id', $user->id);
+                $query->typeOrder()
+                    ->when(!is_null($user), function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    });
             }])
             ->where('status', $filters['status'] ?? 'active')
             ->when(!empty($filters['id']), function ($query) use ($filters) {
