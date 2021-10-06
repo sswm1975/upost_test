@@ -132,7 +132,7 @@ class Route extends Model
         $lang = app()->getLocale();
 
         return $this->belongsTo(City::class, 'from_city_id', 'id')
-            ->select(['id', "name_{$lang} as city_name"])
+            ->select(['id', "name_{$lang} as name"])
             ->withDefault();
     }
 
