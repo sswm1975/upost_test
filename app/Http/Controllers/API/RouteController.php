@@ -265,6 +265,10 @@ class RouteController extends Controller
 
         $route->update($data);
 
+        if (isset($data['route_points'])) {
+            $route->route_points()->createMany($data['route_points']);
+        }
+
         return response()->json([
             'status'  => true,
             'result'  => null_to_blank($route->toArray()),
