@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
  * @property int $user_id Код пользователя
  * @property string $register_date Дата регистрации
  * @property string $name Наименование
- * @property string $slug Слаг
+ * @property string|null $slug Слаг
  * @property int|null $category_id Код категории
  * @property string $price Цена
  * @property string $price_usd Цена в долларах
@@ -29,7 +29,7 @@ use Illuminate\Support\Str;
  * @property array $images Фотографии заказа
  * @property int|null $from_country_id Код страны начала заказа
  * @property int|null $from_city_id Код города начала заказа
- * @property string|null $from_address_from Точный адрес старта заказа
+ * @property string|null $from_address Точный адрес старта заказа
  * @property int|null $to_country_id Код страны окончания заказа
  * @property int|null $to_city_id Код города окончания заказа
  * @property string|null $to_address Точный адрес прибытия заказа
@@ -38,7 +38,7 @@ use Illuminate\Support\Str;
  * @property int $personal_price Признак персонального вознаграждения
  * @property string $user_price Сумма персонального вознаграждения
  * @property string|null $user_currency Валюта персонального вознаграждения
- * @property int $not_more_price Признак
+ * @property int $not_more_price Признак "Не принимать ставки выше данной цены"
  * @property int $is_user_active Признак активности пользователя
  * @property int $looks Количество просмотров
  * @property string $status Статус заказа
@@ -46,10 +46,13 @@ use Illuminate\Support\Str;
  * @property-read \App\Models\Category|null $category
  * @property-read \App\Models\City|null $from_city
  * @property-read \App\Models\Country|null $from_country
+ * @property-read array $images_medium
+ * @property-read array $images_original
+ * @property-read array $images_thumb
  * @property-read bool $is_favorite
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
- * @property-write mixed $from_address
+ * @property-read \App\Models\Review|null $review
  * @property-read \App\Models\City|null $to_city
  * @property-read \App\Models\Country|null $to_country
  * @property-read \App\Models\User $user
@@ -60,7 +63,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromAddressFrom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromCountryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromdate($value)
@@ -106,6 +109,9 @@ class Order extends Model
     ];
     protected $appends = [
         'is_favorite',
+        'images_thumb',
+        'images_medium',
+        'images_original',
     ];
 
     public static function boot()
@@ -136,13 +142,58 @@ class Order extends Model
         });
     }
 
+    ### GETTERS ###
+
     public function getImagesAttribute($value): array
     {
         if (is_null($value)) return [];
 
-        if (is_array($value)) return $value;
+        if (is_string($value)) {
+            $value = json_decode($value);
+        }
 
-        return json_decode($value);
+        $images = [];
+        foreach ($value as $image) {
+            $images[] = asset('storage/' . $image);
+        }
+
+        return $images;
+    }
+
+    public function getImagesThumbAttribute(): array
+    {
+        if (is_null($this->images)) return [];
+
+        $images = [];
+        foreach ($this->images as $image) {
+            $images[] = str_replace('image_', 'image_thumb_', $image);
+        }
+
+        return $images;
+    }
+
+    public function getImagesMediumAttribute(): array
+    {
+        if (is_null($this->images)) return [];
+
+        $images = [];
+        foreach ($this->images as $image) {
+            $images[] = str_replace('image_', 'image_medium_', $image);
+        }
+
+        return $images;
+    }
+
+    public function getImagesOriginalAttribute(): array
+    {
+        if (is_null($this->images)) return [];
+
+        $images = [];
+        foreach ($this->images as $image) {
+            $images[] = str_replace('image_', 'image_original_', $image);
+        }
+
+        return $images;
     }
 
     public function getStrikesAttribute($json)
@@ -164,6 +215,8 @@ class Order extends Model
 
         return in_array($this->id, explode(',', $user->favorite_orders));
     }
+
+    ### SETTERS ###
 
     public function setNameAttribute($value)
     {

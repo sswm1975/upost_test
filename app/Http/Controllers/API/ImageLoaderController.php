@@ -22,8 +22,8 @@ class ImageLoaderController extends Controller
     public function upload(Request $request):JsonResponse
     {
         $data = validateOrExit([
-            'type'   => 'required|in:user,order',
-            'image'  => 'required|base64_image',
+            'type'  => 'required|in:user,order',
+            'image' => 'required|base64_image',
         ]);
 
         $method = 'uploadImage4' . Str::title($data['type']);
@@ -50,11 +50,11 @@ class ImageLoaderController extends Controller
      */
     public function uploadImage4User(string $base64_image, int $user_id): string
     {
-        $path = 'users/' . $user_id . '/';
-
-        $image_original_name = 'user_photo-original.jpg';
-        $image_main_name     = 'user_photo.jpg';
-        $image_thumb_name    = 'user_photo-thumb.jpg';
+        $uniqid = uniqid();
+        $path = "{$user_id}/user/";
+        $image_original_name = "image_original_$uniqid.jpg";
+        $image_main_name     = "image_$uniqid.jpg";
+        $image_thumb_name    = "image_thumb_$uniqid.jpg";
 
         $data = substr($base64_image, strpos($base64_image, ',') + 1);
         $image_file = base64_decode($data);
@@ -85,15 +85,14 @@ class ImageLoaderController extends Controller
     public function uploadImage4Order(string $base64_image, int $user_id): string
     {
         $uniqid = uniqid();
-
-        $path = "content/order/{$user_id}/";
-
-        $image_original_name = "image-original_$uniqid.jpg";
+        $path = "{$user_id}/orders/";
+        $image_original_name = "image_original_$uniqid.jpg";
         $image_main_name     = "image_$uniqid.jpg";
-        $image_medium_name   = "image-medium_$uniqid.jpg";
-        $image_thumb_name    = "image-thumb_$uniqid.jpg";
+        $image_medium_name   = "image_medium_$uniqid.jpg";
+        $image_thumb_name    = "image_thumb_$uniqid.jpg";
 
-        $image_file = base64_decode(substr($base64_image, strpos($base64_image, ',') + 1));
+        $data = substr($base64_image, strpos($base64_image, ',') + 1);
+        $image_file = base64_decode($data);
 
         Storage::disk('public')->put($path . $image_original_name, $image_file);
         $storage_path = Storage::disk('public')->path($path);

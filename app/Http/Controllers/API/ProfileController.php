@@ -127,7 +127,7 @@ class ProfileController extends Controller
         }
 
         if ($request->filled('photo')) {
-            $data['photo'] = $this->saveImage($data['photo'], $user->id);
+            $data['photo'] = (new ImageLoaderController)->uploadImage4User($data['photo'], $user->id);
         }
 
         if ($request->filled('resume')) {
@@ -274,39 +274,6 @@ class ProfileController extends Controller
         }
 
         return Storage::disk('public')->download($data['filename']);
-    }
-
-    /**
-     * Сохранить фотографию.
-     *
-     * @param string $base64_image
-     * @param int    $user_id
-     * @return string
-     */
-    protected function saveImage(string $base64_image, int $user_id): string
-    {
-        $path = 'users/' . $user_id . '/';
-        $image_original_name = 'photo-original.jpg';
-        $image_main_name     = 'photo.jpg';
-        $image_thumb_name    = 'photo-thumb.jpg';
-
-        $data = substr($base64_image, strpos($base64_image, ',') + 1);
-        $image_file = base64_decode($data);
-
-        Storage::disk('public')->put($path . $image_original_name, $image_file);
-        $storage_path = Storage::disk('public')->path($path);
-
-        $src = imagecreatefromstring($image_file);
-        if ($src === false) {
-            return '';
-        }
-
-        imagejpeg(cropAlign($src, 200, 200), $storage_path . $image_main_name);
-        imagejpeg(cropAlign($src, 100, 100), $storage_path . $image_thumb_name);
-
-        imagedestroy($src);
-
-        return $path . $image_main_name;
     }
 
     /**
