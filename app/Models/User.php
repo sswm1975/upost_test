@@ -211,13 +211,15 @@ class User extends Authenticatable
         return Carbon::parse($this->birthday)->age;
     }
 
-    public function getPhotoAttribute($value): string
+    public function getPhotoAttribute($photo): string
     {
-        if (is_null($value)) {
+        if (is_null($photo)) {
             return asset('storage/user_no_photo.png');
         }
 
-        return asset('storage/' . $value);
+        $user_id = request()->user()->id;
+
+        return asset("storage/{$user_id}/user/{$photo}");
     }
 
     public function getPhotoThumbAttribute(): string

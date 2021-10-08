@@ -144,20 +144,22 @@ class Order extends Model
 
     ### GETTERS ###
 
-    public function getImagesAttribute($value): array
+    public function getImagesAttribute($images): array
     {
-        if (is_null($value)) return [];
+        if (is_null($images)) return [];
 
-        if (is_string($value)) {
-            $value = json_decode($value);
+        if (is_string($images)) {
+            $images = json_decode($images);
         }
 
-        $images = [];
-        foreach ($value as $image) {
-            $images[] = asset('storage/' . $image);
+        $user_id = request()->user()->id;
+
+        $link_images = [];
+        foreach ($images as $image) {
+            $link_images[] = asset("storage/{$user_id}/orders/{$image}");
         }
 
-        return $images;
+        return $link_images;
     }
 
     public function getImagesThumbAttribute(): array
