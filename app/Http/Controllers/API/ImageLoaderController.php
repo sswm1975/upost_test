@@ -50,11 +50,12 @@ class ImageLoaderController extends Controller
      */
     public function uploadImage4User(string $base64_image, int $user_id): string
     {
+        $date = date('YmdHms');
         $uniqid = uniqid();
-        $path = "{$user_id}/user/";
-        $image_original_name = "image_original_$uniqid.jpg";
-        $image_main_name     = "image_$uniqid.jpg";
-        $image_thumb_name    = "image_thumb_$uniqid.jpg";
+        $path = "/{$user_id}/user/";
+        $image_original_name = "image_original_{$date}_{$uniqid}.jpg";
+        $image_main_name     = "image_{$date}_{$uniqid}.jpg";
+        $image_thumb_name    = "image_thumb_{$date}_{$uniqid}.jpg";
 
         $data = substr($base64_image, strpos($base64_image, ',') + 1);
         $image_file = base64_decode($data);
@@ -72,7 +73,7 @@ class ImageLoaderController extends Controller
 
         imagedestroy($src);
 
-        return $path . $image_main_name;
+        return asset('storage' . $path . $image_main_name);
     }
 
     /**
@@ -84,12 +85,13 @@ class ImageLoaderController extends Controller
      */
     public function uploadImage4Order(string $base64_image, int $user_id): string
     {
+        $date = date('YmdHms');
         $uniqid = uniqid();
-        $path = "{$user_id}/orders/";
-        $image_original_name = "image_original_$uniqid.jpg";
-        $image_main_name     = "image_$uniqid.jpg";
-        $image_medium_name   = "image_medium_$uniqid.jpg";
-        $image_thumb_name    = "image_thumb_$uniqid.jpg";
+        $path = "/{$user_id}/orders/";
+        $image_original_name = "image_original_{$date}_{$uniqid}.jpg";
+        $image_main_name     = "image_{$date}_{$uniqid}.jpg";
+        $image_medium_name   = "image_medium_{$date}_{$uniqid}.jpg";
+        $image_thumb_name    = "image_thumb_{$date}_{$uniqid}.jpg";
 
         $data = substr($base64_image, strpos($base64_image, ',') + 1);
         $image_file = base64_decode($data);
@@ -108,6 +110,6 @@ class ImageLoaderController extends Controller
 
         imagedestroy($src);
 
-        return $path . $image_main_name;
+        return asset('storage' . $path . $image_main_name);
     }
 }
