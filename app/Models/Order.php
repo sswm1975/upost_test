@@ -255,6 +255,20 @@ class Order extends Model
         $this->attributes['user_price'] = !empty($value) ? $value : 0;
     }
 
+    public function setImagesAttribute($images)
+    {
+        if (empty($images)) {
+            return $this->attributes['images'] = null;
+        }
+
+        foreach ($images as $key => $image) {
+            $uri_parts = explode('/', $image);
+            $images[$key] = end($uri_parts);
+        }
+
+        $this->attributes['images'] = json_encode($images);
+    }
+
     ### LINKS ###
 
     public function user(): BelongsTo
