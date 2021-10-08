@@ -171,6 +171,9 @@ Route::group(
         # Створення замовлення
         Route::post('add', 'API\OrderController@addOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+        # Редагування замовлення
+        Route::post('{order_id}/update', 'API\OrderController@updateOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
         # Вивід замовлень за фільтром
         Route::get('show', 'API\OrderController@showOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
 

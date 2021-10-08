@@ -58,6 +58,38 @@ class OrderController extends Controller
     }
 
     /**
+     * Обновить заказ.
+     *
+     * @param int $order_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     * @throws ValidatorException|ValidationException
+     */
+    public function updateOrder(int $order_id, Request $request): JsonResponse
+    {
+        if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
+
+        # Ищем заказ по его коду - должен принадлежать авторизированному пользователю и быть активным.
+        $order = Order::query()
+            ->whereKey($order_id)
+            ->where('user_id', $request->user()->id)
+            ->where('status', Order::STATUS_ACTIVE)
+            ->first();
+
+        if (!$order) throw new ErrorException(__('message.order_not_found'));
+
+        $data = validateOrExit($this->validator($request->all()));
+
+        $order->update($data);
+
+        return response()->json([
+            'status' => true,
+            'result' => null_to_blank($order->toArray()),
+        ]);
+    }
+
+    /**
      * Валидатор запроса с данными заказа.
      *
      * @param  array $data
@@ -77,10 +109,10 @@ class OrderController extends Controller
                 'weight'         => 'required|string|max:50',
                 'description'    => 'required|string|not_phone|censor|max:500',
                 'from_country_id'=> 'required|integer|exists:countries,id',
-                'from_city_id'   => 'sometimes|required|integer|exists:cities,id,country_id,' . $data['from_country_id'],
+                'from_city_id'   => 'sometimes|required|integer|exists:cities,id,country_id,' . ($data['from_country_id'] ?? 0),
                 'from_address'   => 'sometimes|nullable|string',
                 'to_country_id'  => 'required|integer|exists:countries,id',
-                'to_city_id'     => 'sometimes|required|integer|exists:cities,id,country_id,' . $data['to_country_id'],
+                'to_city_id'     => 'sometimes|required|integer|exists:cities,id,country_id,' . ($data['to_country_id'] ?? 0),
                 'to_address'     => 'sometimes|nullable|string',
                 'fromdate'       => 'sometimes|required|date',
                 'tilldate'       => 'required|date|after_or_equal:fromdate',

@@ -256,7 +256,7 @@ class RouteController extends Controller
         $route = Route::query()
             ->where('id', $route_id)
             ->where('user_id', $request->user()->id)
-            ->where('status', 'active')
+            ->where('status', Route::STATUS_ACTIVE)
             ->first();
 
         if (!$route) throw new ErrorException(__('message.route_not_found'));
