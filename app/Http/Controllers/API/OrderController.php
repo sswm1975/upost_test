@@ -84,8 +84,9 @@ class OrderController extends Controller
         $order->update($data);
 
         return response()->json([
-            'status' => true,
-            'result' => null_to_blank($order->toArray()),
+            'status'   => true,
+            'order_id' => $order->id,
+            'url'      => $order->slug,
         ]);
     }
 
