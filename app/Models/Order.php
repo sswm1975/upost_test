@@ -108,6 +108,7 @@ class Order extends Model
         'strikes' => 'array',
     ];
     protected $appends = [
+        'status_name',
         'is_favorite',
         'images_thumb',
         'images_medium',
@@ -143,6 +144,10 @@ class Order extends Model
     }
 
     ### GETTERS ###
+    public function getStatusNameAttribute(): string
+    {
+        return __("message.order.$this->status");
+    }
 
     public function getImagesAttribute($images): array
     {

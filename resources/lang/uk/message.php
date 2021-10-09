@@ -54,4 +54,13 @@ return [
         'banned'  => 'Заборонений',
         'removed' => 'Видалений',
     ],
+
+    # Order's attribute
+    'order' => [
+        # Statuses
+        'active'     => 'Активний',
+        'closed'     => 'Закритий',
+        'ban'        => 'Заборонений',
+        'successful' => 'Успішний',
+    ],
 ];
