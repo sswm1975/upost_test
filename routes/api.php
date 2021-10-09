@@ -175,19 +175,19 @@ Route::group(
         Route::post('{order_id}/update', 'API\OrderController@updateOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Вивід замовлень за фільтром
-        Route::get('show', 'API\OrderController@showOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('show', 'API\OrderController@showOrders');
 
         # Вивід моїх замовлень
         Route::get('my/show', 'API\OrderController@showMyOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Вивід конкретного замовлення
-        Route::get('{order_id}/show', 'API\OrderController@showOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('{order_id}/show', 'API\OrderController@showOrder');
 
         # Видалення замовлення
         Route::delete('{order_id}/delete', 'API\OrderController@deleteOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Підбір маршруту для замовлення
-        Route::get('{order_id}/selection_route', 'API\OrderController@selectionRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('{order_id}/selection_route', 'API\OrderController@selectionRoute');
 
         # Підтвердити виконання замовлення
         Route::post('confirm', 'API\OrderController@confirmOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
