@@ -217,9 +217,7 @@ class User extends Authenticatable
             return asset('storage/user_no_photo.png');
         }
 
-        $user_id = request()->user()->id;
-
-        return asset("storage/{$user_id}/user/{$photo}");
+        return asset("storage/{$this->id}/user/{$photo}");
     }
 
     public function getPhotoThumbAttribute(): string

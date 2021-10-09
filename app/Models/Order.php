@@ -152,11 +152,9 @@ class Order extends Model
             $images = json_decode($images);
         }
 
-        $user_id = request()->user()->id;
-
         $link_images = [];
         foreach ($images as $image) {
-            $link_images[] = asset("storage/{$user_id}/orders/{$image}");
+            $link_images[] = asset("storage/{$this->user_id}/orders/{$image}");
         }
 
         return $link_images;
