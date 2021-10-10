@@ -144,9 +144,10 @@ class Order extends Model
     }
 
     ### GETTERS ###
+
     public function getStatusNameAttribute(): string
     {
-        return __("message.order.$this->status");
+        return __("message.order.statuses.$this->status");
     }
 
     public function getImagesAttribute($images): array

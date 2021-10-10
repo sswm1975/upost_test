@@ -41,27 +41,53 @@ return [
 
     # User's attribute
     'user' => [
-        # Gender
-        'male'    => 'Мужской',
-        'female'  => 'Женский',
-        'unknown' => 'Неизвестный',
-
-        # User verification
-        'valid'    => 'Проверенный',
-        'no_valid' => 'Не проверенный',
-
-        # Statuses
-        'active'  => 'Активный',
-        'banned'  => 'Забаненный',
-        'removed' => 'Удаленный',
+        'genders' => [
+            'male'    => 'Мужской',
+            'female'  => 'Женский',
+            'unknown' => 'Неизвестный',
+        ],
+        'validations' => [
+            'valid'    => 'Проверенный',
+            'no_valid' => 'Не проверенный',
+        ],
+        'statuses' => [
+            'active'  => 'Активный',
+            'banned'  => 'Забаненный',
+            'removed' => 'Удаленный',
+        ],
     ],
 
     # Order's attribute
     'order' => [
-        # Statuses
-        'active'     => 'Активный',
-        'closed'     => 'Закрытый',
-        'ban'        => 'Забаненный',
-        'successful' => 'Успешный',
+        'statuses' => [
+            'active'     => 'Активный',
+            'closed'     => 'Закрытый',
+            'ban'        => 'Забаненный',
+            'successful' => 'Успешный',
+        ],
+    ],
+
+    # Route's attribute
+    'route' => [
+        'statuses' => [
+            'active'     => 'Активный',
+            'closed'     => 'Закрытый',
+            'ban'        => 'Забаненный',
+            'successful' => 'Успешный',
+        ],
+        'transports' => [
+            'car'   => 'Автомобиль',
+            'bus'   => 'Автобус',
+            'walk'  => 'Пешком',
+            'train' => 'Поезд',
+            'plane' => 'Самолет',
+        ],
+        'transports_prepositional' => [
+            'car'   => 'на Автомобиле',
+            'bus'   => 'на Автобусе',
+            'walk'  => 'Пешком',
+            'train' => 'Поездом',
+            'plane' => 'Самолётом',
+        ],
     ],
 ];

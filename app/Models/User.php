@@ -193,17 +193,17 @@ class User extends Authenticatable
 
     public function getGenderNameAttribute(): string
     {
-        return __("message.user.$this->gender");
+        return __("message.user.genders.$this->gender");
     }
 
     public function getValidationNameAttribute($value): string
     {
-        return __("message.user.$this->validation");
+        return __("message.user.validations.$this->validation");
     }
 
     public function getStatusNameAttribute(): string
     {
-        return __("message.user.$this->status");
+        return __("message.user.statuses.$this->status");
     }
 
     public function getAgeAttribute(): string

@@ -41,18 +41,53 @@ return [
 
     # User's attribute
     'user' => [
-        # Gender
-        'male'    => 'Male',
-        'female'  => 'Female',
-        'unknown' => 'Unknown',
+        'genders' => [
+            'male'    => 'Male',
+            'female'  => 'Female',
+            'unknown' => 'Unknown',
+        ],
+        'validations' => [
+            'valid'    => 'Verified',
+            'no_valid' => 'Not verified',
+        ],
+        'statuses' => [
+            'active'  => 'Active',
+            'banned'  => 'Banned',
+            'removed' => 'Removed',
+        ],
+    ],
 
-        # User verification
-        'valid'    => 'Verified',
-        'no_valid' => 'Not verified',
+    # Order's attribute
+    'order' => [
+        'statuses' => [
+            'active'     => 'Active',
+            'closed'     => 'Closed',
+            'ban'        => 'Banned',
+            'successful' => 'Successful',
+        ],
+    ],
 
-        # Statuses
-        'active'  => 'Active',
-        'banned'  => 'Banned',
-        'removed' => 'Removed',
+    # Route's attribute
+    'route' => [
+        'statuses' => [
+            'active'     => 'Active',
+            'closed'     => 'Closed',
+            'ban'        => 'Banned',
+            'successful' => 'Successful',
+        ],
+        'transports' => [
+            'car'   => 'Car',
+            'bus'   => 'Bus',
+            'walk'  => 'Walk',
+            'train' => 'Train',
+            'plane' => 'Plane',
+        ],
+        'transports_prepositional' => [
+            'car'   => 'by Сar',
+            'bus'   => 'by Bus',
+            'walk'  => 'on Foot',
+            'train' => 'by Train',
+            'plane' => 'by Plane',
+        ],
     ],
 ];

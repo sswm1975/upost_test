@@ -40,27 +40,53 @@ return [
 
     # User's attribute
     'user' => [
-        # Gender
-        'male'    => 'Чоловічий',
-        'female'  => 'Жіночий',
-        'unknown' => 'Невідомий',
-
-        # User verification
-        'valid'    => 'Перевірений',
-        'no_valid' => 'Не перевірений',
-
-        # Statuses
-        'active'  => 'Активний',
-        'banned'  => 'Заборонений',
-        'removed' => 'Видалений',
+        'genders' => [
+            'male'    => 'Чоловічий',
+            'female'  => 'Жіночий',
+            'unknown' => 'Невідомий',
+        ],
+        'validations' => [
+            'valid'    => 'Перевірений',
+            'no_valid' => 'Не перевірений',
+        ],
+        'statuses' => [
+            'active'  => 'Активний',
+            'banned'  => 'Заборонений',
+            'removed' => 'Видалений',
+        ],
     ],
 
     # Order's attribute
     'order' => [
-        # Statuses
-        'active'     => 'Активний',
-        'closed'     => 'Закритий',
-        'ban'        => 'Заборонений',
-        'successful' => 'Успішний',
+        'statuses' => [
+            'active'     => 'Активний',
+            'closed'     => 'Закритий',
+            'ban'        => 'Заборонений',
+            'successful' => 'Успішний',
+        ],
+    ],
+
+    # Route's attribute
+    'route' => [
+        'statuses' => [
+            'active'     => 'Активний',
+            'closed'     => 'Закритий',
+            'ban'        => 'Заборонений',
+            'successful' => 'Успішний',
+        ],
+        'transports' => [
+            'car'   => 'Автомобіль',
+            'bus'   => 'Автобус',
+            'walk'  => 'Пішки',
+            'train' => 'Потяг',
+            'plane' => 'Літак',
+        ],
+        'transports_prepositional' => [
+            'car'   => 'на Автомобілі',
+            'bus'   => 'на Автобусі',
+            'walk'  => 'Пішки',
+            'train' => 'Потягом',
+            'plane' => 'Літаком',
+        ],
     ],
 ];

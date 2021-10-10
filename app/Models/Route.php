@@ -73,6 +73,9 @@ class Route extends Model
     protected $guarded = ['id'];
     public $timestamps = false;
     protected $appends = [
+        'status_name',
+        'transport_name',
+        'transport_prepositional_name',
         'is_favorite',
     ];
 
@@ -90,6 +93,23 @@ class Route extends Model
         });
     }
 
+    ### GETTERS ###
+
+    public function getStatusNameAttribute(): string
+    {
+        return __("message.route.statuses.$this->status");
+    }
+
+    public function getTransportNameAttribute(): string
+    {
+        return __("message.route.transports.$this->transport");
+    }
+
+    public function getTransportPrepositionalNameAttribute(): string
+    {
+        return __("message.route.transports_prepositional.$this->transport");
+    }
+
     public function getIsFavoriteAttribute(): bool
     {
         $user = request()->user();
@@ -100,6 +120,8 @@ class Route extends Model
 
         return in_array($this->id, explode(',', $user->favorite_routes));
     }
+
+    ### SETTERS ###
 
     public function setFromCityIdAttribute($value)
     {
