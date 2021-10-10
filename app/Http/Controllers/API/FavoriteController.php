@@ -26,7 +26,7 @@ class FavoriteController extends Controller
         ]);
 
         $user = $request->user();
-        $field = 'user_favorite_' . $request->get('type') . 's';
+        $field = 'favorite_' . $request->get('type') . 's';
         $favorites = $user->$field ? explode(',', $user->$field) : [];
 
         if (($key = array_search($request->get('id'), $favorites)) !== false) {
