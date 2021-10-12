@@ -1163,17 +1163,19 @@
 						{
 							"name": "Отримання фільтрів",
 							"request": {
+								"auth": {
+									"type": "noauth"
+								},
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/filters?lang=ru&currency=usd",
+									"raw": "{{host}}/{{endpoint}}/handbooks?lang=ru&currency=usd",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
-										"orders",
-										"filters"
+										"handbooks"
 									],
 									"query": [
 										{
@@ -1625,19 +1627,21 @@
 							"response": []
 						},
 						{
-							"name": "Отримання фільтрів",
+							"name": "Отримання довідників",
 							"request": {
+								"auth": {
+									"type": "noauth"
+								},
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/filters?lang=uk&currency=uah",
+									"raw": "{{host}}/{{endpoint}}/handbooks?lang=uk&currency=uah",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
-										"orders",
-										"filters"
+										"handbooks"
 									],
 									"query": [
 										{
@@ -4388,7 +4392,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 43);"
+											"pm.variables.set(\"order_id\", 50);"
 										],
 										"type": "text/javascript"
 									}
@@ -5016,7 +5020,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"route_id\", 21);"
+											"pm.variables.set(\"route_id\", 94);"
 										],
 										"type": "text/javascript"
 									}
@@ -5026,7 +5030,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/show?lang=ru",
+									"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/show?lang=uk",
 									"host": [
 										"{{host}}"
 									],
@@ -5039,7 +5043,7 @@
 									"query": [
 										{
 											"key": "lang",
-											"value": "ru"
+											"value": "uk"
 										}
 									]
 								}
@@ -6289,6 +6293,37 @@
 				{
 					"name": "Різне",
 					"item": [
+						{
+							"name": "Отримання довідників",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/handbooks?lang=ru&currency=usd",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"handbooks"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "ru"
+										},
+										{
+											"key": "currency",
+											"value": "usd"
+										}
+									]
+								}
+							},
+							"response": []
+						},
 						{
 							"name": "Завантаження фото",
 							"request": {
