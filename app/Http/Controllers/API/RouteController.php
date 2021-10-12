@@ -163,7 +163,7 @@ class RouteController extends Controller
             'count'  => $routes['total'],
             'page'   => $routes['current_page'],
             'pages'  => $routes['last_page'],
-            'result' => null_to_blank($routes['data']),
+            'routes' => null_to_blank($routes['data']),
         ]);
     }
 

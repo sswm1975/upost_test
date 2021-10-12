@@ -250,7 +250,7 @@ class OrderController extends Controller
             'count'  => $orders['total'],
             'page'   => $orders['current_page'],
             'pages'  => $orders['last_page'],
-            'result' => null_to_blank($orders['data']),
+            'orders' => null_to_blank($orders['data']),
         ]);
     }
 
