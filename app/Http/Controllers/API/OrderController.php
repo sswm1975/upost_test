@@ -257,11 +257,11 @@ class OrderController extends Controller
     /**
      * Отбор заказов по фильтру.
      *
-     * @param User $user
+     * @param User|null $user
      * @param array $filters
      * @return array
      */
-    public function getOrdersByFilter(User $user, array $filters = []): array
+    public function getOrdersByFilter(?User $user, array $filters = []): array
     {
         $rate = !empty($filters['currency']) ? CurrencyRate::rate($filters['currency']) : 1;
 
@@ -278,13 +278,22 @@ class OrderController extends Controller
                 'to_city',
             ])
             ->withCount(['rates as rates_all_count' => function ($query) use ($user) {
-                $query->where('parent_id', 0)->where('user_id', $user->id);
+                $query->where('parent_id', 0)
+                    ->when(!is_null($user), function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    });
             }])
             ->withCount(['rates as rates_read_count' => function ($query) use ($user) {
-                $query->where('is_read', 0)->where('user_id', $user->id);
+                $query->where('is_read', 0)
+                    ->when(!is_null($user), function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    });
             }])
             ->withCount(['rates as is_in_rate' => function ($query) use ($user) {
-                $query->typeOrder()->where('user_id', $user->id);
+                $query->typeOrder()
+                    ->when(!is_null($user), function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    });
             }])
             ->when(!empty($filters['order_id']), function ($query) use ($filters) {
                 return $query->where('orders.id', $filters['order_id']);
