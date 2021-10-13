@@ -421,7 +421,8 @@ class OrderController extends Controller
      *
      * @param int $order_id
      * @param Request $request
-     * @throws ValidatorException|ErrorException|ValidationException
+     * @return JsonResponse
+     * @throws ErrorException|ValidationException|ValidatorException
      */
     public function strikeOrder(int $order_id, Request $request): JsonResponse
     {
@@ -433,17 +434,17 @@ class OrderController extends Controller
             throw new ErrorException(__('message.order_not_found'));
         }
 
-        $user_id = $request->user()->user_id;
+        $user_id = $request->user()->id;
 
-        $strikes = $order->order_strikes;
+        $strikes = $order->strikes;
         if ($strikes && array_key_exists($user_id, $strikes)) {
-            throw new ErrorException(__('message.already_have_complaint'));
+            throw new ErrorException(__('message.already_have_complaint'), 403);
         }
         $strikes[$user_id] = $request->get('strike_id');
-        $order->order_strikes = $strikes;
+        $order->strikes = $strikes;
 
         if (count($strikes) >= static::COUNT_STRIKES_FOR_BAN) {
-            $order->order_status = Order::STATUS_BAN;
+            $order->status = Order::STATUS_BAN;
 
             event(new OrderBanned($order));
         }
