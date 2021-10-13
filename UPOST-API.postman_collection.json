@@ -1079,7 +1079,7 @@
 											"disabled": true
 										},
 										{
-											"key": "page",
+											"key": "page-number",
 											"value": "1",
 											"description": "Номер сторінки для виводу, за замовченням 1  (опціонально)",
 											"disabled": true
@@ -1148,6 +1148,16 @@
 											"key": "currency",
 											"value": "usd",
 											"description": "Валюта, в якій передається ціна (uah, rub, usd, eur) (опціонально)",
+											"disabled": true
+										},
+										{
+											"key": "category[]",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "category[]",
+											"value": "2",
 											"disabled": true
 										},
 										{
@@ -4428,7 +4438,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/show?lang=ru",
+									"raw": "{{host}}/{{endpoint}}/orders/show?category[]=2&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -4457,7 +4467,7 @@
 											"disabled": true
 										},
 										{
-											"key": "page",
+											"key": "page-number",
 											"value": "1",
 											"description": "Номер сторінки для виводу, за замовченням 1  (опціонально)",
 											"disabled": true
@@ -4527,6 +4537,15 @@
 											"value": "usd",
 											"description": "Валюта, в якій передається ціна (uah, rub, usd, eur) (опціонально)",
 											"disabled": true
+										},
+										{
+											"key": "category[]",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "category[]",
+											"value": "2"
 										},
 										{
 											"key": "lang",

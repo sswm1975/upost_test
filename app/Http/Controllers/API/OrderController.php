@@ -227,7 +227,9 @@ class OrderController extends Controller
             'sorting'        => 'sometimes|required|in:asc,desc',
             'sort_by'        => 'sometimes|required|in:date,price',
             'show'           => 'sometimes|required|integer|min:1',
-            'page'           => 'sometimes|required|integer|min:1',
+            'page-number'    => 'sometimes|required|integer|min:1',
+            'category'       => 'sometimes|required|array',
+            'category.*'     => 'required|integer',
             'date_from'      => 'sometimes|required|date',
             'date_to'        => 'sometimes|required|date|after_or_equal:date_from',
             'city_from'      => 'sometimes|required|array',
@@ -305,7 +307,7 @@ class OrderController extends Controller
                 return $query->where('orders.user_id', $filters['user_id']);
             })
             ->when(!empty($filters['category']), function ($query) use ($filters) {
-                return $query->where('orders.category_id', $filters['category']);
+                return $query->whereIn('orders.category_id', $filters['category']);
             })
             ->when(!empty($filters['status']), function ($query) use ($filters) {
                 return $query->where('orders.status', $filters['status']);
@@ -335,7 +337,7 @@ class OrderController extends Controller
                 return $query->where('orders.price_usd', '<=', $filters['price_to'] * $rate);
             })
             ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
-            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page'] ?? 1)
+            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1)
             ->toArray();
     }
 
