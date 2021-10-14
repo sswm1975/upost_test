@@ -142,18 +142,18 @@ class RouteController extends Controller
             'id.*'              => 'required|integer',
             'user_id'           => 'sometimes|required|integer',
             'status'            => 'sometimes|required|in:active,ban,close',
-            'fromdate'          => 'sometimes|required|date',
-            'tilldate'          => 'sometimes|required|date|after_or_equal:fromdate',
-            'from_country_id'   => 'sometimes|required|array',
-            'from_country_id.*' => 'required|integer',
-            'from_city_id'      => 'sometimes|required|array',
-            'from_city_id.*'    => 'required|integer',
-            'to_country_id'     => 'sometimes|required|array',
-            'to_country_id.*'   => 'required|integer',
-            'to_city_id'        => 'sometimes|required|array',
-            'to_city_id.*'      => 'required|integer',
+            'date_from'         => 'sometimes|required|date',
+            'date_to'           => 'sometimes|required|date|after_or_equal:date_from',
+            'country_from'      => 'sometimes|required|array',
+            'country_from.*'    => 'required|integer',
+            'city_from'         => 'sometimes|required|array',
+            'city_from.*'       => 'required|integer',
+            'country_to'        => 'sometimes|required|array',
+            'country_to.*'      => 'required|integer',
+            'city_to'           => 'sometimes|required|array',
+            'city_to.*'         => 'required|integer',
             'show'              => 'sometimes|required|integer|min:1',
-            'page'              => 'sometimes|required|integer|min:1',
+            'page-number'       => 'sometimes|required|integer|min:1',
         ]);
 
         $routes = $this->getRoutesByFilter($request->user(), $filters);
@@ -217,26 +217,26 @@ class RouteController extends Controller
             ->when(!empty($filters['user_id']), function ($query) use ($filters) {
                 return $query->where('user_id', $filters['user_id']);
             })
-            ->when(!empty($filters['fromdate']), function ($query) use ($filters) {
-                return $query->where('fromdate', '>=', $filters['fromdate']);
+            ->when(!empty($filters['date_from']), function ($query) use ($filters) {
+                return $query->where('fromdate', '>=', $filters['date_from']);
             })
-            ->when(!empty($filters['tilldate']), function ($query) use ($filters) {
-                return $query->where('tilldate', '<=', $filters['tilldate']);
+            ->when(!empty($filters['date_to']), function ($query) use ($filters) {
+                return $query->where('tilldate', '<=', $filters['date_to']);
             })
-            ->when(!empty($filters['from_country_id']), function ($query) use ($filters) {
-                return $query->existsCountryInFromCountry($filters['from_country_id']);
+            ->when(!empty($filters['country_from']), function ($query) use ($filters) {
+                return $query->existsCountryInFromCountry($filters['country_from']);
             })
-            ->when(!empty($filters['from_city_id']), function ($query) use ($filters) {
-                return $query->existsCityInFromCity($filters['from_city_id']);
+            ->when(!empty($filters['city_from']), function ($query) use ($filters) {
+                return $query->existsCityInFromCity($filters['city_from']);
             })
-            ->when(!empty($filters['to_country_id']), function ($query) use ($filters) {
-                return $query->existsCountryInToCountry($filters['to_country_id']);
+            ->when(!empty($filters['country_to']), function ($query) use ($filters) {
+                return $query->existsCountryInToCountry($filters['country_to']);
             })
-            ->when(!empty($filters['to_city_id']), function ($query) use ($filters) {
-                return $query->existsCityInToCity($filters['to_city_id']);
+            ->when(!empty($filters['city_to']), function ($query) use ($filters) {
+                return $query->existsCityInToCity($filters['city_to']);
             })
             ->orderBy('id', 'desc')
-            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page'] ?? 1)
+            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1)
             ->toArray();
     }
 

@@ -5121,7 +5121,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/routes/show?from_country_id[]=3&from_city_id[]=4&from_city_id[]=3&to_country_id[]=2&to_city_id[]=2&to_city_id[]=3",
+									"raw": "{{host}}/{{endpoint}}/routes/show?country_from[]=3&city_from[]=4&city_from[]=3&country_to[]=2&city_to[]=2&city_to[]=3",
 									"host": [
 										"{{host}}"
 									],
@@ -5168,32 +5168,32 @@
 											"disabled": true
 										},
 										{
-											"key": "from_country_id[]",
+											"key": "country_from[]",
 											"value": "3",
 											"description": "Код країни початку, масив"
 										},
 										{
-											"key": "from_city_id[]",
+											"key": "city_from[]",
 											"value": "4",
 											"description": "Код міста початку, масив (опційно)"
 										},
 										{
-											"key": "from_city_id[]",
+											"key": "city_from[]",
 											"value": "3",
 											"description": "Код міста початку, масив (опційно)"
 										},
 										{
-											"key": "to_country_id[]",
+											"key": "country_to[]",
 											"value": "2",
 											"description": "Код краіни кінця, масив (опційно)"
 										},
 										{
-											"key": "to_city_id[]",
+											"key": "city_to[]",
 											"value": "2",
 											"description": "Код міста, масив (опційно)"
 										},
 										{
-											"key": "to_city_id[]",
+											"key": "city_to[]",
 											"value": "3",
 											"description": "Код міста, масив (опційно)"
 										},
