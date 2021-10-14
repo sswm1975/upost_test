@@ -108,6 +108,27 @@ class AuthController extends Controller
     }
 
     /**
+     * Получить данные авторизированного пользователя.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function getAuthUser(Request $request): JsonResponse
+    {
+        $user = request()->user();
+
+        if (!$user) throw new ErrorException(__('message.user_not_found'));
+
+        unset($user->password, $user->api_token);
+
+        return response()->json([
+            'status' => true,
+            'user'   => $user,
+        ]);
+    }
+
+    /**
      * Простая проверка токена.
      *
      * @param Request $request

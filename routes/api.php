@@ -21,6 +21,9 @@ Route::group(
 
         # Перевірка токена
         Route::get('check_token', 'API\AuthController@checkToken');
+
+        # Дані авторизованого користувача
+        Route::get('user', 'API\AuthController@getAuthUser');
     }
 );
 
