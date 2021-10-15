@@ -121,8 +121,6 @@ class User extends Authenticatable
         'register_date_human',
         'last_active_human',
         'age',
-        'orders_count',
-        'routes_count',
     ];
 
     /**
@@ -262,16 +260,6 @@ class User extends Authenticatable
         if (is_null($this->favorite_routes)) return 0;
 
         return substr_count($this->favorite_routes, ',') + 1;
-    }
-
-    public function getOrdersCountAttribute(): int
-    {
-        return $this->orders->count();
-    }
-
-    public function getRoutesCountAttribute(): int
-    {
-        return $this->routes->count();
     }
 
     ### LINKS ###

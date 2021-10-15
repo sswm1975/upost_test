@@ -56,6 +56,7 @@ class ProfileController extends Controller
         unset($user->password, $user->api_token);
 
         $user->load(['city.country']);
+        $user->loadCount(['orders', 'routes']);
 
         # добавляем кол-во заказов, как Заказчик и как Исполнитель (фрилансер)
         $user->creator_count = Review::getCountReviewsByCreator($user->id);
