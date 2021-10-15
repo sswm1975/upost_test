@@ -3,6 +3,6 @@
 return [
     'default' => [
         'lang' => 'en',
-        'currency' => 'usd',
+        'currency' => '$',
     ],
 ];

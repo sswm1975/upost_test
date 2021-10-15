@@ -177,11 +177,6 @@ class User extends Authenticatable
 
     ### SETTERS ###
 
-    public function setCurrencyAttribute($value)
-    {
-        $this->attributes['currency'] = config('app.currencies')[$value];
-    }
-
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = getHashPassword($value);

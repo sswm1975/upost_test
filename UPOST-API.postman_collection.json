@@ -2853,14 +2853,14 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "user_lang",
+											"key": "lang",
 											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально",
 											"type": "text"
 										},
 										{
-											"key": "user_currency",
-											"value": "usd",
+											"key": "currency",
+											"value": "$",
 											"description": "Валюта (uah, rub, usd, eur) - опціонально",
 											"type": "text"
 										}
@@ -3285,7 +3285,7 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/auth/user",
+									"raw": "{{host}}/{{endpoint}}/auth/user?lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -3293,6 +3293,12 @@
 										"{{endpoint}}",
 										"auth",
 										"user"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "ru"
+										}
 									]
 								}
 							},
@@ -3576,7 +3582,7 @@
 										},
 										{
 											"key": "currency",
-											"value": "usd",
+											"value": "$",
 											"description": "Валюта (uah, rub, usd, eur) - опціонально",
 											"type": "text"
 										}
@@ -4484,7 +4490,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/show?category[]=2&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/orders/show?currency=₴&category[]=2&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -4580,9 +4586,8 @@
 										},
 										{
 											"key": "currency",
-											"value": "usd",
-											"description": "Валюта, в якій передається ціна (uah, rub, usd, eur) (опціонально)",
-											"disabled": true
+											"value": "₴",
+											"description": "Валюта, в якій передається ціна (uah, rub, usd, eur) (опціонально)"
 										},
 										{
 											"key": "category[]",

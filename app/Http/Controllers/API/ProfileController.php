@@ -155,7 +155,7 @@ class ProfileController extends Controller
     {
         $data = validateOrExit([
             'lang'     => 'required_without:currency|in:' . implode(',', config('app.languages')),
-            'currency' => 'required_without:lang|in:' . implode(',', array_keys(config('app.currencies'))),
+            'currency' => 'required_without:lang|in:' . implode(',', config('app.currencies')),
         ]);
 
         $request->user()->fill($data)->save();
