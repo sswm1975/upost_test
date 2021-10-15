@@ -242,7 +242,7 @@ class OrderController extends Controller
             'country_to.*'   => 'required|integer',
             'price_from'     => 'sometimes|required|numeric',
             'price_to'       => 'sometimes|required|numeric',
-            'currency'       => 'sometimes|required|in:' . implode(',', array_keys(config('app.currencies'))),
+            'currency'       => 'sometimes|required|in:' . implode(',', config('app.currencies')),
         ]);
 
         $orders = $this->getOrdersByFilter($request->user(), $filters);
@@ -265,7 +265,7 @@ class OrderController extends Controller
      */
     public function getOrdersByFilter(?User $user, array $filters = []): array
     {
-        $rate = !empty($filters['currency']) ? CurrencyRate::rate($filters['currency']) : 1;
+        $rate = !empty($filters['currency']) ? CurrencyRate::getRate($filters['currency']) : 1;
 
         return Order::query()
             ->with([
