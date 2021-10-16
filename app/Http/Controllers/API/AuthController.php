@@ -30,7 +30,7 @@ class AuthController extends Controller
 
         $user = $this->attemptLogin($credentials);
 
-        if (!$user) throw new ErrorException(__('message.auth_failed'));
+        if (!$user) throw new ErrorException(__('message.auth_failed'), 403);
 
         $token = $this->generateToken($user);
 
