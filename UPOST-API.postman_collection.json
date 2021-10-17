@@ -3360,17 +3360,17 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "user_email",
+											"key": "email",
 											"value": "sswm@i.ua",
 											"type": "text"
 										},
 										{
-											"key": "user_password",
+											"key": "password",
 											"value": "testtest",
 											"type": "text"
 										},
 										{
-											"key": "user_password_confirmation",
+											"key": "password_confirmation",
 											"value": "testtest",
 											"type": "text"
 										},
@@ -4843,7 +4843,8 @@
 											"key": "from_city_id",
 											"value": "4",
 											"description": "Код міста старту",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "to_country_id",
@@ -4855,7 +4856,8 @@
 											"key": "to_city_id",
 											"value": "2",
 											"description": "Код міста закінчення",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "fromdate",
@@ -4879,25 +4881,29 @@
 											"key": "route_points[0][country_id]",
 											"value": "10",
 											"description": "Точки опційно: Код країни",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "route_points[0][city_id]",
 											"value": "14",
 											"description": "Точки опційно: Код міста",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "route_points[0][date]",
 											"value": "2021-09-21",
 											"description": "Точки опційно: Дата",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "route_points[1][country_id]",
 											"value": "4",
 											"description": "Точки опційно: Код країни",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "route_points[1][city_id]",
@@ -4910,7 +4916,8 @@
 											"key": "route_points[1][date]",
 											"value": "2021-09-22",
 											"description": "Точки опційно: Дата",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},

@@ -47,7 +47,7 @@ class PasswordController extends Controller
     public function reset(Request $request): JsonResponse
     {
         $credentials = validateOrExit([
-            'token'         => 'required',
+            'token'    => 'required',
             'email'    => 'required|email',
             'password' => 'required|min:6|confirmed',
         ]);
@@ -59,8 +59,8 @@ class PasswordController extends Controller
         });
 
         return response()->json([
-            'status'  => $status === Password::PASSWORD_RESET,
-            'message' => __($status),
+            'status' => $status === Password::PASSWORD_RESET,
+            'errors' => [__($status)],
         ]);
     }
 }
