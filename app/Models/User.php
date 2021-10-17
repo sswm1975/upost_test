@@ -95,10 +95,15 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    const STATUS_NEW = 'new';
     const STATUS_ACTIVE = 'active';
+    const STATUS_NOT_ACTIVE = 'not_active';
     const STATUS_BANNED = 'banned';
     const STATUS_REMOVED = 'removed';
+
+    const STATUSES = [
+        self::STATUS_ACTIVE,
+        self::STATUS_NOT_ACTIVE,
+    ];
 
     const VALIDATION_STATUS_VALID = 'valid';
     const VALIDATION_STATUS_NO_VALID = 'no_valid';
@@ -167,7 +172,7 @@ class User extends Authenticatable
 
         static::creating(function ($model) {
             $model->register_date = $model->freshTimestamp();
-            $model->status = self::STATUS_NEW;
+            $model->status = self::STATUS_ACTIVE;
             $model->validation = self::VALIDATION_STATUS_NO_VALID;
             $model->lang = config('user.default.lang');
             $model->currency = config('user.default.currency');

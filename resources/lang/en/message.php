@@ -51,9 +51,10 @@ return [
             'no_valid' => 'Not verified',
         ],
         'statuses' => [
-            'active'  => 'Active',
-            'banned'  => 'Banned',
-            'removed' => 'Removed',
+            'active'     => 'Active',
+            'not_active' => 'Not active',
+            'banned'     => 'Banned',
+            'removed'    => 'Removed',
         ],
     ],
 

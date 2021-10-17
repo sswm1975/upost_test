@@ -101,7 +101,7 @@ class ProfileController extends Controller
                 'name'     => 'sometimes|string|max:100',
                 'surname'  => 'sometimes|string|max:100',
                 'city_id'  => 'integer|exists:cities,id',
-                'status'   => 'in:active,banned,removed',
+                'status'   => 'in:' . implode(',', User::STATUSES),
                 'birthday' => 'date',
                 'gender'   => 'nullable|in:male,female,unknown',
                 'photo'    => 'nullable|base64_image',
