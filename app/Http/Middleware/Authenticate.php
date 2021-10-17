@@ -19,6 +19,12 @@ class Authenticate extends Middleware
      */
     protected function unauthenticated($request, array $guards)
     {
+        $lang = in_array($request->get('lang'), config('app.languages'))
+            ? $request->get('lang')
+            : config('app.default_language');
+
+        app()->setLocale($lang);
+
         throw new ErrorException(__('message.token_incorrect'));
     }
 }
