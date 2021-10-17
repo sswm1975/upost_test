@@ -31,8 +31,12 @@ class PasswordController extends Controller
             throw new ErrorException($e->getMessage());
         }
 
+        if ($status !== Password::RESET_LINK_SENT) {
+            throw new ErrorException(__($status));
+        }
+
         return response()->json([
-            'status'  => $status === Password::RESET_LINK_SENT,
+            'status'  => true,
             'message' => __($status),
         ]);
     }
@@ -42,7 +46,7 @@ class PasswordController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException|ValidatorException
+     * @throws ValidationException|ValidatorException|ErrorException
      */
     public function reset(Request $request): JsonResponse
     {
@@ -58,9 +62,13 @@ class PasswordController extends Controller
             event(new PasswordReset($user));
         });
 
+        if ($status !== Password::PASSWORD_RESET) {
+            throw new ErrorException(__($status));
+        }
+
         return response()->json([
-            'status' => $status === Password::PASSWORD_RESET,
-            'errors' => [__($status)],
+            'status'  => true,
+            'message' => __($status),
         ]);
     }
 }
