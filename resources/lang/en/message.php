@@ -39,9 +39,11 @@ return [
     'job_not_found'           => 'Job not found.',
     'image_not_found'         => 'Image not found.',
 
-    'send_token' => [
-        'error' => 'Error sending token',
-        'email' => 'Token sent to address',
+    'verification_code' => [
+        'incorrect'         => 'Verification code is incorrect',
+        'send_error'        => 'Error sending verification code',
+        'send_by_email'     => 'Verification code sent to address',
+        'change_successful' => 'Data updated successfully',
     ],
 
     # User's attribute

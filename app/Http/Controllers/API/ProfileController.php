@@ -212,13 +212,13 @@ class ProfileController extends Controller
 
             return response()->json([
                 'status'  => true,
-                'message' => __('message.send_token.email') . ' ' . $request->user()->email,
+                'message' => __('message.verification_code.send_by_email') . ' ' . $request->user()->email,
             ]);
         }
 
         return response()->json([
             'status'  => false,
-            'errors' => [__('message.send_token.error')],
+            'errors' => [__('message.verification_code.send_error')],
         ]);
     }
 
@@ -253,7 +253,7 @@ class ProfileController extends Controller
     {
         $user_change = UserChange::whereToken($token)->first();
 
-        if (!$user_change) throw new ErrorException(__('message.token_incorrect'));
+        if (!$user_change) throw new ErrorException(__('message.verification_code.incorrect'));
 
         $user = User::find($user_change->user_id);
         if (!$user) throw new ErrorException(__('message.user_not_found'));
@@ -269,7 +269,8 @@ class ProfileController extends Controller
         $user_change->delete();
 
         return response()->json([
-            'status' => true,
+            'status'  => true,
+            'message' => __('message.verification_code.change_successful'),
         ]);
     }
 

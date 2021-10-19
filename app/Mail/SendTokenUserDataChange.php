@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 class SendTokenUserDataChange extends Mailable
 {
     /**
-     * Отправка токена подтверждения при изменении данных пользовательского профиля.
+     * Отправка кода подтверждения (токена) при изменении данных пользовательского профиля.
      */
 
     use SerializesModels;
@@ -32,10 +32,8 @@ class SendTokenUserDataChange extends Mailable
      */
     public function build(): SendTokenUserDataChange
     {
-        return $this->subject('Токен подтверждения смены данных профиля')
+        return $this->subject('Код подтверждения смены данных профиля')
             ->markdown('emails.send_token_user_data_change')
-            ->with([
-                'token' => $this->token,
-            ]);
+            ->with(['token' => $this->token]);
     }
 }

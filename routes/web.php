@@ -13,5 +13,5 @@ Route::get('/emails/order_ban', function() {
 });
 
 Route::get('/emails/token_user_data_change', function() {
-    return new SendTokenUserDataChange('TEST_TOKEN');
+    return new SendTokenUserDataChange('VERIFICATION_CODE');
 });
