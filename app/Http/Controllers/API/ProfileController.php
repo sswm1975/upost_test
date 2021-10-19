@@ -5,9 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Mail\SendTokenUserDataChange;
 use App\Models\Review;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -198,13 +200,25 @@ class ProfileController extends Controller
     public function updateLogin(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'phone' => 'required_without:email|phone|unique:users,phone',
-            'email' => 'required_without:phone|email|max:30|unique:users,email',
+            'phone'  => 'required_without:email|phone|unique:users,phone',
+            'email'  => 'required_without:phone|email|max:30|unique:users,email',
+            'sender' => 'in:email',
         ]);
 
+        $token = UserChange::create($data)->token;
+
+        if ($data['sender'] == 'email') {
+            Mail::to($request->user()->email)->send(new SendTokenUserDataChange($token));
+
+            return response()->json([
+                'status'  => true,
+                'message' => __('message.send_token.email') . ' ' . $request->user()->email,
+            ]);
+        }
+
         return response()->json([
-            'status' => true,
-            'token'  => UserChange::create($data)->token,
+            'status'  => false,
+            'message' => __('message.send_token.error'),
         ]);
     }
 

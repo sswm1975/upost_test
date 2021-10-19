@@ -39,6 +39,11 @@ return [
     'job_not_found'           => 'Job not found.',
     'image_not_found'         => 'Image not found.',
 
+    'send_token' => [
+        'error' => 'Error sending token',
+        'email' => 'Token sent to address',
+    ],
+
     # User's attribute
     'user' => [
         'genders' => [

@@ -38,6 +38,11 @@ return [
     'job_not_found'           => 'Завдання не знайдено.',
     'image_not_found'         => 'Зображення не знайдено.',
 
+    'send_token' => [
+        'error' => 'Помилка при відправці токена',
+        'email' => 'Токен відправлений на адресу',
+    ],
+
     # User's attribute
     'user' => [
         'genders' => [

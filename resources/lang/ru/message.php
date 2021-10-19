@@ -39,6 +39,11 @@ return [
     'job_not_found'           => 'Задание не найдено.',
     'image_not_found'         => 'Рисунок не найден.',
 
+    'send_token' => [
+        'error' => 'Ошибка при отправке токена',
+        'email' => 'Токен отправлен на адрес',
+    ],
+
     # User's attribute
     'user' => [
         'genders' => [
