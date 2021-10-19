@@ -218,7 +218,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'status'  => false,
-            'message' => __('message.send_token.error'),
+            'errors' => [__('message.send_token.error')],
         ]);
     }
 
