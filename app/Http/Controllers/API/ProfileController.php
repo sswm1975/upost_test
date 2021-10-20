@@ -166,6 +166,32 @@ class ProfileController extends Controller
     }
 
     /**
+     * Отправить код подтверждения с помощью выбранного отправителя для смены логина/пароля/платёжных данных.
+     *
+     * @param User $user
+     * @param array $data
+     * @return JsonResponse
+     */
+    private function sendVerificationCode(User $user, array $data = []): JsonResponse
+    {
+        $token = UserChange::create($data)->token;
+
+        if ($data['sender'] == 'email') {
+            Mail::to($user->email)->send(new SendTokenUserDataChange($token));
+
+            return response()->json([
+                'status'  => true,
+                'message' => __('message.verification_code.send_by_email') . ' ' . $user->email,
+            ]);
+        }
+
+        return response()->json([
+            'status'  => false,
+            'errors' => [__('message.verification_code.send_error')],
+        ]);
+    }
+
+    /**
      * Обновление пароля пользователя.
      *
      * @param Request $request
@@ -181,13 +207,11 @@ class ProfileController extends Controller
                 }
                 return true;
             }],
-            'password' => ['required', 'min:6', 'confirmed'],
+            'password'     => ['required', 'min:6', 'confirmed'],
+            'sender'       => 'in:email',
         ]);
 
-        return response()->json([
-            'status' => true,
-            'token'  => UserChange::create($data)->token,
-        ]);
+        return $this->sendVerificationCode($request->user(), $data);
     }
 
     /**
@@ -205,21 +229,7 @@ class ProfileController extends Controller
             'sender' => 'in:email',
         ]);
 
-        $token = UserChange::create($data)->token;
-
-        if ($data['sender'] == 'email') {
-            Mail::to($request->user()->email)->send(new SendTokenUserDataChange($token));
-
-            return response()->json([
-                'status'  => true,
-                'message' => __('message.verification_code.send_by_email') . ' ' . $request->user()->email,
-            ]);
-        }
-
-        return response()->json([
-            'status'  => false,
-            'errors' => [__('message.verification_code.send_error')],
-        ]);
+        return $this->sendVerificationCode($request->user(), $data);
     }
 
     /**
@@ -232,14 +242,12 @@ class ProfileController extends Controller
     public function updateCard(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'card_number' => 'required_without:card_name|bankcard',
-            'card_name'   => 'required_without:card_number|max:50',
+            'card_number' => 'nullable|required_without:card_name|bankcard',
+            'card_name'   => 'nullable|required_without:card_number|max:50',
+            'sender'      => 'in:email',
         ]);
 
-        return response()->json([
-            'status' => true,
-            'token'  => UserChange::create($data)->token,
-        ]);
+        return $this->sendVerificationCode($request->user(), $data);
     }
 
     /**
