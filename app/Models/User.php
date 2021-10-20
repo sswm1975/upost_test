@@ -182,6 +182,17 @@ class User extends Authenticatable
 
     ### SETTERS ###
 
+    public function setPhotoAttribute($photo)
+    {
+        if (empty($photo)) {
+            return $this->attributes['photo'] = null;
+        }
+
+        $uri_parts = explode('/', $photo);
+
+        $this->attributes['photo'] = end($uri_parts);
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = getHashPassword($value);
