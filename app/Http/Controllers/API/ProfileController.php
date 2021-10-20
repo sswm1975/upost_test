@@ -200,8 +200,8 @@ class ProfileController extends Controller
     public function updateLogin(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'phone'  => 'required_without:email|phone|unique:users,phone',
-            'email'  => 'required_without:phone|email|max:30|unique:users,email',
+            'phone'  => 'nullable|required_without:email|phone|unique:users,phone',
+            'email'  => 'nullable|required_without:phone|email|max:30|unique:users,email',
             'sender' => 'in:email',
         ]);
 
