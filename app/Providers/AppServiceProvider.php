@@ -82,7 +82,7 @@ class AppServiceProvider extends ServiceProvider
          * Валидация: Запись существует в таблице или значение равно 0 или пустое.
          */
         Validator::extend('exists_or_null', function ($attribute, $value, $parameters) {
-            if($value == 0 || is_null($value)) {
+            if (empty($value)) {
                 return true;
             } else {
                 $validator = Validator::make([$attribute => $value], [

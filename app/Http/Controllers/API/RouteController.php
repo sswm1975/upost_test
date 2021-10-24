@@ -57,9 +57,9 @@ class RouteController extends Controller
     {
         $rules = [
             'from_country_id' => 'required|integer|exists:countries,id',
-            'from_city_id'    => 'sometimes|required_with:from_country_id|integer|exists:cities,id,country_id,' . ($data['from_country_id'] ?? '0'),
+            'from_city_id'    => 'sometimes|exists_or_null:cities,id,country_id,' . ($data['from_country_id'] ?? '0'),
             'to_country_id'   => 'required|integer|exists:countries,id',
-            'to_city_id'      => 'sometimes|required_with:to_country_id|integer|exists:cities,id,country_id,' . ($data['to_country_id'] ?? '0'),
+            'to_city_id'      => 'sometimes|exists_or_null:cities,id,country_id,' . ($data['to_country_id'] ?? '0'),
             'fromdate'        => 'required|date',
             'tilldate'        => 'required|date|after_or_equal:fromdate',
             'transport'       => 'required|in:car,bus,walk,train,plane',
