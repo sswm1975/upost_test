@@ -4490,7 +4490,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/show?currency=₴&category[]=2&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/orders/show?show=1&currency=₴&category[]=2&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -4509,8 +4509,7 @@
 										{
 											"key": "show",
 											"value": "1",
-											"description": "Кількість замовлень на сторінці, за замовченням 5  (опціонально)",
-											"disabled": true
+											"description": "Кількість замовлень на сторінці, за замовченням 5  (опціонально)"
 										},
 										{
 											"key": "status",
@@ -4713,6 +4712,44 @@
 										{
 											"key": "user_id",
 											"value": "1"
+										}
+									]
+								},
+								"description": "Пiдтвердити виконання замовлення"
+							},
+							"response": []
+						},
+						{
+							"name": "Закриття замовлення",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"order_id\", 51);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/close?lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"orders",
+										"{{order_id}}",
+										"close"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk"
 										}
 									]
 								},
