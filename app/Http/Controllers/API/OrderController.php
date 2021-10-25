@@ -417,6 +417,33 @@ class OrderController extends Controller
     }
 
     /**
+     * Закрыть заказ.
+     *
+     * @param int $order_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function closeOrder(int $order_id, Request $request): JsonResponse
+    {
+        $order = Order::where([
+            'id'      => $order_id,
+            'user_id' => $request->user()->id,
+            'status'  => Order::STATUS_ACTIVE,
+        ])->first();
+
+        if (!$order) {
+            throw new ErrorException(__('message.order_not_found'));
+        }
+
+        $order->update(['status' => Order::STATUS_CLOSED]);
+
+        return response()->json([
+            'status' => true,
+        ]);
+    }
+
+    /**
      * Пожаловаться на заказ.
      *
      * @param int $order_id

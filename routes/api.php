@@ -195,6 +195,9 @@ Route::group(
         # Підтвердити виконання замовлення
         Route::post('confirm', 'API\OrderController@confirmOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+        # Закриття замовлення
+        Route::post('{order_id}/close', 'API\OrderController@closeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
         # Лічильник переглядів
         Route::post('{order_id}/add_look', 'API\OrderController@addLook');
 

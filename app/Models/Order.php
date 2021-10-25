@@ -128,18 +128,20 @@ class Order extends Model
         });
 
         static::saved(function ($model) {
-            $id = $model->id ?: DB::getPdo()->lastInsertId();
-            $model->slug = Str::slug($model->name . ' ' . $id);
+            if (empty($model->slug)) {
+                $id = $model->id ?: DB::getPdo()->lastInsertId();
+                $model->slug = Str::slug($model->name . ' ' . $id);
 
-            $currency = getCurrencyNameBySymbol($model->currency);
-            $model->price_usd = convertPriceToUsd($model->price, $currency);
+                $currency = getCurrencyNameBySymbol($model->currency);
+                $model->price_usd = convertPriceToUsd($model->price, $currency);
 
-            DB::table($model->table)
-                ->where('id', $id)
-                ->update([
-                    'slug' => $model->slug,
-                    'price_usd' => $model->price_usd,
-                ]);
+                DB::table($model->table)
+                    ->where('id', $id)
+                    ->update([
+                        'slug' => $model->slug,
+                        'price_usd' => $model->price_usd,
+                    ]);
+            }
         });
     }
 
