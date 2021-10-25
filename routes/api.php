@@ -198,6 +198,9 @@ Route::group(
         # Закриття замовлення
         Route::post('{order_id}/close', 'API\OrderController@closeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+        # Закриття декілька замовлень
+        Route::post('close', 'API\OrderController@closeOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
+
         # Лічильник переглядів
         Route::post('{order_id}/add_look', 'API\OrderController@addLook');
 

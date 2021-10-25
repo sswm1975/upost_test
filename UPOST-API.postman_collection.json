@@ -4758,6 +4758,58 @@
 							"response": []
 						},
 						{
+							"name": "Закриття декілька замовлень",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"order_id\", 51);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "order_id[]",
+											"value": "50",
+											"type": "text"
+										},
+										{
+											"key": "order_id[]",
+											"value": "51",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/orders/close?lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"orders",
+										"close"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk"
+										}
+									]
+								},
+								"description": "Пiдтвердити виконання замовлення"
+							},
+							"response": []
+						},
+						{
 							"name": "Лічильник переглядів",
 							"event": [
 								{

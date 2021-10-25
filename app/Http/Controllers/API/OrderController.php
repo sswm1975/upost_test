@@ -444,6 +444,32 @@ class OrderController extends Controller
     }
 
     /**
+     * Массовое закрытие заказов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function closeOrders(Request $request): JsonResponse
+    {
+        $data = validateOrExit([
+            'order_id'   => 'required|array|min:1',
+            'order_id.*' => 'required|integer',
+        ]);
+
+        Order::whereKey($data['order_id'])
+            ->where([
+                'user_id' => $request->user()->id,
+                'status'  => Order::STATUS_ACTIVE,
+            ])
+            ->update(['status' => Order::STATUS_CLOSED]);
+
+        return response()->json([
+            'status' => true,
+        ]);
+    }
+
+    /**
      * Пожаловаться на заказ.
      *
      * @param int $order_id
