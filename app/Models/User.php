@@ -304,6 +304,14 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
+    public function successful_orders(): HasMany
+    {
+        return $this->orders()->whereStatus(Order::STATUS_SUCCESSFUL);
+    }
+
+    /**
+     * @return HasMany
+     */
     public function routes(): HasMany
     {
         return $this->hasMany(Route::class, 'user_id', 'id');

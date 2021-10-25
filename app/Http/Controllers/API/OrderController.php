@@ -270,8 +270,7 @@ class OrderController extends Controller
         return Order::query()
             ->with([
                 'user' => function ($query) {
-                    $query->select(User::FIELDS_FOR_SHOW)
-                        ->addSelect(DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders'));
+                    $query->select(User::FIELDS_FOR_SHOW)->withCount('successful_orders');
                 },
                 'category',
                 'from_country',
