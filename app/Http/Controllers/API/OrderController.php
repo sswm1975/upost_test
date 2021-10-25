@@ -457,7 +457,8 @@ class OrderController extends Controller
             'order_id.*' => 'required|integer',
         ]);
 
-        Order::whereKey($data['order_id'])
+        $affected_orders = Order::query()
+            ->whereKey($data['order_id'])
             ->where([
                 'user_id' => $request->user()->id,
                 'status'  => Order::STATUS_ACTIVE,
@@ -465,7 +466,8 @@ class OrderController extends Controller
             ->update(['status' => Order::STATUS_CLOSED]);
 
         return response()->json([
-            'status' => true,
+            'status'          => true,
+            'affected_orders' => $affected_orders,
         ]);
     }
 
