@@ -100,6 +100,13 @@ class Order extends Model
     const STATUS_BAN = 'ban';
     const STATUS_SUCCESSFUL = 'successful';
 
+    const STATUSES = [
+        self::STATUS_ACTIVE,
+        self::STATUS_CLOSED,
+        self::STATUS_BAN,
+        self::STATUS_SUCCESSFUL,
+    ];
+
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     public $timestamps = false;

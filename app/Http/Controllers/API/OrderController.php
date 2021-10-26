@@ -223,7 +223,7 @@ class OrderController extends Controller
         $filters = validateOrExit([
             'order_id'       => 'sometimes|required|integer',
             'user_id'        => 'sometimes|required|integer',
-            'status'         => 'sometimes|required|in:active,ban',
+            'status'         => 'sometimes|required|in:' .  implode(',', Order::STATUSES),
             'sorting'        => 'sometimes|required|in:asc,desc',
             'sort_by'        => 'sometimes|required|in:date,price',
             'show'           => 'sometimes|required|integer|min:1',
