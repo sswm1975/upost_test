@@ -9,14 +9,15 @@
     "license": "MIT",
     "require": {
         "php": "^7.4",
+        "ext-dom": "*",
         "ext-gd": "*",
         "ext-json": "*",
-        "ext-zlib": "*",
-        "ext-dom": "*",
         "ext-libxml": "*",
+        "ext-zlib": "*",
         "doctrine/migrations": "^3.2",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^1.0",
+        "fzaninotto/faker": "^1.9",
         "guzzlehttp/guzzle": "^6.5",
         "laravel/framework": "^7.30",
         "laravel/tinker": "^2.6",
@@ -51,7 +52,11 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

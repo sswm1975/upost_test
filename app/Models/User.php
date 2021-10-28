@@ -171,12 +171,12 @@ class User extends Authenticatable
         parent::boot();
 
         static::creating(function ($model) {
-            $model->register_date = $model->freshTimestamp();
-            $model->status = self::STATUS_ACTIVE;
-            $model->validation = self::VALIDATION_STATUS_NO_VALID;
-            $model->lang = config('user.default.lang');
-            $model->currency = config('user.default.currency');
-            $model->role = self::ROLE_USER;
+            $model->register_date = $model->register_date ?? $model->freshTimestamp();
+            $model->status = $model->status ?? self::STATUS_ACTIVE;
+            $model->validation = $model->validation ?? self::VALIDATION_STATUS_NO_VALID;
+            $model->lang = $model->lang ?? config('user.default.lang');
+            $model->currency = $model->currency ?? config('user.default.currency');
+            $model->role = $model->role ?? self::ROLE_USER;
         });
     }
 
