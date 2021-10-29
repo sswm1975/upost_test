@@ -106,7 +106,7 @@ class OrderController extends Controller
                 'products_count' => 'required|integer',
                 'size'           => 'required|string|max:50',
                 'weight'         => 'required|string|max:50',
-                'description'    => 'required|string|not_phone|censor|max:500',
+                'description'    => 'required|string|not_phone|censor|max:5000',
                 'from_country_id'=> 'required|integer|exists:countries,id',
                 'from_city_id'   => 'sometimes|required|integer|exists:cities,id,country_id,' . ($data['from_country_id'] ?? 0),
                 'from_address'   => 'sometimes|nullable|string',
