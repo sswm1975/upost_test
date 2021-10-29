@@ -116,6 +116,8 @@ class User extends Authenticatable
     public $timestamps = false;
 
     protected $appends = [
+        'short_name',
+        'full_name',
         'status_name',
         'gender_name',
         'validation_name',
@@ -199,6 +201,16 @@ class User extends Authenticatable
     }
 
     ### GETTERS ###
+
+    public function getShortNameAttribute(): string
+    {
+        return $this->name . ($this->surname ? ' ' . mb_substr($this->surname, 0, 1) . '.' : '');
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->name . ($this->surname ? ' ' . $this->surname : '');
+    }
 
     public function getGenderNameAttribute(): string
     {
