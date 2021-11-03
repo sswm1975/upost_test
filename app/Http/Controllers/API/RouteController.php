@@ -119,12 +119,16 @@ class RouteController extends Controller
     public function showMyRoutes(Request $request): JsonResponse
     {
         $user = $request->user();
+        $filters = array_merge(['user_id' => $user->id], $request->all());
 
-        $routes = $this->getRoutesByFilter($user, ['user_id' => $user->id])['data'];
+        $routes = $this->getRoutesByFilter($user, $filters);
 
         return response()->json([
             'status' => true,
-            'routes' => null_to_blank($routes),
+            'count'  => $routes['total'],
+            'page'   => $routes['current_page'],
+            'pages'  => $routes['last_page'],
+            'routes' => null_to_blank($routes['data']),
         ]);
     }
 
