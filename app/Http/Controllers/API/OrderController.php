@@ -202,12 +202,16 @@ class OrderController extends Controller
     public function showMyOrders(Request $request): JsonResponse
     {
         $user = $request->user();
+        $filters = array_merge(['user_id' => $user->id], $request->all());
 
-        $orders = $this->getOrdersByFilter($user, ['user_id' => $user->id])['data'];
+        $orders = $this->getOrdersByFilter($user, $filters);
 
         return response()->json([
             'status' => true,
-            'orders' => null_to_blank($orders),
+            'count'  => $orders['total'],
+            'page'   => $orders['current_page'],
+            'pages'  => $orders['last_page'],
+            'orders' => null_to_blank($orders['data']),
         ]);
     }
 
