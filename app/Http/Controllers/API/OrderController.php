@@ -283,7 +283,7 @@ class OrderController extends Controller
                 'to_city',
             ])
             ->withCount([
-                'rates as have_rate' => function ($query) use ($user) {
+                'rates as has_rate' => function ($query) use ($user) {
                     $query->where('parent_id', 0)->where('user_id', $user->id ?? 0);
                 },
                 'rates as rates_read_count' => function ($query) use ($user) {

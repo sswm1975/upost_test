@@ -193,6 +193,9 @@ class RouteController extends Controller
                 'route_points.country',
                 'route_points.city'
             ])
+            ->withCount(['rates as has_rate' => function ($query) use ($user) {
+                $query->where('parent_id', 0)->where('user_id', $user->id ?? 0);
+            }])
             ->withCount(['rates as rates_all_count' => function ($query) use ($user) {
                 $query->where('parent_id', 0)
                     ->when(!is_null($user), function ($q) use ($user) {
