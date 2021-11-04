@@ -136,11 +136,11 @@ class Rate extends Model
     public static function getNewRatesByOrder(int $order_id)
     {
         return static::where([
-            'order_id' => $order_id,
+            'order_id'  => $order_id,
             'parent_id' => 0,
-            'is_read' => 0,
-            'status' => self::STATUS_ACTIVE,
-            'type' => self::TYPE_ROUTE,
+            'is_read'   => 0,
+            'status'    => self::STATUS_ACTIVE,
+            'type'      => self::TYPE_ORDER,
         ])->whereNotExists(function ($query) {
             $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
         })->with([
@@ -169,11 +169,11 @@ class Rate extends Model
     public static function getReadRatesByOrder(int $order_id)
     {
         return static::where([
-            'order_id' => $order_id,
+            'order_id'  => $order_id,
             'parent_id' => 0,
-            'is_read' => 1,
-            'status' => self::STATUS_ACTIVE,
-            'type' => self::TYPE_ROUTE,
+            'is_read'   => 1,
+            'status'    => self::STATUS_ACTIVE,
+            'type'      => self::TYPE_ORDER,
         ])->whereNotExists(function ($query) {
             $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
         })->with([
@@ -201,10 +201,10 @@ class Rate extends Model
     public static function getExistsChildRatesByOrder(int $order_id)
     {
         return static::where([
-            'order_id' => $order_id,
+            'order_id'  => $order_id,
             'parent_id' => 0,
-            'status' => self::STATUS_ACTIVE,
-            'type' => self::TYPE_ROUTE,
+            'status'    => self::STATUS_ACTIVE,
+            'type'      => self::TYPE_ORDER,
         ])->whereExists(function ($query) {
             $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
         })->selectRaw('rates.*, (select rm.user_id from rates as rm where rm.parent_id = rates.id order by id desc limit 1) as last_message_from')
@@ -234,11 +234,11 @@ class Rate extends Model
     public static function getNewRatesByRoute(int $route_id)
     {
         return static::where([
-            'route_id'        => $route_id,
+            'route_id'  => $route_id,
             'parent_id' => 0,
             'is_read'   => 0,
             'status'    => self::STATUS_ACTIVE,
-            'type'      => self::TYPE_ORDER,
+            'type'      => self::TYPE_ROUTE,
         ])->whereNotExists(function ($query) {
             $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
         })->with([
@@ -270,8 +270,8 @@ class Rate extends Model
             'route_id'    => $route_id,
             'parent_id'   => 0,
             'is_read'     => 1,
-            'status'    => self::STATUS_ACTIVE,
-            'type'        => self::TYPE_ORDER,
+            'status'      => self::STATUS_ACTIVE,
+            'type'        => self::TYPE_ROUTE,
         ])->whereNotExists(function ($query) {
             $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
         })->with([
@@ -302,7 +302,7 @@ class Rate extends Model
             'route_id'  => $route_id,
             'parent_id' => 0,
             'status'    => self::STATUS_ACTIVE,
-            'type'      => self::TYPE_ORDER,
+            'type'      => self::TYPE_ROUTE,
         ])->whereExists(function ($query) {
             $query->selectRaw(1)->from('rates as rc')->whereRaw('rc.parent_id = rates.id');
         })->selectRaw('rates.*, (select rm.user_id from rates as rm where rm.parent_id = rates.id order by id desc limit 1) as last_message_from')
