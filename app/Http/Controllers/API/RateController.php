@@ -431,12 +431,14 @@ class RateController extends Controller
         $new_rates = Rate::getNewRatesByOrder($order_id);
         $read_rates = Rate::getReadRatesByOrder($order_id);
         $exists_child_rates = Rate::getExistsChildRatesByOrder($order_id);
+        $rates_all = count($new_rates) +  count($read_rates) + count($exists_child_rates);
 
         return response()->json([
             'status' => true,
             'new_rates' => null_to_blank($new_rates),
             'read_rates' => null_to_blank($read_rates),
             'exists_child_rates' => null_to_blank($exists_child_rates),
+            'rates_all' => $rates_all,
         ]);
     }
 
