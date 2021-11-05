@@ -46,7 +46,8 @@ class AppServiceProvider extends ServiceProvider
          */
         ResetPassword::createUrlUsing(function ($user, string $token) {
             $lang = request()->get('lang', config('app.default_language'));
-            return 'https://uapi.tantal-web.top/api/password/reset?token='.$token.'&lang='.$lang;
+//            return 'https://uapi.tantal-web.top/api/password/reset?token='.$token.'&lang='.$lang;
+            return 'http://post.tantal-web.top/password-reset?token='.$token.'&lang='.$lang;
         });
 
         /**
