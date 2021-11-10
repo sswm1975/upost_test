@@ -128,7 +128,7 @@ class Rate extends Model
      */
     public static function getRatesByOrder(int $order_id)
     {
-        return static::query()
+        return json_decode(static::query()
             ->with([
                 'order.user:' . implode(',', User::FIELDS_FOR_SHOW),
                 'order.from_country',
@@ -152,7 +152,7 @@ class Rate extends Model
             ->oldest()
             ->get()
             ->groupBy('who_start')
-            ->all();
+            ->toJson());
     }
 
     /**

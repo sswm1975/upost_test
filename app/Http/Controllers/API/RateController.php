@@ -454,33 +454,29 @@ class RateController extends Controller
      */
     public function showRatesByOrder(int $order_id, Request $request):JsonResponse
     {
-        $all_rates_cnt = 0;
         $all_rates = Rate::getRatesByOrder($order_id);
 
         $new_rates = $read_rates = $contr_rates = [];
         foreach ($all_rates as $rates) {
-            $rates_cnt = count($rates);
-            $all_rates_cnt += $rates_cnt;
-            foreach ($rates as $idx => $rate) {
-                if ($rates_cnt==1 && !$rate->is_read) {
+            if (count($rates) == 1) {
+                $rate = $rates[0];
+                if ($rate->is_read) {
+                    $read_rates[] = $rate;
+                } else {
                     $new_rates[] = $rate;
-                    continue;
                 }
-                if ($rates_cnt == $idx+1 && !$rate->is_read) {
-                    $contr_rates[] = $rate;
-                    continue;
-                }
-                $read_rates[] = $rate;
+                continue;
             }
+            $contr_rates[] = end($rates);
         }
 
         return response()->json([
             'status'        => true,
-            'all_rates_cnt' => $all_rates_cnt,
             'all_rates'     => null_to_blank($all_rates),
             'new_rates'     => null_to_blank($new_rates),
             'read_rates'    => null_to_blank($read_rates),
             'contr_rates'   => null_to_blank($contr_rates),
+            'all_rates_cnt' => count($new_rates) + count($read_rates) + count($contr_rates),
         ]);
     }
 
