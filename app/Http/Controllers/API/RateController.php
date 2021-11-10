@@ -331,16 +331,16 @@ class RateController extends Controller
     {
         $data = validateOrExit([
             'rate_type' => 'required|in:order,route',
-            'user_id'   => 'sometimes|integer',
-            'rate_id'   => 'sometimes|integer',
             'order_id'  => 'required_without:route_id|integer',
             'route_id'  => 'required_without:order_id|integer',
-            'parent_id' => 'sometimes|integer',
             'who_start' => 'sometimes|integer',
+            'user_id'   => 'sometimes|integer',
+            'rate_id'   => 'sometimes|integer',
+            'parent_id' => 'sometimes|integer',
         ]);
 
         $rates = Rate::query()
-            ->where('type', $request->rate_type)
+            ->where('type', $data['rate_type'])
             ->when($request->filled('user_id'), function ($query) use ($data) {
                 return $query->where('user_id', $data['user_id']);
             })
@@ -362,61 +362,87 @@ class RateController extends Controller
             ->orderByDesc('id')
             ->get();
 
-        $data = ['count' => 0, 'result' => []];
+        if (!$rates->count()) {
+            return response()->json([
+                'status' => true,
+                'count'  => 0,
+            ]);
+        }
 
-        if ($rates->count()) {
-            # находим заказ на мой маршрут (может быть не больше одного заказа)
-            if ($request->rate_type == 'order') {
-                $parent = $rates->firstWhere('parent_id', 0);
-                if (!$parent) {
-                    $parent = Rate::find($rates[0]->parent_id);
-                }
-                $receiver = Order::find($parent->order_id, ['user_id']);
-                $data = [
-                    'count'     => $rates->count(),
-                    'who_start' => $parent->who_start ?? 0,
-                    'receiver'  => $receiver->user_id ?? 0,
-                    'parent'    => $parent ?? [],
-                    'result'    => $rates,
-                ];
+        $order = Order::query()
+            ->with([
+                'user:' . implode(',', User::FIELDS_FOR_SHOW),
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+                'category',
+            ])
+            ->find($rates[0]->order_id);
+
+        $route = Route::query()
+            ->with([
+                'user:' . implode(',', User::FIELDS_FOR_SHOW),
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+            ])
+            ->find($rates[0]->route_id);
+
+        $rows = compact('rates', 'order', 'route');
+
+        # находим заказ на мой маршрут (может быть не больше одного заказа)
+        if ($data['rate_type'] == 'order') {
+            $parent = $rates->firstWhere('parent_id', 0);
+            if (!$parent) {
+                $parent = Rate::find($rates[0]->parent_id);
             }
+            $receiver = Order::find($parent->order_id, ['user_id']);
+            $rows = [
+                'count'     => $rates->count(),
+                'who_start' => $parent->who_start ?? 0,
+                'receiver'  => $receiver->user_id ?? 0,
+                'parent'    => $parent ?? [],
+                'rates'     => $rates,
+            ];
+        }
 
-            # находим маршруты на мой заказ (их может быть до 3 штук)
-            if ($request->rate_type == 'route') {
-                $parents = $rates->where('parent_id', 0)->all();
+        # находим маршруты на мой заказ (их может быть до 3 штук)
+        if ($data['rate_type'] == 'route') {
+            $parents = $rates->where('parent_id', 0)->all();
 
-                # в выборке нет родителя
-                if (count($parents) == 0) {
-                    $parent = Rate::find($rates[0]->parent_id);
-                    $receiver = Route::where('route_id', $parent->route_id)->first('user_id')->user_id;
-                    $data = [
-                        'count'     => $rates->count(),
-                        'who_start' => $parent->who_start,
-                        'receiver'  => $receiver,
-                        'parent'    => $parent,
-                        'result'    => $rates,
-                    ];
+            # в выборке нет родителя
+            if (count($parents) == 0) {
+                $parent = Rate::find($rates[0]->parent_id);
+                $receiver = Route::where('route_id', $parent->route_id)->first('user_id')->user_id;
+                $rows = [
+                    'count'     => $rates->count(),
+                    'who_start' => $parent->who_start,
+                    'receiver'  => $receiver,
+                    'parent'    => $parent,
+                    'rates'     => $rates,
+                ];
 
-                # в выборке несколько маршрутов на мой заказ - выводим только основные ставки
-                } elseif (count($parents) > 1) {
-                    $data = ['count' => count($parents), 'result' => $parents];
+            # в выборке несколько маршрутов на мой заказ - выводим только основные ставки
+            } elseif (count($parents) > 1) {
+                $rows = ['count' => count($parents), 'rates' => $parents];
 
-                # в выборке только один родитель
-                } else {
-                    $parent = array_shift($parents);
-                    $receiver = Route::where('route_id', $parent->route_id)->first('user_id')->user_id;
-                    $data = [
-                        'count'     => $rates->count(),
-                        'who_start' => $parent->who_start,
-                        'receiver'  => $receiver,
-                        'parent'    => $parent,
-                        'result'    => $rates,
-                    ];
-                }
+            # в выборке только один родитель
+            } else {
+                $parent = array_shift($parents);
+                $receiver = Route::where('route_id', $parent->route_id)->first('user_id')->user_id;
+                $rows = [
+                    'count'     => $rates->count(),
+                    'who_start' => $parent->who_start,
+                    'receiver'  => $receiver,
+                    'parent'    => $parent,
+                    'rates'     => $rates,
+                ];
             }
         }
 
-        return response()->json(array_merge(['status' => true], $data));
+        return response()->json(array_merge(['status' => true], $rows));
     }
 
     /**
@@ -428,17 +454,33 @@ class RateController extends Controller
      */
     public function showRatesByOrder(int $order_id, Request $request):JsonResponse
     {
-        $new_rates = Rate::getNewRatesByOrder($order_id);
-        $read_rates = Rate::getReadRatesByOrder($order_id);
-        $exists_child_rates = Rate::getExistsChildRatesByOrder($order_id);
-        $rates_all = count($new_rates) +  count($read_rates) + count($exists_child_rates);
+        $all_rates_cnt = 0;
+        $all_rates = Rate::getRatesByOrder($order_id);
+
+        $new_rates = $read_rates = $contr_rates = [];
+        foreach ($all_rates as $rates) {
+            $rates_cnt = count($rates);
+            $all_rates_cnt += $rates_cnt;
+            foreach ($rates as $idx => $rate) {
+                if ($rates_cnt==1 && !$rate->is_read) {
+                    $new_rates[] = $rate;
+                    continue;
+                }
+                if ($rates_cnt == $idx+1 && !$rate->is_read) {
+                    $contr_rates[] = $rate;
+                    continue;
+                }
+                $read_rates[] = $rate;
+            }
+        }
 
         return response()->json([
-            'status' => true,
-            'new_rates' => null_to_blank($new_rates),
-            'read_rates' => null_to_blank($read_rates),
-            'exists_child_rates' => null_to_blank($exists_child_rates),
-            'rates_all' => $rates_all,
+            'status'        => true,
+            'all_rates_cnt' => $all_rates_cnt,
+            'all_rates'     => null_to_blank($all_rates),
+            'new_rates'     => null_to_blank($new_rates),
+            'read_rates'    => null_to_blank($read_rates),
+            'contr_rates'   => null_to_blank($contr_rates),
         ]);
     }
 

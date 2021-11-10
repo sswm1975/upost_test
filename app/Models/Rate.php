@@ -121,13 +121,48 @@ class Rate extends Model
     }
 
     /**
+     * Получить ставки по выбранному заказу.
+     *
+     * @param int $order_id
+     * @return array
+     */
+    public static function getRatesByOrder(int $order_id)
+    {
+        return static::query()
+            ->with([
+                'order.user:' . implode(',', User::FIELDS_FOR_SHOW),
+                'order.from_country',
+                'order.from_city',
+                'order.category',
+                'route.user:' . implode(',', User::FIELDS_FOR_SHOW),
+                'route.from_country',
+                'route.from_city',
+            ])
+            ->where([
+                'order_id' => $order_id,
+                'type'     => self::TYPE_ORDER,
+            ])
+            ->where(function ($query) {
+                $query->whereHas('order', function ($q) {
+                    $q->whereUserId(request()->user()->id);
+                })->orWhereHas('route', function ($q) {
+                    $q->whereUserId(request()->user()->id);
+                });
+            })
+            ->oldest()
+            ->get()
+            ->groupBy('who_start')
+            ->all();
+    }
+
+    /**
      * Новые ставки по выбранному заказу.
      * Условия:
      * - order_id = параметр КОД ЗАКАЗА
      * - parent_id = 0
      * - is_read = 0
      * - status = active
-     * - type = route
+     * - type = order
      * - нет дочерних ставок
      *
      * @param int $order_id
@@ -160,7 +195,7 @@ class Rate extends Model
      * - parent_id = 0
      * - is_read = 1
      * - status = active
-     * - type = route
+     * - type = order
      * - нет дочерних ставок
      *
      * @param int $order_id
@@ -192,7 +227,7 @@ class Rate extends Model
      * - order_id = параметр КОД ЗАКАЗА
      * - parent_id = 0
      * - status = active
-     * - type = route
+     * - type = order
      * - есть дочерние ставки
      *
      * @param int $order_id
@@ -225,7 +260,7 @@ class Rate extends Model
      * - parent_id = 0
      * - is_read = 0
      * - status = active
-     * - type = order
+     * - type = route
      * - нет дочерних ставок
      *
      * @param int $route_id
@@ -258,7 +293,7 @@ class Rate extends Model
      * - parent_id = 0
      * - is_read = 1
      * - status = active
-     * - type = order
+     * - type = route
      * - нет дочерних ставок
      *
      * @param int $route_id
@@ -290,7 +325,7 @@ class Rate extends Model
      * - route_id = параметр КОД МАРШРУТА
      * - parent_id = 0
      * - status = active
-     * - type = order
+     * - type = route
      * - есть дочерние ставки
      *
      * @param int $route_id
