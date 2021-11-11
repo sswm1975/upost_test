@@ -283,6 +283,34 @@ class RouteController extends Controller
     }
 
     /**
+     * Массовое закрытие маршрутов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function closeRoutes(Request $request): JsonResponse
+    {
+        $data = validateOrExit([
+            'route_id'   => 'required|array|min:1',
+            'route_id.*' => 'required|integer',
+        ]);
+
+        $affected_routes = Route::query()
+            ->whereKey($data['route_id'])
+            ->where([
+                'user_id' => $request->user()->id,
+                'status'  => Route::STATUS_ACTIVE,
+            ])
+            ->update(['status' => Route::STATUS_CLOSED]);
+
+        return response()->json([
+            'status'          => true,
+            'affected_routes' => $affected_routes,
+        ]);
+    }
+
+    /**
      * Удалить маршрут.
      *
      * @param int $route_id
