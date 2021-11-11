@@ -214,7 +214,9 @@ class RouteController extends Controller
                         $q->where('user_id', $user->id);
                     });
             }])
-            ->where('status', $filters['status'] ?? 'active')
+            ->when(!empty($filters['status']), function ($query) use ($filters) {
+                return $query->where('status', $filters['status']);
+            })
             ->when(!empty($filters['id']), function ($query) use ($filters) {
                 return $query->whereIn('id', $filters['id']);
             })
