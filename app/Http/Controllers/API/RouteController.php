@@ -145,7 +145,7 @@ class RouteController extends Controller
             'id'                => 'sometimes|required|array',
             'id.*'              => 'required|integer',
             'user_id'           => 'sometimes|required|integer',
-            'status'            => 'sometimes|required|in:active,ban,close',
+            'status'            => 'sometimes|required|in:' .  implode(',', Route::STATUSES),
             'date_from'         => 'sometimes|required|date',
             'date_to'           => 'sometimes|required|date|after_or_equal:date_from',
             'country_from'      => 'sometimes|required|array',

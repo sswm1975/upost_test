@@ -68,6 +68,13 @@ class Route extends Model
     const STATUS_BAN = 'ban';
     const STATUS_SUCCESSFUL = 'successful';
 
+    const STATUSES = [
+        self::STATUS_ACTIVE,
+        self::STATUS_CLOSED,
+        self::STATUS_BAN,
+        self::STATUS_SUCCESSFUL,
+    ];
+
     protected $table = 'routes';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
