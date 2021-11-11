@@ -236,7 +236,10 @@ Route::group(
         # Редагування маршруту
         Route::post('{route_id}/update', 'API\RouteController@updateRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-        # Закриття декілька замовлень
+        # Закриття маршруту
+        Route::post('{route_id}/close', 'API\RouteController@closeRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Закриття декілька маршрутів
         Route::post('close', 'API\RouteController@closeRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Видалення маршруту

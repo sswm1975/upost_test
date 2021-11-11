@@ -283,6 +283,33 @@ class RouteController extends Controller
     }
 
     /**
+     * Закрыть маршрут.
+     *
+     * @param int $route_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function closeRoute(int $route_id, Request $request): JsonResponse
+    {
+        $route = Route::where([
+            'id'      => $route_id,
+            'user_id' => $request->user()->id,
+            'status'  => Route::STATUS_ACTIVE,
+        ])->first();
+
+        if (!$route) {
+            throw new ErrorException(__('message.route_not_found'));
+        }
+
+        $route->update(['status' => Route::STATUS_CLOSED]);
+
+        return response()->json([
+            'status' => true,
+        ]);
+    }
+
+    /**
      * Массовое закрытие маршрутов.
      *
      * @param Request $request
