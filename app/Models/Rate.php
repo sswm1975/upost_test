@@ -128,15 +128,19 @@ class Rate extends Model
      */
     public static function getRatesByOrder(int $order_id)
     {
-        return json_decode(static::query()
+        return static::query()
             ->with([
                 'order.user:' . implode(',', User::FIELDS_FOR_SHOW),
                 'order.from_country',
                 'order.from_city',
+                'order.to_country',
+                'order.to_city',
                 'order.category',
                 'route.user:' . implode(',', User::FIELDS_FOR_SHOW),
                 'route.from_country',
                 'route.from_city',
+                'route.to_country',
+                'route.to_city',
             ])
             ->where([
                 'order_id' => $order_id,
@@ -152,7 +156,7 @@ class Rate extends Model
             ->oldest()
             ->get()
             ->groupBy('who_start')
-            ->toJson());
+            ->all();
     }
 
     /**

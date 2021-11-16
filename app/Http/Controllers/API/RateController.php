@@ -467,7 +467,7 @@ class RateController extends Controller
                 }
                 continue;
             }
-            $contr_rates[] = end($rates);
+            $contr_rates[] = $rates->last();
         }
 
         return response()->json([
