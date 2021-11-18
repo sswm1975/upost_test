@@ -189,6 +189,9 @@ Route::group(
         # Видалення замовлення
         Route::delete('{order_id}/delete', 'API\OrderController@deleteOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+        # Видалення декілька замовлень
+        Route::delete('delete', 'API\OrderController@deleteOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
+
         # Підбір маршруту для замовлення
         Route::get('{order_id}/selection_route', 'API\OrderController@selectionRoute');
 
@@ -244,6 +247,9 @@ Route::group(
 
         # Видалення маршруту
         Route::delete('{route_id}/delete', 'API\RouteController@deleteRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Видалення декілька маршрутів
+        Route::delete('delete', 'API\RouteController@deleteRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Підбір замовлення для маршруту
         Route::get('{route_id}/selection_order', 'API\RouteController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);

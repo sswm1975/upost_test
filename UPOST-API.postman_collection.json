@@ -4651,6 +4651,59 @@
 							"response": []
 						},
 						{
+							"name": "Видалення декілька замовлень",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "order_id[]",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "order_id[]",
+											"value": "2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/orders/delete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"orders",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Підбір маршруту для замовлення",
 							"event": [
 								{
@@ -4726,7 +4779,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 51);"
+											"pm.variables.set(\"order_id\", 106);"
 										],
 										"type": "text/javascript"
 									}
@@ -4736,7 +4789,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/close?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/close",
 									"host": [
 										"{{host}}"
 									],
@@ -4749,7 +4802,8 @@
 									"query": [
 										{
 											"key": "lang",
-											"value": "uk"
+											"value": "uk",
+											"disabled": true
 										}
 									]
 								},
@@ -4764,7 +4818,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 51);"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -4789,7 +4843,7 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/close?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/orders/close",
 									"host": [
 										"{{host}}"
 									],
@@ -4801,7 +4855,8 @@
 									"query": [
 										{
 											"key": "lang",
-											"value": "uk"
+											"value": "uk",
+											"disabled": true
 										}
 									]
 								},
@@ -5322,6 +5377,98 @@
 							"response": []
 						},
 						{
+							"name": "Закриття маршруту",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"route_id\", 51);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/close",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"routes",
+										"{{route_id}}",
+										"close"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Пiдтвердити виконання замовлення"
+							},
+							"response": []
+						},
+						{
+							"name": "Закриття декілька міршрутів",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "route_id[]",
+											"value": "104",
+											"type": "text"
+										},
+										{
+											"key": "route_id[]",
+											"value": "105",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/routes/close",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"routes",
+										"close"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Пiдтвердити виконання замовлення"
+							},
+							"response": []
+						},
+						{
 							"name": "Видалення маршруту",
 							"event": [
 								{
@@ -5346,6 +5493,59 @@
 										"{{endpoint}}",
 										"routes",
 										"{{route_id}}",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Видалення декілька міршрутів",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "route_id[]",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "route_id[]",
+											"value": "2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/routes/delete",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"routes",
 										"delete"
 									],
 									"query": [
@@ -6204,7 +6404,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/show?user_id=3&rate_type=route&route_id=49",
+									"raw": "{{host}}/{{endpoint}}/rates/show?rate_type=order&order_id=54",
 									"host": [
 										"{{host}}"
 									],
@@ -6216,24 +6416,25 @@
 									"query": [
 										{
 											"key": "user_id",
-											"value": "3",
-											"description": "Код користувача"
+											"value": "21",
+											"description": "Код користувача",
+											"disabled": true
 										},
 										{
 											"key": "rate_type",
-											"value": "route",
+											"value": "order",
 											"description": "Тип сущності: order або route"
 										},
 										{
 											"key": "order_id",
-											"value": "16",
-											"description": "Код замовлення",
-											"disabled": true
+											"value": "54",
+											"description": "Код замовлення"
 										},
 										{
 											"key": "route_id",
 											"value": "49",
-											"description": "Код маршруту"
+											"description": "Код маршруту",
+											"disabled": true
 										},
 										{
 											"key": "rate_id",
@@ -6271,7 +6472,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"rate_id\", 304);"
+											"pm.variables.set(\"rate_id\", 8);"
 										],
 										"type": "text/javascript"
 									}
@@ -6310,7 +6511,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 10);"
+											"pm.variables.set(\"order_id\", 54);"
 										],
 										"type": "text/javascript"
 									}

@@ -368,6 +368,34 @@ class RouteController extends Controller
     }
 
     /**
+     * Массовое удаление маршрутов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function deleteRoutes(Request $request): JsonResponse
+    {
+        $data = validateOrExit([
+            'route_id'   => 'required|array|min:1',
+            'route_id.*' => 'required|integer',
+        ]);
+
+        $affected_routes = Route::query()
+            ->whereKey($data['route_id'])
+            ->where([
+                'user_id' => $request->user()->id,
+                'status'  => Route::STATUS_ACTIVE,
+            ])
+            ->delete();
+
+        return response()->json([
+            'status'          => true,
+            'affected_routes' => $affected_routes,
+        ]);
+    }
+
+    /**
      * Подобрать заказ для маршрута.
      *
      * @param int $route_id

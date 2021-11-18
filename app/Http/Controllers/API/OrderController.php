@@ -13,7 +13,6 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Models\Order;
@@ -149,6 +148,35 @@ class OrderController extends Controller
         $affected = $order->delete();
 
         return response()->json(['status' => (bool)$affected]);
+    }
+
+    /**
+     * Массовое удаление заказов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function deleteOrders(Request $request): JsonResponse
+    {
+        $data = validateOrExit([
+            'order_id'   => 'required|array|min:1',
+            'order_id.*' => 'required|integer',
+        ]);
+
+        $affected_orders = Order::query()
+            ->whereKey($data['order_id'])
+            ->whereIn('status', [
+                Order::STATUS_ACTIVE,
+                Order::STATUS_BAN,
+                Order::STATUS_CLOSED,
+            ])
+            ->delete();
+
+        return response()->json([
+            'status'          => true,
+            'affected_orders' => $affected_orders,
+        ]);
     }
 
     /**
