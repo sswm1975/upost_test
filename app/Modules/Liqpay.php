@@ -13,12 +13,15 @@ class Liqpay
      * @param float $amount
      * @param string $currency
      * @param string $description
+     * @param string $language
      * @return array
      */
-    public static function create_params(int $user_id, string $user_name, int $job_id, float $amount, string $currency, string $description = ''): array
+    public static function create_params(int $user_id, string $user_name, int $job_id, float $amount, string $currency, string $description = '', string $language = ''): array
     {
         $public_key = config('app.liqpay_public_key');
         $private_key = config('app.liqpay_private_key');
+
+        $language = $language ?: app()->getLocale();
 
         $info = self::encode_params([
             'user_id' => $user_id,
@@ -35,7 +38,7 @@ class Liqpay
             'sender_last_name' => $user_name,                        # Фамилия отправителя.
             'info'             => $info,                             # Информация для добавления данных к платежу.
             'order_id'         => self::create_order_id(),           # Уникальный ID покупки в Вашем магазине. Максимальная длина 255 символов.
-            'language'         => app()->getLocale(),                # Язык клиента ru, uk, en.
+            'language'         => $language,                         # Язык клиента ru, uk, en.
             'paytypes'         => 'card',                            # Параметр в котором передаются способы оплаты, которые будут отображены на чекауте. Возможные значения card - оплата картой, liqpay - через кабинет liqpay, privat24 - через кабинет приват24, masterpass - через кабинет masterpass, moment_part - рассрочка, cash - наличными, invoice - счет на e-mail, qr - сканирование qr-кода. Если параметр не передан, то применяются настройки магазина, вкладка Checkout.
             'result_url'       => route('api.liqpay.result'),  # URL в Вашем магазине на который покупатель будет переадресован после завершения покупки.
             'sandbox'          => '1',                               # Включает тестовый режим: 1-Да, 0-Нет. При тестовом режиме средства с карты плательщика не списываются.

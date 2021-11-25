@@ -65,6 +65,8 @@ class JobController extends Controller
      */
     public function createLiqpayParams(int $job_id, Request $request): JsonResponse
     {
+        app()->setLocale('ru');
+
         $job = Job::whereJobId($job_id)
             ->with('rate.order', 'rate.route')
             ->first();
