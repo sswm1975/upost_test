@@ -9,6 +9,8 @@ return [
     'old_password_incorrect'  => 'Текущий пароль неверен.',
     'token_incorrect'         => 'Токен неверен.',
     'updated_successful'      => 'Обновлено успешно.',
+    'country_or_city_start_search'  => 'Введите название города или страны. Минимум 2 буквы.',
+    'country_or_city_not_found'     => 'Не найдены результаты. Проверьте правильность ввода.',
     'country_not_found'       => 'Страна не найдена.',
     'city_not_found'          => 'Город не найден.',
     'category_not_found'      => 'Категория не найдена.',

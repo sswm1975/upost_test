@@ -9,6 +9,8 @@ return [
     'old_password_incorrect'  => 'Поточний пароль неправильний.',
     'token_incorrect'         => 'Токен неправильний.',
     'updated_successful'      => 'Оновлено успішно.',
+    'country_or_city_start_search'  => 'Почніть вводити назву міста чи країни. Мінімум 2 літери.',
+    'country_or_city_not_found'     => 'Не знайдено результатів. Перевірте правильність введення.',
     'country_not_found'       => 'Країна не знайдена.',
     'city_not_found'          => 'Місто не знайдено',
     'category_not_found'      => 'Категорія не знайдена.',

@@ -92,4 +92,44 @@ class Country extends Model
             ->get()
             ->toArray();
     }
+
+    /**
+     * Инкрементный поиск по странам.
+     *
+     * @param string $search
+     * @return array
+     */
+    public static function filterByCountryName(string $search): array
+    {
+        return static::with('cities')
+           ->where(function($q) use ($search) {
+               $q->where('name_uk', 'like', "%$search%")->orWhere('name_ru', 'like', "%$search%")->orWhere('name_en', 'like', "%$search%");
+            })
+            ->language()
+            ->addSelect('id')
+            ->oldest('id')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * Инкрементный поиск по городам.
+     *
+     * @param string $search
+     * @return array
+     */
+    public static function filterByCityName(string $search): array
+    {
+        return static::with(['cities' => function($q) use ($search) {
+                $q->where('name_uk', 'like', "%$search%")->orWhere('name_ru', 'like', "%$search%")->orWhere('name_en', 'like', "%$search%");
+            }])
+            ->whereHas('cities', function($q) use ($search) {
+                $q->where('name_uk', 'like', "%$search%")->orWhere('name_ru', 'like', "%$search%")->orWhere('name_en', 'like', "%$search%");
+            })
+            ->language()
+            ->addSelect('id')
+            ->oldest('id')
+            ->get()
+            ->toArray();
+    }
 }

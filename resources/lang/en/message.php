@@ -9,6 +9,8 @@ return [
     'old_password_incorrect'  => 'The current password is incorrect.',
     'token_incorrect'         => 'The token is incorrect.',
     'updated_successful'      => 'Updated successful.',
+    'country_or_city_start_search'  => 'Start entering the name of the city or country. At least 2 letters.',
+    'country_or_city_not_found'     => 'No results found. Check that the input is correct.',
     'country_not_found'       => 'Country not found.',
     'city_not_found'          => 'City not found.',
     'category_not_found'      => 'Category not found.',

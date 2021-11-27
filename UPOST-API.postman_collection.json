@@ -3996,6 +3996,35 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Інкрементний пошук Країни або Міста",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/countries/search?name=ра&lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"countries",
+										"search"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "ра"
+										},
+										{
+											"key": "lang",
+											"value": "uk"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},

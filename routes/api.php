@@ -148,6 +148,9 @@ Route::group(
 
         # Отримати список міст по всім країнам або конкретної країни
         Route::get('{country_id}/cities/show', 'API\CountryController@getCities');
+
+        # Інкрементний пошук Країни або Міста
+        Route::get('search', 'API\CountryController@searchCountryOrCity');
     }
 );
 

@@ -7,9 +7,30 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Models\Country;
 use App\Models\City;
+use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
+    /**
+     * Инкрементный поиск Страны или Города.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function searchCountryOrCity(Request $request): JsonResponse
+    {
+        $name =  strip_tags(strip_unsafe(trim($request->get('name'))));
+
+        if (mb_strlen($name) < 2) throw new ErrorException(__('message.country_or_city_start_search'));
+
+        $found = array_merge(Country::filterByCityName($name), Country::filterByCountryName($name));
+
+        if (!count($found)) throw new ErrorException(__('message.country_or_city_not_found'));
+
+        return response()->json(['result' => $found]);
+    }
+
     /**
      * Получить наименование страниы по её коду.
      *
