@@ -9,6 +9,7 @@ use App\Models\Job;
 use App\Modules\Liqpay;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class JobController extends Controller
@@ -82,7 +83,7 @@ class JobController extends Controller
             $job_id,
             5,
             'UAH',
-            'Test payment',
+            'Test payment, route ' . route('api.liqpay.result'),
         );
 
         return response()->json([
@@ -95,10 +96,10 @@ class JobController extends Controller
      * Получить результат оплаты от Liqpay.
      *
      * @param Request $request
-     * @return JsonResponse
+     * @return void
      */
-    public function resultLiqpay(Request $request): JsonResponse
+    public function resultLiqpay(Request $request)
     {
-        dd($request->all());
+        Log::error($request->all());
     }
 }
