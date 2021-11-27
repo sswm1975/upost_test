@@ -24,7 +24,7 @@ Route::get('/liqpay', function() {
         1,
         5,
         'UAH',
-        'Test payment',
+        'Test payment, route ' . route('api.liqpay.result'),
     );
 
     $data = $params['data'];
