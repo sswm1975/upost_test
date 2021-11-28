@@ -325,12 +325,12 @@ Route::group(
         Route::post('accept', 'API\JobController@acceptJob');
 
         # Оплата замовлення (формування параметрів для Liqpay оплати)
-        Route::post('{rate_id}/liqpay_params', 'API\JobController@createLiqpayParams');
+        Route::post('{job_id}/liqpay_params', 'API\JobController@createLiqpayParams');
     }
 );
 
 # Оплата замовлення (отримання результату оплати від Liqpay)
-Route::get('liqpay_result', 'API\JobController@resultLiqpay')->name('api.liqpay.result');
+Route::post('liqpay/callback', 'API\JobController@callbackLiqpay');
 
 // Парсинг даних
 Route::get('parser', 'API\ParserController')->middleware(MIDDLEWARE_AUTH_BASIC);

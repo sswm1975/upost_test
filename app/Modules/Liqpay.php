@@ -28,6 +28,7 @@ class Liqpay
             'job_id'  => $job_id,
         ]);
 
+        # см. описание https://www.liqpay.ua/documentation/api/aquiring/checkout/doc
         $params = [
             'public_key'       => $public_key,                       # Публичный ключ.
             'version'          => 3,                                 # Версия API (Number).
@@ -40,9 +41,12 @@ class Liqpay
             'order_id'         => self::create_order_id(),           # Уникальный ID покупки в Вашем магазине. Максимальная длина 255 символов.
             'language'         => $language,                         # Язык клиента ru, uk, en.
             'paytypes'         => 'card',                            # Параметр в котором передаются способы оплаты, которые будут отображены на чекауте. Возможные значения card - оплата картой, liqpay - через кабинет liqpay, privat24 - через кабинет приват24, masterpass - через кабинет masterpass, moment_part - рассрочка, cash - наличными, invoice - счет на e-mail, qr - сканирование qr-кода. Если параметр не передан, то применяются настройки магазина, вкладка Checkout.
-            'result_url'       => route('api.liqpay.result'),  # URL в Вашем магазине на который покупатель будет переадресован после завершения покупки.
+            'result_url'       => 'http://post.tantal-web.top',      # URL в Вашем магазине на который покупатель будет переадресован после завершения покупки.
+            'server_url'       => 'http://post.tantal-web.top',      # URL API в Вашем магазине для уведомлений об изменении статуса платежа (сервер->сервер).
             'sandbox'          => '1',                               # Включает тестовый режим: 1-Да, 0-Нет. При тестовом режиме средства с карты плательщика не списываются.
         ];
+
+        \Log::info($params);
 
         $data = self::encode_params($params);
         $signature = self::str_to_sign($private_key . $data . $private_key);
@@ -89,11 +93,45 @@ class Liqpay
      * Signed string.
      *
      * @param string $str
-     *
      * @return string
      */
     private static function str_to_sign(string $str): string
     {
         return base64_encode(sha1($str, 1));
+    }
+
+    /**
+     * Decode responce from Liqpay.
+     *
+     * @param string $data
+     * @param string $signature
+     * @return array
+     */
+    public static function decode_responce(string $data, string $signature): array
+    {
+        $public_key = config('app.liqpay_public_key');
+        $private_key = config('app.liqpay_private_key');
+
+        $sign =  self::str_to_sign($private_key . $data . $private_key);
+        if ($sign !== $signature) {
+            return [
+                'status' => false,
+                'error' => 'Сигнатура платежа не прошла проверку!'
+            ];
+        }
+
+        $decode_data = self::decode_params($data);
+        $decode_data['info'] = self::decode_params($decode_data['info']);
+        if (empty($decode_data['info'])) {
+            return [
+                'status' => false,
+                'error' => 'Нет дополнительных данных о переводе!'
+            ];
+        }
+
+        return [
+            'status' => true,
+            'data'   => $decode_data,
+        ];
     }
 }
