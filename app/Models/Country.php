@@ -101,8 +101,7 @@ class Country extends Model
      */
     public static function filterByCountryName(string $search): array
     {
-        return static::with('cities')
-           ->where(function($q) use ($search) {
+        $counties = static::where(function($q) use ($search) {
                $q->where('name_uk', 'like', "%$search%")->orWhere('name_ru', 'like', "%$search%")->orWhere('name_en', 'like', "%$search%");
             })
             ->language()
@@ -110,6 +109,12 @@ class Country extends Model
             ->oldest('id')
             ->get()
             ->toArray();
+
+        foreach ($counties as $key => $county) {
+            $counties[$key]['cities'] = [];
+        }
+
+        return $counties;
     }
 
     /**

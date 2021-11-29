@@ -24,7 +24,7 @@ class CountryController extends Controller
 
         if (mb_strlen($name) < 2) throw new ErrorException(__('message.country_or_city_start_search'));
 
-        $found = array_merge(Country::filterByCityName($name), Country::filterByCountryName($name));
+        $found = array_merge(Country::filterByCountryName($name), Country::filterByCityName($name));
 
         if (!count($found)) throw new ErrorException(__('message.country_or_city_not_found'));
 
