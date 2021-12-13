@@ -42,7 +42,7 @@ class ImageLoaderController extends Controller
     }
 
     /**
-     * Загрузить фото для профили пользователя.
+     * Загрузить фото для профиля пользователя.
      *
      * @param string $base64_image
      * @param int $user_id
