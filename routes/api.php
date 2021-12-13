@@ -24,6 +24,9 @@ Route::group(
 
         # Дані авторизованого користувача
         Route::get('user', 'API\AuthController@getAuthUser');
+
+        # Гугл-авторизация
+        Route::post('google', 'API\AuthController@google');
     }
 );
 

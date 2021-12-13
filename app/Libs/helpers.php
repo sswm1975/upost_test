@@ -368,7 +368,7 @@ function getCurrencySymbol(string $currency): string
  * Определение наименования валюты по его символу (знаку).
  * Пример: ₴ => uah; $ => usd и т.д.
  *
- * @param string $symbol Символ (знак) валюты (₴,  $, ₽, €)
+ * @param string $symbol Символ (знак) валюты (₴, $, ₽, €)
  * @return string
  */
 function getCurrencyNameBySymbol(string $symbol): string
@@ -399,4 +399,36 @@ function convertPriceToUsd(float $price, string $currency): float
     $rate = getCurrencyRate($currency);
 
     return $price * $rate;
+}
+
+
+/**
+ * Проверить и получить языковую настройку пользователя.
+ *
+ * @param string $lang
+ * @return string
+ */
+function getLanguage(string $lang):string
+{
+    if (empty($lang) || !in_array($lang, config('app.languages'))) {
+        return config('app.default_language');
+    }
+
+    return $lang;
+}
+
+/**
+ * Проверить и получить пол пользователя.
+ *
+ * @param string $gender
+ * @return string
+ */
+function getGender(string $gender): string
+{
+    if (!empty($gender)) {
+        if (in_array(mb_strtolower($gender), config('app.males'))) return 'male';
+        if (in_array(mb_strtolower($gender), config('app.females'))) return 'female';
+    }
+
+    return 'unknown';
 }
