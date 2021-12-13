@@ -16,7 +16,8 @@ class AddGoogleIdInUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('google_id', 30)
                 ->nullable()
-                ->comment('ID пользователя Google');
+                ->comment('ID пользователя Google')
+                ->unique();
         });
     }
 
