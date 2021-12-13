@@ -48,20 +48,21 @@ class AuthController extends Controller
      */
     public function google(Request $request): JsonResponse
     {
-        $data = validateOrExit(['user_data' => 'required']);
-        $s=1;
+        $data = $request->all();
+
+        if (empty($data['identifier']) || empty($data['email'])) {
+            return response()->json(['status' => false]);
+        }
+
         # ищем пользователя с идентификатором Гугла
         if (!$user = User::where('google_id', $data['identifier'])->first()) {
             # ищем пользователя с емейлом Гугла
             if ($user = User::where('email', $data['email'])->first()) {
-                $s=2;
                 if (empty($user->google_id)) {
-                    $s=3;
                     $user->google_id = $data['identifier'];
                     $user->save();
                 }
             } else {
-                $s=4;
                 # создаём нового пользователя
                 $user = static::createGoogleUser($data);
             }
@@ -73,7 +74,6 @@ class AuthController extends Controller
             'status'  => true,
             'message' => __('message.login_successful'),
             'token'   => $token,
-            's' => $s,
         ]);
     }
 
@@ -210,11 +210,12 @@ class AuthController extends Controller
         return User::create([
             'google_id' => $data['identifier'],
             'email'     => $data['email'],
-            'name'      => $data['firstName'],
-            'surname'   => $data['lastName'],
-            'phone'     => $data['phone'],
-            'lang'      => getLanguage($data['language']),
-            'gender'    => getGender($data['gender']),
+            'name'      => $data['firstName'] ?? '',
+            'surname'   => $data['lastName'] ?? '',
+            'phone'     => $data['phone'] ?? '',
+            'lang'      => getLanguage($data['language'] ?? ''),
+            'gender'    => getGender($data['gender'] ?? ''),
+            'password'  => '123456',
         ]);
     }
 }
