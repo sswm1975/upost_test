@@ -37,7 +37,7 @@ class SocialChangePassword extends Mailable
         $lang = app()->getLocale();
 
         return $this->subject('Реєстрація через соціальну мережу')
-            ->markdown('emails.social_change_password_uk')
+            ->markdown("emails.{$lang}.social_change_password")
             ->with($this->data);
     }
 }
