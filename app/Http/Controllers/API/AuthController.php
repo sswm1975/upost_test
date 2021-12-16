@@ -5,9 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Mail\SocialChangePassword;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
@@ -61,14 +63,26 @@ class AuthController extends Controller
         # ищем пользователя по идентификатору соц.сети в зависимости от провайдера
         if (!$user = User::where($field_id, $data['identifier'])->first()) {
             # ищем пользователя по емейлу, который привязан к соц.сети
-            if ($user = User::where('email', $data['email'])->first()) {
+            if ($user = User::whereEmail($data['email'])->first()) {
                 if (empty($user->$field_id)) {
                     $user->$field_id = $data['identifier'];
                     $user->save();
                 }
             } else {
+                $password = Str::random(10);
+
                 # создаём нового пользователя
-                $user = static::createSocialUser($field_id, $data);
+                $user = static::createSocialUser($field_id, $data, $password);
+
+                $data = [
+                    'provider' => $data['provider'],
+                    'fullname' => $user->fullname,
+                    'email'    => $user->email,
+                    'password' => $password,
+                    'url'      => 'https://post.tantal-web.top/log-in/',
+                ];
+
+                Mail::to($user->email)->send(new SocialChangePassword($data));
             }
         }
 
@@ -206,11 +220,12 @@ class AuthController extends Controller
     /**
      * Создать пользователя на основании данных из соц.сети (Google/Facebook).
      *
-     * @param string $social_field_id
-     * @param array  $data
+     * @param string $field_id
+     * @param array $data
+     * @param string $password
      * @return User
      */
-    private static function createSocialUser(string $field_id, array $data): User
+    private static function createSocialUser(string $field_id, array $data, string $password): User
     {
         return User::create([
             $field_id  => $data['identifier'],
@@ -220,7 +235,7 @@ class AuthController extends Controller
             'phone'    => $data['phone'] ?? NULL,
             'lang'     => getLanguage($data['language'] ?? ''),
             'gender'   => getGender($data['gender'] ?? ''),
-            'password' => '123456',
+            'password' => $password,
         ]);
     }
 }
