@@ -42,29 +42,33 @@ class AuthController extends Controller
     }
 
     /**
-     * Гугл-авторизация.
+     * Авторизация через соц.сети (Google, Facebook).
      *
-     * @throws ValidatorException|ValidationException
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function google(Request $request): JsonResponse
+    public function social(Request $request): JsonResponse
     {
         $data = $request->all();
 
-        if (empty($data['identifier']) || empty($data['email'])) {
+        if (empty($data['provider']) || empty($data['identifier']) || empty($data['email'])) {
             return response()->json(['status' => false]);
         }
 
-        # ищем пользователя с идентификатором Гугла
-        if (!$user = User::where('google_id', $data['identifier'])->first()) {
-            # ищем пользователя с емейлом Гугла
+        # поле с идентификатором соц.сети (google_id или facebook_id)
+        $field_id = $data['provider'] . '_id';
+
+        # ищем пользователя по идентификатору соц.сети в зависимости от провайдера
+        if (!$user = User::where($field_id, $data['identifier'])->first()) {
+            # ищем пользователя по емейлу, который привязан к соц.сети
             if ($user = User::where('email', $data['email'])->first()) {
-                if (empty($user->google_id)) {
-                    $user->google_id = $data['identifier'];
+                if (empty($user->$field_id)) {
+                    $user->$field_id = $data['identifier'];
                     $user->save();
                 }
             } else {
                 # создаём нового пользователя
-                $user = static::createGoogleUser($data);
+                $user = static::createSocialUser($field_id, $data);
             }
         }
 
@@ -200,22 +204,23 @@ class AuthController extends Controller
     }
 
     /**
-     * Создать пользователя на основании данных из Гугла.
+     * Создать пользователя на основании данных из соц.сети (Google/Facebook).
      *
-     * @param $data
+     * @param string $social_field_id
+     * @param array  $data
      * @return User
      */
-    private static function createGoogleUser($data): User
+    private static function createSocialUser(string $field_id, array $data): User
     {
         return User::create([
-            'google_id' => $data['identifier'],
-            'email'     => $data['email'],
-            'name'      => $data['firstName'] ?? '',
-            'surname'   => $data['lastName'] ?? '',
-            'phone'     => $data['phone'] ?? '',
-            'lang'      => getLanguage($data['language'] ?? ''),
-            'gender'    => getGender($data['gender'] ?? ''),
-            'password'  => '123456',
+            $field_id  => $data['identifier'],
+            'email'    => $data['email'],
+            'name'     => $data['firstName'] ?? '',
+            'surname'  => $data['lastName'] ?? '',
+            'phone'    => $data['phone'] ?? NULL,
+            'lang'     => getLanguage($data['language'] ?? ''),
+            'gender'   => getGender($data['gender'] ?? ''),
+            'password' => '123456',
         ]);
     }
 }
