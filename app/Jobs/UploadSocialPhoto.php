@@ -39,7 +39,7 @@ class UploadSocialPhoto implements ShouldQueue
         $user = $this->user;
 
         $image = file_get_contents($this->photoURL);
-        $image_base64 = base64_encode($image);
+        $image_base64 = 'data:image/jpg;base64,' . base64_encode($image);
         $image_path = (new ImageLoaderController)->uploadImage4User($image_base64, $user->id);
         $user->photo = $image_path;
         $user->save();
