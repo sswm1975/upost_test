@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Jobs\UploadSocialPhoto;
 use App\Mail\SocialChangePassword;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -228,7 +229,7 @@ class AuthController extends Controller
      */
     private static function createSocialUser(string $field_id, array $data, string $password): User
     {
-        return User::create([
+        $user = User::create([
             $field_id  => $data['identifier'],
             'email'    => $data['email'],
             'name'     => $data['firstName'] ?? '',
@@ -238,5 +239,11 @@ class AuthController extends Controller
             'gender'   => getGender($data['gender'] ?? ''),
             'password' => $password,
         ]);
+
+        if (!empty($data['photoURL'])) {
+            UploadSocialPhoto::dispatch($user, $data['photoURL']);
+        }
+
+        return $user;
     }
 }
