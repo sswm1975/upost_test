@@ -36,7 +36,7 @@ class SocialChangePassword extends Mailable
     {
         $lang = $this->data['language'];
 
-        return $this->subject(__('message.email.social_registration', null, $lang))
+        return $this->subject(__('message.email.social_registration', [], $lang))
             ->markdown("emails.{$lang}.social_change_password")
             ->with($this->data);
     }
