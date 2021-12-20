@@ -34,7 +34,7 @@ class SocialChangePassword extends Mailable
      */
     public function build(): SocialChangePassword
     {
-        return $this->subject('Реєстрація через соціальну мережу')
+        return $this->subject(__('message.email.social_registration'))
             ->markdown("emails.{$this->data['language']}.social_change_password")
             ->with($this->data);
     }

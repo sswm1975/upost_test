@@ -48,6 +48,11 @@ return [
         'change_successful' => 'Data updated successfully',
     ],
 
+    # Messages for mailing letters
+    'email' => [
+        'social_registration' => 'Registration through the social network',
+    ],
+
     # User's attribute
     'user' => [
         'genders' => [

@@ -47,6 +47,11 @@ return [
         'change_successful' => 'Дані успішно оновлені',
     ],
 
+    # Повідомлення при розсилках листів
+    'email' => [
+        'social_registration' => 'Реєстрація через соціальну мережу',
+    ],
+
     # User's attribute
     'user' => [
         'genders' => [

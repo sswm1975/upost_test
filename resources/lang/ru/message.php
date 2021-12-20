@@ -48,6 +48,11 @@ return [
         'change_successful' => 'Данные успешно обновлены',
     ],
 
+    # Сообщения при рассылках писем
+    'email' => [
+        'social_registration' => 'Регистрация через социальную сеть',
+    ],
+
     # User's attribute
     'user' => [
         'genders' => [
