@@ -1,6 +1,6 @@
 @component('mail::message')
 
-<b>Доброго дня, {{ $fullname }}.</b>
+<b>Доброго дня, {{ $client_name }}.</b>
 
 Ви успішно зареєструвались на сервісі UPOST за допомогою вашого {{ ucfirst($provider) }} аккаунту {{ $email }}. Раді вітати Вас!
 

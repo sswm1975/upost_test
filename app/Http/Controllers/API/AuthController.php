@@ -76,12 +76,12 @@ class AuthController extends Controller
                 $user = static::createSocialUser($field_id, $data, $password);
 
                 $info = [
-                    'language' => getLanguage($data['language'] ?? ''),
-                    'provider' => $data['provider'],
-                    'fullname' => $user->fullname,
-                    'email'    => $user->email,
-                    'password' => $password,
-                    'url'      => 'https://post.tantal-web.top/log-in/',
+                    'language'    => $user->lang,
+                    'provider'    => $data['provider'],
+                    'client_name' => $data['displayName'],
+                    'email'       => $data['email'],
+                    'password'    => $password,
+                    'url'         => 'https://post.tantal-web.top/log-in/',
                 ];
 
                 Mail::to($user->email)->send(new SocialChangePassword($info));

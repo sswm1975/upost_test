@@ -1,6 +1,6 @@
 @component('mail::message')
 
-<b>Good day, {{ $fullname }}.</b>
+<b>Good day, {{ $client_name }}.</b>
 
 You have successfully signed up for UPOST with your {{ ucfirst($provider) }} account {{ $email }}. Glad to welcome you!
 
