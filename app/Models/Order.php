@@ -115,6 +115,7 @@ class Order extends Model
         'strikes' => 'array',
     ];
     protected $appends = [
+        'short_name',
         'status_name',
         'is_favorite',
         'images_thumb',
@@ -153,6 +154,11 @@ class Order extends Model
     }
 
     ### GETTERS ###
+
+    public function getShortNameAttribute(): string
+    {
+        return Str::limit($this->name, 10, '…');
+    }
 
     public function getStatusNameAttribute(): string
     {
@@ -273,7 +279,7 @@ class Order extends Model
     public function setImagesAttribute($images)
     {
         if (empty($images)) {
-            return $this->attributes['images'] = null;
+            $this->attributes['images'] = null;
         }
 
         foreach ($images as $key => $image) {
