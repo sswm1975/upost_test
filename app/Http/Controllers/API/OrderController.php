@@ -214,10 +214,20 @@ class OrderController extends Controller
             )['data'];
         }
 
+        $more_orders = $this->getOrdersByFilter(
+            $request->user(),
+            [
+                'without_order_id' => $order['id'],
+                'user_id' => $order['user_id'],
+                'show' => 3,
+            ]
+        )['data'];
+
         return response()->json([
             'status' => true,
             'order' => null_to_blank($order),
             'similar_orders' => null_to_blank($similar_orders),
+            'more_orders' => null_to_blank($more_orders),
         ]);
     }
 
