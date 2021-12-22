@@ -81,7 +81,7 @@ class AuthController extends Controller
                     'client_name' => $data['displayName'],
                     'email'       => $data['email'],
                     'password'    => $password,
-                    'url'         => 'https://post.tantal-web.top/log-in/',
+                    'url'         => 'https://post.tantal-web.top/log-in/?change_password',
                 ];
 
                 Mail::to($user->email)->send(new SocialChangePassword($info));
