@@ -73,7 +73,7 @@ class ProfileController extends Controller
         # добавляем последние 2 заказа, созданные пользователем
         $last_orders = (new OrderController)->getOrdersByFilter($user, [
             'user_id' => $user->id,
-            'show' => 2,
+            'show' => 3,
         ])['data'] ?? '';
 
         # добавляем последние 2 маршрута, созданные пользователем

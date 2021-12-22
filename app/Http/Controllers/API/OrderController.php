@@ -214,7 +214,7 @@ class OrderController extends Controller
             )['data'];
         }
 
-        $more_orders = $this->getOrdersByFilter(
+        $last_orders = $this->getOrdersByFilter(
             $request->user(),
             [
                 'without_order_id' => $order['id'],
@@ -227,7 +227,7 @@ class OrderController extends Controller
             'status' => true,
             'order' => null_to_blank($order),
             'similar_orders' => null_to_blank($similar_orders),
-            'more_orders' => null_to_blank($more_orders),
+            'more_orders' => null_to_blank($last_orders),
         ]);
     }
 
