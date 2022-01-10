@@ -3414,7 +3414,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"user_id\", 20);"
+											"pm.variables.set(\"user_id\", 21);"
 										],
 										"type": "text/javascript"
 									}
@@ -4483,7 +4483,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 50);"
+											"pm.variables.set(\"order_id\", 53);"
 										],
 										"type": "text/javascript"
 									}
@@ -4519,7 +4519,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/show?show=1&currency=₴&category[]=2&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/orders/show?user_id=15&show=1&status=active&page-number=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=₴&category[]=1&category[]=2&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -4532,8 +4532,7 @@
 										{
 											"key": "user_id",
 											"value": "15",
-											"description": "Код користувача (опціонально)",
-											"disabled": true
+											"description": "Код користувача (опціонально)"
 										},
 										{
 											"key": "show",
@@ -4543,74 +4542,62 @@
 										{
 											"key": "status",
 											"value": "active",
-											"description": "Статус замовлення  (опціонально)",
-											"disabled": true
+											"description": "Статус замовлення  (опціонально)"
 										},
 										{
 											"key": "page-number",
 											"value": "1",
-											"description": "Номер сторінки для виводу, за замовченням 1  (опціонально)",
-											"disabled": true
+											"description": "Номер сторінки для виводу, за замовченням 1  (опціонально)"
 										},
 										{
 											"key": "date_from",
 											"value": "2021-06-01",
-											"description": "Дата початку  (опціонально)",
-											"disabled": true
+											"description": "Дата початку  (опціонально)"
 										},
 										{
 											"key": "date_to",
 											"value": "2021-06-05",
-											"description": "Кінцева дата  (опціонально)",
-											"disabled": true
+											"description": "Кінцева дата  (опціонально)"
 										},
 										{
 											"key": "city_from[]",
 											"value": "4",
-											"description": "Код міста початку, масив (опціонально)",
-											"disabled": true
+											"description": "Код міста початку, масив (опціонально)"
 										},
 										{
 											"key": "city_from[]",
 											"value": "3",
-											"description": "Код міста початку, масив (опціонально)",
-											"disabled": true
+											"description": "Код міста початку, масив (опціонально)"
 										},
 										{
 											"key": "city_to[]",
 											"value": "2",
-											"description": "Код міста прибуття, масив (опціонально)",
-											"disabled": true
+											"description": "Код міста прибуття, масив (опціонально)"
 										},
 										{
 											"key": "city_to[]",
 											"value": "3",
-											"description": "Код міста прибуття, масив (опціонально)",
-											"disabled": true
+											"description": "Код міста прибуття, масив (опціонально)"
 										},
 										{
 											"key": "country_from[]",
 											"value": "3",
-											"description": "Код країни початку, масив  (опціонально)",
-											"disabled": true
+											"description": "Код країни початку, масив  (опціонально)"
 										},
 										{
 											"key": "country_to[]",
 											"value": "2",
-											"description": "Код каїни прибуття, масив (опціонально)",
-											"disabled": true
+											"description": "Код каїни прибуття, масив (опціонально)"
 										},
 										{
 											"key": "price_from",
 											"value": "100",
-											"description": "Ціна Від  (опціонально)",
-											"disabled": true
+											"description": "Ціна Від  (опціонально)"
 										},
 										{
 											"key": "price_to",
 											"value": "250",
-											"description": "Ціна По  (опціонально)",
-											"disabled": true
+											"description": "Ціна По  (опціонально)"
 										},
 										{
 											"key": "currency",
@@ -4620,11 +4607,12 @@
 										{
 											"key": "category[]",
 											"value": "1",
-											"disabled": true
+											"description": "Категорія товарів"
 										},
 										{
 											"key": "category[]",
-											"value": "2"
+											"value": "2",
+											"description": "Категорія товарів"
 										},
 										{
 											"key": "lang",
@@ -6762,6 +6750,51 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Google",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://post.tantal-web.top/socialify/Google/?state=HA-SVKCFWXM8Z2A5L4P9QTJ3OE1U6GR7HDY0BIN&code=4%2F0AX4XfWiNJ8U7q-fATtr4NruVMRhWRJ_FD4cpkEuamUOZNo4M6hUzb0j35Zhulte1Kn-MsA&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=1&prompt=consent#",
+									"protocol": "https",
+									"host": [
+										"post",
+										"tantal-web",
+										"top"
+									],
+									"path": [
+										"socialify",
+										"Google",
+										""
+									],
+									"query": [
+										{
+											"key": "state",
+											"value": "HA-SVKCFWXM8Z2A5L4P9QTJ3OE1U6GR7HDY0BIN"
+										},
+										{
+											"key": "code",
+											"value": "4%2F0AX4XfWiNJ8U7q-fATtr4NruVMRhWRJ_FD4cpkEuamUOZNo4M6hUzb0j35Zhulte1Kn-MsA"
+										},
+										{
+											"key": "scope",
+											"value": "email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid"
+										},
+										{
+											"key": "authuser",
+											"value": "1"
+										},
+										{
+											"key": "prompt",
+											"value": "consent"
+										}
+									],
+									"hash": ""
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -8436,6 +8469,65 @@
 										"statements",
 										"{{statement_id}}",
 										"accept"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Почта",
+					"item": [
+						{
+							"name": "Є запитання",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Вася Пупкин",
+											"description": "Им'я",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "+380971234567",
+											"description": "Телефон в міжнародному стандарті",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "test@i.ua",
+											"description": "Електрона адреса",
+											"type": "text"
+										},
+										{
+											"key": "text",
+											"value": "Позвоните мне",
+											"description": "Текст повідомлення",
+											"type": "text"
+										},
+										{
+											"key": "lang",
+											"value": "ru",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/mail/have_question",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"mail",
+										"have_question"
 									]
 								}
 							},
