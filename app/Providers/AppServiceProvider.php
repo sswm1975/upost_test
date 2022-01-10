@@ -51,10 +51,10 @@ class AppServiceProvider extends ServiceProvider
 
         /**
          * Валидация: Проверка международного телефонного номера.
-         * Начинается с 00 или +, далее 12 и более цифр
+         * Начинается с 00 или +, далее 11 и более цифр
          */
         Validator::extend('phone', function($attribute, $value, $parameters) {
-            return preg_match('/^(00|\+)(\d{12,})$/', $value) === 1;
+            return preg_match('/^(00|\+)(\d{11,})$/', $value) === 1;
         });
 
         /**

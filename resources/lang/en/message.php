@@ -51,6 +51,8 @@ return [
     # Messages for mailing letters
     'email' => [
         'social_registration' => 'Registration through the social network',
+        'send_success'        => 'The message has been sent, you will be contacted shortly.',
+        'send_error'          => 'There was an error sending your message.',
     ],
 
     # User's attribute

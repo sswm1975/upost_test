@@ -30,6 +30,17 @@ Route::group(
     }
 );
 
+// Відправка лістів
+Route::group(
+    [
+        'prefix' => 'mail',
+    ],
+    function () {
+        # Відправити листа з форми "Є запитання?"
+        Route::post('have_question', 'API\MailController@haveQuestion');
+    }
+);
+
 // Операції по відновленню пароля
 Route::group(
     [
