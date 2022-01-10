@@ -36,9 +36,9 @@ class MailController extends Controller
         $body .= "Имя: {$data['name']}\nТелефон: {$data['phone']}\nEmail: {$data['email']}\nСообщение: {$data['text']}\n";
 
         try {
-//            Mail::raw($body, function($message) {
-//                $message->to(config('mail.admin_emails'))->subject('Обратная связь: Вопрос от клиента');
-//            });
+            Mail::raw($body, function($message) {
+                $message->to(config('mail.admin_emails'))->subject('Обратная связь: Вопрос от клиента');
+            });
 
             if (!Mail::failures()) {
                 return response()->json([
