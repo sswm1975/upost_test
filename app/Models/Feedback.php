@@ -24,6 +24,6 @@ class Feedback extends Model
             $subject = static::SUBJECT_WITHOUT_NAME;
         }
 
-        return Arr::get(static::SUBJECT_TYPES, $subject, static::SUBJECT_WITHOUT_NAME);
+        return Arr::get(static::SUBJECT_TYPES, $subject, static::SUBJECT_TYPES[static::SUBJECT_WITHOUT_NAME]);
     }
 }
