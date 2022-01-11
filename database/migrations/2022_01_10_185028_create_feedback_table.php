@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\Feedback;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMailFeedbackTable extends Migration
+class CreateFeedbackTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +14,9 @@ class CreateMailFeedbackTable extends Migration
      */
     public function up()
     {
-        Schema::create('mail_feedback', function (Blueprint $table) {
+        Schema::create('feedback', function (Blueprint $table) {
             $table->increments('id')->comment('Код');
-            $table->string('subject', 30)->comment('Тема (раздел)');
+            $table->enum('subject',  array_keys(Feedback::SUBJECT_TYPES))->default(Feedback::SUBJECT_WITHOUT_NAME)->comment('Тема (раздел)');
             $table->string('name', 100)->comment('Имя клиента');
             $table->string('phone', 20)->comment('Телефон клиента');
             $table->string('email', 100)->comment('Email клиента');
@@ -25,7 +26,7 @@ class CreateMailFeedbackTable extends Migration
             $table->timestamp('read_at')->nullable()->comment('Дата прочтения');
         });
 
-        DB::statement("ALTER TABLE mail_feedback COMMENT = 'Обратная связь с клиентами'");
+        DB::statement("ALTER TABLE feedback COMMENT = 'Обратная связь с клиентами'");
     }
 
     /**
@@ -35,6 +36,6 @@ class CreateMailFeedbackTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mail_feedback');
+        Schema::dropIfExists('feedback');
     }
 }

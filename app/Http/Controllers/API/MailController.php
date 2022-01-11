@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Exceptions\ValidatorException;
-use App\Models\MailFeedback;
+use App\Models\Feedback;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,9 +28,9 @@ class MailController extends Controller
             'email' => 'required|email',
             'text'  => 'required|string|min:5|max:500|not_phone|censor',
         ]);
-        $data['subject'] = 'У Вас есть Вопросы?';
+        $data['subject'] = Feedback::SUBJECT_HAVE_QUESTION;
 
-        MailFeedback::create($data);
+        Feedback::create($data);
 
         $body = "Письмо отправлено с главной страницы формы «У Вас есть Вопросы?»\n\n";
         $body .= "Имя: {$data['name']}\nТелефон: {$data['phone']}\nEmail: {$data['email']}\nСообщение: {$data['text']}\n";
