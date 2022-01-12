@@ -110,7 +110,7 @@ return [
     */
     'auth' => [
 
-        'controller' => App\Platform\Controllers\AuthController::class,
+        'controller' => App\Platform\Controllers\Auth\AuthController::class,
 
         'guard' => 'admin',
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Platform\Controllers;
+namespace App\Platform\Controllers\Auth;
 
 use Encore\Admin\Controllers\AuthController as BaseAuthController;
 
