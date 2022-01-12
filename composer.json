@@ -15,6 +15,7 @@
         "ext-libxml": "*",
         "ext-zlib": "*",
         "doctrine/migrations": "^3.2",
+        "encore/laravel-admin": "^1.8",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^1.0",
         "fzaninotto/faker": "^1.9",

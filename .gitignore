@@ -4,6 +4,9 @@
 /public/content
 /storage/*.key
 /vendor
+!/vendor
+/vendor/*
+!/vendor/encore
 .env
 .env.backup
 .phpunit.result.cache
