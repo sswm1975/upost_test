@@ -18,6 +18,15 @@
  *
  */
 
+use Encore\Admin\Grid\Column;
+use App\Platform\Extensions\Grid\Displayers\AjaxModal;
+
 Encore\Admin\Form::forget(['map', 'editor']);
 
 Admin::favicon(config('app.url').'favicon.png');
+
+# Разрешаем перетаскивать модалки
+Admin::js('vendor/laravel-admin/AdminLTE/plugins/jQuery/draggable.min.js');
+Admin::script("$('.modal-dialog').draggable({handle: '.modal-header'});");
+
+Column::extend('ajaxModal', AjaxModal::class);

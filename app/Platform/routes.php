@@ -16,6 +16,10 @@ Route::group([
         $router->get('/', 'DashboardController@index')->name('index');
     });
 
+    # Клиенты
+    $router->get('clients', 'ClientController@index')->name('clients.index');
+    $router->get('clients/{id}', 'ClientController@show')->name('clients.show');
+
     # Пункты меню "Админка"
     $router->group([
         'prefix'     => 'auth',
