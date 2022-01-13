@@ -24,7 +24,7 @@ class CreateFeedbackTable extends Migration
             $table->timestamp('created_at')->nullable()->comment('Дата добавления');
             $table->timestamp('updated_at')->nullable()->comment('Дата обновления');
             $table->timestamp('read_at')->nullable()->comment('Дата прочтения');
-            $table->integer('read_user_id')->nullable()->comment('Пользователь, который прочитал письмо');
+            $table->unsignedInteger('read_admin_user_id')->nullable()->comment('Пользователь, который прочитал письмо');
         });
 
         DB::statement("ALTER TABLE feedback COMMENT = 'Обратная связь с клиентами'");

@@ -41,9 +41,10 @@
 
                             <p>
                                 {{ Admin::user()->name }}
-                                <small>Member since admin {{ Admin::user()->created_at }}</small>
+                                <small>В системе с {{ Admin::user()->created_at->format('d.m.Y') }}</small>
                             </p>
                         </li>
+
                         <li class="user-footer">
                             <div class="pull-left">
                                 <a href="{{ admin_url('auth/setting') }}" class="btn btn-default btn-flat">{{ trans('admin.setting') }}</a>
