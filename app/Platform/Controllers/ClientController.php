@@ -14,9 +14,6 @@ class ClientController extends AdminController
     protected string $title = 'Клиенты';
     protected string $icon = 'fa-users';
     protected bool $enableStyleIndex = true;
-    protected array $breadcrumb = [
-        ['text' => 'Админка', 'icon' => 'tasks', 'url' => 'admin'],
-    ];
 
     /**
      * Make a grid builder.
