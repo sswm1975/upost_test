@@ -68,8 +68,8 @@ class ClientController extends AdminController
         $grid->column('birthday', 'Дата рождения')->sortable();
 
         $grid->column('city_id', 'Город')
-            ->display(function () {
-                return $this->city->name;
+            ->display(function ($value) {
+                return !empty($value) ? $this->city->name : '';
             })
             ->sortable();
 
