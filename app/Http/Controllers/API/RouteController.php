@@ -11,12 +11,28 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class RouteController extends Controller
 {
     const DEFAULT_PER_PAGE = 5;
+
+    /**
+     * Правила проверки входных данных запроса при сохранении маршрута.
+     *
+     * @param  array $data
+     * @return array
+     */
+    protected static function rules4saveRoute(array $data): array
+    {
+        return [
+            'from_country_id' => 'required|integer|exists:countries,id',
+            'from_city_id'    => 'sometimes|exists_or_null:cities,id,country_id,' . ($data['from_country_id'] ?? '0'),
+            'to_country_id'   => 'required|integer|exists:countries,id',
+            'to_city_id'      => 'sometimes|exists_or_null:cities,id,country_id,' . ($data['to_country_id'] ?? '0'),
+            'deadline'        => 'required|date|after_or_equal:'.date('Y-m-d'),
+        ];
+    }
 
     /**
      * Добавить маршрут.
@@ -29,17 +45,15 @@ class RouteController extends Controller
     {
         if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
-        $data = validateOrExit($this->validator($request->all()));
+        $data = validateOrExit(self::rules4saveRoute($request->all()));
+        $data['user_id'] = $request->user()->id;
 
-        $route = Route::create($data);
+        $exists_route = Route::where($data)->count();
+        if ($exists_route) throw new ErrorException(__('message.route_exists'));
 
-        if (isset($data['route_points'])) {
-            $route->route_points()->createMany($data['route_points']);
-        }
+        $route_id = Route::insertGetId($data);
 
-        $route = Route::with('route_points:route_id,country_id,city_id,date')
-            ->find($route->id)
-            ->toArray();
+        $route = Route::getByIdWithRelations($route_id);
 
         return response()->json([
             'status' => true,
@@ -48,32 +62,118 @@ class RouteController extends Controller
     }
 
     /**
-     * Валидатор запроса с данными маршрута.
+     * Редактировать маршрут.
      *
-     * @param  array $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @param int route_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException|ValidationException|ValidatorException
      */
-    protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
+    public function updateRoute(int $route_id, Request $request): JsonResponse
     {
-        $rules = [
-            'from_country_id' => 'required|integer|exists:countries,id',
-            'from_city_id'    => 'sometimes|exists_or_null:cities,id,country_id,' . ($data['from_country_id'] ?? '0'),
-            'to_country_id'   => 'required|integer|exists:countries,id',
-            'to_city_id'      => 'sometimes|exists_or_null:cities,id,country_id,' . ($data['to_country_id'] ?? '0'),
-            'fromdate'        => 'required|date',
-            'tilldate'        => 'required|date|after_or_equal:fromdate',
-            'transport'       => 'required|in:car,bus,walk,train,plane',
-            'route_points'    => 'sometimes|nullable|array',
-        ];
+        if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
-        for ($i = 0; $i < count($data['route_points'] ?? []); $i++) {
-            $country_id = (int)($data['route_points'][$i]['country_id'] ?? 0);
-            $rules["route_points.{$i}.country_id"] = 'sometimes|required|integer|exists:countries,id';
-            $rules["route_points.{$i}.city_id"]    = 'sometimes|required|integer|exists:cities,id,country_id,' . $country_id;
-            $rules["route_points.{$i}.date"]       = 'sometimes|required|date';
-        }
+        $route = Route::isOwnerByKey($route_id)->first();
 
-        return Validator::make($data, $rules);
+        if (!$route) throw new ErrorException(__('message.route_not_found'));
+
+        $data = validateOrExit(self::rules4saveRoute($request->all()));
+
+        $affected = $route->update($data);
+
+        $route = $affected ? Route::getByIdWithRelations($route_id) : [];
+
+        return response()->json([
+            'status'  => $affected,
+            'result'  => null_to_blank($route),
+        ]);
+    }
+
+    /**
+     * Закрыть маршрут.
+     *
+     * @param int $route_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function closeRoute(int $route_id, Request $request): JsonResponse
+    {
+        $route = Route::isOwnerByKey($route_id)->first();
+
+        if (!$route) throw new ErrorException(__('message.route_not_found'));
+
+        $affected = $route->update(['status' => Route::STATUS_CLOSED]);
+
+        return response()->json([
+            'status' => $affected,
+        ]);
+    }
+
+    /**
+     * Массовое закрытие маршрутов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function closeRoutes(Request $request): JsonResponse
+    {
+        $data = validateOrExit([
+            'route_id'   => 'required|array|min:1',
+            'route_id.*' => 'required|integer',
+        ]);
+
+        $affected_rows = Route::isOwnerByKey($data['route_id'])->update(['status' => Route::STATUS_CLOSED]);
+
+        return response()->json([
+            'status'        => true,
+            'affected_rows' => $affected_rows,
+        ]);
+    }
+
+    /**
+     * Удалить маршрут.
+     * (разрешено удалять только в определенных статусах)
+     *
+     * @param int $route_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function deleteRoute(int $route_id, Request $request): JsonResponse
+    {
+        $route = Route::isOwnerByKey($route_id)->first();
+
+        if (!$route) throw new ErrorException(__('message.route_not_found'));
+
+        $affected = $route->delete();
+
+        return response()->json([
+            'status' => (bool)$affected,
+        ]);
+    }
+
+    /**
+     * Массовое удаление маршрутов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function deleteRoutes(Request $request): JsonResponse
+    {
+        $data = validateOrExit([
+            'route_id'   => 'required|array|min:1',
+            'route_id.*' => 'required|integer',
+        ]);
+
+        $affected_rows = Route::isOwnerByKey($data['route_id'])->delete();
+
+        return response()->json([
+            'status'        => true,
+            'affected_rows' => $affected_rows,
+        ]);
     }
 
     /**
@@ -190,8 +290,6 @@ class RouteController extends Controller
                 'from_city',
                 'to_country',
                 'to_city',
-                'route_points.country',
-                'route_points.city'
             ])
             ->withCount(['rates as has_rate' => function ($query) use ($user) {
                 $query->where('parent_id', 0)->where('user_id', $user->id ?? 0);
@@ -249,151 +347,6 @@ class RouteController extends Controller
             ->toArray();
     }
 
-    /**
-     * Редактирование маршрута.
-     *
-     * @param int route_id
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException|ErrorException|ValidatorException
-     */
-    public function updateRoute(int $route_id, Request $request): JsonResponse
-    {
-        if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
-
-        # Ищем маршрут по его коду, он должен принадлежать авторизированному пользователю и быть активным
-        $route = Route::query()
-            ->where('id', $route_id)
-            ->where('user_id', $request->user()->id)
-            ->where('status', Route::STATUS_ACTIVE)
-            ->first();
-
-        if (!$route) throw new ErrorException(__('message.route_not_found'));
-
-        $data = validateOrExit($this->validator($request->all()));
-
-        $route->update($data);
-
-        if (isset($data['route_points'])) {
-            $route->route_points()->createMany($data['route_points']);
-        }
-
-        return response()->json([
-            'status'  => true,
-            'result'  => null_to_blank($route->toArray()),
-        ]);
-    }
-
-    /**
-     * Закрыть маршрут.
-     *
-     * @param int $route_id
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function closeRoute(int $route_id, Request $request): JsonResponse
-    {
-        $route = Route::where([
-            'id'      => $route_id,
-            'user_id' => $request->user()->id,
-            'status'  => Route::STATUS_ACTIVE,
-        ])->first();
-
-        if (!$route) {
-            throw new ErrorException(__('message.route_not_found'));
-        }
-
-        $route->update(['status' => Route::STATUS_CLOSED]);
-
-        return response()->json([
-            'status' => true,
-        ]);
-    }
-
-    /**
-     * Массовое закрытие маршрутов.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidatorException|ValidationException
-     */
-    public function closeRoutes(Request $request): JsonResponse
-    {
-        $data = validateOrExit([
-            'route_id'   => 'required|array|min:1',
-            'route_id.*' => 'required|integer',
-        ]);
-
-        $affected_routes = Route::query()
-            ->whereKey($data['route_id'])
-            ->where([
-                'user_id' => $request->user()->id,
-                'status'  => Route::STATUS_ACTIVE,
-            ])
-            ->update(['status' => Route::STATUS_CLOSED]);
-
-        return response()->json([
-            'status'          => true,
-            'affected_routes' => $affected_routes,
-        ]);
-    }
-
-    /**
-     * Удалить маршрут.
-     *
-     * @param int $route_id
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function deleteRoute(int $route_id, Request $request): JsonResponse
-    {
-        # Ищем маршрут по его коду, он должен принадлежать авторизированному пользователю и быть в одном из разрешенных статусов
-        $route = Route::query()
-            ->where('id', $route_id)
-            ->where('user_id',  $request->user()->id)
-            ->whereIn('status', [
-                Route::STATUS_ACTIVE,
-                Route::STATUS_BAN,
-                Route::STATUS_CLOSED,
-            ])
-            ->first();
-
-        if (!$route) throw new ErrorException(__('message.route_not_found'));
-
-        $affected = $route->delete();
-
-        return response()->json(['status' => (bool)$affected]);
-    }
-
-    /**
-     * Массовое удаление маршрутов.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidatorException|ValidationException
-     */
-    public function deleteRoutes(Request $request): JsonResponse
-    {
-        $data = validateOrExit([
-            'route_id'   => 'required|array|min:1',
-            'route_id.*' => 'required|integer',
-        ]);
-
-        $affected_routes = Route::query()
-            ->whereKey($data['route_id'])
-            ->where([
-                'user_id' => $request->user()->id,
-                'status'  => Route::STATUS_ACTIVE,
-            ])
-            ->delete();
-
-        return response()->json([
-            'status'          => true,
-            'affected_routes' => $affected_routes,
-        ]);
-    }
 
     /**
      * Подобрать заказ для маршрута.

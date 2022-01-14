@@ -17,6 +17,7 @@ return [
     'not_filled_profile'      => 'In profile not filled name or surname or birthday.',
     'order_not_found'         => 'Order not found.',
     'route_not_found'         => 'Route not found.',
+    'route_exists'            => 'Route exists.',
     'rate_not_found'          => 'Rate not found.',
     'who_start_incorrect'     => 'The field who_start incorrect.',
     'one_rate_per_order'      => 'Can be only one basic rate per order.',
@@ -91,20 +92,6 @@ return [
             'closed'     => 'Closed',
             'ban'        => 'Banned',
             'successful' => 'Successful',
-        ],
-        'transports' => [
-            'car'   => 'Car',
-            'bus'   => 'Bus',
-            'walk'  => 'Walk',
-            'train' => 'Train',
-            'plane' => 'Plane',
-        ],
-        'transports_prepositional' => [
-            'car'   => 'by Сar',
-            'bus'   => 'by Bus',
-            'walk'  => 'on Foot',
-            'train' => 'by Train',
-            'plane' => 'by Plane',
         ],
     ],
 ];

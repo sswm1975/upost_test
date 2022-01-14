@@ -174,7 +174,7 @@ return [
         'day' => 'День',
         'description' => 'Опис',
         'email' => 'E-mail адреса',
-        'tilldate' => 'Дата закінчення',
+        'deadline' => 'Дата закінчення',
         'excerpt' => 'Уривок',
         'files' => 'Файли',
         'first_name' => 'Ім\'я',

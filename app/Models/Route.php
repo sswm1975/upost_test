@@ -6,61 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use DateTimeInterface;
 
-/**
- * App\Models\Route
- *
- * @property int $id Код
- * @property int $parent_id Код родителя
- * @property int $user_id Код пользователя
- * @property int|null $from_country_id Код страны старта
- * @property int|null $from_city_id Код города старта
- * @property int|null $to_country_id Код страны окончания
- * @property int|null $to_city_id Код города окончания
- * @property int $looks Количество просмотров
- * @property string|null $fromdate Дата начала маршрута
- * @property string|null $tilldate Дата окончания маршрута
- * @property string|null $transport Вид транспорта
- * @property string $type Тип маршрута
- * @property string $status Статус маршрута
- * @property string $register_date Дата регистрации маршрута
- * @property-read \App\Models\City|null $from_city
- * @property-read \App\Models\Country|null $from_country
- * @property-read bool $is_favorite
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
- * @property-read int|null $rates_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\RoutePoint[] $route_points
- * @property-read int|null $route_points_count
- * @property-read \App\Models\City|null $to_city
- * @property-read \App\Models\Country|null $to_country
- * @property-read \App\Models\User $user
- * @method static \Illuminate\Database\Eloquent\Builder|Route existsCityInFromCity(array $cities)
- * @method static \Illuminate\Database\Eloquent\Builder|Route existsCityInToCity(array $cities)
- * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryInFromCountry(array $countries)
- * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryInToCountry(array $countries)
- * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryOrCity(string $routes_field, string $route_points_field, array $rows)
- * @method static \Illuminate\Database\Eloquent\Builder|Route newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Route newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Route query()
- * @method static \Illuminate\Database\Eloquent\Builder|Route successful()
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromCityId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromCountryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromdate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereLooks($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereRegisterDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereTilldate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereToCityId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereToCountryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereTransport($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route whereUserId($value)
- * @mixin \Eloquent
- */
 class Route extends Model
 {
     const STATUS_ACTIVE = 'active';
@@ -78,26 +26,21 @@ class Route extends Model
     protected $table = 'routes';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
-    public $timestamps = false;
     protected $appends = [
         'status_name',
-        'transport_name',
-        'transport_prepositional_name',
         'is_favorite',
     ];
 
-    public static function boot()
+    /**
+     * Prepare a date for array / JSON serialization.
+     * https://laravel.com/docs/7.x/upgrade#date-serialization
+     *
+     * @param  DateTimeInterface  $date
+     * @return string
+     */
+    protected function serializeDate(DateTimeInterface $date)
     {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->user_id = request()->user()->id;
-            $model->parent_id = 0;
-            $model->type = 'route';
-            $model->status = self::STATUS_ACTIVE;
-            $model->looks = 0;
-            $model->register_date = Date::now();
-        });
+        return $date->format('Y-m-d H:i:s');
     }
 
     ### GETTERS ###
@@ -105,16 +48,6 @@ class Route extends Model
     public function getStatusNameAttribute(): string
     {
         return __("message.route.statuses.$this->status");
-    }
-
-    public function getTransportNameAttribute(): string
-    {
-        return __("message.route.transports.$this->transport");
-    }
-
-    public function getTransportPrepositionalNameAttribute(): string
-    {
-        return __("message.route.transports_prepositional.$this->transport");
     }
 
     public function getIsFavoriteAttribute(): bool
@@ -188,17 +121,17 @@ class Route extends Model
         return $this->hasMany(Rate::class, 'route_id', 'id');
     }
 
-    public function route_points(): HasMany
-    {
-        return $this->hasMany(RoutePoint::class, 'route_id', 'id');
-    }
-
     public function review(): MorphOne
     {
         return $this->morphOne(Review::class, 'reviewable');
     }
 
     ### SCOPES ###
+
+    public function scopeOwner($query)
+    {
+        return $query->where('user_id', request()->user()->id);
+    }
 
     public function scopeSuccessful($query)
     {
@@ -210,21 +143,12 @@ class Route extends Model
      *
      * @param $query
      * @param string $routes_field        - одно из полей таблицы route: from_country_id, to_country_id
-     * @param string $route_points_field  - одно из полей таблицы route_points: country_id, city_id
      * @param array $rows                 - массив кодов стран или городов, например [1,4,78].
      * @return mixed
      */
-    public function scopeExistsCountryOrCity($query, string $routes_field, string $route_points_field, array $rows)
+    public function scopeExistsCountryOrCity($query, string $routes_field, array $rows)
     {
-        return $query->where(function ($query) use ($routes_field, $route_points_field, $rows) {
-            return $query->whereIn($routes_field, $rows)
-                ->orWhereExists(function($query) use ($route_points_field, $rows) {
-                    $query->selectRaw(1)
-                        ->from('route_points')
-                        ->whereRaw('route_points.route_id = routes.id')
-                        ->whereIn($route_points_field, $rows);
-                });
-        });
+        return $query->whereIn($routes_field, $rows);
     }
 
     /**
@@ -261,6 +185,19 @@ class Route extends Model
     public function scopeExistsCityInFromCity($query, array $cities)
     {
         return $query->existsCountryOrCity('from_city_id', 'city_id', $cities);
+    }
+
+    /**
+     * Получить маршрут/ы владельца по списку ключей и выбранным статусам.
+     *
+     * @param $query
+     * @param mixed $id
+     * @param array $statuses
+     * @return mixed
+     */
+    protected function scopeIsOwnerByKey($query, $id, array $statuses = [self::STATUS_ACTIVE])
+    {
+        return $query->owner()->whereKey($id)->whereIn('status', $statuses);
     }
 
     /**
@@ -314,5 +251,18 @@ class Route extends Model
                 $query->whereParentId(0)->whereUserId($user->id);
             }])
             ->get();
+    }
+
+    /**
+     * Возвращает маршрут по его коду вместе со всеми отношениями.
+     *
+     * @param int $id
+     * @return array
+     */
+    protected static function getByIdWithRelations(int $id): array
+    {
+        return static::with(['from_country', 'from_city', 'to_country', 'to_city'])
+            ->find($id)
+            ->toArray();
     }
 }
