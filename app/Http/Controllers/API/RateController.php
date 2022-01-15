@@ -376,7 +376,6 @@ class RateController extends Controller
                 'from_city',
                 'to_country',
                 'to_city',
-                'category',
             ])
             ->find($rates[0]->order_id);
 

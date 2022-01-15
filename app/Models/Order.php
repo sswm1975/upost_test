@@ -173,15 +173,6 @@ class Order extends Model
         return $this->belongsTo(User::class, 'user_id')->withDefault();
     }
 
-    public function category(): BelongsTo
-    {
-        $lang = app()->getLocale();
-
-        return $this->belongsTo(Category::class, 'category_id', 'id')
-            ->select(['id', "name_{$lang} as name"])
-            ->withDefault();
-    }
-
     public function from_country(): BelongsTo
     {
         $lang = app()->getLocale();
@@ -281,7 +272,6 @@ class Order extends Model
                         DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders')
                     ]);
                 },
-                'category',
                 'from_country',
                 'from_city',
                 'to_country',

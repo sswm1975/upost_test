@@ -253,7 +253,6 @@ class OrderController extends Controller
                 $request->user(),
                 [
                     'without_order_id' => $order['id'],
-                    'category_id' => $order['category_id'],
                     'show' => 3,
                 ]
             )['data'];
@@ -315,8 +314,6 @@ class OrderController extends Controller
             'sort_by'        => 'sometimes|required|in:date,price',
             'show'           => 'sometimes|required|integer|min:1',
             'page-number'    => 'sometimes|required|integer|min:1',
-            'category'       => 'sometimes|required|array',
-            'category.*'     => 'required|integer',
             'date_from'      => 'sometimes|required|date',
             'date_to'        => 'sometimes|required|date|after_or_equal:date_from',
             'city_from'      => 'sometimes|required|array',
@@ -359,7 +356,6 @@ class OrderController extends Controller
                 'user' => function ($query) {
                     $query->select(User::FIELDS_FOR_SHOW)->withCount('successful_orders');
                 },
-                'category',
                 'from_country',
                 'from_city',
                 'to_country',
@@ -390,9 +386,6 @@ class OrderController extends Controller
             })
             ->when(!empty($filters['user_id']), function ($query) use ($filters) {
                 return $query->where('orders.user_id', $filters['user_id']);
-            })
-            ->when(!empty($filters['category']), function ($query) use ($filters) {
-                return $query->whereIn('orders.category_id', $filters['category']);
             })
             ->when(!empty($filters['status']), function ($query) use ($filters) {
                 return $query->where('orders.status', $filters['status']);

@@ -135,7 +135,6 @@ class Rate extends Model
                 'order.from_city',
                 'order.to_country',
                 'order.to_city',
-                'order.category',
                 'route.user:' . implode(',', User::FIELDS_FOR_SHOW),
                 'route.from_country',
                 'route.from_city',

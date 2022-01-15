@@ -4029,76 +4029,6 @@
 					]
 				},
 				{
-					"name": "Категорії",
-					"item": [
-						{
-							"name": "Отримати всі категорій",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/categories/show?lang=uk",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"categories",
-										"show"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Отримати конкретну категорію",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.variables.set(\"category_id\", 2);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/сategories/{{category_id}}/show",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"сategories",
-										"{{category_id}}",
-										"show"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "Замовлення",
 					"item": [
 						{
@@ -6554,51 +6484,6 @@
 											"disabled": true
 										}
 									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Google",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://post.tantal-web.top/socialify/Google/?state=HA-SVKCFWXM8Z2A5L4P9QTJ3OE1U6GR7HDY0BIN&code=4%2F0AX4XfWiNJ8U7q-fATtr4NruVMRhWRJ_FD4cpkEuamUOZNo4M6hUzb0j35Zhulte1Kn-MsA&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=1&prompt=consent#",
-									"protocol": "https",
-									"host": [
-										"post",
-										"tantal-web",
-										"top"
-									],
-									"path": [
-										"socialify",
-										"Google",
-										""
-									],
-									"query": [
-										{
-											"key": "state",
-											"value": "HA-SVKCFWXM8Z2A5L4P9QTJ3OE1U6GR7HDY0BIN"
-										},
-										{
-											"key": "code",
-											"value": "4%2F0AX4XfWiNJ8U7q-fATtr4NruVMRhWRJ_FD4cpkEuamUOZNo4M6hUzb0j35Zhulte1Kn-MsA"
-										},
-										{
-											"key": "scope",
-											"value": "email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid"
-										},
-										{
-											"key": "authuser",
-											"value": "1"
-										},
-										{
-											"key": "prompt",
-											"value": "consent"
-										}
-									],
-									"hash": ""
 								}
 							},
 							"response": []

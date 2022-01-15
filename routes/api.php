@@ -168,20 +168,6 @@ Route::group(
     }
 );
 
-// Категорії
-Route::group(
-    [
-        'prefix' => 'categories',
-    ],
-    function () {
-        # Отримання всіх категорій
-        Route::get('show', 'API\CategoryController@getCategories');
-
-        # Отримання конкретної категорії
-        Route::get('{category_id}/show', 'API\CategoryController@getCategories');
-    }
-);
-
 // Замовлення
 Route::group(
     [
