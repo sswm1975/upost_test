@@ -318,7 +318,7 @@ function validateOrExit($validator_or_rules): array
 
     $data = $validator->validated();
 
-    if (!array_key_exists('user_id', $data) && request()->user()->id) {
+    if (!array_key_exists('user_id', $data) && !empty(request()->user()->id)) {
         $data['user_id'] = request()->user()->id;
     }
 
