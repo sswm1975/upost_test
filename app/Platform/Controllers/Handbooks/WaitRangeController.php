@@ -62,8 +62,8 @@ class WaitRangeController extends AdminController
         $form->text('name_ru', 'Название 🇷🇺')->required();
         $form->text('name_en', 'Название 🇬🇧')->required();
         $form->currency('days', 'Дней')->symbol('∑')->digits(0)->rules('required|numeric');
-        $form->number('order', 'Порядок ');
-        $form->switch('active', 'Действует')->states(SWITCH_YES_NO);
+        $form->number('order', 'Порядок ')->default(1);
+        $form->switch('active', 'Действует')->default(1)->states(SWITCH_YES_NO);
 
         return $form;
     }
