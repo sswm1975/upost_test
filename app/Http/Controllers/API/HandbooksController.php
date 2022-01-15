@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\WaitRange;
 use App\Models\Complaint;
 use App\Models\Country;
 use App\Models\Order;
@@ -39,7 +39,7 @@ class HandbooksController extends Controller
             'countries'             => Country::getCountries(),
             'countries_with_cities' => Country::getCountriesWithCities(),
             'prices'                => $prices,
-            'categories'            => Category::getCategories(),
+            'wait_ranges'           => WaitRange::getWaitRanges(),
             'complaints'            => Complaint::getComplaints(),
         ]);
     }
