@@ -21,8 +21,8 @@ class ModifyOrdersTable extends Migration
             $table->dropColumn(['category_id', 'size', 'weight', 'fromdate', 'from_address', 'to_address', 'personal_price']);
             $table->renameColumn('tilldate', 'deadline');
 
-            $table->foreign('wait_range', 'FK_orders_wait_range')
-                ->references('id')->on('wait_range_id')
+            $table->foreign('wait_range_id', 'FK_orders_wait_range')
+                ->references('id')->on('wait_range')
                 ->onDelete('cascade');
         });
     }
