@@ -7,16 +7,19 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Chat;
 use App\Models\Route;
 use App\Models\User;
-use Exception;
+use App\Models\CurrencyRate;
+use App\Models\WaitRange;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Validation\ValidationException;
-use App\Models\Order;
-use App\Models\CurrencyRate;
+use Exception;
 
 class OrderController extends Controller
 {
@@ -32,25 +35,60 @@ class OrderController extends Controller
     const COUNT_STRIKES_FOR_BAN = 50;
 
     /**
+     * Правила проверки входных данных запроса при сохранении заказа.
+     *
+     * @return array
+     */
+    protected function rules4saveOrder(): array
+    {
+        return [
+            'product_link'   => 'sometimes|nullable|string|url',
+            'name'           => 'required|string|censor|max:100',
+            'price'          => 'required|numeric',
+            'currency'       => 'required|in:' . implode(',', config('app.currencies')),
+            'products_count' => 'required|integer',
+            'description'    => 'required|string|not_phone|censor|max:5000',
+            'from_country_id'=> 'required|integer|exists:countries,id',
+            'from_city_id'   => 'required|required|integer|exists:cities,id,country_id,' . request('from_country_id',  0),
+            'to_country_id'  => 'required|integer|exists:countries,id',
+            'to_city_id'     => 'required|required|integer|exists:cities,id,country_id,' . request('to_country_id', 0),
+            'wait_range_id'  => 'required|integer|exists:wait_ranges,id,active,1',
+            'user_price'     => 'required|numeric',
+            'user_currency'  => 'required|in:' . implode(',', config('app.currencies')),
+            'not_more_price' => 'required|boolean',
+            'images'         => 'required|array|max:8',
+        ];
+    }
+
+    /**
      * Добавить заказ.
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
-     * @throws ValidatorException|ValidationException
+     * @throws ErrorException|ValidatorException|ValidationException
      */
     public function addOrder(Request $request): JsonResponse
     {
         if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
-        $data = validateOrExit($this->validator($request->all()));
+        $data = validateOrExit(self::rules4saveOrder());
 
-        $order = Order::create($data);
+        $exists_order = Order::where(Arr::only($data, ['user_id', 'name', 'price', 'from_country_id', 'to_country_id']))->count();
+        if ($exists_order) throw new ErrorException(__('message.order_exists'));
+
+        $wait_days = WaitRange::find($data['wait_range_id'])->days;
+        $data['register_date'] = Date::now()->format('Y-m-d');
+        $data['deadline'] =  Date::now()->addDays($wait_days)->format('Y-m-d') ;
+        $data['slug'] = Str::slug($data['name']) . '-'. Str::random(8);
+        $data['price_usd'] = convertPriceToUsd($data['price'], $data['currency']);
+        $data['images'] = json_encode($data['images']);
+
+        $order_id = Order::insertGetId($data);
 
         return response()->json([
             'status'   => true,
-            'order_id' => $order->id,
-            'url'      => $order->slug,
+            'order_id' => $order_id,
+            'url'      => $data['slug'],
         ]);
     }
 
@@ -67,60 +105,94 @@ class OrderController extends Controller
     {
         if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
-        # Ищем заказ по его коду - должен принадлежать авторизированному пользователю и быть активным.
-        $order = Order::query()
-            ->whereKey($order_id)
-            ->where('user_id', $request->user()->id)
-            ->where('status', Order::STATUS_ACTIVE)
-            ->first();
+        if (! $order = Order::isOwnerByKey($order_id)->first()) {
+            throw new ErrorException(__('message.order_not_found'));
+        }
 
-        if (!$order) throw new ErrorException(__('message.order_not_found'));
+        $data = validateOrExit(self::rules4saveOrder());
 
-        $data = validateOrExit($this->validator($request->all()));
+        if ($order->wait_range_id <> $data['wait_range_id']) {
+            $wait_days = WaitRange::find($data['wait_range_id'])->days;
+            $data['deadline'] =  Date::createFromFormat( 'Y-m-d', $order->register_date)->addDays($wait_days)->format('Y-m-d') ;
+        }
+        if ($order->price <> $data['price']) {
+            $data['price_usd'] = convertPriceToUsd($data['price'], $data['currency']);
+        }
 
-        $order->update($data);
+        $affected = $order->update($data);
 
         return response()->json([
-            'status'   => true,
+            'status'   => $affected,
             'order_id' => $order->id,
             'url'      => $order->slug,
         ]);
     }
 
     /**
-     * Валидатор запроса с данными заказа.
+     * Закрыть заказ(ы) (внутренний).
      *
-     * @param  array $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @param mixed $id
+     * @return JsonResponse
      */
-    protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
+    private static function closeOrder_int($id): JsonResponse
     {
-        return Validator::make($data,
-            [
-                'product_link'   => 'sometimes|nullable|string|url',
-                'name'           => 'required|string|censor|max:100',
-                'category_id'    => 'required|integer|exists:categories,id',
-                'price'          => 'required|numeric',
-                'currency'       => 'required|in:' . implode(',', config('app.currencies')),
-                'products_count' => 'required|integer',
-                'size'           => 'required|string|max:50',
-                'weight'         => 'required|string|max:50',
-                'description'    => 'required|string|not_phone|censor|max:5000',
-                'from_country_id'=> 'required|integer|exists:countries,id',
-                'from_city_id'   => 'sometimes|required|integer|exists:cities,id,country_id,' . ($data['from_country_id'] ?? 0),
-                'from_address'   => 'sometimes|nullable|string',
-                'to_country_id'  => 'required|integer|exists:countries,id',
-                'to_city_id'     => 'sometimes|required|integer|exists:cities,id,country_id,' . ($data['to_country_id'] ?? 0),
-                'to_address'     => 'sometimes|nullable|string',
-                'fromdate'       => 'sometimes|required|date',
-                'tilldate'       => 'required|date|after_or_equal:fromdate',
-                'personal_price' => 'required|boolean',
-                'user_price'     => 'required_if:personal_price,1',
-                'user_currency'  => 'required_if:personal_price,1|sometimes|nullable|in:' . implode(',', config('app.currencies')),
-                'not_more_price' => 'required|boolean',
-                'images'         => 'required|array|max:8',
-            ]
-        );
+        $affected_rows = Order::isOwnerByKey($id)->update(['status' => Order::STATUS_CLOSED]);
+
+        return response()->json([
+            'status'        => $affected_rows > 0,
+            'affected_rows' => $affected_rows,
+        ]);
+    }
+
+    /**
+     * Закрыть заказ.
+     *
+     * @param int $order_id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function closeOrder(int $order_id, Request $request): JsonResponse
+    {
+        return self::closeOrder_int($order_id);
+    }
+
+    /**
+     * Массовое закрытие заказов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function closeOrders(Request $request): JsonResponse
+    {
+        $data = validateOrExit([
+            'order_id'   => 'required|array|min:1',
+            'order_id.*' => 'required|integer',
+        ]);
+
+        return self::closeOrder_int($data['order_id']);
+    }
+
+    /**
+     * Удалить заказ(ы) (внутренний).
+     *
+     * @param mixed $id
+     * @return JsonResponse
+     */
+    private static function deleteOrder_int($id): JsonResponse
+    {
+        $statuses = [
+            Order::STATUS_ACTIVE,
+            Order::STATUS_BAN,
+            Order::STATUS_CLOSED,
+        ];
+
+        $affected_rows = Order::isOwnerByKey($id, $statuses)->delete();
+
+        return response()->json([
+            'status'        => $affected_rows > 0,
+            'affected_rows' => $affected_rows,
+        ]);
     }
 
     /**
@@ -129,25 +201,10 @@ class OrderController extends Controller
      * @param int $order_id
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
      */
     public function deleteOrder(int $order_id, Request $request): JsonResponse
     {
-        $order = Order::query()
-            ->where('id', $order_id)
-            ->where('user_id', $request->user()->id)
-            ->whereIn('status', [
-                Order::STATUS_ACTIVE,
-                Order::STATUS_BAN,
-                Order::STATUS_CLOSED,
-            ])
-            ->first();
-
-        if (!$order) throw new ErrorException(__('message.order_not_found'));
-
-        $affected = $order->delete();
-
-        return response()->json(['status' => (bool)$affected]);
+        return self::deleteOrder_int($order_id);
     }
 
     /**
@@ -164,19 +221,7 @@ class OrderController extends Controller
             'order_id.*' => 'required|integer',
         ]);
 
-        $affected_orders = Order::query()
-            ->whereKey($data['order_id'])
-            ->whereIn('status', [
-                Order::STATUS_ACTIVE,
-                Order::STATUS_BAN,
-                Order::STATUS_CLOSED,
-            ])
-            ->delete();
-
-        return response()->json([
-            'status'          => true,
-            'affected_orders' => $affected_orders,
-        ]);
+        return self::deleteOrder_int($data['order_id']);
     }
 
     /**
@@ -458,60 +503,6 @@ class OrderController extends Controller
         return true;
     }
 
-    /**
-     * Закрыть заказ.
-     *
-     * @param int $order_id
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function closeOrder(int $order_id, Request $request): JsonResponse
-    {
-        $order = Order::where([
-            'id'      => $order_id,
-            'user_id' => $request->user()->id,
-            'status'  => Order::STATUS_ACTIVE,
-        ])->first();
-
-        if (!$order) {
-            throw new ErrorException(__('message.order_not_found'));
-        }
-
-        $order->update(['status' => Order::STATUS_CLOSED]);
-
-        return response()->json([
-            'status' => true,
-        ]);
-    }
-
-    /**
-     * Массовое закрытие заказов.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidatorException|ValidationException
-     */
-    public function closeOrders(Request $request): JsonResponse
-    {
-        $data = validateOrExit([
-            'order_id'   => 'required|array|min:1',
-            'order_id.*' => 'required|integer',
-        ]);
-
-        $affected_orders = Order::query()
-            ->whereKey($data['order_id'])
-            ->where([
-                'user_id' => $request->user()->id,
-                'status'  => Order::STATUS_ACTIVE,
-            ])
-            ->update(['status' => Order::STATUS_CLOSED]);
-
-        return response()->json([
-            'status'          => true,
-            'affected_orders' => $affected_orders,
-        ]);
-    }
 
     /**
      * Пожаловаться на заказ.

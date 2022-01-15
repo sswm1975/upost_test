@@ -16,6 +16,7 @@ return [
     'category_not_found'      => 'Категория не найдена.',
     'not_filled_profile'      => 'В профиле не указаны имя или фамилия или день рождения.',
     'order_not_found'         => 'Заказ не найден.',
+    'order_exists'            => 'Заказ существует.',
     'route_not_found'         => 'Маршрут не найден.',
     'route_exists'            => 'Маршрут существует.',
     'rate_not_found'          => 'Ставка не найдена.',

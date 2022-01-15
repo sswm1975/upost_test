@@ -16,6 +16,7 @@ return [
     'category_not_found'      => 'Category not found.',
     'not_filled_profile'      => 'In profile not filled name or surname or birthday.',
     'order_not_found'         => 'Order not found.',
+    'order_exists'            => 'Order exists.',
     'route_not_found'         => 'Route not found.',
     'route_exists'            => 'Route exists.',
     'rate_not_found'          => 'Rate not found.',
