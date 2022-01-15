@@ -61,18 +61,6 @@ class Route extends Model
         return in_array($this->id, explode(',', $user->favorite_routes));
     }
 
-    ### SETTERS ###
-
-    public function setFromCityIdAttribute($value)
-    {
-        $this->attributes['from_city_id'] = is_null($value) ? 0 : $value;
-    }
-
-    public function setToCityIdAttribute($value)
-    {
-        $this->attributes['to_city_id'] = is_null($value) ? 0 : $value;
-    }
-
     ### LINKS ###
 
     public function user(): BelongsTo
