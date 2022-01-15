@@ -24,7 +24,8 @@
         "laravel/tinker": "^2.6",
         "liqpay/liqpay": "^1.2",
         "maatwebsite/excel": "^3.1",
-        "pavelpage/censorship": "^1.0"
+        "pavelpage/censorship": "^1.0",
+        "spatie/eloquent-sortable": "^3.11"
     },
     "require-dev": {
         "facade/ignition": "^2.12",
