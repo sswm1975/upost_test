@@ -20,6 +20,14 @@ Route::group([
     $router->get('clients', 'ClientController@index')->name('clients.index');
     $router->get('clients/{id}', 'ClientController@show')->name('clients.show');
 
+    $router->group([
+        'prefix'     => 'handbooks',
+        'namespace'  => 'Handbooks',
+        'as' => 'handbooks.'
+    ], function ($router) {
+        $router->resource('wait_range', 'WaitRangeController')->names('wait_range');
+    });
+
     # Пункты меню "Админка"
     $router->group([
         'prefix'     => 'auth',
@@ -27,6 +35,6 @@ Route::group([
         'middleware' => 'admin.permission:allow,administrator',
         'as' => 'auth.',
     ], function (Router $router) {
-        $router->get('/info', 'InfoController@index')->name('info');
+        $router->get('info', 'InfoController@index')->name('info');
     });
 });
