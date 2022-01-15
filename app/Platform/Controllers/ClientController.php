@@ -23,7 +23,6 @@ class ClientController extends AdminController
     protected function grid()
     {
         Admin::style($this->style());
-        Admin::script('$("table tr").off("dblclick").on("dblclick", function(){$.pjax({url:"/platform/clients/" + $(this).data("key"), container:"#pjax-container"})});');
 
         $grid = new Grid(new User());
 
@@ -72,14 +71,20 @@ class ClientController extends AdminController
 
         $grid->column('wallet', 'Баланс')
             ->filter('range')
+            ->setAttributes(['align'=>'right'])
             ->sortable();
 
         $grid->column('currency', 'Валюта')
             ->filter(array_combine(config('app.currencies'), config('app.currencies')))
+            ->setAttributes(['align'=>'center'])
             ->sortable();
 
         $grid->column('lang', 'Язык')
-            ->filter(array_combine(config('app.languages'), config('app.languages')))
+            ->display(function ($lang) {
+                return ADMIN_LANGUAGES[$lang];
+            })
+            ->filter(ADMIN_LANGUAGES)
+            ->setAttributes(['align'=>'center'])
             ->sortable();
 
         $grid->column('card_number', '№ карточки')
@@ -176,5 +181,4 @@ class ClientController extends AdminController
             ul.products {margin: 0; padding: 0 0 0 10px;}
 EOT;
     }
-
 }
