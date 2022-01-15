@@ -41,16 +41,17 @@
 
                             <p>
                                 {{ Admin::user()->name }}
+                                <small>Роль: {{ Admin::user()->roles[0]->name }}</small>
                                 <small>В системе с {{ Admin::user()->created_at->format('d.m.Y') }}</small>
                             </p>
                         </li>
 
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="{{ admin_url('auth/setting') }}" class="btn btn-default btn-flat">{{ trans('admin.setting') }}</a>
+                                <a href="{{ admin_url('auth/setting') }}" class="btn btn-success btn-flat">{{ trans('admin.setting') }}</a>
                             </div>
                             <div class="pull-right">
-                                <a href="{{ admin_url('auth/logout') }}" class="btn btn-default btn-flat">{{ trans('admin.logout') }}</a>
+                                <a href="{{ admin_url('auth/logout') }}" class="btn btn-danger btn-flat">{{ trans('admin.logout') }}</a>
                             </div>
                         </li>
                     </ul>

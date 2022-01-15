@@ -10,8 +10,7 @@
             </div>
             <div class="pull-left info">
                 <p>{{ Admin::user()->name }}</p>
-                <!-- Status -->
-                <a href="#"><i class="fa fa-circle text-success"></i> {{ trans('admin.online') }}</a>
+                <small class="text-primary">{{ Admin::user()->roles[0]->name }}</small>
             </div>
         </div>
 
