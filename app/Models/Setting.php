@@ -29,9 +29,7 @@ class Setting extends Model
             return static::getSettings();
         });
 
-        foreach ($settings as $name => $value) {
-            config([$name => $value]);
-        }
+        config($settings);
     }
 
     public static function updateCacheSettings()
