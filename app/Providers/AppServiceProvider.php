@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Rate;
+use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
@@ -38,6 +39,9 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Schema::defaultStringLength(191);
+
+        # Кэширование таблицы settings и занесение их в App Config, т.е. потом можно вызывать config('default_language')
+        Setting::initCache();
 
         /**
          * Для операции "Сброс пароля" избавляемся от маршрута ниже (для API он не нужен):

@@ -20,11 +20,17 @@ Route::group([
     $router->get('clients', 'ClientController@index')->name('clients.index');
     $router->get('clients/{id}', 'ClientController@show')->name('clients.show');
 
+    # Настройки
+    $router->resource('settings', 'SettingController')->names('settings')->middleware('admin.permission:check,settings');
+
+    # Справочники
     $router->group([
         'prefix'     => 'handbooks',
         'namespace'  => 'Handbooks',
-        'as' => 'handbooks.'
+        'as'         => 'handbooks.',
+        'middleware' => 'admin.permission:check,handbooks',
     ], function ($router) {
+        # Диапазоны ожидания
         $router->resource('wait_range', 'WaitRangeController')->names('wait_range');
     });
 
