@@ -20,6 +20,9 @@ Route::group([
     $router->get('clients', 'ClientController@index')->name('clients.index');
     $router->get('clients/{id}', 'ClientController@show')->name('clients.show');
 
+    # Рассылки
+    $router->get('mailing/{name}', 'MailingController@index')->name('mailing.index');
+
     # Настройки
     $router->resource('settings', 'SettingController')->names('settings')->middleware('admin.permission:check,settings');
 

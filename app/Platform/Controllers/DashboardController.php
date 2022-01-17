@@ -7,11 +7,11 @@ use Encore\Admin\Layout\Content;
 
 class DashboardController extends Controller
 {
-    public function index(Content $content)
+    public function index(Content $content): Content
     {
         return $content
             ->title('Главная')
-            ->description('Описание...')
-            ->row('Проверка');
+            ->description('&nbsp;')
+            ->body('Здесь будет дашборд');
     }
 }
