@@ -1,5 +1,4 @@
 @component('mail::message')
-
 <b>Good day, {{ $client_name }}.</b>
 
 You have successfully signed up for UPOST with your {{ ucfirst($provider) }} account {{ $email }}. Glad to welcome you!
@@ -14,6 +13,5 @@ We encourage you to follow the <a href="{{ $url }}" target="_blank">link</a> to 
 
 <hr><br>
 
-<i>All the best, respectfully, the team {{ config('app.name') }}.</i>
-
+<i>All the best, respectfully,<br>the team {{ config('app.name') }}.</i>
 @endcomponent

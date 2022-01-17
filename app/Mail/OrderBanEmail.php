@@ -9,14 +9,16 @@ class OrderBanEmail extends Mailable
 {
     use SerializesModels;
 
+    private string $lang;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $lang)
     {
-        //
+        $this->lang = $lang;
     }
 
     /**
@@ -24,12 +26,10 @@ class OrderBanEmail extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): OrderBanEmail
     {
         return $this->subject('Много жалоб по заказу')
-            ->markdown('emails.orderban')
-            ->with([
-                'url' => 'https://www.google.com',
-            ]);
+            ->markdown("emails.{$this->lang}.order_ban")
+            ->with(['url' => 'https://www.google.com']);
     }
 }

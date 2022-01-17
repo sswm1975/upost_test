@@ -29,6 +29,6 @@ class OrderBanned
     {
         $user = User::find($event->order->user_id);
 
-        Mail::to($user->email)->send(new OrderBanEmail());
+        Mail::to($user->email)->send(new OrderBanEmail($user->lang));
     }
 }

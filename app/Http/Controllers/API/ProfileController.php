@@ -177,7 +177,7 @@ class ProfileController extends Controller
         $token = UserChange::create($data)->token;
 
         if ($data['sender'] == 'email') {
-            Mail::to($user->email)->send(new SendTokenUserDataChange($token));
+            Mail::to($user->email)->send(new SendTokenUserDataChange($token, $user->lang));
 
             return response()->json([
                 'status'  => true,

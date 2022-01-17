@@ -1,5 +1,4 @@
 @component('mail::message')
-
 <b>Добрый день, {{ $client_name }}.</b>
 
 Вы успешно зарегистрировались на сервисе UPOST с помощью {{ ucfirst($provider) }} аккаунта {{ $email }}. Рады приветствовать Вас!
@@ -14,6 +13,6 @@
 
 <hr><br>
 
-<i>Всего лучшего, с уважением, команда {{ config('app.name') }}.</i>
-
+<i>C уважением,<br>
+команда {{ config('app.name') }}.</i>
 @endcomponent

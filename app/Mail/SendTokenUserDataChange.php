@@ -14,15 +14,18 @@ class SendTokenUserDataChange extends Mailable
     use SerializesModels;
 
     private string $token;
+    private string $lang;
 
     /**
      * Create a new message instance.
      *
      * @param string $token
+     * @param string $lang
      */
-    public function __construct(string $token = '')
+    public function __construct(string $token = '', string $lang = 'en')
     {
         $this->token = $token;
+        $this->lang = $lang;
     }
 
     /**
@@ -33,7 +36,7 @@ class SendTokenUserDataChange extends Mailable
     public function build(): SendTokenUserDataChange
     {
         return $this->subject('Код подтверждения смены данных профиля')
-            ->markdown('emails.send_token_user_data_change')
+            ->markdown("emails.{$this->lang}.send_token_user_data_change")
             ->with(['token' => $this->token]);
     }
 }
