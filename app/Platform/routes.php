@@ -21,7 +21,7 @@ Route::group([
     $router->get('clients/{id}', 'ClientController@show')->name('clients.show');
 
     # Рассылки
-    $router->get('mailing/{name}', 'MailingController@index')->name('mailing.index');
+    $router->get('mailings/{name}', 'MailingController@index')->name('mailings.index');
 
     # Настройки
     $router->resource('settings', 'SettingController')->names('settings')->middleware('admin.permission:check,settings');
@@ -34,7 +34,7 @@ Route::group([
         'middleware' => 'admin.permission:check,handbooks',
     ], function ($router) {
         # Диапазоны ожидания
-        $router->resource('wait_range', 'WaitRangeController')->names('wait_range');
+        $router->resource('wait_ranges', 'WaitRangeController')->names('wait_ranges');
 
         # Жалобы
         $router->resource('complaints', 'ComplaintController')->names('complaints');
