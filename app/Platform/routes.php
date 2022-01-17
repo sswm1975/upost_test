@@ -35,6 +35,9 @@ Route::group([
     ], function ($router) {
         # Диапазоны ожидания
         $router->resource('wait_range', 'WaitRangeController')->names('wait_range');
+
+        # Жалобы
+        $router->resource('complaints', 'ComplaintController')->names('complaints');
     });
 
     # Пункты меню "Админка"
