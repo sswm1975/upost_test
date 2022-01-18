@@ -171,6 +171,6 @@ class OrderController extends AdminController
      */
     protected function detail($id): Show
     {
-        return $this->addShowFields(new Show(User::findOrFail($id)));
+        return $this->addShowFields(new Show(Order::findOrFail($id)));
     }
 }
