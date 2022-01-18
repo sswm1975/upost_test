@@ -41,7 +41,7 @@ class AdminController extends Controller
      *
      * @var bool
      */
-    protected bool $enableStyleIndex = false;
+    protected bool $enableStyleIndex = true;
 
     /**
      * Position the "Create" button on the right?

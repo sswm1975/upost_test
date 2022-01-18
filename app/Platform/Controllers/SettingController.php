@@ -12,7 +12,6 @@ class SettingController extends AdminController
 {
     protected string $title = 'Настройки';
     protected string $icon = 'fa-gear';
-    protected bool $enableStyleIndex = true;
     protected bool $isCreateButtonRight = true;
 
     /**

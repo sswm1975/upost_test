@@ -12,7 +12,6 @@ class WaitRangeController extends AdminController
 {
     protected string $title = 'Диапазоны ожидания';
     protected string $icon = 'fa-calendar-plus-o';
-    protected bool $enableStyleIndex = true;
     protected bool $isCreateButtonRight = true;
     protected array $breadcrumb = [
         ['text' => 'Справочники', 'icon' => 'book'],

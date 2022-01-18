@@ -12,7 +12,6 @@ class ComplaintController extends AdminController
 {
     protected string $title = 'Жалобы';
     protected string $icon = 'fa-frown-o';
-    protected bool $enableStyleIndex = true;
     protected bool $isCreateButtonRight = true;
     protected array $breadcrumb = [
         ['text' => 'Справочники', 'icon' => 'book'],

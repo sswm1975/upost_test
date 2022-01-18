@@ -12,16 +12,15 @@ class ClientController extends AdminController
 {
     protected string $title = 'Клиенты';
     protected string $icon = 'fa-users';
-    protected bool $enableStyleIndex = true;
 
     /**
      * Make a grid builder.
      *
      * @return Grid
      */
-    protected function grid()
+    protected function grid(): Grid
     {
-        $grid = new Grid(new User());
+        $grid = new Grid(new User);
 
         # SETTINGS GRID
         $grid->quickSearch(function ($model, $query) {
@@ -92,11 +91,10 @@ class ClientController extends AdminController
 
         $grid->column('resume_modal', 'Резюме')
             ->modal('Резюме', function () {
-                $src = url()->isValidUrl($this->photo) ? $this->photo : Storage::disk(config('admin.upload.disk'))->url($this->photo);
                 return "
                     <div>
                         <div style='width: 20%; float: left; padding-right: 10px;'>
-                            <img src='$src' class='img img-thumbnail'>
+                            <img src='$this->photo' class='img img-thumbnail'>
                         </div>
                         <div style='width: 80%; float: left;'>
                             {$this->resume}
@@ -144,7 +142,7 @@ class ClientController extends AdminController
         $grid->column('facebook_id', 'Код Фейсбук');
 
         # EXPORT TO EXCEL
-        $grid->exporter(new ExcelExpoter());
+        $grid->exporter(new ExcelExpoter);
 
         return $grid;
     }
@@ -155,7 +153,7 @@ class ClientController extends AdminController
      * @param mixed $id
      * @return Show
      */
-    protected function detail($id)
+    protected function detail($id): Show
     {
         return $this->addShowFields(new Show(User::findOrFail($id)));
     }
