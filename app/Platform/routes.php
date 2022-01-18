@@ -20,6 +20,9 @@ Route::group([
     $router->get('clients', 'ClientController@index')->name('clients.index');
     $router->get('clients/{id}', 'ClientController@show')->name('clients.show');
 
+    # Заказы
+    $router->get('orders', 'OrderController@index')->name('orders.index');
+
     # Рассылки
     $router->get('mailings/{name}', 'MailingController@index')->name('mailings.index');
 

@@ -51,6 +51,8 @@ Admin::style(<<<CSS
     /* Меню в сайдбаре: увеличиваем ширину пунктов меню */
     .sidebar-menu .treeview span {width:230px !important;}
     .sidebar-menu .treeview .treeview-menu {width:230px !important;}
+
+    .nowrap {white-space: nowrap;}
 CSS);
 
 # Двойной клик на гриде: Переход на просмотр записи
@@ -59,9 +61,6 @@ Admin::script('$("table tbody tr").off("dblclick").on("dblclick", function(){$.p
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
     $navbar->right(new Nav\FullScreen());
 });
-
-Column::extend('ajaxModal', AjaxModal::class);
-Column::extend('orderable', Orderable::class);
 
 Form::forget(['map', 'editor']);
 
@@ -75,3 +74,13 @@ Form::init(function (Form $form) {
         $tools->disableView();
     });
 });
+
+
+Column::extend('ajaxModal', AjaxModal::class);
+Column::extend('orderable', Orderable::class);
+Column::extend('showYesNo', function ($value) {
+    return $value
+        ? '<span class="badge label-success">Да</span>'
+        : '<span class="badge label-danger">Нет</span>';
+});
+

@@ -53,7 +53,7 @@ class DashboardController extends Controller
             ->selectRaw('COUNT(1) AS total, SUM(IF(register_date>?,1,0)) AS today', [date('Y-m-d') . ' 00:00:00'])
             ->first();
 
-        return new InfoBox('Заказы', 'shopping-bag', 'green', '#', "{$cnt->today} / {$cnt->total}");
+        return new InfoBox('Заказы', 'shopping-bag', 'green', route('platform.orders.index'), "{$cnt->today} / {$cnt->total}");
     }
 
     /**

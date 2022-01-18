@@ -8,15 +8,13 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Events\AfterSheet;
-use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class ExcelExpoter extends ExcelExporter implements WithHeadings, ShouldAutoSize, WithEvents, WithStrictNullComparison
 {
-    const EXCLUDE_COLUMNS = ['resume_modal'];
-    private $data;
+    const EXCLUDE_COLUMNS = ['resume_modal', 'description_modal'];
 
     public function export()
     {

@@ -209,6 +209,15 @@ class Order extends Model
             ->withDefault();
     }
 
+    public function wait_range(): BelongsTo
+    {
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(WaitRange::class, 'wait_range_id', 'id')
+            ->select(['id', "name_{$lang} as name"])
+            ->withDefault();
+    }
+
     public function rates(): HasMany
     {
         return $this->hasMany(Rate::class, 'order_id', 'id');
