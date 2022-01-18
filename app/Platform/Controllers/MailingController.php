@@ -30,6 +30,9 @@ class MailingController extends Controller
      */
     public function index(Content $content): Content
     {
+        # Контент письма: вместо 100% устанавливаем авто-размер, что приводит к выравниванию письма к левому краю.
+        Admin::style('.wrapper {width:auto !important;}');
+
         $mailings = static::getMailings();
         $mailing = Arr::last(request()->segments());
 

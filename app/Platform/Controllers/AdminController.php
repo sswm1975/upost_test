@@ -123,10 +123,8 @@ class AdminController extends Controller
      */
     public function index(Content $content): Content
     {
-        Admin::style($this->styleIndexFix());
-
         if ($this->enableStyleIndex) {
-            Admin::style($this->styleIndex());
+            Admin::style(self::styleIndex());
         }
 
         Grid::init(function (Grid $grid) {
@@ -222,32 +220,29 @@ EOT
     }
 
     /**
-     * Get index style fix.
-     *
-     * @return string
-     */
-    protected function styleIndexFix(): string
-    {
-        return <<<EOT
-
-            .column-selector ul.dropdown-menu {width:200px;}
-            th span.dropdown ul.dropdown-menu {left:0 !important;width:200px;}
-
-EOT;
-    }
-
-    /**
      * Get index style.
      *
      * @return string
      */
-    protected function styleIndex(): string
+    protected static function styleIndex(): string
     {
         return <<<EOT
 
+             /* Грид-таблица: ширина автоматическая таблицы (актуально для таблиц с малым кол-вом столбцов) */
             .table.grid-table {width:auto;}
-            .table.grid-table > thead > tr > th,
-            .table.grid-table > tbody > tr > td {border:1px solid #f4f4f4;}
+
+            /* Заголовки таблицы: размер шрифта уменьшаем, запрещаем перенос название столбцов, фон - серый */
+            .table.grid-table th {font-size: 11px; white-space: nowrap; background:lightgrey;}
+
+            /* Ячейки грид-таблицы: более четкое выделение ячеек таблицы */
+            .table.grid-table th,
+            .table.grid-table td {border:1px solid #ddd;}
+
+            /* Выбор столбцов для отображения/скрытия: увеличиваем ширину и уменьшаем размер шрифта */
+            .column-selector > ul.dropdown-menu {width: 250px; font-size: 12px;}
+
+            /* Модальное окно: для заголовка меняем курсор */
+            .modal-header {cursor: move;}
 
 EOT;
     }

@@ -46,6 +46,13 @@ Admin::favicon(config('app.url').'favicon.png');
 Admin::js('vendor/laravel-admin/AdminLTE/plugins/jQuery/draggable.min.js');
 Admin::script("$('.modal-dialog').draggable({handle: '.modal-header'});");
 
+# Подгружаем fix-стили
+Admin::style(<<<CSS
+    /* Меню в сайдбаре: увеличиваем ширину пунктов меню */
+    .sidebar-menu .treeview span {width:230px !important;}
+    .sidebar-menu .treeview .treeview-menu {width:230px !important;}
+CSS);
+
 # Двойной клик на гриде: Переход на просмотр записи
 Admin::script('$("table tbody tr").off("dblclick").on("dblclick", function(){$.pjax({url:"/' . implode('/', request()->segments()) . '/" + $(this).data("key"), container:"#pjax-container"})});');
 

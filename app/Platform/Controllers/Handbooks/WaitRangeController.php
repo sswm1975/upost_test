@@ -4,7 +4,6 @@ namespace App\Platform\Controllers\Handbooks;
 
 use App\Models\WaitRange;
 use App\Platform\Controllers\AdminController;
-use Encore\Admin\Admin;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Encore\Admin\Show;
@@ -26,8 +25,6 @@ class WaitRangeController extends AdminController
      */
     protected function grid(): Grid
     {
-        Admin::style($this->style());
-
         $grid = new Grid(new WaitRange);
 
         # SETTINGS GRID
@@ -77,24 +74,5 @@ class WaitRangeController extends AdminController
     protected function detail($id): Show
     {
         return $this->addShowFields(new Show(WaitRange::findOrFail($id)));
-    }
-
-    /**
-     * Styles for index interface.
-     *
-     * @return string
-     */
-    protected function style(): string
-    {
-        return <<<EOT
-            .column-selector > ul.dropdown-menu {width: 255px;}
-            table > thead > tr > th {white-space: nowrap; background:lightgrey;}
-            table > tbody > tr td.column-manager_id {padding-right: 20px;}
-            table > tbody > tr td.column-manager_sip {padding-right: 25px;}
-            .modal-header{cursor: move;}
-            table th, .dataTable th {font-size: 11px;}
-            .modal-backdrop {opacity:0 !important;}
-            ul.products {margin: 0; padding: 0 0 0 10px;}
-EOT;
     }
 }
