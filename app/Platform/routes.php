@@ -24,6 +24,10 @@ Route::group([
     $router->get('orders', 'OrderController@index')->name('orders.index');
     $router->get('orders/{id}', 'OrderController@show')->name('orders.show');
 
+    # Маршруты
+    $router->get('routes', 'RouteController@index')->name('routes.index');
+    $router->get('routes/{id}', 'RouteController@show')->name('routes.show');
+
     # Рассылки
     $router->get('mailings/{name}', 'MailingController@index')->name('mailings.index');
 

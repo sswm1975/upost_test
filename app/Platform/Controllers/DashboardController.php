@@ -67,6 +67,6 @@ class DashboardController extends Controller
             ->selectRaw('COUNT(1) AS total, SUM(IF(created_at>?,1,0)) AS today', [date('Y-m-d') . ' 00:00:00'])
             ->first();
 
-        return new InfoBox('Маршруты', 'location-arrow', 'blue', '#', "{$cnt->today} / {$cnt->total}");
+        return new InfoBox('Маршруты', 'location-arrow', 'blue', route('platform.routes.index'), "{$cnt->today} / {$cnt->total}");
     }
 }
