@@ -7,6 +7,8 @@
 !/vendor
 /vendor/*
 !/vendor/encore
+!/vendor/jxlwqq
+!/vendor/laravel-admin-ext
 .env
 .env.backup
 .phpunit.result.cache
