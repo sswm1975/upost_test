@@ -2,6 +2,7 @@
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -251,11 +252,15 @@ EOT;
      * Add fields for Show interface.
      * The field description is taken from the comments' column of the table, if any.
      *
-     * @param Show $show
+     * @param Model $model
      * @return Show
      */
-    protected function addShowFields(Show $show): Show
+    protected function showFields(Model $model): Show
     {
+        Admin::style('.col-sm-2.control-label {font-size:12px;}');
+
+        $show = new Show($model);
+
         $show->panel()->tools(function ($tools) {
             $tools->disableEdit();
             $tools->disableDelete();

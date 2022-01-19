@@ -72,7 +72,7 @@ class FeedbackController extends AdminController
      */
     protected function detail($id): Show
     {
-        return $this->addShowFields(new Show(Feedback::findOrFail($id)));
+        return $this->showFields(Feedback::findOrFail($id));
     }
 
     /**

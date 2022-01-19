@@ -72,6 +72,6 @@ class WaitRangeController extends AdminController
      */
     protected function detail($id): Show
     {
-        return $this->addShowFields(new Show(WaitRange::findOrFail($id)));
+        return $this->showFields(WaitRange::findOrFail($id));
     }
 }

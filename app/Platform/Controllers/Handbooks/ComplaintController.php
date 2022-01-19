@@ -63,6 +63,6 @@ class ComplaintController extends AdminController
      */
     protected function detail($id): Show
     {
-        return $this->addShowFields(new Show(Complaint::findOrFail($id)));
+        return $this->showFields(Complaint::findOrFail($id));
     }
 }

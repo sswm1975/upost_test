@@ -74,6 +74,6 @@ class SettingController extends AdminController
      */
     protected function detail($id): Show
     {
-        return $this->addShowFields(new Show(Setting::findOrFail($id)));
+        return $this->showFields(Setting::findOrFail($id));
     }
 }

@@ -93,6 +93,6 @@ class RouteController extends AdminController
      */
     protected function detail($id): Show
     {
-        return $this->addShowFields(new Show(Route::findOrFail($id)));
+        return $this->showFields(Route::findOrFail($id));
     }
 }

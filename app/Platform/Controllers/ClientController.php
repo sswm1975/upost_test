@@ -155,6 +155,6 @@ class ClientController extends AdminController
      */
     protected function detail($id): Show
     {
-        return $this->addShowFields(new Show(User::findOrFail($id)));
+        return $this->showFields(User::findOrFail($id));
     }
 }
