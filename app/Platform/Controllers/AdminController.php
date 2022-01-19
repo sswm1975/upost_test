@@ -221,6 +221,38 @@ EOT
     }
 
     /**
+     * Add fields for Show interface.
+     * The field description is taken from the comments' column of the table, if any.
+     *
+     * @param Model $model
+     * @return Show
+     */
+    protected function showFields(Model $model): Show
+    {
+        Admin::style('.col-sm-2.control-label {font-size:12px;}');
+
+        $show = new Show($model);
+
+        $show->panel()->tools(function ($tools) {
+            $tools->disableEdit();
+            $tools->disableDelete();
+        });
+
+        $columns = collect(DB::select("SHOW FULL COLUMNS FROM {$model->getTable()}"))
+            ->where('Field', '<>', 'password')
+            ->pluck('Comment', 'Field')
+            ->toArray();
+
+        foreach ($columns as $field => $comment) {
+            $show->field($field, $comment)->unescape()->as(function($value) {
+                return is_array($value) ? implode('<br>', $value) : $value;
+            });
+        }
+
+        return $show;
+    }
+
+    /**
      * Get index style.
      *
      * @return string
@@ -246,39 +278,5 @@ EOT
             .modal-header {cursor: move;}
 
 EOT;
-    }
-
-    /**
-     * Add fields for Show interface.
-     * The field description is taken from the comments' column of the table, if any.
-     *
-     * @param Model $model
-     * @return Show
-     */
-    protected function showFields(Model $model): Show
-    {
-        Admin::style('.col-sm-2.control-label {font-size:12px;}');
-
-        $show = new Show($model);
-
-        $show->panel()->tools(function ($tools) {
-            $tools->disableEdit();
-            $tools->disableDelete();
-        });
-
-        $table = $show->getModel()->getTable();
-
-        $columns = collect(DB::select(DB::raw("SHOW FULL COLUMNS FROM {$table}")))
-            ->where('Field', '<>', 'password')
-            ->pluck('Comment', 'Field')
-            ->toArray();
-
-        foreach ($columns as $field => $comment) {
-            $show->field($field, $comment)->unescape()->as(function($value) {
-                return is_array($value) ? implode('<br>', $value) : $value;
-            });
-        }
-
-        return $show;
     }
 }
