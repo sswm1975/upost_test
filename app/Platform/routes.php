@@ -28,6 +28,11 @@ Route::group([
     $router->get('routes', 'RouteController@index')->name('routes.index');
     $router->get('routes/{id}', 'RouteController@show')->name('routes.show');
 
+    # Обратная связь
+    $router->get('feedback', 'FeedbackController@index')->name('feedback.index');
+    $router->get('feedback/{id}', 'FeedbackController@show')->name('feedback.show');
+    $router->post('feedback/set_read', 'FeedbackController@setRead')->name('feedback.set_read');
+
     # Рассылки
     $router->get('mailings/{name}', 'MailingController@index')->name('mailings.index');
 

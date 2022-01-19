@@ -52,6 +52,7 @@ Admin::style(<<<CSS
     .sidebar-menu .treeview span {width:230px !important;}
     .sidebar-menu .treeview .treeview-menu {width:230px !important;}
 
+    /* Класс для запрета переноса строк */
     .nowrap {white-space: nowrap;}
 CSS);
 
@@ -82,5 +83,8 @@ Column::extend('showYesNo', function ($value) {
     return $value
         ? '<span class="badge label-success">Да</span>'
         : '<span class="badge label-danger">Нет</span>';
+});
+Column::extend('nowrap', function ($value) {
+    return "<span class='nowrap'>{$value}</span>";
 });
 
