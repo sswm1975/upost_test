@@ -12,9 +12,8 @@ Route::group([
     'as'         => config('admin.route.prefix') . '.',
 ], function (Router $router) {
 
-    $router->group(['as' => 'dashboard.'], function ($router) {
-        $router->get('/', 'DashboardController@index')->name('index');
-    });
+    # Доска
+    $router->get('/', 'DashboardController@index')->name('dashboard.index');
 
     # Клиенты
     $router->get('clients', 'ClientController@index')->name('clients.index');
@@ -58,7 +57,7 @@ Route::group([
         'prefix'     => 'auth',
         'namespace'  => 'Auth',
         'middleware' => 'admin.permission:allow,administrator',
-        'as' => 'auth.',
+        'as'         => 'auth.',
     ], function (Router $router) {
         $router->get('info', 'InfoController@index')->name('info');
     });
