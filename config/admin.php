@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<img src="/favicon.png"> <b>' . env('APP_NAME', 'Laravel') . '</b>',
+    'logo' => '<img src="/favicon.png" alt="Logo"> <b>' . env('APP_NAME', 'Laravel') . '</b>',
 
     /*
     |--------------------------------------------------------------------------
