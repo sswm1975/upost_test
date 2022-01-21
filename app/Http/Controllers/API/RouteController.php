@@ -207,13 +207,17 @@ class RouteController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException|ValidatorException
      */
     public function showMyRoutes(Request $request): JsonResponse
     {
-        $user = $request->user();
-        $filters = array_merge(['user_id' => $user->id], $request->all());
+        $filters = validateOrExit([
+            'status'      => 'sometimes|required|in:' .  implode(',', Route::STATUSES),
+            'show'        => 'sometimes|required|integer|min:1',
+            'page-number' => 'sometimes|required|integer|min:1',
+        ]);
 
-        $routes = $this->getRoutesByFilter($user, $filters);
+        $routes = $this->getMyRoutes($filters);
 
         return response()->json([
             'status' => true,
@@ -222,6 +226,133 @@ class RouteController extends Controller
             'pages'  => $routes['last_page'],
             'routes' => null_to_blank($routes['data']),
         ]);
+    }
+
+    /**
+     * Получить мои маршруты.
+     *
+     * Сырой запрос, который формирует метод:
+     *   SELECT
+     *     routes.*,
+     *     (
+     *       SELECT COUNT(1) FROM orders
+     *       WHERE `status` = 'active'
+     *         AND routes.deadline BETWEEN register_date AND deadline
+     *         AND from_country_id = routes.from_country_id
+     *         AND to_country_id = routes.to_country_id
+     *         AND (from_city_id = routes.from_city_id OR from_city_id IS NULL AND routes.from_city_id > 0 OR routes.from_city_id IS NULL AND from_city_id > 0)
+     *         AND (to_city_id = routes.to_city_id OR to_city_id IS NULL AND routes.to_city_id > 0 OR routes.to_city_id IS NULL AND to_city_id > 0)
+     *     ) AS orders_cnt,
+     *     (
+     *       SELECT COUNT(1) FROM orders
+     *       WHERE `status` = 'active'
+     *         AND routes.deadline BETWEEN register_date AND deadline
+     *         AND from_country_id = routes.from_country_id
+     *         AND to_country_id = routes.to_country_id
+     *         AND (from_city_id = routes.from_city_id OR from_city_id IS NULL AND routes.from_city_id > 0 OR routes.from_city_id IS NULL AND from_city_id > 0)
+     *         AND (to_city_id = routes.to_city_id OR to_city_id IS NULL AND routes.to_city_id > 0 OR routes.to_city_id IS NULL AND to_city_id > 0)
+     *         AND (routes.viewed_orders_at IS NULL OR register_date > routes.viewed_orders_at)
+     *     ) AS orders_new_cnt,
+     *     (
+     *       SELECT COUNT(1) FROM rates
+     *       WHERE routes.id = rates.route_id
+     *         AND `status` = 'active'
+     *     ) AS rates_all_count,
+     *     (
+     *       SELECT COUNT(1) FROM rates
+     *       WHERE routes.id = rates.route_id
+     *         AND `status` = 'active'
+     *         AND `is_read` = 0
+     *     ) AS rates_new_count,
+     * 	   (
+     *       SELECT IFNULL(SUM(orders.price_usd), 0) FROM orders
+     *       JOIN rates ON rates.order_id = orders.id
+     *       WHERE routes.id = rates.route_id
+     *     ) AS budget_usd,
+     *     (
+     *       SELECT IFNULL(SUM(orders.user_price_usd), 0) FROM orders
+     *       JOIN rates ON rates.order_id = orders.id
+     *       WHERE routes.id = rates.route_id
+     *     ) AS profit_usd
+     *   FROM routes
+     *   WHERE routes.user_id = 21
+     *   AND routes.`status` IN ('active', 'in_work')
+     *   ORDER BY `id` DESC
+     *   LIMIT 5
+     *   OFFSET 0
+     *
+     * @param array $filters
+     * @return array
+     */
+    private function getMyRoutes(array $filters = []): array
+    {
+        $status = $filters['status'] ?? Route::STATUS_ALL;
+
+        # подзапросы для подсчета "Всего заказов" ($orders_all_count) и "Из них новых заказов" ($orders_new_count)
+        if ($status == Route::STATUS_CLOSED) {
+            # заглушка: для закрытых маршрутов всегда возвращаем 0
+            $orders_all_count = $orders_new_count = DB::query()->selectRaw('0');
+        } else {
+            # эта часть для 2 запросов одинаковая
+            $sub_query = Order::selectRaw('count(1)')
+                ->where('status',Order::STATUS_ACTIVE)
+                ->whereBetweenColumns('routes.deadline', ['register_date', 'deadline'])
+                ->whereColumn('from_country_id', 'routes.from_country_id')
+                ->whereColumn('to_country_id', 'routes.to_country_id')
+                ->where(function($query) {
+                    return $query->whereColumn('from_city_id', 'routes.from_city_id')
+                        ->orWhere(function ($query) {
+                            return $query->whereNull('from_city_id')->where('routes.from_city_id', '>', 0);
+                        })
+                        ->orWhere(function ($query) {
+                            return $query->whereNull('routes.from_city_id')->where('from_city_id', '>', 0);
+                        });
+                })
+                ->where(function($query) {
+                    return $query->whereColumn('to_city_id', 'routes.to_city_id')
+                        ->orWhere(function ($query) {
+                            return $query->whereNull('to_city_id')->where('routes.to_city_id', '>', 0);
+                        })
+                        ->orWhere(function ($query) {
+                            return $query->whereNull('routes.to_city_id')->where('to_city_id', '>', 0);
+                        });
+                });
+
+            # количество всех заказов
+            $orders_all_count = $sub_query->getQuery();
+
+            # количество новых заказов
+            $orders_new_count = $sub_query->where(function($query) {
+                    return $query->whereNull('routes.viewed_orders_at')->orWhereColumn('register_date', '>', 'routes.viewed_orders_at');
+                })
+                ->getQuery();
+        }
+
+        return Route::owner()
+            ->filterByStatus($status)
+            ->with([
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+            ])
+            ->withCount(['rates as rates_all_count' => function ($query) {
+                $query->active();
+            }])
+            ->withCount(['rates as rates_new_count' => function ($query) {
+                $query->active()->notRead();
+            }])
+            ->withCount(['order as budget_usd' => function($query) {
+                $query->select(DB::raw('IFNULL(SUM(orders.price_usd), 0)'));
+            }])
+            ->withCount(['order as profit_usd' => function($query) {
+                $query->select(DB::raw('IFNULL(SUM(orders.user_price_usd), 0)'));
+            }])
+            ->selectSub($orders_all_count, 'orders_all_count')
+            ->selectSub($orders_new_count, 'orders_new_count')
+            ->orderBy('id', 'desc')
+            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1)
+            ->toArray();
     }
 
     /**

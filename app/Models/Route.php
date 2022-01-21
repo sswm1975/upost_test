@@ -5,22 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\DB;
 use DateTimeInterface;
 
 class Route extends Model
 {
-    const STATUS_ACTIVE = 'active';
-    const STATUS_CLOSED = 'closed';
-    const STATUS_BAN = 'ban';
+    const STATUS_ALL        = 'all';
+    const STATUS_ACTIVE     = 'active';
+    const STATUS_IN_WORK    = 'in_work';
     const STATUS_SUCCESSFUL = 'successful';
+    const STATUS_CLOSED     = 'closed';
+    const STATUS_BAN        = 'ban';
 
     const STATUSES = [
+        self::STATUS_ALL,
         self::STATUS_ACTIVE,
+        self::STATUS_IN_WORK,
+        self::STATUS_SUCCESSFUL,
         self::STATUS_CLOSED,
         self::STATUS_BAN,
-        self::STATUS_SUCCESSFUL,
     ];
 
     protected $table = 'routes';
@@ -28,7 +33,6 @@ class Route extends Model
     protected $guarded = ['id'];
     protected $appends = [
         'status_name',
-        'is_favorite',
     ];
 
     /**
@@ -48,17 +52,6 @@ class Route extends Model
     public function getStatusNameAttribute(): string
     {
         return __("message.route.statuses.$this->status");
-    }
-
-    public function getIsFavoriteAttribute(): bool
-    {
-        $user = request()->user();
-
-        if (empty($user->favorite_routes)) {
-            return false;
-        }
-
-        return in_array($this->id, explode(',', $user->favorite_routes));
     }
 
     ### LINKS ###
@@ -109,6 +102,11 @@ class Route extends Model
         return $this->hasMany(Rate::class, 'route_id', 'id');
     }
 
+    function order(): HasOneThrough
+    {
+        return $this->hasOneThrough(Order::class, Rate::class, 'route_id', 'id', 'id', 'order_id');
+    }
+
     public function review(): MorphOne
     {
         return $this->morphOne(Review::class, 'reviewable');
@@ -124,6 +122,17 @@ class Route extends Model
     public function scopeSuccessful($query)
     {
         return $query->whereStatus(self::STATUS_SUCCESSFUL);
+    }
+
+    public function scopeFilterByStatus($query, $status)
+    {
+        if ($status == self::STATUS_ALL) {
+            return $query->whereIn('status', [self::STATUS_ACTIVE, self::STATUS_IN_WORK]);
+        }
+        if ($status == self::STATUS_CLOSED) {
+            return $query->whereIn('status', [self::STATUS_CLOSED, self::STATUS_SUCCESSFUL, self::STATUS_BAN]);
+        }
+        return $query->where('status', $status);
     }
 
     /**

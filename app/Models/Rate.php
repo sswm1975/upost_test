@@ -106,18 +106,24 @@ class Rate extends Model
         return $query->where('type', self::TYPE_ROUTE);
     }
 
+    function scopeActive($query)
+    {
+        return $query->where('status', self::STATUS_ACTIVE);
+    }
+
+    function scopeNotRead($query)
+    {
+        return $query->where('is_read', 0);
+    }
+
     function scopeDeadlineToday($query)
     {
-        return $query->where([
-            'deadline' => Carbon::today()->toDateString(),
-            'status'   => self::STATUS_ACTIVE,
-        ]);
+        return $query->active()->where('deadline', Carbon::today()->toDateString());
     }
 
     function scopeDeadlineTermExpired($query, int $days = 0)
     {
-        return $query->where('status', self::STATUS_ACTIVE)
-            ->where('deadline', '>=', Carbon::today()->addDays($days)->toDateString());
+        return $query->active()->where('deadline', '>=', Carbon::today()->addDays($days)->toDateString());
     }
 
     /**
