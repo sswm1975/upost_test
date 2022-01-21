@@ -81,6 +81,7 @@ class OrderController extends Controller
         $data['deadline'] =  Date::now()->addDays($wait_days)->format('Y-m-d') ;
         $data['slug'] = Str::slug($data['name']) . '-'. Str::random(8);
         $data['price_usd'] = convertPriceToUsd($data['price'], $data['currency']);
+        $data['user_price_usd'] = convertPriceToUsd($data['user_price'], $data['currency']);
         $data['images'] = json_encode($data['images']);
 
         $order_id = Order::insertGetId($data);
@@ -117,6 +118,9 @@ class OrderController extends Controller
         }
         if ($order->price <> $data['price']) {
             $data['price_usd'] = convertPriceToUsd($data['price'], $data['currency']);
+        }
+        if ($order->user_price <> $data['user_price']) {
+            $data['user_price_usd'] = convertPriceToUsd($data['user_price'], $data['currency']);
         }
 
         $affected = $order->update($data);
