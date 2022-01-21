@@ -4968,7 +4968,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/routes/my/show?lang=ru",
+									"raw": "{{host}}/{{endpoint}}/routes/my/show?lang=ru&status=all",
 									"host": [
 										"{{host}}"
 									],
@@ -4981,7 +4981,13 @@
 									"query": [
 										{
 											"key": "lang",
-											"value": "ru"
+											"value": "ru",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										},
+										{
+											"key": "status",
+											"value": "all",
+											"description": "Фільтр по статусам (all, active, in_work, closed)"
 										}
 									]
 								}
