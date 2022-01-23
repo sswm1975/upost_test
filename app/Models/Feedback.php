@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Arr;
-use DateTimeInterface;
 
 class Feedback extends Model
 {
+    use TimestampSerializable;
+
     protected $table = 'feedback';
     protected $guarded = ['id'];
 
@@ -19,18 +21,6 @@ class Feedback extends Model
         self::SUBJECT_WITHOUT_NAME  => 'Без темы',
         self::SUBJECT_HAVE_QUESTION => 'У Вас есть Вопрос?',
     ];
-
-    /**
-     * Prepare a date for array / JSON serialization.
-     * https://laravel.com/docs/7.x/upgrade#date-serialization
-     *
-     * @param  DateTimeInterface  $date
-     * @return string
-     */
-    protected function serializeDate(DateTimeInterface $date)
-    {
-        return $date->format('Y-m-d H:i:s');
-    }
 
     ### GETTERS ###
 

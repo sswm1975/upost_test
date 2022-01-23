@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
-use DateTimeInterface;
 use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
+    use TimestampSerializable;
+
     protected $fillable = ['name', 'value'];
 
     public static function boot()
@@ -41,17 +43,5 @@ class Setting extends Model
     public static function getSettings(): array
     {
         return static::pluck('value', 'name')->toArray();
-    }
-
-    /**
-     * Prepare a date for array / JSON serialization.
-     * https://laravel.com/docs/7.x/upgrade#date-serialization
-     *
-     * @param  DateTimeInterface  $date
-     * @return string
-     */
-    protected function serializeDate(DateTimeInterface $date)
-    {
-        return $date->format('Y-m-d H:i:s');
     }
 }

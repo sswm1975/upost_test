@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\DB;
-use DateTimeInterface;
 
 class Route extends Model
 {
+    use TimestampSerializable;
+
     const STATUS_ALL        = 'all';
     const STATUS_ACTIVE     = 'active';
     const STATUS_IN_WORK    = 'in_work';
@@ -34,18 +36,6 @@ class Route extends Model
     protected $appends = [
         'status_name',
     ];
-
-    /**
-     * Prepare a date for array / JSON serialization.
-     * https://laravel.com/docs/7.x/upgrade#date-serialization
-     *
-     * @param  DateTimeInterface  $date
-     * @return string
-     */
-    protected function serializeDate(DateTimeInterface $date)
-    {
-        return $date->format('Y-m-d H:i:s');
-    }
 
     ### GETTERS ###
 
