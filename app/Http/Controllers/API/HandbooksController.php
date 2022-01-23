@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shop;
 use App\Models\WaitRange;
 use App\Models\Complaint;
 use App\Models\Country;
@@ -41,6 +42,7 @@ class HandbooksController extends Controller
             'prices'                => $prices,
             'wait_ranges'           => WaitRange::getWaitRanges(),
             'complaints'            => Complaint::getComplaints(),
+            'shops'                 => Shop::pluck('name', 'slug')->toArray(),
         ]);
     }
 }
