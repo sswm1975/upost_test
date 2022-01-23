@@ -45,6 +45,9 @@ Route::group([
         'as'         => 'handbooks.',
         'middleware' => 'admin.permission:check,handbooks',
     ], function ($router) {
+        # Магазины
+        $router->resource('shops', 'ShopController')->names('shops');
+
         # Диапазоны ожидания
         $router->resource('wait_ranges', 'WaitRangeController')->names('wait_ranges');
 
