@@ -178,27 +178,26 @@ class RouteController extends Controller
      */
     public function showRoute(int $route_id, Request $request): JsonResponse
     {
-        $route = end($this->getRoutesByFilter(
-            $request->user(),
-            ['id' => [$route_id]]
-        )['data']);
+        $route = Route::whereKey($route_id)
+            ->with([
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+            ])
+            ->withCount(['order as budget_usd' => function($query) {
+                $query->select(DB::raw('IFNULL(SUM(orders.price_usd), 0)'));
+            }])
+            ->withCount(['order as profit_usd' => function($query) {
+                $query->select(DB::raw('IFNULL(SUM(orders.user_price_usd), 0)'));
+            }])
+            ->first();
 
         if (!$route) throw new ErrorException(__('message.route_not_found'));
 
-        $similar_routes = $this->getRoutesByFilter(
-            $request->user(),
-            [
-                'without_route_id' => $route['id'],
-                'city_from' => [$route['from_city_id']],
-                'city_to' => [$route['to_city_id']],
-                'show' => 3,
-            ]
-        )['data'];
-
         return response()->json([
             'status' => true,
-            'route' => null_to_blank($route),
-            'similar_routes' => null_to_blank($similar_routes),
+            'route'  => null_to_blank($route),
         ]);
     }
 

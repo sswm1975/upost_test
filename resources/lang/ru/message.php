@@ -90,6 +90,7 @@ return [
     'route' => [
         'statuses' => [
             'active'     => 'Активный',
+            'in_work'    => 'В работе',
             'closed'     => 'Закрытый',
             'ban'        => 'Забаненный',
             'successful' => 'Успешный',
