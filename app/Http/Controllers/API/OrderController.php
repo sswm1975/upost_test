@@ -265,7 +265,7 @@ class OrderController extends Controller
             $data = collect($orders['data']);
             $prices = [
                 'price_min' => $data->min('price_usd'),
-                'price_max' => $data->min('price_usd'),
+                'price_max' => $data->max('price_usd'),
             ];
             $shop_slugs = $data->pluck('shop_slug')->unique()->all();
             $shops = Shop::getBySlugs($shop_slugs);
