@@ -44,14 +44,10 @@ class OrderController extends AdminController
             })
             ->sortable();
         $grid->column('name', 'Наименование')
-            ->display(function($value){
-                return "<span class='nowrap'>{$value}</span>";
-            })
+            ->nowrap()
             ->sortable();
         $grid->column('slug', 'Слаг')
-            ->display(function($value){
-                return "<span class='nowrap'>{$value}</span>";
-            })
+            ->nowrap()
             ->sortable();
         $grid->column('description_modal', 'Описание')
             ->modal('Описание', function () {
@@ -78,6 +74,8 @@ class OrderController extends AdminController
                 $host = parse_url($url, PHP_URL_HOST);
                 return "<a href='{$url}' target='_blank'>{$host}</a>";
             })
+            ->sortable();
+        $grid->column('shop_slug', 'Магазин')
             ->sortable();
         $grid->column('products_count', 'Кол-во')
             ->setAttributes(['align'=>'center'])
@@ -132,14 +130,10 @@ class OrderController extends AdminController
             })
             ->sortable();
         $grid->column('register_date', 'Зарегистрирован')
-            ->display(function($value){
-                return "<span style='white-space: nowrap'>$value</span>";
-            })
+            ->nowrap()
             ->sortable();
         $grid->column('deadline', 'Дата дедлайна')
-            ->display(function($value){
-                return "<span style='white-space: nowrap'>$value</span>";
-            })
+            ->nowrap()
             ->sortable();
         $grid->column('looks', 'Просмотров')
             ->setAttributes(['align'=>'center'])
@@ -155,6 +149,12 @@ class OrderController extends AdminController
             ->display(function(){
                 return "<span style='white-space: nowrap'>{$this->status_name}</span>";
             })
+            ->sortable();
+        $grid->column('created_at', trans('admin.created_at'))
+            ->nowrap()
+            ->sortable();
+        $grid->column('updated_at', trans('admin.updated_at'))
+            ->nowrap()
             ->sortable();
 
         # EXPORT TO EXCEL
