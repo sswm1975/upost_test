@@ -76,20 +76,12 @@ class OrderController extends Controller
         $exists_order = Order::where(Arr::only($data, ['user_id', 'name', 'price', 'from_country_id', 'to_country_id']))->count();
         if ($exists_order) throw new ErrorException(__('message.order_exists'));
 
-        $wait_days = WaitRange::find($data['wait_range_id'])->days;
-        $data['register_date'] = Date::now()->format('Y-m-d');
-        $data['deadline'] =  Date::now()->addDays($wait_days)->format('Y-m-d') ;
-        $data['slug'] = Str::slug($data['name']) . '-'. Str::random(8);
-        $data['price_usd'] = convertPriceToUsd($data['price'], $data['currency']);
-        $data['user_price_usd'] = convertPriceToUsd($data['user_price'], $data['currency']);
-        $data['images'] = json_encode($data['images']);
-
-        $order_id = Order::insertGetId($data);
+        $order = Order::create($data);
 
         return response()->json([
             'status'   => true,
-            'order_id' => $order_id,
-            'url'      => $data['slug'],
+            'order_id' => $order->id,
+            'slug'     => $order->slug,
         ]);
     }
 
@@ -112,23 +104,12 @@ class OrderController extends Controller
 
         $data = validateOrExit(self::rules4saveOrder());
 
-        if ($order->wait_range_id <> $data['wait_range_id']) {
-            $wait_days = WaitRange::find($data['wait_range_id'])->days;
-            $data['deadline'] =  Date::createFromFormat( 'Y-m-d', $order->register_date)->addDays($wait_days)->format('Y-m-d') ;
-        }
-        if ($order->price <> $data['price']) {
-            $data['price_usd'] = convertPriceToUsd($data['price'], $data['currency']);
-        }
-        if ($order->user_price <> $data['user_price']) {
-            $data['user_price_usd'] = convertPriceToUsd($data['user_price'], $data['currency']);
-        }
-
         $affected = $order->update($data);
 
         return response()->json([
             'status'   => $affected,
             'order_id' => $order->id,
-            'url'      => $order->slug,
+            'slug'     => $order->slug,
         ]);
     }
 

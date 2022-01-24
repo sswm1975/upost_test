@@ -397,11 +397,13 @@ function getCurrencyRate(string $currency = '')
  * Конвертация цены выбранной валюты в долларовый эквивалент.
  *
  * @param float $price Цена
- * @param string $currency Наименование валюты (uah, usd, rub, eur)
+ * @param string $currency Наименование валюты (₴, $, €, ₽)
  * @return float
  */
 function convertPriceToUsd(float $price, string $currency): float
 {
+    if ($currency == '$') return $price;
+
     $rate = getCurrencyRate($currency);
 
     return $price * $rate;

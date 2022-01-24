@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class Order extends Model
 {
+    use TimestampSerializable;
+
     const STATUS_ACTIVE = 'active';
     const STATUS_CLOSED = 'closed';
     const STATUS_BAN = 'ban';
@@ -25,7 +29,6 @@ class Order extends Model
 
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
-    public $timestamps = false;
     protected $casts = [
         'images' => 'array',
         'strikes' => 'array',
@@ -38,6 +41,21 @@ class Order extends Model
         'images_medium',
         'images_original',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->slug = Str::slug($model->name) . '-'. Str::random(8);
+            $model->register_date = Date::now()->format('Y-m-d');
+        });
+
+        self::saving(function ($model) {
+            $model->price_usd = convertPriceToUsd($model->price, $model->currency);
+            $model->user_price_usd = convertPriceToUsd($model->user_price, $model->user_currency);
+        });
+    }
 
     ### GETTERS ###
 
@@ -130,26 +148,29 @@ class Order extends Model
         $this->attributes['name'] = !empty($value) ? strip_tags(strip_unsafe($value)) : null;
     }
 
+    public function setProductLinkAttribute($value)
+    {
+        $product_link = $this->attributes['product_link'] ?? null;
+        if ($product_link == $value) return;
+
+        $this->attributes['product_link'] = $value;
+
+        $shop_slug = null;
+        $host = parse_url($value, PHP_URL_HOST);
+        $slugs = Shop::pluck('slug')->toArray();
+        foreach ($slugs as $slug) {
+            if (Str::contains($host, $slug)) {
+                $shop_slug = $slug;
+            }
+        }
+        $this->attributes['shop_slug'] = $shop_slug;
+    }
+
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = !empty($value)
             ? strip_tags(strip_unsafe($value), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
             : null;
-    }
-
-    public function setFromAddressAttribute($value)
-    {
-        $this->attributes['from_address'] = !empty($value) ? strip_tags(strip_unsafe($value)) : null;
-    }
-
-    public function setToAddressAttribute($value)
-    {
-        $this->attributes['to_address'] = !empty($value) ? strip_tags(strip_unsafe($value)) : null;
-    }
-
-    public function setUserPriceAttribute($value)
-    {
-        $this->attributes['user_price'] = !empty($value) ? $value : 0;
     }
 
     public function setImagesAttribute($images)
@@ -164,6 +185,20 @@ class Order extends Model
         }
 
         $this->attributes['images'] = json_encode($images);
+    }
+
+    public function setWaitRangeIdAttribute($value)
+    {
+        if (isset($this->attributes['wait_range_id'])) {
+            if ($this->attributes['wait_range_id'] == $value) return;
+            $register_date = Date::createFromFormat( 'Y-m-d', $this->attributes['register_date']);
+        } else {
+            $register_date = Date::now();
+        }
+
+        $this->attributes['wait_range_id'] = $value;
+        $wait_days = WaitRange::find($value)->days;
+        $this->attributes['deadline'] = $register_date->addDays($wait_days)->format('Y-m-d');
     }
 
     ### LINKS ###
