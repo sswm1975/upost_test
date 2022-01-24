@@ -10,14 +10,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Chat;
 use App\Models\Route;
+use App\Models\Shop;
 use App\Models\User;
 use App\Models\CurrencyRate;
-use App\Models\WaitRange;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Exception;
 
@@ -33,6 +32,18 @@ class OrderController extends Controller
 
     /** @var int Количество страйков, за которое выдается бан (заказ переводится в статус ban) */
     const COUNT_STRIKES_FOR_BAN = 50;
+
+    /** @var array Типы фильтров для отбора заказов (Все, Принятые, Мои предложения, Доставленные) */
+    const FILTER_ALL = 'all';
+    const FILTER_ACCEPTED = 'accepted';
+    const FILTER_SUGGESTIONS = 'suggestions';
+    const FILTER_DELIVERED = 'delivered';
+    const FILTER_TYPES = [
+        self::FILTER_ALL,
+        self::FILTER_ACCEPTED,
+        self::FILTER_SUGGESTIONS,
+        self::FILTER_DELIVERED,
+    ];
 
     /**
      * Правила проверки входных данных запроса при сохранении заказа.
@@ -207,6 +218,109 @@ class OrderController extends Controller
         ]);
 
         return self::deleteOrder_int($data['order_id']);
+    }
+
+    /**
+     * Заказы по маршруту.
+     *
+     * @param int $route_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws ValidatorException
+     */
+    public function showOrdersByRoute(int $route_id, Request $request): JsonResponse
+    {
+        $filter_type = $request->get('filter_type', self::FILTER_ALL);
+        if (!array_key_exists($request->get('filter_type'), self::FILTER_TYPES)) {
+            $filter_type = self::FILTER_ALL;
+        }
+
+        $filters = validateOrExit([
+            'price_to'    => 'sometimes|required|numeric',
+            'price_from'  => 'sometimes|required|numeric',
+            'shop'        => 'sometimes|required|array',
+            'shop.*'      => 'required',
+            'sorting'     => 'sometimes|required|in:asc,desc',
+            'sort_by'     => 'sometimes|required|in:date,price',
+            'show'        => 'sometimes|required|integer|min:1',
+            'page-number' => 'sometimes|required|integer|min:1',
+        ]);
+
+        $route = Route::getByIdWithRelations($route_id);
+
+        if ($filter_type == self::FILTER_ALL) {
+            $orders = $this->getAllOrdersByRoute($route_id, $filters);
+        } else {
+            $orders = [];
+        }
+
+        $prices = [
+            'price_min' => 0,
+            'price_max' => 0,
+        ];
+        $shops = [];
+
+        if (!empty($orders['data'])) {
+            $data = collect($orders['data']);
+            $prices = [
+                'price_min' => $data->min('price_usd'),
+                'price_max' => $data->min('price_usd'),
+            ];
+            $shop_slugs = $data->pluck('shop_slug')->unique()->all();
+            $shops = Shop::getBySlugs($shop_slugs);
+        }
+
+        return response()->json([
+            'status' => true,
+            'route'  => null_to_blank($route),
+            'orders' => null_to_blank($orders['data']),
+            'count'  => $orders['total'],
+            'page'   => $orders['current_page'],
+            'pages'  => $orders['last_page'],
+            'prices' => $prices,
+            'shops'  => $shops,
+        ]);
+    }
+
+    /**
+     * Получить список заказов по выбранному маршруту и фильтру "all-Заказы".
+     *
+     * @param int $route_id
+     * @param array $filters
+     * @return mixed
+     */
+    public function getAllOrdersByRoute(int $route_id, array $filters = [])
+    {
+        return Order::join('routes', 'routes.id', DB::raw($route_id))
+            ->with([
+                'user' => function ($query) {
+                    $query->select(User::FIELDS_FOR_SHOW)->withCount('successful_orders');
+                },
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+            ])
+            ->withCount([
+                'rates as rates_count',
+                'rates as has_rate' => function ($query) {
+                    $query->whereColumn('rates.route_id', 'routes.id');
+                },
+            ])
+            ->searchByRoutes()
+            ->when(!empty($filters['price_from']), function ($query) use ($filters) {
+                return $query->where('orders.price_usd', '>=', $filters['price_from']);
+            })
+            ->when(!empty($filters['price_to']), function ($query) use ($filters) {
+                return $query->where('orders.price_usd', '<=', $filters['price_to']);
+            })
+            ->when(!empty($filters['shop']), function ($query) use ($filters) {
+                return $query->whereIn('orders.shop_slug', $filters['shop']);
+            })
+            ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
+            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1)
+            ->toArray();
     }
 
     /**

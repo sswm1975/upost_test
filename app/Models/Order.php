@@ -289,6 +289,42 @@ class Order extends Model
     }
 
     /**
+     * Поиск заказов по данным маршрута/ов.
+     *
+     * @param $query
+     * @param bool $only_new - флаг "Только новые заказы"
+     * @return mixed
+     */
+    public function scopeSearchByRoutes($query, bool $only_new = false)
+    {
+        return $query->where('orders.status', self::STATUS_ACTIVE)
+            ->whereBetweenColumns('routes.deadline', ['orders.register_date', 'orders.deadline'])
+            ->whereColumn('orders.from_country_id', 'routes.from_country_id')
+            ->whereColumn('orders.to_country_id', 'routes.to_country_id')
+            ->where(function($query) {
+                return $query->whereColumn('orders.from_city_id', 'routes.from_city_id')
+                    ->orWhere(function ($query) {
+                        return $query->whereNull('orders.from_city_id')->where('routes.from_city_id', '>', 0);
+                    })
+                    ->orWhere(function ($query) {
+                        return $query->whereNull('routes.from_city_id')->where('orders.from_city_id', '>', 0);
+                    });
+            })
+            ->where(function($query) {
+                return $query->whereColumn('orders.to_city_id', 'routes.to_city_id')
+                    ->orWhere(function ($query) {
+                        return $query->whereNull('orders.to_city_id')->where('routes.to_city_id', '>', 0);
+                    })
+                    ->orWhere(function ($query) {
+                        return $query->whereNull('routes.to_city_id')->where('orders.to_city_id', '>', 0);
+                    });
+            })
+            ->when($only_new, function ($query) {
+                return $query->where('orders.created_at', '>', DB::Raw('IFNULL(routes.viewed_orders_at, "1900-01-01 00:00:00")'));
+            });
+    }
+
+    /**
      * Получить список избранных заказов авторизированного пользователя.
      *
      * @return array|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection

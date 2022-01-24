@@ -13,4 +13,19 @@ class Shop extends Model
     {
         $this->attributes['slug'] = strtolower($value);
     }
+
+    /**
+     * Получить список магазинов по списку слагов.
+     *
+     * @param array $slugs
+     * @return array
+     */
+    public static function getBySlugs(array $slugs = []): array
+    {
+        if (empty($slugs)) return [];
+
+        return static::whereIn('slug', $slugs)
+            ->pluck('name', 'slug')
+            ->toArray();
+    }
 }

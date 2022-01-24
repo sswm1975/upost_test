@@ -246,10 +246,17 @@ class Route extends Model
      * @param int $id
      * @return array
      */
-    protected static function getByIdWithRelations(int $id): array
+    public static function getByIdWithRelations(int $id): array
     {
-        return static::with(['from_country', 'from_city', 'to_country', 'to_city'])
-            ->find($id)
+        return static::whereKey($id)
+            ->with(['from_country', 'from_city', 'to_country', 'to_city'])
+            ->withCount(['order as budget_usd' => function($query) {
+                $query->select(DB::raw('IFNULL(SUM(orders.price_usd), 0)'));
+            }])
+            ->withCount(['order as profit_usd' => function($query) {
+                $query->select(DB::raw('IFNULL(SUM(orders.user_price_usd), 0)'));
+            }])
+            ->first()
             ->toArray();
     }
 }

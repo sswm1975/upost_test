@@ -4071,7 +4071,7 @@
 										},
 										{
 											"key": "description",
-											"value": "Крутой монитор",
+											"value": "Крутой монитор <script>",
 											"description": "Опис замовлення",
 											"type": "text"
 										},
@@ -4165,7 +4165,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 57);"
+											"pm.variables.set(\"order_id\", 76);"
 										],
 										"type": "text/javascript"
 									}
@@ -4209,7 +4209,7 @@
 										},
 										{
 											"key": "description",
-											"value": "Крутой монитор",
+											"value": "Крутой монитор <script>",
 											"description": "Опис замовлення",
 											"type": "text"
 										},
@@ -4245,7 +4245,7 @@
 										},
 										{
 											"key": "user_price",
-											"value": "150",
+											"value": "150.23",
 											"description": "Сума винагороди",
 											"type": "text"
 										},
@@ -4271,8 +4271,7 @@
 											"key": "images[]",
 											"value": "monitor-27-dell-s2721ds-2.jpg",
 											"description": "Масив назв картинок, завантажених в замовлення",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										}
 									]
 								},
@@ -4348,6 +4347,86 @@
 										{
 											"key": "lang",
 											"value": "ru"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Список замовленнь по маршруту",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"route_id\", 3);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/orders/route/{{route_id}}/show?lang=ru&filter_type=all",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"orders",
+										"route",
+										"{{route_id}}",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "ru"
+										},
+										{
+											"key": "filter_type",
+											"value": "all",
+											"description": "Типы фильтра для отбора заказов (all, accepted, suggestions, delivered / Все, Принятые, Мои предложения, Доставленные)"
+										},
+										{
+											"key": "price_from",
+											"value": "100",
+											"disabled": true
+										},
+										{
+											"key": "price_to",
+											"value": "5000",
+											"disabled": true
+										},
+										{
+											"key": "shop[]",
+											"value": "rozetka",
+											"disabled": true
+										},
+										{
+											"key": "sorting",
+											"value": "asc",
+											"description": "asc,desc",
+											"disabled": true
+										},
+										{
+											"key": "sort_by",
+											"value": "date",
+											"description": "date,price",
+											"disabled": true
+										},
+										{
+											"key": "show",
+											"value": "5",
+											"disabled": true
+										},
+										{
+											"key": "page-number",
+											"value": "1",
+											"disabled": true
 										}
 									]
 								}
@@ -5001,7 +5080,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"route_id\", 94);"
+											"pm.variables.set(\"route_id\", 3);"
 										],
 										"type": "text/javascript"
 									}

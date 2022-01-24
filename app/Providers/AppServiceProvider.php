@@ -41,9 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         # Кэширование таблицы settings и занесение их в App Config, т.е. потом можно вызывать, к примеру config('default_language')
-        if (Schema::hasTable('settings')) {
-            Setting::initCache();
-        }
+        Setting::initCache();
 
         /**
          * Для операции "Сброс пароля" избавляемся от маршрута ниже (для API он не нужен):

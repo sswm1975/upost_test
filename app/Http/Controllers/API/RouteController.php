@@ -178,20 +178,7 @@ class RouteController extends Controller
      */
     public function showRoute(int $route_id, Request $request): JsonResponse
     {
-        $route = Route::whereKey($route_id)
-            ->with([
-                'from_country',
-                'from_city',
-                'to_country',
-                'to_city',
-            ])
-            ->withCount(['order as budget_usd' => function($query) {
-                $query->select(DB::raw('IFNULL(SUM(orders.price_usd), 0)'));
-            }])
-            ->withCount(['order as profit_usd' => function($query) {
-                $query->select(DB::raw('IFNULL(SUM(orders.user_price_usd), 0)'));
-            }])
-            ->first();
+        $route = Route::getByIdWithRelations($route_id);
 
         if (!$route) throw new ErrorException(__('message.route_not_found'));
 
@@ -224,6 +211,7 @@ class RouteController extends Controller
             'page'   => $routes['current_page'],
             'pages'  => $routes['last_page'],
             'routes' => null_to_blank($routes['data']),
+            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
@@ -235,22 +223,22 @@ class RouteController extends Controller
      *     routes.*,
      *     (
      *       SELECT COUNT(1) FROM orders
-     *       WHERE `status` = 'active'
-     *         AND routes.deadline BETWEEN register_date AND deadline
-     *         AND from_country_id = routes.from_country_id
-     *         AND to_country_id = routes.to_country_id
-     *         AND (from_city_id = routes.from_city_id OR from_city_id IS NULL AND routes.from_city_id > 0 OR routes.from_city_id IS NULL AND from_city_id > 0)
-     *         AND (to_city_id = routes.to_city_id OR to_city_id IS NULL AND routes.to_city_id > 0 OR routes.to_city_id IS NULL AND to_city_id > 0)
+     *       WHERE orders.`status` = 'active'
+     *         AND routes.deadline BETWEEN orders.register_date AND orders.deadline
+     *         AND orders.from_country_id = routes.from_country_id
+     *         AND orders.to_country_id = routes.to_country_id
+     *         AND (orders.from_city_id = routes.from_city_id OR orders.from_city_id IS NULL AND routes.from_city_id > 0 OR routes.from_city_id IS NULL AND orders.from_city_id > 0)
+     *         AND (orders.to_city_id = routes.to_city_id OR orders.to_city_id IS NULL AND routes.to_city_id > 0 OR routes.to_city_id IS NULL AND orders.to_city_id > 0)
      *     ) AS orders_cnt,
      *     (
      *       SELECT COUNT(1) FROM orders
-     *       WHERE `status` = 'active'
-     *         AND routes.deadline BETWEEN register_date AND deadline
-     *         AND from_country_id = routes.from_country_id
-     *         AND to_country_id = routes.to_country_id
-     *         AND (from_city_id = routes.from_city_id OR from_city_id IS NULL AND routes.from_city_id > 0 OR routes.from_city_id IS NULL AND from_city_id > 0)
-     *         AND (to_city_id = routes.to_city_id OR to_city_id IS NULL AND routes.to_city_id > 0 OR routes.to_city_id IS NULL AND to_city_id > 0)
-     *         AND (routes.viewed_orders_at IS NULL OR register_date > routes.viewed_orders_at)
+     *       WHERE orders.`status` = 'active'
+     *         AND routes.deadline BETWEEN orders.register_date AND orders.deadline
+     *         AND orders.from_country_id = routes.from_country_id
+     *         AND orders.to_country_id = routes.to_country_id
+     *         AND (orders.from_city_id = routes.from_city_id OR orders.from_city_id IS NULL AND routes.from_city_id > 0 OR routes.from_city_id IS NULL AND orders.from_city_id > 0)
+     *         AND (orders.to_city_id = routes.to_city_id OR orders.to_city_id IS NULL AND routes.to_city_id > 0 OR routes.to_city_id IS NULL AND orders.to_city_id > 0)
+     *         AND orders.created_at > IFNULL(routes.viewed_orders_at, '1900-01-01 00:00:00')
      *     ) AS orders_new_cnt,
      *     (
      *       SELECT COUNT(1) FROM rates
@@ -292,39 +280,11 @@ class RouteController extends Controller
             # заглушка: для закрытых маршрутов всегда возвращаем 0
             $orders_all_count = $orders_new_count = DB::query()->selectRaw('0');
         } else {
-            # эта часть для 2 запросов одинаковая
-            $sub_query = Order::selectRaw('count(1)')
-                ->where('status',Order::STATUS_ACTIVE)
-                ->whereBetweenColumns('routes.deadline', ['register_date', 'deadline'])
-                ->whereColumn('from_country_id', 'routes.from_country_id')
-                ->whereColumn('to_country_id', 'routes.to_country_id')
-                ->where(function($query) {
-                    return $query->whereColumn('from_city_id', 'routes.from_city_id')
-                        ->orWhere(function ($query) {
-                            return $query->whereNull('from_city_id')->where('routes.from_city_id', '>', 0);
-                        })
-                        ->orWhere(function ($query) {
-                            return $query->whereNull('routes.from_city_id')->where('from_city_id', '>', 0);
-                        });
-                })
-                ->where(function($query) {
-                    return $query->whereColumn('to_city_id', 'routes.to_city_id')
-                        ->orWhere(function ($query) {
-                            return $query->whereNull('to_city_id')->where('routes.to_city_id', '>', 0);
-                        })
-                        ->orWhere(function ($query) {
-                            return $query->whereNull('routes.to_city_id')->where('to_city_id', '>', 0);
-                        });
-                });
-
             # количество всех заказов
-            $orders_all_count = $sub_query->getQuery();
+            $orders_all_count = Order::selectRaw('count(1)')->searchByRoutes()->getQuery();
 
             # количество новых заказов
-            $orders_new_count = $sub_query->where(function($query) {
-                    return $query->whereNull('routes.viewed_orders_at')->orWhereColumn('register_date', '>', 'routes.viewed_orders_at');
-                })
-                ->getQuery();
+            $orders_new_count = Order::selectRaw('count(1)')->searchByRoutes(true)->getQuery();
         }
 
         return Route::owner()

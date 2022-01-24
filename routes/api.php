@@ -212,6 +212,9 @@ Route::group(
 
         # Скарга на замовлення
         Route::post('{order_id}/strike', 'API\OrderController@strikeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Заказы по выбранному маршруту
+        Route::get('route/{route_id}/show', 'API\OrderController@showOrdersByRoute');
     }
 );
 
