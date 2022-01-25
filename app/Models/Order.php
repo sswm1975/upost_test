@@ -156,7 +156,7 @@ class Order extends Model
         $this->attributes['product_link'] = $value;
 
         $shop_slug = null;
-        $host = parse_url($value, PHP_URL_HOST);
+        $host = strtolower(parse_url($value, PHP_URL_HOST));
         $slugs = Shop::pluck('slug')->toArray();
         foreach ($slugs as $slug) {
             if (Str::contains($host, $slug)) {
