@@ -87,6 +87,9 @@ Route::group(
 
         # Завантажити фотографію
         Route::get('download_image', 'API\ProfileController@downloadImage');
+
+        # Перевірка заповнення профілю (ім'я, прізвище, дата народження) у авторизованого користувача.
+        Route::get('profile/is_filled', 'API\ProfileController@isProfileFilled')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
 

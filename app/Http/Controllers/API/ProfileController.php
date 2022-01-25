@@ -283,6 +283,16 @@ class ProfileController extends Controller
     }
 
     /**
+     * Проверка заполнения профиля (имя, фамилия, дата рождения) у авторизированного пользователя.
+     *
+     * @return JsonResponse
+     */
+    public function isProfileFilled(): JsonResponse
+    {
+        return response()->json(['status' => !isProfileNotFilled()]);
+    }
+
+    /**
      * Скачать фотографию.
      *
      * @param Request $request
