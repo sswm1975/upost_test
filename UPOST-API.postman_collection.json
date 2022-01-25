@@ -3472,6 +3472,26 @@
 							"response": []
 						},
 						{
+							"name": "Заповнений профіль користувача",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/users/profile/is_filled",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"users",
+										"profile",
+										"is_filled"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Зміна даних профілю (тільки публічні дані)",
 							"request": {
 								"method": "POST",
@@ -4360,7 +4380,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"route_id\", 3);"
+											"pm.variables.set(\"route_id\", 123);"
 										],
 										"type": "text/javascript"
 									}
