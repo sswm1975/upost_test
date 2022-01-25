@@ -4,29 +4,172 @@ use Illuminate\Support\Facades\Route;
 
 const MIDDLEWARE_AUTH_BASIC = 'auth:api';
 
-// Аутентифікація
-Route::group(
-    [
-        'prefix' => 'auth',
-    ],
-    function () {
+Route::namespace('API')->group(function ($route) {
+    # Аутентифікація
+    $route->prefix('auth')->group(function ($route) {
         # Реєстрація
-        Route::post('register', 'API\AuthController@register');
+        $route->post('register', 'AuthController@register');
 
         # Авторизація
-        Route::post('login', 'API\AuthController@login');
+        $route->post('login', 'AuthController@login');
 
         # Припинення сеансу авторизованого користувача
-        Route::post('logout', 'API\AuthController@logout')->middleware(MIDDLEWARE_AUTH_BASIC);
+        $route->post('logout', 'AuthController@logout')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Перевірка токена
-        Route::get('check_token', 'API\AuthController@checkToken');
+        $route->get('check_token', 'AuthController@checkToken');
 
         # Дані авторизованого користувача
-        Route::get('user', 'API\AuthController@getAuthUser');
+        $route->get('user', 'AuthController@getAuthUser');
 
         # Авторизація за допомогою соц.мережі (Google, Facebook)
-        Route::post('social', 'API\AuthController@social');
+        $route->post('social', 'AuthController@social');
+    });
+
+    # Операції по відновленню пароля
+    $route->group(['prefix' => 'password'], function ($route) {
+        # Відправити запит з емейлом для скидання паролю
+        $route->post('email', 'PasswordController@sendResetLinkEmail')->name('password.email');
+
+        # Зміна паролю
+        $route->post('reset', 'PasswordController@reset');
+    });
+
+    # Операції с профілем користувача
+    $route->group(['prefix' => 'users'], function ($route) {
+        # Отримання інформації про користувача (тільки публічні дані)
+        $route->get('{user_id}/profile', 'ProfileController@getPublicData');
+
+        # Отримання інформації про користувача (всі дані)
+        $route->get('profile', 'ProfileController@getPrivateData')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Зміна даних профілю (тільки публічні дані)
+        $route->post('profile/update', 'ProfileController@updatePublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Зміна даних мов та валют
+        $route->post('language/update', 'ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Зміна паролю
+        $route->post('password/update', 'ProfileController@updatePassword')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Зміна логіну: телефону та/або емейлу
+        $route->post('login/update', 'ProfileController@updateLogin')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Зміна даних пластикової картки
+        $route->post('card/update', 'ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Верифікація зміни даних користувача (тільки пароль/логін/картка)
+        $route->get('verification/{token}', 'ProfileController@verificationUserChanges')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Завантажити фотографію
+        $route->get('download_image', 'ProfileController@downloadImage');
+
+        # Перевірка заповнення профілю (ім'я, прізвище, дата народження) у авторизованого користувача.
+        $route->get('profile/is_filled', 'ProfileController@isProfileFilled')->middleware(MIDDLEWARE_AUTH_BASIC);
+    });
+
+    # Замовлення
+    $route->group(['prefix' => 'orders'], function ($route) {
+        # Створення замовлення
+        $route->post('add', 'OrderController@addOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Редагування замовлення
+        $route->post('{order_id}/update', 'OrderController@updateOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Вивід замовлень за фільтром
+        $route->get('show', 'OrderController@showOrders');
+
+        # Вивід моїх замовлень
+        $route->get('my/show', 'OrderController@showMyOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Вивід конкретного замовлення
+        $route->get('{order_id}/show', 'OrderController@showOrder');
+
+        # Підбір маршруту для замовлення
+        $route->get('{order_id}/selection_route', 'OrderController@selectionRoute');
+
+        # Підтвердити виконання замовлення
+        $route->post('confirm', 'OrderController@confirmOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Закриття замовлення
+        $route->post('{order_id}/close', 'OrderController@closeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Закриття декілька замовлень
+        $route->post('close', 'OrderController@closeOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Лічильник переглядів
+        $route->post('{order_id}/add_look', 'OrderController@addLook');
+
+        # Скарга на замовлення
+        $route->post('{order_id}/strike', 'OrderController@strikeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Заказы по выбранному маршруту
+        $route->get('route/{route_id}/show', 'OrderController@showOrdersByRoute');
+    });
+
+    # Маршрути
+    $route->group(['prefix' => 'routes'], function ($route) {
+        # Створення маршруту
+        $route->post('add', 'RouteController@addRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Вивід моїх маршрутів
+        $route->get('my/show', 'RouteController@showMyRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Виведення маршруту за фільтром
+        $route->get('show', 'RouteController@showRoutes');
+
+        # Вивід конкретного маршруту
+        $route->get('{route_id}/show', 'RouteController@showRoute');
+
+        # Редагування маршруту
+        $route->post('{route_id}/update', 'RouteController@updateRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Закриття маршруту
+        $route->post('{route_id}/close', 'RouteController@closeRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Закриття декілька маршрутів
+        $route->post('close', 'RouteController@closeRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Підбір замовлення для маршруту
+        $route->get('{route_id}/selection_order', 'RouteController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Лічильник переглядів
+        $route->post('{route_id}/add_look', 'RouteController@addLook');
+    });
+});
+
+// Ставки
+Route::group(
+    [
+        'prefix' => 'rates',
+    ],
+    function () {
+        # Зробити ставку
+        Route::post('add', 'API\RateController@addRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Редагувати ставку
+        Route::post('{rate_id}/update', 'API\RateController@updateRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Видалити ставку
+        Route::delete('{rate_id}/delete', 'API\RateController@deleteRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Відхилити ставку
+        Route::post('{rate_id}/reject', 'API\RateController@rejectRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Отримати ставки
+        Route::get('show', 'API\RateController@showRates')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Переглянути ставку
+        Route::get('{rate_id}/show', 'API\RateController@showRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Вивід ставок для конкретного заказу
+        Route::get('order/{order_id}/show', 'API\RateController@showRatesByOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Вивід ставок для конкретного маршруту
+        Route::get('route/{route_id}/show', 'API\RateController@showRatesByRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Прийняти ставку
+        Route::post('{rate_id}/accept', 'API\RateController@acceptRate')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
 
@@ -38,58 +181,6 @@ Route::group(
     function () {
         # Відправити листа з форми "Є запитання?"
         Route::post('have_question', 'API\MailController@haveQuestion');
-    }
-);
-
-// Операції по відновленню пароля
-Route::group(
-    [
-        'prefix' => 'password',
-    ],
-    function () {
-        # Відправити запит з емейлом для скидання паролю
-        Route::post('email', 'API\PasswordController@sendResetLinkEmail')->name('password.email');
-
-        # Зміна паролю
-        Route::post('reset', 'API\PasswordController@reset');
-    }
-);
-
-// Операції с профілем користувача
-Route::group(
-    [
-        'prefix' => 'users',
-    ],
-    function () {
-        # Отримання інформації про користувача (тільки публічні дані)
-        Route::get('{user_id}/profile', 'API\ProfileController@getPublicData');
-
-        # Отримання інформації про користувача (всі дані)
-        Route::get('profile', 'API\ProfileController@getPrivateData')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Зміна даних профілю (тільки публічні дані)
-        Route::post('profile/update', 'API\ProfileController@updatePublicData')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Зміна даних мов та валют
-        Route::post('language/update', 'API\ProfileController@updateLanguage')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Зміна паролю
-        Route::post('password/update', 'API\ProfileController@updatePassword')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Зміна логіну: телефону та/або емейлу
-        Route::post('login/update', 'API\ProfileController@updateLogin')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Зміна даних пластикової картки
-        Route::post('card/update', 'API\ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Верифікація зміни даних користувача (тільки пароль/логін/картка)
-        Route::get('verification/{token}', 'API\ProfileController@verificationUserChanges')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Завантажити фотографію
-        Route::get('download_image', 'API\ProfileController@downloadImage');
-
-        # Перевірка заповнення профілю (ім'я, прізвище, дата народження) у авторизованого користувача.
-        Route::get('profile/is_filled', 'API\ProfileController@isProfileFilled')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
 
@@ -171,90 +262,11 @@ Route::group(
     }
 );
 
-// Замовлення
-Route::group(
-    [
-        'prefix' => 'orders',
-    ],
-    function () {
-        # Створення замовлення
-        Route::post('add', 'API\OrderController@addOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Редагування замовлення
-        Route::post('{order_id}/update', 'API\OrderController@updateOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Вивід замовлень за фільтром
-        Route::get('show', 'API\OrderController@showOrders');
-
-        # Вивід моїх замовлень
-        Route::get('my/show', 'API\OrderController@showMyOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Вивід конкретного замовлення
-        Route::get('{order_id}/show', 'API\OrderController@showOrder');
-
-        # Підбір маршруту для замовлення
-        Route::get('{order_id}/selection_route', 'API\OrderController@selectionRoute');
-
-        # Підтвердити виконання замовлення
-        Route::post('confirm', 'API\OrderController@confirmOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Закриття замовлення
-        Route::post('{order_id}/close', 'API\OrderController@closeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Закриття декілька замовлень
-        Route::post('close', 'API\OrderController@closeOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Лічильник переглядів
-        Route::post('{order_id}/add_look', 'API\OrderController@addLook');
-
-        # Скарга на замовлення
-        Route::post('{order_id}/strike', 'API\OrderController@strikeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Заказы по выбранному маршруту
-        Route::get('route/{route_id}/show', 'API\OrderController@showOrdersByRoute');
-    }
-);
-
 // Загрузка фото і створення мініатюр
 Route::post('upload_image', 'API\ImageLoaderController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 // Список довідників для фільтру на сторінці Замовлення/Маршрути
 Route::get('handbooks', 'API\HandbooksController@getHandbooks');
-
-// Маршрут
-Route::group(
-    [
-        'prefix' => 'routes',
-    ],
-    function () {
-        # Створення маршруту
-        Route::post('add', 'API\RouteController@addRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Вивід моїх маршрутів
-        Route::get('my/show', 'API\RouteController@showMyRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Виведення маршруту за фільтром
-        Route::get('show', 'API\RouteController@showRoutes');
-
-        # Вивід конкретного маршруту
-        Route::get('{route_id}/show', 'API\RouteController@showRoute');
-
-        # Редагування маршруту
-        Route::post('{route_id}/update', 'API\RouteController@updateRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Закриття маршруту
-        Route::post('{route_id}/close', 'API\RouteController@closeRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Закриття декілька маршрутів
-        Route::post('close', 'API\RouteController@closeRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Підбір замовлення для маршруту
-        Route::get('{route_id}/selection_order', 'API\RouteController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Лічильник переглядів
-        Route::post('{route_id}/add_look', 'API\RouteController@addLook');
-    }
-);
 
 // Список обраних
 Route::group(
@@ -267,41 +279,6 @@ Route::group(
 
         # Вивести список обраних
         Route::get('show', 'API\FavoriteController@showFavorites')->middleware(MIDDLEWARE_AUTH_BASIC);
-    }
-);
-
-// Ставки
-Route::group(
-    [
-        'prefix' => 'rates',
-    ],
-    function () {
-        # Зробити ставку
-        Route::post('add', 'API\RateController@addRate')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Редагувати ставку
-        Route::post('{rate_id}/update', 'API\RateController@updateRate')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Видалити ставку
-        Route::delete('{rate_id}/delete', 'API\RateController@deleteRate')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Відхилити ставку
-        Route::post('{rate_id}/reject', 'API\RateController@rejectRate')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Отримати ставки
-        Route::get('show', 'API\RateController@showRates')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Переглянути ставку
-        Route::get('{rate_id}/show', 'API\RateController@showRate')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Вивід ставок для конкретного заказу
-        Route::get('order/{order_id}/show', 'API\RateController@showRatesByOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Вивід ставок для конкретного маршруту
-        Route::get('route/{route_id}/show', 'API\RateController@showRatesByRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Прийняти ставку
-        Route::post('{rate_id}/accept', 'API\RateController@acceptRate')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
 
