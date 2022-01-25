@@ -124,51 +124,6 @@ class RouteController extends Controller
     }
 
     /**
-     * Удалить заказ(ы) (внутренний).
-     *
-     * @param mixed $id
-     * @return JsonResponse
-     */
-    private static function deleteRoute_int($id): JsonResponse
-    {
-        $affected_rows = Route::isOwnerByKey($id)->delete();
-
-        return response()->json([
-            'status'        => $affected_rows > 0,
-            'affected_rows' => $affected_rows,
-        ]);
-    }
-
-    /**
-     * Удалить маршрут.
-     * (разрешено удалять только в определенных статусах)
-     *
-     * @param int $route_id
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function deleteRoute(int $route_id): JsonResponse
-    {
-        return self::deleteRoute_int($route_id);
-    }
-
-    /**
-     * Массовое удаление маршрутов.
-     *
-     * @return JsonResponse
-     * @throws ValidatorException|ValidationException
-     */
-    public function deleteRoutes(): JsonResponse
-    {
-        $data = validateOrExit([
-            'route_id'   => 'required|array|min:1',
-            'route_id.*' => 'required|integer',
-        ]);
-
-        return self::deleteRoute_int($data['route_id']);
-    }
-
-    /**
      * Вывод выбранного маршрута.
      *
      * @param int $route_id

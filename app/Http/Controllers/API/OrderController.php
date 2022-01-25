@@ -170,57 +170,6 @@ class OrderController extends Controller
     }
 
     /**
-     * Удалить заказ(ы) (внутренний).
-     *
-     * @param mixed $id
-     * @return JsonResponse
-     */
-    private static function deleteOrder_int($id): JsonResponse
-    {
-        $statuses = [
-            Order::STATUS_ACTIVE,
-            Order::STATUS_BAN,
-            Order::STATUS_CLOSED,
-        ];
-
-        $affected_rows = Order::isOwnerByKey($id, $statuses)->delete();
-
-        return response()->json([
-            'status'        => $affected_rows > 0,
-            'affected_rows' => $affected_rows,
-        ]);
-    }
-
-    /**
-     * Удалить заказ.
-     *
-     * @param int $order_id
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function deleteOrder(int $order_id, Request $request): JsonResponse
-    {
-        return self::deleteOrder_int($order_id);
-    }
-
-    /**
-     * Массовое удаление заказов.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidatorException|ValidationException
-     */
-    public function deleteOrders(Request $request): JsonResponse
-    {
-        $data = validateOrExit([
-            'order_id'   => 'required|array|min:1',
-            'order_id.*' => 'required|integer',
-        ]);
-
-        return self::deleteOrder_int($data['order_id']);
-    }
-
-    /**
      * Заказы по маршруту.
      *
      * @param int $route_id
