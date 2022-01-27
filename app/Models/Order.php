@@ -16,6 +16,7 @@ class Order extends Model
     use TimestampSerializable;
 
     const STATUS_ACTIVE = 'active';
+    const STATUS_IN_WORK = 'in_work';
     const STATUS_CLOSED = 'closed';
     const STATUS_BAN = 'ban';
     const STATUS_SUCCESSFUL = 'successful';
@@ -268,6 +269,11 @@ class Order extends Model
     public function scopeOwner($query)
     {
         return $query->where('user_id', request()->user()->id);
+    }
+
+    function scopeActive($query)
+    {
+        return $query->where('status', self::STATUS_ACTIVE);
     }
 
     public function scopeSuccessful($query)

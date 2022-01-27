@@ -57,7 +57,7 @@ return [
         'send_error'          => 'Возникла ошибка при отправке сообщения.',
     ],
 
-    # User's attribute
+    # User attributes
     'user' => [
         'genders' => [
             'male'    => 'Мужской',
@@ -76,7 +76,7 @@ return [
         ],
     ],
 
-    # Order's attribute
+    # Order attributes
     'order' => [
         'statuses' => [
             'active'     => 'Активный',
@@ -86,8 +86,19 @@ return [
         ],
     ],
 
-    # Route's attribute
+    # Route attributes
     'route' => [
+        'statuses' => [
+            'active'     => 'Активный',
+            'in_work'    => 'В работе',
+            'closed'     => 'Закрытый',
+            'ban'        => 'Забаненный',
+            'successful' => 'Успешный',
+        ],
+    ],
+
+    # Rate attributes
+    'rate' => [
         'statuses' => [
             'active'     => 'Активный',
             'in_work'    => 'В работе',

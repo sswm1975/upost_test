@@ -57,7 +57,7 @@ return [
         'send_error'          => 'There was an error sending your message.',
     ],
 
-    # User's attribute
+    # User attributes
     'user' => [
         'genders' => [
             'male'    => 'Male',
@@ -76,7 +76,7 @@ return [
         ],
     ],
 
-    # Order's attribute
+    # Order attributes
     'order' => [
         'statuses' => [
             'active'     => 'Active',
@@ -86,7 +86,7 @@ return [
         ],
     ],
 
-    # Route's attribute
+    # Route attributes
     'route' => [
         'statuses' => [
             'active'     => 'Active',
@@ -96,4 +96,16 @@ return [
             'successful' => 'Successful',
         ],
     ],
+
+    # Rate attributes
+    'rate' => [
+        'statuses' => [
+            'active'     => 'Active',
+            'in_work'    => 'In work',
+            'closed'     => 'Closed',
+            'ban'        => 'Banned',
+            'successful' => 'Successful',
+        ],
+    ],
+
 ];

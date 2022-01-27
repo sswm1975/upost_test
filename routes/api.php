@@ -27,7 +27,7 @@ Route::namespace('API')->group(function ($route) {
     });
 
     # Операції по відновленню пароля
-    $route->group(['prefix' => 'password'], function ($route) {
+    $route->prefix('password')->group(function ($route) {
         # Відправити запит з емейлом для скидання паролю
         $route->post('email', 'PasswordController@sendResetLinkEmail')->name('password.email');
 
@@ -36,7 +36,7 @@ Route::namespace('API')->group(function ($route) {
     });
 
     # Операції с профілем користувача
-    $route->group(['prefix' => 'users'], function ($route) {
+    $route->prefix('users')->group(function ($route) {
         # Отримання інформації про користувача (тільки публічні дані)
         $route->get('{user_id}/profile', 'ProfileController@getPublicData');
 
@@ -69,7 +69,7 @@ Route::namespace('API')->group(function ($route) {
     });
 
     # Замовлення
-    $route->group(['prefix' => 'orders'], function ($route) {
+    $route->prefix('orders')->group(function ($route) {
         # Створення замовлення
         $route->post('add', 'OrderController@addOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
@@ -108,7 +108,7 @@ Route::namespace('API')->group(function ($route) {
     });
 
     # Маршрути
-    $route->group(['prefix' => 'routes'], function ($route) {
+    $route->prefix('routes')->group(function ($route) {
         # Створення маршруту
         $route->post('add', 'RouteController@addRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
 
@@ -139,37 +139,36 @@ Route::namespace('API')->group(function ($route) {
 });
 
 // Ставки
-Route::group(
-    [
-        'prefix' => 'rates',
-    ],
-    function () {
-        # Зробити ставку
-        Route::post('add', 'API\RateController@addRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+Route::prefix('rates')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function () {
+        # Создать ставку
+        Route::post('add', 'API\RateController@addRate');
 
-        # Редагувати ставку
-        Route::post('{rate_id}/update', 'API\RateController@updateRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Изменить ставку
+        Route::post('{rate_id}/update', 'API\RateController@updateRate');
 
-        # Видалити ставку
-        Route::delete('{rate_id}/delete', 'API\RateController@deleteRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Просмотр ставки
+        Route::get('{rate_id}/show', 'API\RateController@showRate');
+
+        # Отменить ставку
+        Route::post('{rate_id}/cancel', 'API\RateController@cancelRate');
+
+        # Удалить ставку
+        Route::delete('{rate_id}/delete', 'API\RateController@deleteRate');
 
         # Відхилити ставку
-        Route::post('{rate_id}/reject', 'API\RateController@rejectRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('{rate_id}/reject', 'API\RateController@rejectRate');
 
         # Отримати ставки
-        Route::get('show', 'API\RateController@showRates')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Переглянути ставку
-        Route::get('{rate_id}/show', 'API\RateController@showRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('show', 'API\RateController@showRates');
 
         # Вивід ставок для конкретного заказу
-        Route::get('order/{order_id}/show', 'API\RateController@showRatesByOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('order/{order_id}/show', 'API\RateController@showRatesByOrder');
 
         # Вивід ставок для конкретного маршруту
-        Route::get('route/{route_id}/show', 'API\RateController@showRatesByRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::get('route/{route_id}/show', 'API\RateController@showRatesByRoute');
 
         # Прийняти ставку
-        Route::post('{rate_id}/accept', 'API\RateController@acceptRate')->middleware(MIDDLEWARE_AUTH_BASIC);
+        Route::post('{rate_id}/accept', 'API\RateController@acceptRate');
     }
 );
 

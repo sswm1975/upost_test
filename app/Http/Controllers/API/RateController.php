@@ -11,271 +11,169 @@ use App\Models\Route;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 
 class RateController extends Controller
 {
     /**
+     * Правила проверки входных данных запроса при создании ставки.
+     *
+     * @return array
+     */
+    protected static function rules4saveRate(): array
+    {
+        return  [
+            'route_id' => 'required|integer|exists:routes,id,status,active,user_id,'.request()->user()->id,
+            'order_id' => 'required|integer|exists:orders,id,status,active',
+            'deadline' => 'required|date|after_or_equal:'.date('Y-m-d'),
+            'amount'   => 'required|numeric',
+            'currency' => 'required|in:' . implode(',', config('app.currencies')),
+            'comment'  => 'required|string|censor|max:1000',
+        ];
+    }
+
+    /**
      * Создать ставку.
      *
-     * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException|ValidationException
+     * @throws ValidatorException|ValidationException|ErrorException
      */
-    public function addRate(Request $request): JsonResponse
+    public function addRate(): JsonResponse
     {
-        validateOrExit($this->validator4add($request));
+        $data = validateOrExit(self::rules4saveRate());
 
-        $rate = Rate::create($request->all());
+        $is_double = Rate::active()->where(Arr::only($data, ['user_id', 'order_id', 'route_id']))->count();
+        if ($is_double) throw new ErrorException(__('message.rate_exists'));
+
+        Rate::create($data);
+
+        return response()->json(['status' => true]);
+    }
+
+    /**
+     * Изменить ставку.
+     *
+     * @param int $rate_id
+     * @return JsonResponse
+     * @throws ValidationException|ValidatorException|ErrorException
+     */
+    public function updateRate(int $rate_id): JsonResponse
+    {
+        if (! $rate = Rate::isOwnerByKey($rate_id)->first()) {
+            throw new ErrorException(__('message.rate_not_found'));
+        }
+        $data = validateOrExit(self::rules4saveRate());
+
+        $affected = $rate->update($data);
+
+        return response()->json(['status' => $affected]);
+    }
+
+    /**
+     * Просмотр ставки.
+     *
+     * @param int $rate_id
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function showRate(int $rate_id): JsonResponse
+    {
+        $rate = Rate::query()
+            ->with([
+                'user' => function ($query) {
+                    $query->select(User::FIELDS_FOR_SHOW)->withCount('successful_orders');
+                },
+                'route.from_country',
+                'route.from_city',
+                'route.to_country',
+                'route.to_city',
+            ])
+            ->whereKey($rate_id)
+            ->where(function ($query) {
+                return $query->owner()->orWhereExists(function($query) {
+                    $query->selectRaw(1)->from('orders')
+                        ->whereColumn('orders.id', 'rates.order_id')
+                        ->where('user_id', request()->user()->id);
+                });
+            })
+            ->first();
+
+        if (! $rate) throw new ErrorException(__('message.rate_not_found'));
+
+        # если ставка не прочитана и ставку смотрит владелец заказа, то устанавливаем признак просмотра ставки
+        if (!$rate->is_read && $rate->user_id <> request()->user()->id) {
+            $rate->is_read = true;
+            $rate->save();
+        }
 
         return response()->json([
             'status' => true,
-            'result' => null_to_blank($rate->toArray()),
+            'result' => null_to_blank($rate),
         ]);
     }
 
     /**
-     * Валидатор запроса для создания ставки.
-     *
-     * @param  Request $request
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator4add(Request $request): \Illuminate\Contracts\Validation\Validator
-    {
-        $validator = Validator::make($request->all(),
-            [
-                'who_start' => 'required|integer',
-                'rate_type' => 'required|in:order,route',
-                'order_id'  => 'required|integer',
-                'route_id'  => 'required|integer',
-                'parent_id' => 'required|integer',
-                'text'      => 'required|string|max:300',
-                'deadline'  => 'required|date',
-                'price'     => 'required|numeric',
-                'currency'  => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
-            ]
-        );
-
-        # если есть ошибки на первичной проверке, то выходим
-        if ($validator->fails()) {
-            return $validator;
-        }
-
-        # доп.проверки
-        $validator->after(function ($validator) use ($request) {
-            $user_id = $request->user()->id;
-            # создатель ставки должен существовать
-            if (!User::whereKey($request->who_start)->count()) {
-                $validator->errors()->add('who_start', __('message.user_not_found'));
-            }
-
-            # это основная ставка
-            if ($request->parent_id == 0) {
-                # создателем первоначальной ставки должен быть авторизированный пользователь
-                if ($request->who_start <> $user_id) {
-                    $validator->errors()->add('who_start', __('message.who_start_incorrect'));
-                }
-
-                # если указан тип "Заказ"
-                if ($request->type == 'order') {
-                    # заказ должен существовать
-                    if (!Order::whereKey($request->order_id)->count()) {
-                        $validator->errors()->add('order_id', __('message.order_not_found'));
-                    }
-
-                    # маршрут должен принадлежать пользователю
-                    if (!Route::where(['id' => $request->route_id, 'user_id' => $user_id])->count()) {
-                        $validator->errors()->add('route_id', __('message.route_not_found'));
-                    }
-
-                    # для типа "Заказ" может быть только одна основная ставка (parent_id = 0)
-                    $cnt = Rate::where(['user_id' => $user_id, 'order_id' => $request->order_id, 'parent_id' => 0])->count();
-                    if ($cnt) {
-                        $validator->errors()->add('order_id', __('message.one_rate_per_order'));
-                    }
-                }
-
-                # если указан тип "Маршрут"
-                if ($request->type == 'route') {
-                    # маршрут должен существовать
-                    if (!Route::whereKey($request->route_id)->count()) {
-                        $validator->errors()->add('route_id', __('message.route_not_found'));
-                    }
-
-                    # заказ должен принадлежать пользователю
-                    if (!Order::where(['order_id' => $request->order_id, 'user_id' => $user_id])->count()) {
-                        $validator->errors()->add('order_id', __('message.order_not_found'));
-                    }
-
-                    # для типа "Маршрут" может быть максимум три основных ставки (parent_id = 0)
-                    $cnt = Rate::where(['user_id' => $user_id, 'route_id' => $request->route_id, 'parent_id' => 0])->count();
-                    if ($cnt > 2) {
-                        $validator->errors()->add('route_id', __('message.three_rate_per_route'));
-                    }
-                }
-            }
-
-            # это ответ или контрставка
-            if ($request->parent_id <> 0) {
-                # основная ставка должна существовать и быть активной
-                $main_rate = Rate::where(['id' => $request->parent_id, 'status' => 'active'])->first();
-                if (!$main_rate) {
-                    $validator->errors()->add('parent_id', __('message.rate_not_found'));
-                } else {
-                    # основные параметры должны соответствовать основной ставке
-                    if ($main_rate->who_start <> $request->who_start) {
-                        $validator->errors()->add('who_start', __('message.differs_from_basic_rate'));
-                    }
-                    if ($main_rate->type <> $request->type) {
-                        $validator->errors()->add('type', __('message.differs_from_basic_rate'));
-                    }
-                    if ($main_rate->order_id <> $request->order_id) {
-                        $validator->errors()->add('order_id', __('message.differs_from_basic_rate'));
-                    }
-                    if ($main_rate->route_id <> $request->route_id) {
-                        $validator->errors()->add('route_id', __('message.differs_from_basic_rate'));
-                    }
-                }
-
-                # это ответ на ставку
-                if ($request->who_start <> $user_id) {
-                    # заказ должен принадлежать ответчику
-                    if ($request->type == 'order') {
-                        if (!Order::where(['id' => $request->order_id, 'user_id' => $user_id])->count()) {
-                            $validator->errors()->add('order_id', __('message.order_not_found'));
-                        }
-                    }
-
-                    # маршрут должен принадлежать ответчику
-                    if ($request->rate_type == 'route') {
-                        if (!Route::where(['id' => $request->route_id, 'user_id' => $user_id])->count()) {
-                            $validator->errors()->add('route_id', __('message.route_not_found'));
-                        }
-                    }
-
-                # это контрставка
-                } else {
-                    # создатель контрставки должен быть владельцем основной ставки
-                    if ($main_rate && $main_rate->user_id <> $user_id) {
-                        $validator->errors()->add('parent_id', __('message.not_owner_basic_rate'));
-                    }
-                }
-            }
-        });
-
-        return $validator;
-    }
-
-    /**
-     * Редактировать ставку.
+     * Отменить ставку.
      *
      * @param int $rate_id
-     * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException|ValidatorException
      */
-    public function updateRate(int $rate_id, Request $request): JsonResponse
+    public function cancelRate(int $rate_id): JsonResponse
     {
-        $data = validateOrExit($this->validator4update($rate_id, $request));
-
-        $rate = Rate::whereKey($rate_id)->first()->fill($data);
-        $rate->save();
+        $affected_rows = Rate::IsOwnerByKey($rate_id)->update(['status' => Rate::STATUS_CANCELED]);
 
         return response()->json([
-            'status'  => true,
-            'result'  => null_to_blank($rate->toArray()),
+            'status' => $affected_rows > 0,
         ]);
-    }
-
-    /**
-     * Валидатор запроса для обновления ставки.
-     *
-     * @param int $rate_id
-     * @param  Request $request
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator4update(int $rate_id, Request $request): \Illuminate\Contracts\Validation\Validator
-    {
-        $validator = Validator::make($request->all(),
-            [
-                'text'     => 'required|string|max:300',
-                'deadline' => 'required|date',
-                'price'    => 'required|numeric',
-                'currency' => 'required|in:' . implode(',', array_keys(config('app.currencies'))),
-            ]
-        );
-
-        # если есть ошибки на первичной проверке, то выходим
-        if ($validator->fails()) {
-            return $validator;
-        }
-
-        # доп.проверки
-        $validator->after(function ($validator) use ($rate_id, $request) {
-            $rate = Rate::query()
-                ->where([
-                    'id' => $rate_id,
-                    'user_id' => $request->user()->id,
-                    'status' => 'active'
-                ])
-                ->first();
-            if (empty($rate)) {
-                $validator->errors()->add('id', __('message.rate_not_found'));
-            } else {
-                if ($rate->parent_id == 0) {
-                    $exists_next_rate = Rate::query()
-                        ->where('parent_id', $rate_id)
-                        ->count();
-                } else {
-                    $exists_next_rate = Rate::query()
-                        ->where('parent_id', $rate->parent_id)
-                        ->where('id', '>', $rate_id)
-                        ->count();
-                }
-                if ($exists_next_rate) {
-                    $validator->errors()->add('id', __('message.not_last_rate'));
-                }
-            }
-        });
-
-        return $validator;
     }
 
     /**
      * Удалить ставку.
      *
      * @param int $rate_id
+     * @return JsonResponse
+     */
+    public function deleteRate(int $rate_id): JsonResponse
+    {
+        $affected = Rate::IsOwnerByKey($rate_id, [Rate::STATUS_ACTIVE, Rate::STATUS_CANCELED])->delete();
+
+        return response()->json([
+            'status' => $affected,
+        ]);
+    }
+
+    /**
+     * Принять ставку.
+     *
+     * @param int $rate_id
      * @param Request $request
      * @return JsonResponse
      * @throws ErrorException
      */
-    public function deleteRate(int $rate_id, Request $request): JsonResponse
+    public function acceptRate(int $rate_id, Request $request): JsonResponse
     {
         $rate = Rate::query()
-            ->where('id', $rate_id)
-            ->where('user_id', $request->user()->user_id)
-            ->where('status', Rate::STATUS_ACTIVE)
+            ->with('order:id')
+            ->whereKey($rate_id)
+            ->active()
+            ->whereHas('order', function($query) {
+                $query->owner()->active();
+            })
             ->first();
 
-        if (!$rate) throw new ErrorException(__('message.rate_not_found'));
+        if (! $rate) throw new ErrorException(__('message.rate_not_found'));
 
-        if ($rate->parent_id == 0) {
-            $exists_next_rate = Rate::query()
-                ->where('parent_id', $rate_id)
-                ->count();
-        } else {
-            $exists_next_rate = Rate::query()
-                ->where('parent_id', $rate->parent_id)
-                ->where('id', '>', $rate_id)
-                ->count();
-        }
-        if ($exists_next_rate) throw new ErrorException(__('message.not_last_rate'));
 
-        $affected = $rate->delete();
+//        $rate->status = Rate::STATUS_ACCEPTED;
+//        $rate->is_read = true;
+//        $rate->save();
+        $rate->order()->attach(['status' => Order::STATUS_IN_WORK]);
 
         return response()->json([
-            'status' => (bool)$affected,
+            'status' => true,
+            'result' => [__('message.rate_accepted')],
+            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
@@ -313,7 +211,7 @@ class RateController extends Controller
         }
         if ($exists_next_rate) throw new ErrorException(__('message.not_last_rate'));
 
-        $affected = $rate->update(['status' => Rate::STATUS_BAN]);
+        $affected = $rate->update(['status' => Rate::STATUS_REJECTED]);
 
         return response()->json([
             'status' => (bool)$affected,
@@ -502,75 +400,5 @@ class RateController extends Controller
         ]);
     }
 
-    /**
-     * Получить ставку.
-     *
-     * @param int $rate_id
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function showRate(int $rate_id, Request $request):JsonResponse
-    {
-        if (!$rate = Rate::find($rate_id)) {
-            throw new ErrorException(__('message.rate_not_found'));
-        }
 
-        $rate->is_read = true;
-        $rate->save();
-
-        return response()->json([
-            'status' => true,
-            'result' => null_to_blank($rate->toArray()),
-        ]);
-    }
-
-    /**
-     * Принять ставку.
-     *
-     * @param int $rate_id
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function acceptRate(int $rate_id, Request $request):JsonResponse
-    {
-        $rate = Rate::query()
-            ->with('route:id,user_id', 'order:id,user_id')
-            ->whereKey($rate_id)
-            ->whereStatus(Rate::STATUS_ACTIVE)
-            ->first();
-
-        if (!$rate) throw new ErrorException(__('message.rate_not_found'));
-
-        $user_id = $request->user()->id;
-
-        # Условия подтверждения ставки:
-        # - при ставке на заказ подтвердить может только владелец маршрута
-        # - при ставке на машртут подтвердить может только владелец заказа
-        # - свои ставки подтверждать запрещено
-        if ($rate->who_start == $rate->user_id) {
-            $accept = ($rate->rate_type == 'order' && $rate->order->user_id == $user_id) || ($rate->type == 'route' && $rate->route->user_id == $user_id);
-        } else {
-            $accept = ($rate->rate_type == 'order' && $rate->route->user_id == $user_id) || ($rate->type == 'route' && $rate->order->user_id == $user_id);
-        }
-
-        if (!$accept) throw new ErrorException(__('message.rate_not_accepted'));
-
-        # существуют ещё ставки?
-        if ($rate->parent_id == 0) {
-            $exists_next_rate = Rate::where('parent_id', $rate_id)->count();
-        } else {
-            $exists_next_rate = Rate::where('parent_id', $rate->parent_id)->where('rate_id', '>', $rate_id)->count();
-        }
-        if ($exists_next_rate) throw new ErrorException(__('message.not_last_rate'));
-
-        $rate->status = Rate::STATUS_PROGRESS;
-        $rate->save();
-
-        return response()->json([
-            'status' => true,
-            'result' => [__('message.rate_accepted')],
-        ]);
-    }
 }

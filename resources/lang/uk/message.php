@@ -56,7 +56,7 @@ return [
         'send_error'          => 'Виникла помилка при надсиланні повідомлення.',
     ],
 
-    # User's attribute
+    # User attributes
     'user' => [
         'genders' => [
             'male'    => 'Чоловічий',
@@ -75,7 +75,7 @@ return [
         ],
     ],
 
-    # Order's attribute
+    # Order attributes
     'order' => [
         'statuses' => [
             'active'     => 'Активний',
@@ -85,8 +85,18 @@ return [
         ],
     ],
 
-    # Route's attribute
+    # Route attributes
     'route' => [
+        'statuses' => [
+            'active'     => 'Активний',
+            'in_work'    => 'В роботі',
+            'closed'     => 'Закритий',
+            'ban'        => 'Заборонений',
+            'successful' => 'Успішний',
+        ],
+    ],
+    # Rate attributes
+    'rate' => [
         'statuses' => [
             'active'     => 'Активний',
             'in_work'    => 'В роботі',

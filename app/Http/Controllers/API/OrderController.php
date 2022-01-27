@@ -50,11 +50,11 @@ class OrderController extends Controller
      *
      * @return array
      */
-    protected function rules4saveOrder(): array
+    protected static function rules4saveOrder(): array
     {
         return [
-            'product_link'   => 'sometimes|nullable|string|url',
             'name'           => 'required|string|censor|max:100',
+            'product_link'   => 'sometimes|nullable|string|url',
             'price'          => 'required|numeric',
             'currency'       => 'required|in:' . implode(',', config('app.currencies')),
             'products_count' => 'required|integer',
