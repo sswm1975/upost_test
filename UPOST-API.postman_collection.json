@@ -6042,7 +6042,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"rate_id\", 304);"
+											"pm.variables.set(\"rate_id\", 6);"
 										],
 										"type": "text/javascript"
 									}
@@ -6069,105 +6069,6 @@
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
 											"disabled": true
 										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Отримати ставки",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/show?rate_type=order&order_id=54",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"rates",
-										"show"
-									],
-									"query": [
-										{
-											"key": "user_id",
-											"value": "21",
-											"description": "Код користувача",
-											"disabled": true
-										},
-										{
-											"key": "rate_type",
-											"value": "order",
-											"description": "Тип сущності: order або route"
-										},
-										{
-											"key": "order_id",
-											"value": "54",
-											"description": "Код замовлення"
-										},
-										{
-											"key": "route_id",
-											"value": "49",
-											"description": "Код маршруту",
-											"disabled": true
-										},
-										{
-											"key": "rate_id",
-											"value": "264",
-											"description": "Код ставки",
-											"disabled": true
-										},
-										{
-											"key": "parent_id",
-											"value": "0",
-											"description": "Код основної ставки",
-											"disabled": true
-										},
-										{
-											"key": "who_start",
-											"value": "15",
-											"description": "Код користувача, який створив основну ставку",
-											"disabled": true
-										},
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Вивід ставок для конкретного заказу",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.variables.set(\"order_id\", 54);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/order/{{order_id}}/show",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"rates",
-										"order",
-										"{{order_id}}",
-										"show"
 									]
 								}
 							},
