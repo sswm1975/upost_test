@@ -33,7 +33,7 @@ class ShopController extends AdminController
         $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
             $create->text('name', 'Наименование')->placeholder('Наименование')->required();
             $create->text('slug', 'Слаг')->placeholder('Слаг')->required();
-            $create->url('url', 'Ссылка')->placeholder('Ссылка');
+            $create->text('url', 'Ссылка')->placeholder('Ссылка');
         });
 
         $grid->column('id', 'Код')->sortable();
@@ -41,8 +41,8 @@ class ShopController extends AdminController
         $grid->column('slug', 'Слаг')->sortable();
         $grid->column('url', 'Ссылка')->link();
         $grid->column('active', 'Действует')->switch(SWITCH_YES_NO)->sortable();
-        $grid->column('created_at', trans('admin.created_at'))->sortable();
-        $grid->column('updated_at', trans('admin.updated_at'))->sortable();
+        $grid->column('created_at', 'Создано')->sortable();
+        $grid->column('updated_at', 'Изменено')->sortable();
 
         return $grid;
     }
@@ -61,8 +61,8 @@ class ShopController extends AdminController
         $form->text('slug', 'Слаг')->required();
         $form->url('url', 'Ссылка');
         $form->switch('active', 'Действует')->default(1)->states(SWITCH_YES_NO);
-        $form->display('created_at', trans('admin.created_at'));
-        $form->display('updated_at', trans('admin.updated_at'));
+        $form->display('created_at', 'Создано');
+        $form->display('updated_at', 'Изменено');
 
         return $form;
     }

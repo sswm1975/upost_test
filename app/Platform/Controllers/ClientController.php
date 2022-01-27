@@ -5,7 +5,6 @@ namespace App\Platform\Controllers;
 use App\Models\User;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-use Illuminate\Support\Facades\Storage;
 use App\Platform\Extensions\Exporters\ExcelExpoter;
 
 class ClientController extends AdminController
@@ -42,39 +41,18 @@ class ClientController extends AdminController
 
         # COLUMNS
         $grid->column('id', 'Код')->sortable();
-
         $grid->column('surname', 'Фамилия')->sortable();
-
         $grid->column('name', 'Имя')->sortable();
-
         $grid->column('phone', 'Телефон')->sortable();
-
         $grid->column('email', 'Емейл')->sortable();
-
-        $grid->column('gender', 'Пол')
-            ->display(function(){
-                return $this->gender_name;
-            })
-            ->sortable();
-
+        $grid->column('gender', 'Пол')->showOtherField('gender_name')->sortable();
         $grid->column('birthday', 'Дата рождения')->sortable();
-
-        $grid->column('city_id', 'Город')
-            ->display(function ($value) {
-                return !empty($value) ? $this->city->name : '';
-            })
-            ->sortable();
-
-        $grid->column('wallet', 'Баланс')
-            ->filter('range')
-            ->setAttributes(['align'=>'right'])
-            ->sortable();
-
+        $grid->column('city.name', 'Город');
+        $grid->column('wallet', 'Баланс')->filter('range')->setAttributes(['align'=>'right'])->sortable();
         $grid->column('currency', 'Валюта')
             ->filter(array_combine(config('app.currencies'), config('app.currencies')))
             ->setAttributes(['align'=>'center'])
             ->sortable();
-
         $grid->column('lang', 'Язык')
             ->display(function ($lang) {
                 return ADMIN_LANGUAGES[$lang];
@@ -82,13 +60,8 @@ class ClientController extends AdminController
             ->filter(ADMIN_LANGUAGES)
             ->setAttributes(['align'=>'center'])
             ->sortable();
-
-        $grid->column('card_number', '№ карточки')
-            ->filter('like')
-            ->sortable();
-
+        $grid->column('card_number', '№ карточки')->filter('like')->sortable();
         $grid->column('card_name', 'Имя на карте')->sortable();
-
         $grid->column('resume_modal', 'Резюме')
             ->modal('Резюме', function () {
                 return "
@@ -103,42 +76,16 @@ class ClientController extends AdminController
                     </div>
                 ";
             });
-
-        $grid->column('status', 'Статус')
-            ->display(function(){
-                return "<span style='white-space: nowrap'>{$this->status_name}</span>";
-            })
-            ->sortable();
-
-        $grid->column('validation', 'Валидация')
-            ->display(function(){
-                return "<span style='white-space: nowrap'>{$this->validation_name}</span>";
-            })->sortable();
-
-        $grid->column('register_date', 'Зарегистрирован')
-            ->display(function($value){
-                return "<span style='white-space: nowrap'>$value</span>";
-            })
-            ->sortable();
-
-        $grid->column('last_active', 'Последняя активность')
-            ->display(function($value){
-                return "<span style='white-space: nowrap'>$value</span>";
-            })
-            ->sortable();
-
+        $grid->column('status', 'Статус')->showOtherField('status_name')->sortable();
+        $grid->column('validation', 'Валидация')->showOtherField('validation_name')->sortable();
+        $grid->column('register_date', 'Зарегистрирован')->sortable();
+        $grid->column('last_active', 'Последняя активность')->sortable();
         $grid->column('role', 'Роль')->sortable();
-
         $grid->column('creator_rating', 'Рейтинг заказчика')->sortable();
-
         $grid->column('freelancer_rating', 'Рейтинг исполнителя')->sortable();
-
         $grid->column('favorite_orders', 'Заказы');
-
         $grid->column('favorite_routes', 'Маршруты');
-
         $grid->column('google_id', 'Код Гугл');
-
         $grid->column('facebook_id', 'Код Фейсбук');
 
         # EXPORT TO EXCEL

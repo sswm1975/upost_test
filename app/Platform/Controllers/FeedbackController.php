@@ -40,26 +40,15 @@ class FeedbackController extends AdminController
         });
 
         $grid->column('id', 'Код')->sortable();
-        $grid->column('subject', 'Раздел')->nowrap()->sortable();
-        $grid->column('name', 'Клиент')->nowrap()->sortable();
-        $grid->column('phone', 'Телефон')->nowrap()->sortable();
-        $grid->column('email', 'Емейл')->nowrap()->sortable();
+        $grid->column('subject', 'Раздел')->sortable();
+        $grid->column('name', 'Клиент')->sortable();
+        $grid->column('phone', 'Телефон')->sortable();
+        $grid->column('email', 'Емейл')->sortable();
         $grid->column('text', 'Текст');
-        $grid->column('created_at', 'Создано')->nowrap()->sortable();
-        $grid->column('updated_at', 'Изменено')->hide()->nowrap()->sortable();
-        $grid->column('read_at', 'Прочитано')
-            ->display(function($read_at, $column) {
-                if (empty($read_at)) return '';
-                return $column->nowrap();
-            })
-            ->sortable();
-        $grid->column('read_admin_user_id', 'Кто прочитал')
-            ->display(function($read_admin_user_id, $column) {
-                if (empty($read_admin_user_id)) return '';
-                return "{$this->read_admin_user->username} (id={$read_admin_user_id})";
-            })
-            ->nowrap()
-            ->sortable();
+        $grid->column('created_at', 'Создано')->sortable();
+        $grid->column('updated_at', 'Изменено')->hide()->sortable();
+        $grid->column('read_at', 'Прочитано')->sortable();
+        $grid->column('read_admin_user.username', 'Кто прочитал');
 
         return $grid;
     }

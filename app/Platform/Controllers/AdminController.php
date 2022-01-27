@@ -264,12 +264,16 @@ EOT
              /* Грид-таблица: ширина автоматическая таблицы (актуально для таблиц с малым кол-вом столбцов) */
             .table.grid-table {width:auto;}
 
-            /* Заголовки таблицы: размер шрифта уменьшаем, запрещаем перенос название столбцов, фон - серый */
-            .table.grid-table th {font-size: 11px; white-space: nowrap; background:lightgrey;}
+            /* Заголовки таблицы: размер шрифта уменьшаем, фон - серый */
+            .table.grid-table th {font-size: 11px; background:lightgrey;}
 
-            /* Ячейки грид-таблицы: более четкое выделение ячеек таблицы */
-            .table.grid-table th,
-            .table.grid-table td {border:1px solid #ddd;}
+            /*
+               Ячейки грид-таблицы:
+               - более четкое обрамление ячеек таблицы;
+               - запрет переноса значений ячеек на новую строку;
+               - уменьшаем отступы до 4px (по дефолту 8px);
+            */
+            .table.grid-table th, .table.grid-table td {border:1px solid #ddd; white-space: nowrap; padding: 4px;}
 
             /* Выбор столбцов для отображения/скрытия: увеличиваем ширину и уменьшаем размер шрифта */
             .column-selector > ul.dropdown-menu {width: 250px; font-size: 12px;}

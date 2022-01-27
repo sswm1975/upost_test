@@ -38,17 +38,10 @@ class OrderController extends AdminController
 
         # COLUMNS
         $grid->column('id', 'Код')->sortable();
-        $grid->column('user_id', 'Клиент')
-            ->display(function($user_id) {
-                return "<span class='nowrap'>{$this->user->full_name} ({$user_id})</span>";
-            })
-            ->sortable();
-        $grid->column('name', 'Наименование')
-            ->nowrap()
-            ->sortable();
-        $grid->column('slug', 'Слаг')
-            ->nowrap()
-            ->sortable();
+        $grid->column('user_id', 'Код клиента')->sortable();
+        $grid->column('user.full_name', 'ФИО клиента');
+        $grid->column('name', 'Наименование')->sortable();
+        $grid->column('slug', 'Слаг')->sortable();
         $grid->column('description_modal', 'Описание')
             ->modal('Описание', function () {
                 $images = '';
@@ -75,8 +68,7 @@ class OrderController extends AdminController
                 return "<a href='{$url}' target='_blank'>{$host}</a>";
             })
             ->sortable();
-        $grid->column('shop_slug', 'Магазин')
-            ->sortable();
+        $grid->column('shop_slug', 'Магазин')->sortable();
         $grid->column('products_count', 'Кол-во')
             ->setAttributes(['align'=>'center'])
             ->sortable();
@@ -100,44 +92,23 @@ class OrderController extends AdminController
             ->filter(array_combine(config('app.currencies'), config('app.currencies')))
             ->setAttributes(['align'=>'center'])
             ->sortable();
+        $grid->column('user_price_usd', 'Доход в $')
+            ->filter('range')
+            ->setAttributes(['align'=>'right'])
+            ->sortable();
+
         $grid->column('not_more_price', 'Выше не принимать')
             ->showYesNo()
             ->setAttributes(['align'=>'center'])
             ->sortable();
-        $grid->column('from_country_id', 'Страна откуда')
-            ->display(function(){
-                return "<span class='nowrap'>{$this->from_country->name}</span>";
-            })
-            ->sortable();
-        $grid->column('from_city_id', 'Город откуда')
-            ->display(function ($value) {
-                return !empty($value) ? "<span class='nowrap'>{$this->from_city->name}</span>" : '';
-            })
-            ->sortable();
-        $grid->column('to_country_id', 'Страна куда')
-            ->display(function(){
-                return "<span class='nowrap'>{$this->to_country->name}</span>";
-            })
-            ->sortable();
-        $grid->column('to_city_id', 'Город куда')
-            ->display(function ($value) {
-                return !empty($value) ? "<span class='nowrap'>{$this->to_city->name}</span>" : '';
-            })
-            ->sortable();
-        $grid->column('wait_range_id', 'Ждём')
-            ->display(function ($value) {
-                return "<span class='nowrap'>{$this->wait_range->name}</span>";
-            })
-            ->sortable();
-        $grid->column('register_date', 'Зарегистрирован')
-            ->nowrap()
-            ->sortable();
-        $grid->column('deadline', 'Дата дедлайна')
-            ->nowrap()
-            ->sortable();
-        $grid->column('looks', 'Просмотров')
-            ->setAttributes(['align'=>'center'])
-            ->sortable();
+        $grid->column('from_country.name', 'Страна откуда');
+        $grid->column('from_city.name', 'Город откуда');
+        $grid->column('to_country.name', 'Страна куда');
+        $grid->column('to_city.name', 'Город куда');
+        $grid->column('wait_range.name', 'Ждём');
+        $grid->column('register_date', 'Зарегистрирован')->sortable();
+        $grid->column('deadline', 'Дата дедлайна')->sortable();
+        $grid->column('looks', 'Просмотров')->setAttributes(['align'=>'center'])->sortable();
         $grid->column('strikes', 'Жалобы')
             ->display(function($value) {
                 if (empty($value)) return '';
@@ -145,17 +116,9 @@ class OrderController extends AdminController
             })
             ->help('Количество жалоб')
             ->sortable();
-        $grid->column('status', 'Статус')
-            ->display(function(){
-                return "<span style='white-space: nowrap'>{$this->status_name}</span>";
-            })
-            ->sortable();
-        $grid->column('created_at', trans('admin.created_at'))
-            ->nowrap()
-            ->sortable();
-        $grid->column('updated_at', trans('admin.updated_at'))
-            ->nowrap()
-            ->sortable();
+        $grid->column('status', 'Статус')->showOtherField('status_name')->sortable();
+        $grid->column('created_at', 'Создано')->sortable();
+        $grid->column('updated_at', 'Изменено')->sortable();
 
         # EXPORT TO EXCEL
         $grid->exporter(new ExcelExpoter);

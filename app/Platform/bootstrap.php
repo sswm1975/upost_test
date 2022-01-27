@@ -81,10 +81,10 @@ Column::extend('ajaxModal', AjaxModal::class);
 Column::extend('orderable', Orderable::class);
 Column::extend('showYesNo', function ($value) {
     return $value
-        ? '<span class="badge label-success">Да</span>'
-        : '<span class="badge label-danger">Нет</span>';
+        ? '<span class="label label-success">Да</span>'
+        : '<span class="label label-danger">Нет</span>';
 });
-Column::extend('nowrap', function ($value) {
-    return "<span class='nowrap'>{$value}</span>";
+Column::extend('showOtherField', function ($value, $field) {
+    return !empty($value) ? $this->$field : '';
 });
 
