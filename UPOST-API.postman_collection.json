@@ -3137,7 +3137,14 @@
 										{
 											"key": "login",
 											"value": "{{email}}",
-											"description": "Логін: емейл або телефон",
+											"description": "Логін: емейл або телефон (user 21)",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "login",
+											"value": "{{phone}}",
+											"description": "Логін: емейл або телефон (user 22)",
 											"type": "text"
 										},
 										{
@@ -5700,87 +5707,6 @@
 					]
 				},
 				{
-					"name": "Список обраних",
-					"item": [
-						{
-							"name": "Додати в список обраних",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "type",
-											"value": "order",
-											"description": "Тип сущності: order або route",
-											"type": "text"
-										},
-										{
-											"key": "id",
-											"value": "27",
-											"description": "Код запису",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/favorites/update",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"favorites",
-										"update"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Вивести список обраних",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/favorites/show?type=order",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"favorites",
-										"show"
-									],
-									"query": [
-										{
-											"key": "type",
-											"value": "order",
-											"description": "Тип сущності: order або route"
-										},
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "Ставки",
 					"item": [
 						{
@@ -5792,57 +5718,39 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "parent_id",
-											"value": "0",
-											"description": "Код основної ставки",
-											"type": "text"
-										},
-										{
-											"key": "who_start",
-											"value": "29",
-											"description": "Код користувача, який створив основну ставку",
-											"type": "text"
-										},
-										{
-											"key": "rate_type",
-											"value": "order",
-											"description": "Тип сущності: order або route",
-											"type": "text"
-										},
-										{
-											"key": "order_id",
-											"value": "19",
-											"description": "Код замовлення",
-											"type": "text"
-										},
-										{
 											"key": "route_id",
-											"value": "61",
+											"value": "123",
 											"description": "Код маршруту",
 											"type": "text"
 										},
 										{
-											"key": "price",
+											"key": "order_id",
+											"value": "58",
+											"description": "Код замовлення",
+											"type": "text"
+										},
+										{
+											"key": "amount",
 											"value": "100",
-											"description": "Ціна ставки",
+											"description": "Сума доходу",
 											"type": "text"
 										},
 										{
 											"key": "currency",
-											"value": "usd",
-											"description": "Валюта (uah, rub, usd, eur)",
-											"type": "text"
-										},
-										{
-											"key": "text",
-											"value": "test",
-											"description": "Текст ставки",
+											"value": "$",
+											"description": "Валюта доходу",
 											"type": "text"
 										},
 										{
 											"key": "deadline",
-											"value": "2021-05-06",
+											"value": "2022-02-06",
 											"description": "Дата виконання",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": "test",
+											"description": "Коментар",
 											"type": "text"
 										},
 										{
@@ -5874,7 +5782,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"rate_id\", 306);"
+											"pm.variables.set(\"rate_id\", 6);"
 										],
 										"type": "text/javascript"
 									}
@@ -5887,32 +5795,39 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "rate_price",
-											"value": "200",
-											"description": "Ціна ставки",
-											"type": "text",
-											"disabled": true
+											"key": "route_id",
+											"value": "123",
+											"type": "text"
 										},
 										{
-											"key": "rate_currency",
-											"value": "usd",
-											"description": "Валюта (uah, rub, usd, eur)",
-											"type": "text",
-											"disabled": true
+											"key": "order_id",
+											"value": "58",
+											"type": "text"
 										},
 										{
-											"key": "rate_text",
+											"key": "amount",
+											"value": "105",
+											"type": "text"
+										},
+										{
+											"key": "currency",
+											"value": "$",
+											"type": "text"
+										},
+										{
+											"key": "deadline",
+											"value": "2022-02-06",
+											"type": "text"
+										},
+										{
+											"key": "comment",
 											"value": "test",
-											"description": "Текст ставки",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
-											"key": "rate_deadline",
-											"value": "2021-05-06",
-											"description": "Дата виконання",
-											"type": "text",
-											"disabled": true
+											"key": "lang",
+											"value": "uk",
+											"type": "text"
 										}
 									]
 								},
@@ -5926,6 +5841,96 @@
 										"rates",
 										"{{rate_id}}",
 										"update"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Переглянути ставку",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"rate_id\", 6);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/show?lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"{{rate_id}}",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Відмінити ставку",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"rate_id\", 6);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PHP-AUTH-USER",
+										"value": "{{email}}",
+										"type": "text",
+										"description": "Логін: емейл або телефон"
+									},
+									{
+										"key": "PHP-AUTH-PW",
+										"value": "{{password_hash}}",
+										"type": "text",
+										"description": "Хеш пароля, результат виконання md5(md5(password))"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/cancel",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"{{rate_id}}",
+										"cancel"
 									],
 									"query": [
 										{
@@ -5992,6 +5997,45 @@
 							"response": []
 						},
 						{
+							"name": "Прийняти ставку",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"rate_id\", 6);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/accept",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"{{rate_id}}",
+										"accept"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Відхилити ставку",
 							"event": [
 								{
@@ -6017,45 +6061,6 @@
 										"rates",
 										"{{rate_id}}",
 										"reject"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Прийняти ставку",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.variables.set(\"rate_id\", 306);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/accept",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"rates",
-										"{{rate_id}}",
-										"accept"
 									],
 									"query": [
 										{
@@ -6137,45 +6142,6 @@
 							"response": []
 						},
 						{
-							"name": "Переглянути ставку",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.variables.set(\"rate_id\", 8);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/show",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"rates",
-										"{{rate_id}}",
-										"show"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Вивід ставок для конкретного заказу",
 							"event": [
 								{
@@ -6202,6 +6168,87 @@
 										"order",
 										"{{order_id}}",
 										"show"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Список обраних",
+					"item": [
+						{
+							"name": "Додати в список обраних",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "type",
+											"value": "order",
+											"description": "Тип сущності: order або route",
+											"type": "text"
+										},
+										{
+											"key": "id",
+											"value": "27",
+											"description": "Код запису",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/favorites/update",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"favorites",
+										"update"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Вивести список обраних",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/favorites/show?type=order",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"favorites",
+										"show"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "order",
+											"description": "Тип сущності: order або route"
+										},
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
 									]
 								}
 							},
