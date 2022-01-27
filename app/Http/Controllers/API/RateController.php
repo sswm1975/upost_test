@@ -7,17 +7,17 @@ use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Rate;
-use App\Models\Route;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class RateController extends Controller
 {
     /**
      * Правила проверки входных данных запроса при создании ставки.
+     * (создать/править ставку может только владелец активного маршрута; заказ должен быть активным).
      *
      * @return array
      */
@@ -43,6 +43,7 @@ class RateController extends Controller
     {
         $data = validateOrExit(self::rules4saveRate());
 
+        # запрещаем дублировать ставку
         $is_double = Rate::active()->where(Arr::only($data, ['user_id', 'order_id', 'route_id']))->count();
         if ($is_double) throw new ErrorException(__('message.rate_exists'));
 
@@ -60,7 +61,7 @@ class RateController extends Controller
      */
     public function updateRate(int $rate_id): JsonResponse
     {
-        if (! $rate = Rate::isOwnerByKey($rate_id)->first()) {
+        if (! $rate = Rate::isOwnerByKey($rate_id)->first(['id'])) {
             throw new ErrorException(__('message.rate_not_found'));
         }
         $data = validateOrExit(self::rules4saveRate());
@@ -72,6 +73,7 @@ class RateController extends Controller
 
     /**
      * Просмотр ставки.
+     * (доступ к ставке только у владельцев маршрута или заказа)
      *
      * @param int $rate_id
      * @return JsonResponse
@@ -91,10 +93,8 @@ class RateController extends Controller
             ])
             ->whereKey($rate_id)
             ->where(function ($query) {
-                return $query->owner()->orWhereExists(function($query) {
-                    $query->selectRaw(1)->from('orders')
-                        ->whereColumn('orders.id', 'rates.order_id')
-                        ->where('user_id', request()->user()->id);
+                return $query->owner()->orWhereHas('order', function($query) {
+                    $query->owner();
                 });
             })
             ->first();
@@ -115,6 +115,7 @@ class RateController extends Controller
 
     /**
      * Отменить ставку.
+     * (доступ имеет только владелец ставки; ставка должна быть активной)
      *
      * @param int $rate_id
      * @return JsonResponse
@@ -130,6 +131,7 @@ class RateController extends Controller
 
     /**
      * Удалить ставку.
+     * (доступ имеет только владелец ставки; ставка должна быть активной или отмененной)
      *
      * @param int $rate_id
      * @return JsonResponse
@@ -145,260 +147,64 @@ class RateController extends Controller
 
     /**
      * Принять ставку.
+     * (доступ имеет только владелец активного заказа; ставка должна быть активной)
      *
      * @param int $rate_id
-     * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
+     * @throws ErrorException|\Throwable
      */
-    public function acceptRate(int $rate_id, Request $request): JsonResponse
+    public function acceptRate(int $rate_id): JsonResponse
     {
         $rate = Rate::query()
-            ->with('order:id')
             ->whereKey($rate_id)
             ->active()
             ->whereHas('order', function($query) {
                 $query->owner()->active();
             })
-            ->first();
+            ->first(['id']);
 
         if (! $rate) throw new ErrorException(__('message.rate_not_found'));
 
+        /* TODO Подтверждение ставки: Нужно добавить проверку по наличию транзакции */
 
-//        $rate->status = Rate::STATUS_ACCEPTED;
-//        $rate->is_read = true;
-//        $rate->save();
-        $rate->order()->attach(['status' => Order::STATUS_IN_WORK]);
+        DB::beginTransaction();
+        try {
+            $rate->status = Rate::STATUS_ACCEPTED;
+            $rate->is_read = true;
+            $rate->save();
+            $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
+            DB::commit();
+            $status = true;
+        } catch (\Exception $e) {
+            DB::rollback();
+            $status = false;
+        }
 
         return response()->json([
-            'status' => true,
+            'status' => $status,
             'result' => [__('message.rate_accepted')],
-            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
     /**
      * Оклонить ставку.
+     * (доступ имеет только владелец заказа; ставка должна быть активной)
      *
      * @param int $rate_id
-     * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
      */
-    public function rejectRate(int $rate_id, Request $request): JsonResponse
+    public function rejectRate(int $rate_id): JsonResponse
     {
-        $user = $request->user();
-
-        $rate = Rate::query()
-            ->where('id', $rate_id)
-            ->where('user_id', '<>', $user->id)
-            ->where('status', Rate::STATUS_ACTIVE)
-            ->first();
-
-        if (!$rate) throw new ErrorException(__('message.rate_not_found'));
-
-        if ($rate->parent_id == 0) {
-            $exists_next_rate = Rate::query()
-                ->where('parent_id', $rate_id)
-                ->where('user_id', '<>', $user->id)
-                ->count();
-        } else {
-            $exists_next_rate = Rate::query()
-                ->where('parent_id', $rate->parent_id)
-                ->where('user_id', '<>', $user->id)
-                ->where('id', '>', $rate_id)
-                ->count();
-        }
-        if ($exists_next_rate) throw new ErrorException(__('message.not_last_rate'));
-
-        $affected = $rate->update(['status' => Rate::STATUS_REJECTED]);
+        $affected_rows = Rate::query()
+            ->whereKey($rate_id)
+            ->active()
+            ->whereHas('order', function($query) {
+                $query->owner();
+            })
+            ->update(['status' => Rate::STATUS_REJECTED, 'is_read' => 1]);
 
         return response()->json([
-            'status' => (bool)$affected,
+            'status' => $affected_rows > 0,
         ]);
     }
-
-    /**
-     * Получить ставки.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException|ValidatorException
-     */
-    public function showRates(Request $request):JsonResponse
-    {
-        $data = validateOrExit([
-            'rate_type' => 'required|in:order,route',
-            'order_id'  => 'required_without:route_id|integer',
-            'route_id'  => 'required_without:order_id|integer',
-            'who_start' => 'sometimes|integer',
-            'user_id'   => 'sometimes|integer',
-            'rate_id'   => 'sometimes|integer',
-            'parent_id' => 'sometimes|integer',
-        ]);
-
-        $rates = Rate::query()
-            ->where('type', $data['rate_type'])
-            ->when($request->filled('user_id'), function ($query) use ($data) {
-                return $query->where('user_id', $data['user_id']);
-            })
-            ->when(!$request->filled('rate_id') && $request->filled('order_id'), function ($query) use ($data) {
-                return $query->where('order_id', $data['order_id']);
-            })
-            ->when(!$request->filled('rate_id') && $request->filled('route_id'), function ($query) use ($data) {
-                return $query->where('route_id', $data['route_id']);
-            })
-            ->when($request->filled('rate_id'), function ($query) use ($data) {
-                return $query->whereKey($data['rate_id']);
-            })
-            ->when($request->filled('parent_id'), function ($query) use ($data) {
-                return $query->where('parent_id', $data['parent_id']);
-            })
-            ->when($request->filled('who_start'), function ($query) use ($data) {
-                return $query->where('who_start', $data['who_start']);
-            })
-            ->orderByDesc('id')
-            ->get();
-
-        if (!$rates->count()) {
-            return response()->json([
-                'status' => true,
-                'count'  => 0,
-            ]);
-        }
-
-        $order = Order::query()
-            ->with([
-                'user:' . implode(',', User::FIELDS_FOR_SHOW),
-                'from_country',
-                'from_city',
-                'to_country',
-                'to_city',
-            ])
-            ->find($rates[0]->order_id);
-
-        $route = Route::query()
-            ->with([
-                'user:' . implode(',', User::FIELDS_FOR_SHOW),
-                'from_country',
-                'from_city',
-                'to_country',
-                'to_city',
-            ])
-            ->find($rates[0]->route_id);
-
-        $rows = compact('rates', 'order', 'route');
-
-        # находим заказ на мой маршрут (может быть не больше одного заказа)
-        if ($data['rate_type'] == 'order') {
-            $parent = $rates->firstWhere('parent_id', 0);
-            if (!$parent) {
-                $parent = Rate::find($rates[0]->parent_id);
-            }
-            $receiver = Order::find($parent->order_id, ['user_id']);
-            $rows = [
-                'count'     => $rates->count(),
-                'who_start' => $parent->who_start ?? 0,
-                'receiver'  => $receiver->user_id ?? 0,
-                'parent'    => $parent ?? [],
-                'rates'     => $rates,
-            ];
-        }
-
-        # находим маршруты на мой заказ (их может быть до 3 штук)
-        if ($data['rate_type'] == 'route') {
-            $parents = $rates->where('parent_id', 0)->all();
-
-            # в выборке нет родителя
-            if (count($parents) == 0) {
-                $parent = Rate::find($rates[0]->parent_id);
-                $receiver = Route::where('route_id', $parent->route_id)->first('user_id')->user_id;
-                $rows = [
-                    'count'     => $rates->count(),
-                    'who_start' => $parent->who_start,
-                    'receiver'  => $receiver,
-                    'parent'    => $parent,
-                    'rates'     => $rates,
-                ];
-
-            # в выборке несколько маршрутов на мой заказ - выводим только основные ставки
-            } elseif (count($parents) > 1) {
-                $rows = ['count' => count($parents), 'rates' => $parents];
-
-            # в выборке только один родитель
-            } else {
-                $parent = array_shift($parents);
-                $receiver = Route::where('route_id', $parent->route_id)->first('user_id')->user_id;
-                $rows = [
-                    'count'     => $rates->count(),
-                    'who_start' => $parent->who_start,
-                    'receiver'  => $receiver,
-                    'parent'    => $parent,
-                    'rates'     => $rates,
-                ];
-            }
-        }
-
-        return response()->json(array_merge(['status' => true], $rows));
-    }
-
-    /**
-     * Получить ставки по выбранному заказу.
-     *
-     * @param int $order_id
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function showRatesByOrder(int $order_id, Request $request):JsonResponse
-    {
-        $all_rates = Rate::getRatesByOrder($order_id);
-
-        $new_rates = $read_rates = $contr_rates = [];
-        foreach ($all_rates as $rates) {
-            if (count($rates) == 1) {
-                $rate = $rates[0];
-                if ($rate->is_read) {
-                    $read_rates[] = $rate;
-                } else {
-                    $new_rates[] = $rate;
-                }
-                continue;
-            }
-            $contr_rates[] = $rates->last();
-        }
-
-        return response()->json([
-            'status'        => true,
-            'all_rates'     => null_to_blank($all_rates),
-            'new_rates'     => null_to_blank($new_rates),
-            'read_rates'    => null_to_blank($read_rates),
-            'contr_rates'   => null_to_blank($contr_rates),
-            'all_rates_cnt' => count($new_rates) + count($read_rates) + count($contr_rates),
-        ]);
-    }
-
-    /**
-     * Получить ставки по выбранному маршруту.
-     *
-     * @param int $route_id
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function showRatesByRoute(int $route_id, Request $request):JsonResponse
-    {
-        $new_rates = Rate::getNewRatesByRoute($route_id);
-        $read_rates = Rate::getReadRatesByRoute($route_id);
-        $exists_child_rates = Rate::getExistsChildRatesByRoute($route_id);
-        $rates_all = count($new_rates) +  count($read_rates) + count($exists_child_rates);
-
-        return response()->json([
-            'status' => true,
-            'new_rates' => null_to_blank($new_rates),
-            'read_rates' => null_to_blank($read_rates),
-            'exists_child_rates' => null_to_blank($exists_child_rates),
-            'rates_all' => $rates_all,
-        ]);
-    }
-
-
 }

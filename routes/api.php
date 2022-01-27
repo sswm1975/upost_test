@@ -136,41 +136,31 @@ Route::namespace('API')->group(function ($route) {
         # Лічильник переглядів
         $route->post('{route_id}/add_look', 'RouteController@addLook');
     });
-});
 
-// Ставки
-Route::prefix('rates')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function () {
+    # Ставки
+    $route->prefix('rates')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
         # Создать ставку
-        Route::post('add', 'API\RateController@addRate');
+        $route->post('add', 'RateController@addRate');
 
         # Изменить ставку
-        Route::post('{rate_id}/update', 'API\RateController@updateRate');
+        $route->post('{rate_id}/update', 'RateController@updateRate');
 
         # Просмотр ставки
-        Route::get('{rate_id}/show', 'API\RateController@showRate');
+        $route->get('{rate_id}/show', 'RateController@showRate');
 
         # Отменить ставку
-        Route::post('{rate_id}/cancel', 'API\RateController@cancelRate');
+        $route->post('{rate_id}/cancel', 'RateController@cancelRate');
 
         # Удалить ставку
-        Route::delete('{rate_id}/delete', 'API\RateController@deleteRate');
+        $route->delete('{rate_id}/delete', 'RateController@deleteRate');
 
-        # Відхилити ставку
-        Route::post('{rate_id}/reject', 'API\RateController@rejectRate');
+        # Принять ставку
+        $route->post('{rate_id}/accept', 'RateController@acceptRate');
 
-        # Отримати ставки
-        Route::get('show', 'API\RateController@showRates');
-
-        # Вивід ставок для конкретного заказу
-        Route::get('order/{order_id}/show', 'API\RateController@showRatesByOrder');
-
-        # Вивід ставок для конкретного маршруту
-        Route::get('route/{route_id}/show', 'API\RateController@showRatesByRoute');
-
-        # Прийняти ставку
-        Route::post('{rate_id}/accept', 'API\RateController@acceptRate');
-    }
-);
+        # Оклонить ставку
+        $route->post('{rate_id}/reject', 'RateController@rejectRate');
+    });
+});
 
 // Відправка лістів
 Route::group(
