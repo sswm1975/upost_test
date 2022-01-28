@@ -364,7 +364,7 @@ class Order extends Model
                 'to_city',
             ])
             ->withCount(['rates' => function ($query) use ($user) {
-                $query->whereParentId(0)->whereUserId($user->id);
+                $query->whereUserId($user->id);
             }])
             ->get();
     }

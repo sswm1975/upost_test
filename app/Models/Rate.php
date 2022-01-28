@@ -11,13 +11,13 @@ class Rate extends Model
 {
     use TimestampSerializable;
 
-    public const STATUS_ACTIVE = 'active';           # создано владельцем маршрута
-    public const STATUS_CANCELED = 'canceled';       # отменено владельцем ставки/маршрута
-    public const STATUS_REJECTED = 'rejected';       # отклонено владельцем заказа
-    public const STATUS_ACCEPTED = 'accepted';       # владелец заказа принял ставку и успешно оплатил за товар/услугу
-    public const STATUS_DISPUTE = 'dispute';         #
-    public const STATUS_SUCCESSFUL = 'successful';   #
-    public const STATUS_BAN = 'ban';                 #
+    public const STATUS_ACTIVE     = 'active';      # создано владельцем маршрута
+    public const STATUS_CANCELED   = 'canceled';    # отменено владельцем ставки/маршрута
+    public const STATUS_REJECTED   = 'rejected';    # отклонено владельцем заказа
+    public const STATUS_ACCEPTED   = 'accepted';    # владелец заказа принял ставку и успешно оплатил за товар/услугу
+    public const STATUS_DISPUTE    = 'dispute';     #
+    public const STATUS_SUCCESSFUL = 'successful';  #
+    public const STATUS_BAN        = 'ban';         #
 
     protected $table = 'rates';
     protected $primaryKey = 'id';

@@ -320,22 +320,22 @@ class RouteController extends Controller
         return Route::query()
             ->with([
                 'user' => function ($query) {
-                        $query->select(User::FIELDS_FOR_SHOW)
-                            ->addSelect(DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders'));
+                    $query->select(User::FIELDS_FOR_SHOW)
+                        ->addSelect(DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders'));
                 },
                 'from_country',
                 'from_city',
                 'to_country',
                 'to_city',
             ])
+/*
             ->withCount(['rates as has_rate' => function ($query) use ($user) {
-                $query->where('parent_id', 0)->where('user_id', $user->id ?? 0);
+                $query->where('user_id', $user->id ?? 0);
             }])
             ->withCount(['rates as rates_all_count' => function ($query) use ($user) {
-                $query->where('parent_id', 0)
-                    ->when(!is_null($user), function ($q) use ($user) {
-                        $q->where('user_id', $user->id);
-                    });
+                $query->when(!is_null($user), function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                });
             }])
             ->withCount(['rates as rates_read_count' => function ($query) use ($user) {
                 $query->where('is_read', 0)
@@ -344,11 +344,11 @@ class RouteController extends Controller
                     });
             }])
             ->withCount(['rates as is_in_rate' => function ($query) use ($user) {
-                $query->typeOrder()
-                    ->when(!is_null($user), function ($q) use ($user) {
+                $query->when(!is_null($user), function ($q) use ($user) {
                         $q->where('user_id', $user->id);
                     });
             }])
+*/
             ->when(!empty($filters['status']), function ($query) use ($filters) {
                 return $query->where('status', $filters['status']);
             })
