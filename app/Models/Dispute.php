@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id Код
  * @property int $user_id Код пользователя
- * @property int $job_id Код задания
+ * @property int $rate_id Код ставки
  * @property int $problem_id Код проблемы
  * @property string $comment Комментарий
  * @property array $files Файлы
@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereFiles($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereJobId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereRateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereProblemId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUserId($value)
@@ -34,7 +34,7 @@ class Dispute extends Model
 
     protected $fillable = [
         'user_id',
-        'job_id',
+        'rate_id',
         'problem_id',
         'files',
         'comment',

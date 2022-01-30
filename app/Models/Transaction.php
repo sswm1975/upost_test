@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id Код
  * @property int $user_id Пользователь
- * @property int $job_id Задание
+ * @property int $rate_id Ставка
  * @property string $amount Сумма
  * @property string|null $description Описание
  * @property string|null $status Статус
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereJobId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereRateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction wherePayedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereResponse($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereStatus($value)

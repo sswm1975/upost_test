@@ -62,20 +62,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         /**
-         * Валидация: Проверка, что авторизированный пользователь имеет отношения к ставке.
-         * Авторизированному пользователю должен принадлежать Заказ или Маршрут.
-         */
-        Validator::extend('owner_rate', function($attribute, $value, $parameters) {
-            $rate = Rate::query()
-                ->with('route:id,user_id', 'order:id,user_id')
-                ->find($value, ['id', 'route_id', 'order_id']);
-
-            if (!$rate) return false;
-
-            return in_array(request()->user()->id, [$rate->order->user_id, $rate->route->user_id]);
-        });
-
-        /**
          * Валидация: Проверка base64 image-контента.
          */
         Validator::extend('base64_image', function ($attribute, $value, $parameters) {

@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use App\Exceptions\ValidatorException;
 use App\Models\Dispute;
-use App\Models\Job;
 
 class DisputeController extends Controller
 {
@@ -22,6 +21,7 @@ class DisputeController extends Controller
      */
     public function addDispute(Request $request): JsonResponse
     {
+/*
         $data = validateOrExit([
             'job_id'  => [
                 'required',
@@ -56,5 +56,6 @@ class DisputeController extends Controller
         return response()->json([
             'status' => true,
         ]);
+*/
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
-use App\Models\Job;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -25,6 +24,7 @@ class ReviewController extends Controller
      */
     public function addReview(Request $request): JsonResponse
     {
+/*
         $user_id = $request->user()->id;
 
         $data = validateOrExit([
@@ -80,6 +80,7 @@ class ReviewController extends Controller
             'status' => true,
             'sql' => getSQLForFixDatabase()
         ]);
+*/
     }
 
     /**
@@ -91,6 +92,7 @@ class ReviewController extends Controller
      */
     public function showReviews(Request $request): JsonResponse
     {
+/*
         $filters = validateOrExit([
             'user_id'  => 'required|integer|exists:users,id',
             'type'     => 'sometimes|required|in:creator,freelancer',
@@ -111,6 +113,7 @@ class ReviewController extends Controller
             'number' => count($reviews),
             'result' => null_to_blank($reviews),
         ]);
+*/
     }
 
     /**
@@ -133,6 +136,5 @@ class ReviewController extends Controller
             'creator_rating'    => round($creatorRating, 1),
             'freelancer_rating' => round($freelancerRating, 1),
         ]);
-
     }
 }
