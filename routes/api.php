@@ -154,11 +154,14 @@ Route::namespace('API')->group(function ($route) {
         # Удалить ставку
         $route->delete('{rate_id}/delete', 'RateController@deleteRate');
 
-        # Принять ставку
-        $route->post('{rate_id}/accept', 'RateController@acceptRate');
-
         # Оклонить ставку
         $route->post('{rate_id}/reject', 'RateController@rejectRate');
+
+        # Подготовить данные для оплаты по выбранной ставке (формирование параметров для Liqpay-платежа).
+        $route->post('{rate_id}/prepare_payment', 'RateController@preparePayment');
+
+        # Подтверждение ставки - Оплата заказа (от Liqpay пришёл результат оплаты)
+        $route->post('callback_payment', 'RateController@callbackPayment');
     });
 });
 
@@ -270,27 +273,6 @@ Route::group(
         Route::get('show', 'API\FavoriteController@showFavorites')->middleware(MIDDLEWARE_AUTH_BASIC);
     }
 );
-
-// Завдання
-Route::group(
-    [
-        'prefix' => 'jobs',
-        'middleware' => MIDDLEWARE_AUTH_BASIC,
-    ],
-    function () {
-        # Створення завдання
-        Route::post('add', 'API\JobController@addJob');
-
-        # Підтвердження правильності покупки (замовник)
-        Route::post('accept', 'API\JobController@acceptJob');
-
-        # Оплата замовлення (формування параметрів для Liqpay оплати)
-        Route::post('{job_id}/liqpay_params', 'API\JobController@createLiqpayParams');
-    }
-);
-
-# Оплата замовлення (отримання результату оплати від Liqpay)
-Route::post('liqpay/callback', 'API\JobController@callbackLiqpay');
 
 // Парсинг даних
 Route::get('parser', 'API\ParserController')->middleware(MIDDLEWARE_AUTH_BASIC);

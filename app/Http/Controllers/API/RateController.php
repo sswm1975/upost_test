@@ -7,10 +7,14 @@ use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Rate;
+use App\Models\Transaction;
 use App\Models\User;
+use App\Modules\Liqpay;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class RateController extends Controller
@@ -145,27 +149,128 @@ class RateController extends Controller
         ]);
     }
 
+
     /**
-     * Принять ставку.
-     * (доступ имеет только владелец активного заказа; ставка должна быть активной)
+     * Оклонить ставку.
+     * (доступ имеет только владелец заказа; ставка должна быть активной)
      *
      * @param int $rate_id
      * @return JsonResponse
-     * @throws ErrorException|\Throwable
      */
-    public function acceptRate(int $rate_id): JsonResponse
+    public function rejectRate(int $rate_id): JsonResponse
     {
-        $rate = Rate::query()
-            ->whereKey($rate_id)
+        $affected_rows = Rate::whereKey($rate_id)
+            ->active()
+            ->whereHas('order', function($query) {
+                $query->owner();
+            })
+            ->update(['status' => Rate::STATUS_REJECTED, 'is_read' => 1]);
+
+        return response()->json([
+            'status' => $affected_rows > 0,
+        ]);
+    }
+
+    /**
+     * Подготовить данные для оплаты по выбранной ставке (формирование параметров для Liqpay-платежа).
+     *
+     * @param int $rate_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function preparePayment(int $rate_id, Request $request): JsonResponse
+    {
+//        app()->setLocale('ru');
+
+        # ищем активную ставку, где владельцем активного заказа является авторизированный пользователь
+        $rate = Rate::whereKey($rate_id)
+            ->with([
+                'order:id,name,price,currency,price_usd,products_count,status,images',
+                'route.user:id,name,surname,photo,creator_rating,status,gender,birthday,validation,last_active,register_date',
+                'route.to_country',
+                'route.to_city',
+            ])
             ->active()
             ->whereHas('order', function($query) {
                 $query->owner()->active();
             })
-            ->first(['id']);
+            ->first();
 
         if (! $rate) throw new ErrorException(__('message.rate_not_found'));
 
-        /* TODO Подтверждение ставки: Нужно добавить проверку по наличию транзакции */
+        /* TODO Расчет суммы для оплаты: Нужно реализовать конвертацию цены и дохода; добавить пошлину за ввоз; суммировать все расчеты */
+        $amount = $rate->order->price + $rate->amount;
+
+        $user = $request->user();
+
+        $params = Liqpay::create_params(
+            $user->id,
+            $user->user_surname . ' ' . $user->user_name,
+            $rate_id,
+            $amount,
+            'UAH',
+            'Оплата заказа "' . $rate->order->name . '"',
+            'ru',
+        );
+
+        return response()->json([
+            'status'  => true,
+            'amount'  => $amount,
+            'rate'    => $rate,
+            'payment' => $params,
+        ]);
+    }
+
+    /**
+     * Обработать результат оплаты от Liqpay и сохранение транзакции.
+     * (описание см. https://www.liqpay.ua/documentation/api/callback)
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException|\Throwable
+     */
+    public function callbackPayment(Request $request): JsonResponse
+    {
+        $data = $request->get('data');
+        $signature = $request->get('signature');
+
+        if (empty($data) || empty($signature) ) {
+            return response()->json([
+                'status' => false,
+                'error'  => 'Нет данных в data и/или в signature'
+            ]);
+        }
+
+        $response = Liqpay::decode_responce($data, $signature);
+        if (!$response['status']) {
+            return response()->json($response);
+        }
+
+        $liqpay = $response['data'];
+        $rate_id = $liqpay['info']['rate_id'];
+
+        Log::info($liqpay);
+
+        if (! in_array($liqpay['status'], ['success', 'sandbox'])) {
+            return response()->json([
+                'status' => false,
+                'error'  => 'Статус платежа не равен "success" или "sandbox", получен статус "'.$liqpay['status'].'"',
+            ]);
+        }
+
+        Transaction::create([
+            'user_id'     => $liqpay['info']['user_id'],
+            'rate_id'     => $rate_id,
+            'amount'      => $liqpay['amount'],
+            'description' => $liqpay['description'],
+            'status'      => $liqpay['status'],
+            'response'    => $liqpay,
+            'payed_at'    => gmdate('Y-m-d H:i:s', strtotime("+2 hours", $liqpay['end_date'] / 1000)),
+        ]);
+
+        $rate = Rate::find($rate_id, ['id', 'status', 'is_read']);
+        if (! $rate) throw new ErrorException(__('message.rate_not_found'));
 
         DB::beginTransaction();
         try {
@@ -182,29 +287,7 @@ class RateController extends Controller
 
         return response()->json([
             'status' => $status,
-            'result' => [__('message.rate_accepted')],
-        ]);
-    }
-
-    /**
-     * Оклонить ставку.
-     * (доступ имеет только владелец заказа; ставка должна быть активной)
-     *
-     * @param int $rate_id
-     * @return JsonResponse
-     */
-    public function rejectRate(int $rate_id): JsonResponse
-    {
-        $affected_rows = Rate::query()
-            ->whereKey($rate_id)
-            ->active()
-            ->whereHas('order', function($query) {
-                $query->owner();
-            })
-            ->update(['status' => Rate::STATUS_REJECTED, 'is_read' => 1]);
-
-        return response()->json([
-            'status' => $affected_rows > 0,
+            'data'   => $liqpay,
         ]);
     }
 }

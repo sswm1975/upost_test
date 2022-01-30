@@ -244,9 +244,9 @@ class Route extends Model
      * Возвращает маршрут по его коду вместе со всеми отношениями.
      *
      * @param int $id
-     * @return array
+     * @return Route|null
      */
-    public static function getByIdWithRelations(int $id): array
+    public static function getByIdWithRelations(int $id): ?Route
     {
         return static::whereKey($id)
             ->with(['from_country', 'from_city', 'to_country', 'to_city'])
@@ -256,7 +256,6 @@ class Route extends Model
             ->withCount(['order as profit_usd' => function($query) {
                 $query->select(DB::raw('IFNULL(SUM(orders.user_price_usd), 0)'));
             }])
-            ->first()
-            ->toArray();
+            ->first();
     }
 }
