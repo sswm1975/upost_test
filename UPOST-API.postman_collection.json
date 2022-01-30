@@ -5997,7 +5997,7 @@
 							"response": []
 						},
 						{
-							"name": "Прийняти ставку",
+							"name": "Підгоотвити по ставці дані для проплати",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -6013,7 +6013,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/accept",
+									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/prepare_payment?lang=uk",
 									"host": [
 										"{{host}}"
 									],
@@ -6021,14 +6021,13 @@
 										"{{endpoint}}",
 										"rates",
 										"{{rate_id}}",
-										"accept"
+										"prepare_payment"
 									],
 									"query": [
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 										}
 									]
 								}
@@ -6150,125 +6149,6 @@
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
 											"disabled": true
 										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Завдання",
-					"item": [
-						{
-							"name": "Створення завдання",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "rate_id",
-											"value": "3",
-											"description": "Код ставки",
-											"type": "text"
-										},
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/jobs/add",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"jobs",
-										"add"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Підтвердження правильності покупки (замовник)",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "rate_id",
-											"value": "304",
-											"description": "Код ставки",
-											"type": "text"
-										},
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/jobs/accept",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"jobs",
-										"accept"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Оплата замовлення (отримання параметрів для Liqpay оплати)",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.variables.set(\"job_id\", 2);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/jobs/{{job_id}}/liqpay_params",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"jobs",
-										"{{job_id}}",
-										"liqpay_params"
 									]
 								}
 							},
