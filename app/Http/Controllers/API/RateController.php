@@ -269,7 +269,7 @@ class RateController extends Controller
             'payed_at'    => gmdate('Y-m-d H:i:s', strtotime("+2 hours", $liqpay['end_date'] / 1000)),
         ]);
 
-        $rate = Rate::find($rate_id, ['id', 'status', 'is_read']);
+        $rate = Rate::find($rate_id, ['id', 'order_id', 'status', 'is_read']);
         if (! $rate) throw new ErrorException(__('message.rate_not_found'));
 
         DB::beginTransaction();

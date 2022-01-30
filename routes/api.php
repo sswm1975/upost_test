@@ -161,7 +161,7 @@ Route::namespace('API')->group(function ($route) {
         $route->post('{rate_id}/prepare_payment', 'RateController@preparePayment');
 
         # Подтверждение ставки - Оплата заказа (от Liqpay пришёл результат оплаты)
-        $route->post('callback_payment', 'RateController@callbackPayment');
+        $route->post('callback_payment', 'RateController@callbackPayment')->withoutMiddleware(MIDDLEWARE_AUTH_BASIC);
     });
 });
 
