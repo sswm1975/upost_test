@@ -51,7 +51,7 @@ class Liqpay
         $data = self::encode_params($params);
         $signature = self::str_to_sign($private_key . $data . $private_key);
 
-        return compact('data', 'signature');
+        return compact('data', 'signature', 'amount', 'currency');
     }
 
     /**

@@ -216,7 +216,6 @@ class RateController extends Controller
 
         return response()->json([
             'status'  => true,
-            'amount'  => $amount,
             'rate'    => $rate,
             'payment' => $params,
         ]);
