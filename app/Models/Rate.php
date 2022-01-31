@@ -17,7 +17,7 @@ class Rate extends Model
     public const STATUS_ACCEPTED   = 'accepted';    # владелец заказа принял ставку и успешно оплатил за товар/услугу
     public const STATUS_DISPUTE    = 'dispute';     #
     public const STATUS_SUCCESSFUL = 'successful';  #
-    public const STATUS_BAN        = 'ban';         #
+    public const STATUS_BANNED     = 'banned';      #
 
     protected $table = 'rates';
     protected $primaryKey = 'id';

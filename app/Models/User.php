@@ -103,6 +103,8 @@ class User extends Authenticatable
     const STATUSES = [
         self::STATUS_ACTIVE,
         self::STATUS_NOT_ACTIVE,
+        self::STATUS_BANNED,
+        self::STATUS_REMOVED,
     ];
 
     const VALIDATION_STATUS_VALID = 'valid';

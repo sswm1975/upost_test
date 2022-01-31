@@ -23,6 +23,14 @@ class ClientController extends AdminController
         $grid = new Grid(new User);
 
         # SETTINGS GRID
+        $grid->disablePagination(false);
+        $grid->disableFilter(false);
+        $grid->disableExport(false);
+        $grid->disableColumnSelector(false);
+        $grid->disableCreateButton();
+        $grid->disableActions();
+        $grid->paginate(20);
+
         $grid->filter(function ($filter) {
             $filter->disableIdFilter();
 
@@ -56,17 +64,15 @@ class ClientController extends AdminController
         });
 
         $grid->selector(function (Grid\Tools\Selector $selector) {
-            $selector->select('status', 'СТАТУС: ', [
-                User::STATUS_ACTIVE     => __('message.user.statuses.' . User::STATUS_ACTIVE),
-                User::STATUS_NOT_ACTIVE => __('message.user.statuses.' . User::STATUS_NOT_ACTIVE),
-                User::STATUS_BANNED     => __('message.user.statuses.' . User::STATUS_BANNED),
-                User::STATUS_REMOVED    => __('message.user.statuses.' . User::STATUS_REMOVED),
-            ]);
-            $selector->select('gender', 'ПОЛ:', [
-                User::GENDER_MALE    => __('message.user.genders.' . User::GENDER_MALE),
-                User::GENDER_FEMALE  => __('message.user.genders.' . User::GENDER_FEMALE),
-                User::GENDER_UNKNOWN => __('message.user.genders.' . User::GENDER_UNKNOWN),
-            ]);
+            $statuses = array_combine(User::STATUSES, array_map(function ($status) {
+                return __("message.user.statuses.$status");
+            }, User::STATUSES));
+            $selector->select('status', 'СТАТУС: ', $statuses);
+
+            $genders = array_combine(User::GENDERS, array_map(function ($gender) {
+                return __("message.user.genders.$gender");
+            }, User::GENDERS));
+            $selector->select('gender', 'ПОЛ:', $genders);
         });
 
         $grid->quickSearch(function ($model, $query) {
@@ -77,14 +83,6 @@ class ClientController extends AdminController
                     ->orWhere('email', 'like', "%{$query}%");
             });
         })->placeholder('Поиск по имени, телефону, емейлу');
-
-        $grid->disablePagination(false);
-        $grid->disableFilter(false);
-        $grid->disableExport(false);
-        $grid->disableColumnSelector(false);
-        $grid->disableCreateButton();
-        $grid->disableActions();
-        $grid->paginate(20);
 
         # COLUMNS
         $grid->column('id', 'Код')->sortable();

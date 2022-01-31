@@ -3,6 +3,7 @@
 namespace App\Platform\Controllers;
 
 use App\Models\Order;
+use App\Models\Shop;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use App\Platform\Extensions\Exporters\ExcelExpoter;
@@ -22,19 +23,28 @@ class OrderController extends AdminController
         $grid = new Grid(new Order);
 
         # SETTINGS GRID
+        $grid->disablePagination(false);
+        $grid->disableFilter(false);
+        $grid->disableExport(false);
+        $grid->disableColumnSelector(false);
+        $grid->disableCreateButton();
+        $grid->disableActions();
+        $grid->paginate(20);
+
+        $grid->selector(function (Grid\Tools\Selector $selector) {
+            $statuses = array_combine(Order::STATUSES, array_map(function ($status) {
+                return __("message.order.statuses.$status");
+            }, Order::STATUSES));
+
+            $selector->select('status', 'СТАТУС: ', $statuses);
+        });
+
         $grid->quickSearch(function ($model, $query) {
             $model->where(function($model) use ($query) {
                 $model->where('name', 'like', "%{$query}%")->orWhere('slug', 'like', "%{$query}%");
 
             });
         })->placeholder('Поиск по названию');
-
-        $grid->disablePagination(false);
-        $grid->disableExport(false);
-        $grid->disableColumnSelector(false);
-        $grid->disableCreateButton();
-        $grid->disableActions();
-        $grid->paginate(20);
 
         # COLUMNS
         $grid->column('id', 'Код')->sortable();
@@ -60,7 +70,8 @@ class OrderController extends AdminController
                         <div style='clear:both; line-height: 0;'></div>
                     </div>
                 ";
-            });
+            })
+            ->setAttributes(['align'=>'center']);
         $grid->column('product_link', 'Ссылка')
             ->display(function ($url){
                 if (empty($url)) return '';
@@ -68,7 +79,9 @@ class OrderController extends AdminController
                 return "<a href='{$url}' target='_blank'>{$host}</a>";
             })
             ->sortable();
-        $grid->column('shop_slug', 'Магазин')->sortable();
+        $grid->column('shop_slug', 'Магазин')
+            ->filter(Shop::pluck('name', 'slug')->toArray())
+            ->sortable();
         $grid->column('products_count', 'Кол-во')
             ->setAttributes(['align'=>'center'])
             ->sortable();

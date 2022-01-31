@@ -18,13 +18,14 @@ class Order extends Model
     const STATUS_ACTIVE = 'active';
     const STATUS_IN_WORK = 'in_work';
     const STATUS_CLOSED = 'closed';
-    const STATUS_BAN = 'ban';
+    const STATUS_BANNED = 'banned';
     const STATUS_SUCCESSFUL = 'successful';
 
     const STATUSES = [
         self::STATUS_ACTIVE,
+        self::STATUS_IN_WORK,
         self::STATUS_CLOSED,
-        self::STATUS_BAN,
+        self::STATUS_BANNED,
         self::STATUS_SUCCESSFUL,
     ];
 

@@ -79,8 +79,9 @@ return [
     'order' => [
         'statuses' => [
             'active'     => 'Активний',
+            'in_work'    => 'В роботі',
             'closed'     => 'Закритий',
-            'ban'        => 'Заборонений',
+            'banned'     => 'Заборонений',
             'successful' => 'Успішний',
         ],
     ],

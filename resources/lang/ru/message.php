@@ -80,8 +80,9 @@ return [
     'order' => [
         'statuses' => [
             'active'     => 'Активный',
+            'in_work'    => 'В работе',
             'closed'     => 'Закрытый',
-            'ban'        => 'Забаненный',
+            'banned'     => 'Забаненный',
             'successful' => 'Успешный',
         ],
     ],
