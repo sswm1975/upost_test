@@ -105,7 +105,7 @@ class ProfileController extends Controller
                 'city_id'  => 'integer|exists:cities,id',
                 'status'   => 'in:' . implode(',', User::STATUSES),
                 'birthday' => 'date',
-                'gender'   => 'nullable|in:male,female,unknown',
+                'gender'   => 'nullable|in:' . implode(',', User::GENDERS),
                 'photo'    => 'nullable|base64_image',
                 'resume'   => 'nullable|string|not_phone|censor',
             ]

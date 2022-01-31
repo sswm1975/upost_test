@@ -109,8 +109,18 @@ class User extends Authenticatable
     const VALIDATION_STATUS_NO_VALID = 'no_valid';
 
     const ROLE_USER = 'user';
-    const ROLE_SUPER_ADMIN = 'super_admin';
+    const ROLE_ADMIN = 'admin';
     const ROLE_MODERATOR = 'moderator';
+
+    const GENDER_MALE = 'male';
+    const GENDER_FEMALE = 'female';
+    const GENDER_UNKNOWN = 'unknown';
+
+    const GENDERS = [
+        self::GENDER_MALE,
+        self::GENDER_FEMALE,
+        self::GENDER_UNKNOWN,
+    ];
 
     protected $guarded = ['id'];
     public $timestamps = false;
