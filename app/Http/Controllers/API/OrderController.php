@@ -102,8 +102,7 @@ class OrderController extends Controller
      * @param int $order_id
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
-     * @throws ValidatorException|ValidationException
+     * @throws ErrorException|ValidatorException|ValidationException
      */
     public function updateOrder(int $order_id, Request $request): JsonResponse
     {

@@ -126,7 +126,7 @@ class RateController extends Controller
      */
     public function cancelRate(int $rate_id): JsonResponse
     {
-        $affected_rows = Rate::IsOwnerByKey($rate_id)->update(['status' => Rate::STATUS_CANCELED]);
+        $affected_rows = Rate::isOwnerByKey($rate_id)->update(['status' => Rate::STATUS_CANCELED]);
 
         return response()->json([
             'status' => $affected_rows > 0,
@@ -142,17 +142,16 @@ class RateController extends Controller
      */
     public function deleteRate(int $rate_id): JsonResponse
     {
-        $affected = Rate::IsOwnerByKey($rate_id, [Rate::STATUS_ACTIVE, Rate::STATUS_CANCELED])->delete();
+        $affected = Rate::isOwnerByKey($rate_id, [Rate::STATUS_ACTIVE, Rate::STATUS_CANCELED])->delete();
 
         return response()->json([
             'status' => $affected,
         ]);
     }
 
-
     /**
-     * Оклонить ставку.
-     * (доступ имеет только владелец заказа; ставка должна быть активной)
+     * Отклонить ставку.
+     * (доступ имеет только владелец заказа; ставка должна быть в статусе active)
      *
      * @param int $rate_id
      * @return JsonResponse
@@ -181,8 +180,6 @@ class RateController extends Controller
      */
     public function preparePayment(int $rate_id, Request $request): JsonResponse
     {
-//        app()->setLocale('ru');
-
         # ищем активную ставку, где владельцем активного заказа является авторизированный пользователь
         $rate = Rate::whereKey($rate_id)
             ->with([
@@ -288,5 +285,31 @@ class RateController extends Controller
             'status' => $status,
             'data'   => $liqpay,
         ]);
+    }
+
+    /**
+     * Товар по ставке куплен.
+     * (доступ к операции имеет только владелец маршрута; ставка должна быть в статусе accepted)
+     *
+     * @param int $rate_id
+     * @return JsonResponse
+     * @throws ErrorException|ValidationException|ValidatorException
+     */
+    public function buyedRate(int $rate_id): JsonResponse
+    {
+        if (! $rate = Rate::isOwnerByKey($rate_id, [Rate::STATUS_ACCEPTED])->first()) {
+            throw new ErrorException(__('message.rate_not_found'));
+        }
+
+        $data = validateOrExit([
+            'images' => 'required|array|max:5',
+        ]);
+
+        $affected = $rate->update([
+            'images' => $data['images'],
+            'status' => Rate::STATUS_BUYED,
+        ]);
+
+        return response()->json(['status' => $affected]);
     }
 }

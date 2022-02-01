@@ -92,18 +92,22 @@ return [
             'active'     => 'Активний',
             'in_work'    => 'В роботі',
             'closed'     => 'Закритий',
-            'ban'        => 'Заборонений',
+            'banned'     => 'Заборонений',
             'successful' => 'Успішний',
         ],
     ],
     # Rate attributes
     'rate' => [
         'statuses' => [
-            'active'     => 'Активний',
-            'in_work'    => 'В роботі',
-            'closed'     => 'Закритий',
-            'ban'        => 'Заборонений',
-            'successful' => 'Успішний',
+            'active'   => 'Активна',
+            'canceled' => 'Відмінена',
+            'rejected' => 'Відхилена',
+            'accepted' => 'Прийнята',
+            'buyed'    => 'Сплачена',
+            'approved' => 'Схвалена',
+            'dispute'  => 'Спірна',
+            'done'     => 'Виконана',
+            'banned'   => 'Заборонена',
         ],
     ],
 ];

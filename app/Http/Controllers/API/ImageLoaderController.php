@@ -22,7 +22,7 @@ class ImageLoaderController extends Controller
     public function upload(Request $request):JsonResponse
     {
         $data = validateOrExit([
-            'type'  => 'required|in:user,order',
+            'type'  => 'required|in:user,order,rate',
             'image' => 'required|base64_image',
         ]);
 
@@ -106,6 +106,41 @@ class ImageLoaderController extends Controller
 
         createResizedImage($src, 700, $storage_path . $image_main_name);
         imagejpeg(cropAlign($src, 400, 400), $storage_path . $image_medium_name);
+        imagejpeg(cropAlign($src, 100, 100), $storage_path . $image_thumb_name);
+
+        imagedestroy($src);
+
+        return asset('storage' . $path . $image_main_name);
+    }
+
+    /**
+     * Загрузить фото для ставки.
+     *
+     * @param string $base64_image
+     * @param int $user_id
+     * @return string
+     */
+    public function uploadImage4Rate(string $base64_image, int $user_id): string
+    {
+        $date = date('YmdHms');
+        $uniqid = uniqid();
+        $path = "/{$user_id}/rates/";
+        $image_original_name = "image_original_{$date}_{$uniqid}.jpg";
+        $image_main_name     = "image_{$date}_{$uniqid}.jpg";
+        $image_thumb_name    = "image_thumb_{$date}_{$uniqid}.jpg";
+
+        $data = substr($base64_image, strpos($base64_image, ',') + 1);
+        $image_file = base64_decode($data);
+
+        Storage::disk('public')->put($path . $image_original_name, $image_file);
+        $storage_path = Storage::disk('public')->path($path);
+
+        $src = imagecreatefromstring($image_file);
+        if ($src === false) {
+            return '';
+        }
+
+        createResizedImage($src, 700, $storage_path . $image_main_name);
         imagejpeg(cropAlign($src, 100, 100), $storage_path . $image_thumb_name);
 
         imagedestroy($src);

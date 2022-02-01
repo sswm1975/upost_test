@@ -93,7 +93,7 @@ return [
             'active'     => 'Active',
             'in_work'    => 'In work',
             'closed'     => 'Closed',
-            'ban'        => 'Banned',
+            'banned'     => 'Banned',
             'successful' => 'Successful',
         ],
     ],
@@ -101,11 +101,15 @@ return [
     # Rate attributes
     'rate' => [
         'statuses' => [
-            'active'     => 'Active',
-            'in_work'    => 'In work',
-            'closed'     => 'Closed',
-            'ban'        => 'Banned',
-            'successful' => 'Successful',
+            'active'   => 'Active',
+            'canceled' => 'Canceled',
+            'rejected' => 'Rejected',
+            'accepted' => 'Accepted',
+            'buyed'    => 'Buyed',
+            'approved' => 'Approved',
+            'dispute'  => 'Dispute',
+            'done'     => 'Done',
+            'banned'   => 'Banned',
         ],
     ],
 
