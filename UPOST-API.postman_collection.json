@@ -6012,6 +6012,10 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
 								"url": {
 									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/prepare_payment?lang=uk",
 									"host": [
@@ -6060,6 +6064,60 @@
 										"rates",
 										"{{rate_id}}",
 										"reject"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Підтвердження покупки товару виконавцем",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"rate_id\", 6);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "images[]",
+											"value": "monitor-27-dell-s2721ds-1.jpg",
+											"type": "text"
+										},
+										{
+											"key": "images[]",
+											"value": "monitor-27-dell-s2721ds-2.jpg",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/buyed",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"{{rate_id}}",
+										"buyed"
 									],
 									"query": [
 										{
@@ -6184,49 +6242,6 @@
 										{
 											"key": "currency",
 											"value": "usd"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Завантаження фото",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "type",
-											"value": "order",
-											"description": "Тип сущності: order або user",
-											"type": "text"
-										},
-										{
-											"key": "image",
-											"value": "data:image/jpeg",
-											"description": "Фото в форматі base64",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/upload_image",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"upload_image"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
 										}
 									]
 								}
@@ -7672,7 +7687,7 @@
 					"name": "Завантаження файлiв",
 					"item": [
 						{
-							"name": "Завантажити файли",
+							"name": "Завантажити файли (old)",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -7697,6 +7712,49 @@
 									"path": [
 										"{{endpoint}}",
 										"upload"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Завантаження фото",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "type",
+											"value": "order",
+											"description": "Тип сущності: order/user/rate",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"value": "data:image/jpeg",
+											"description": "Фото в форматі base64",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/upload_image",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"upload_image"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
 									]
 								}
 							},
