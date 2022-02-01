@@ -61,9 +61,6 @@ Route::namespace('API')->group(function ($route) {
         # Верифікація зміни даних користувача (тільки пароль/логін/картка)
         $route->get('verification/{token}', 'ProfileController@verificationUserChanges')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-        # Завантажити фотографію
-        $route->get('download_image', 'ProfileController@downloadImage');
-
         # Перевірка заповнення профілю (ім'я, прізвище, дата народження) у авторизованого користувача.
         $route->get('profile/is_filled', 'ProfileController@isProfileFilled')->middleware(MIDDLEWARE_AUTH_BASIC);
     });

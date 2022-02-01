@@ -293,24 +293,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * Скачать фотографию.
-     *
-     * @param Request $request
-     * @return StreamedResponse
-     * @throws ValidationException|ValidatorException|ErrorException
-     */
-    public function downloadImage(Request $request): StreamedResponse
-    {
-        $data = validateOrExit(['filename' => 'required|string']);
-
-        if (!Storage::disk('public')->exists($data['filename'])) {
-            throw new ErrorException(__('message.image_not_found'));
-        }
-
-        return Storage::disk('public')->download($data['filename']);
-    }
-
-    /**
      * Обработка биографии пользователя: Удаление всех тегов и атрибутов, кроме разрешенных.
      *
      * @param string $content

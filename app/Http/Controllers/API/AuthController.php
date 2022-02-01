@@ -33,7 +33,7 @@ class AuthController extends Controller
 
         $user = $this->attemptLogin($credentials);
 
-        if (!$user) throw new ErrorException(__('message.auth_failed'), 403);
+        if (! $user) throw new ErrorException(__('message.auth_failed'), 403);
 
         $token = $this->generateToken($user);
 
@@ -62,7 +62,7 @@ class AuthController extends Controller
         $field_id = $data['provider'] . '_id';
 
         # ищем пользователя по идентификатору соц.сети в зависимости от провайдера
-        if (!$user = User::where($field_id, $data['identifier'])->first()) {
+        if (! $user = User::where($field_id, $data['identifier'])->first()) {
             # ищем пользователя по емейлу, который привязан к соц.сети
             if ($user = User::whereEmail($data['email'])->first()) {
                 if (empty($user->$field_id)) {
@@ -81,7 +81,7 @@ class AuthController extends Controller
                     'client_name' => $data['displayName'],
                     'email'       => $data['email'],
                     'password'    => $password,
-                    'url'         => 'https://post.tantal-web.top/log-in/?change_password',
+                    'url'         => env('WORDPRESS_URL') . 'log-in/?change_password',
                 ];
 
                 Mail::to($user->email)->send(new SocialChangePassword($info));
@@ -116,7 +116,7 @@ class AuthController extends Controller
             ->when(!$is_email, function ($query) use ($login) {
                 return $query->wherePhone($login);
             })
-            ->first();
+            ->first(['id']);
     }
 
     /**
@@ -172,9 +172,9 @@ class AuthController extends Controller
      */
     public function getAuthUser(Request $request): JsonResponse
     {
-        $user = request()->user();
+        $user = $request->user();
 
-        if (!$user) throw new ErrorException(__('message.user_not_found'));
+        if (! $user) throw new ErrorException(__('message.user_not_found'));
 
         $user->loadCount(['orders', 'routes']);
 

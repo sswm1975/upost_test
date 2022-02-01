@@ -9,12 +9,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Support\Facades\Date;
 
 /**
  * App\Models\User
  *
  * @property int $id Код
- * @property string $phone Телефон
+ * @property string|null $phone Телефон
  * @property string $email Емейл
  * @property string $password Пароль
  * @property string|null $name Имя пользователя
@@ -28,36 +29,44 @@ use Illuminate\Contracts\Auth\CanResetPassword;
  * @property string|null $lang Язык для системы
  * @property string|null $currency Валюта
  * @property string|null $validation Признак проверки пользователя
- * @property string $register_date Дата регистрации
  * @property string|null $role Роль
  * @property string $photo Ссылка на фотографию (аватар)
  * @property string|null $favorite_orders Список избранных заказов
  * @property string|null $favorite_routes Список избранных маршрутов
- * @property string|null $last_active Дата и время последней активности
  * @property string|null $resume Биография/Резюме
  * @property string $wallet Баланс в долларах
- * @property int $creator_rating Рейтинг заказчика
- * @property int $freelancer_rating Рейтинг исполнителя
+ * @property string $creator_rating Рейтинг заказчика
+ * @property string $freelancer_rating Рейтинг исполнителя
  * @property string|null $api_token Токен для работы через API
+ * @property string|null $google_id ID пользователя Google
+ * @property string|null $facebook_id ID пользователя Facebook
+ * @property string|null $register_date Дата регистрации
+ * @property string|null $last_active Дата и время последней активности
+ * @property \Illuminate\Support\Carbon $created_at Добавлено
+ * @property \Illuminate\Support\Carbon|null $updated_at Изменено
  * @property-read \App\Models\City|null $city
  * @property-read string $age
  * @property-read int $favorite_orders_count
  * @property-read int $favorite_routes_count
+ * @property-read string $full_name
  * @property-read string $gender_name
  * @property-read string $last_active_human
- * @property-read int|null $orders_count
  * @property-read string $photo_original
  * @property-read string $photo_thumb
  * @property-read string $register_date_human
- * @property-read int|null $routes_count
+ * @property-read string $short_name
  * @property-read string $status_name
  * @property-read string $validation_name
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
+ * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Route[] $routes
+ * @property-read int|null $routes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $successful_orders
+ * @property-read int|null $successful_orders_count
  * @method static \Illuminate\Database\Eloquent\Builder|User exclude($value = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User existsToken($token = '')
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
@@ -68,13 +77,16 @@ use Illuminate\Contracts\Auth\CanResetPassword;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCardName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCardNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatorRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFacebookId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFavoriteOrders($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFavoriteRoutes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFreelancerRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereGoogleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereLang($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereLastActive($value)
@@ -87,6 +99,7 @@ use Illuminate\Contracts\Auth\CanResetPassword;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereSurname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereValidation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereWallet($value)
  * @mixin \Eloquent
@@ -94,6 +107,22 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 class User extends Authenticatable
 {
     use Notifiable;
+
+    protected $guarded = ['id'];
+    protected $appends = [
+        'short_name',
+        'full_name',
+        'status_name',
+        'gender_name',
+        'validation_name',
+        'photo_thumb',
+        'photo_original',
+        'favorite_orders_count',
+        'favorite_routes_count',
+        'register_date_human',
+        'last_active_human',
+        'age',
+    ];
 
     const STATUS_ACTIVE = 'active';
     const STATUS_NOT_ACTIVE = 'not_active';
@@ -122,24 +151,6 @@ class User extends Authenticatable
         self::GENDER_MALE,
         self::GENDER_FEMALE,
         self::GENDER_UNKNOWN,
-    ];
-
-    protected $guarded = ['id'];
-    public $timestamps = false;
-
-    protected $appends = [
-        'short_name',
-        'full_name',
-        'status_name',
-        'gender_name',
-        'validation_name',
-        'photo_thumb',
-        'photo_original',
-        'favorite_orders_count',
-        'favorite_routes_count',
-        'register_date_human',
-        'last_active_human',
-        'age',
     ];
 
     /**
@@ -185,12 +196,9 @@ class User extends Authenticatable
         parent::boot();
 
         static::creating(function ($model) {
-            $model->register_date = $model->register_date ?? $model->freshTimestamp();
-            $model->status = $model->status ?? self::STATUS_ACTIVE;
-            $model->validation = $model->validation ?? self::VALIDATION_STATUS_NO_VALID;
+            $model->register_date = Date::now()->format('Y-m-d');
             $model->lang = $model->lang ?? config('user.default.lang');
             $model->currency = $model->currency ?? config('user.default.currency');
-            $model->role = $model->role ?? self::ROLE_USER;
         });
     }
 

@@ -3820,31 +3820,6 @@
 								}
 							},
 							"response": []
-						},
-						{
-							"name": "Отримати фото",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/users/download_image?filename=users/19/user_photo.jpg",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"users",
-										"download_image"
-									],
-									"query": [
-										{
-											"key": "filename",
-											"value": "users/19/user_photo.jpg"
-										}
-									]
-								}
-							},
-							"response": []
 						}
 					]
 				},
