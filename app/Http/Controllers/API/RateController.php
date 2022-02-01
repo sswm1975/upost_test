@@ -288,7 +288,7 @@ class RateController extends Controller
     }
 
     /**
-     * Товар по ставке куплен.
+     * Подтверждение покупки товара исполнителем (Товар по ставке куплен).
      * (доступ к операции имеет только владелец маршрута; ставка должна быть в статусе accepted)
      *
      * @param int $rate_id
@@ -297,7 +297,7 @@ class RateController extends Controller
      */
     public function buyedRate(int $rate_id): JsonResponse
     {
-        if (! $rate = Rate::isOwnerByKey($rate_id, [Rate::STATUS_ACCEPTED])->first()) {
+        if (! $rate = Rate::isOwnerByKey($rate_id, [Rate::STATUS_ACCEPTED])->first(['id'])) {
             throw new ErrorException(__('message.rate_not_found'));
         }
 
@@ -311,5 +311,27 @@ class RateController extends Controller
         ]);
 
         return response()->json(['status' => $affected]);
+    }
+
+    /**
+     * Подтверждение покупки товара заказчиком.
+     * - операция только для владельца заказа
+     * - ставка должна быть в статусе accepted
+     * - заказ должен быть в статусе in_work
+     *
+     * @param int $rate_id
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function approvedRate(int $rate_id): JsonResponse
+    {
+        $rate = Rate::byKeyForOwnerOrder($rate_id, [Rate::STATUS_BUYED], [Order::STATUS_IN_WORK])->first(['id']);
+
+        if (! $rate) throw new ErrorException(__('message.rate_not_found'));
+
+        $rate->status = Rate::STATUS_APPROVED;
+        $rate->save();
+
+        return response()->json(['status' => true]);
     }
 }

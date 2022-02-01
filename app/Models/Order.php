@@ -272,6 +272,14 @@ class Order extends Model
         return $query->where('user_id', request()->user()->id);
     }
 
+    public function scopeOwnerWithStatuses($query, array $statuses = [])
+    {
+        return $query->owner()
+            ->when(!empty($statuses), function ($query) use ($statuses) {
+                return $query->whereIn('status', $statuses);
+            });
+    }
+
     function scopeActive($query)
     {
         return $query->where('status', self::STATUS_ACTIVE);

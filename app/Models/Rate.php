@@ -132,7 +132,7 @@ class Rate extends Model
     }
 
     /**
-     * Получить маршрут/ы владельца по списку ключей и выбранным статусам.
+     * Получить ставку(и) владельца по списку ключей и выбранным статусам.
      *
      * @param $query
      * @param mixed $id
@@ -142,6 +142,24 @@ class Rate extends Model
     protected function scopeIsOwnerByKey($query, $id, array $statuses = [self::STATUS_ACTIVE])
     {
         return $query->owner()->whereKey($id)->whereIn('status', $statuses);
+    }
+
+    /**
+     * Получить ставку по её коду при условии, что авторизированный пользователь является владельцем заказа.
+     *
+     * @param $query
+     * @param mixed $id             код или список кодов
+     * @param array $rate_statuses  список статусов ставки, по умолчанию active
+     * @param array $order_statuses список статусов для заказа
+     * @return mixed
+     */
+    protected function scopeByKeyForOwnerOrder($query, $id, array $rate_statuses = [self::STATUS_ACTIVE], array $order_statuses = [])
+    {
+        return $query->whereKey($id)
+            ->whereIn('status', $rate_statuses)
+            ->whereHas('order', function($query) use ($order_statuses) {
+                $query->ownerWithStatuses($order_statuses);
+            });
     }
 
     function scopeNotRead($query)
