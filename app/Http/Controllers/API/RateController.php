@@ -49,7 +49,7 @@ class RateController extends Controller
 
         # запрещаем дублировать ставку
         $is_double = Rate::active()->where(Arr::only($data, ['user_id', 'order_id', 'route_id']))->count();
-        if ($is_double) throw new ErrorException(__('message.rate_exists'));
+        if ($is_double) throw new ErrorException(__('message.rate_add_double'));
 
         Rate::create($data);
 

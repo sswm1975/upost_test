@@ -20,6 +20,7 @@ return [
     'route_not_found'         => 'Route not found.',
     'route_exists'            => 'Route exists.',
     'rate_not_found'          => 'Rate not found.',
+    'rate_add_double'         => 'Is double rate.',
     'who_start_incorrect'     => 'The field who_start incorrect.',
     'one_rate_per_order'      => 'Can be only one basic rate per order.',
     'three_rate_per_route'    => 'Сan be max three basic rate per route.',
