@@ -263,20 +263,6 @@ Route::post('upload_image', 'API\ImageLoaderController@upload')->middleware(MIDD
 // Список довідників для фільтру на сторінці Замовлення/Маршрути
 Route::get('handbooks', 'API\HandbooksController@getHandbooks');
 
-// Список обраних
-Route::group(
-    [
-        'prefix' => 'favorites',
-    ],
-    function () {
-        # Додати в список обраних
-        Route::post('update', 'API\FavoriteController@updateFavorite')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Вивести список обраних
-        Route::get('show', 'API\FavoriteController@showFavorites')->middleware(MIDDLEWARE_AUTH_BASIC);
-    }
-);
-
 // Парсинг даних
 Route::get('parser', 'API\ParserController')->middleware(MIDDLEWARE_AUTH_BASIC);
 

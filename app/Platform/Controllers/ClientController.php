@@ -132,8 +132,6 @@ class ClientController extends AdminController
         $grid->column('role', 'Роль')->sortable();
         $grid->column('creator_rating', 'Рейтинг заказчика')->sortable();
         $grid->column('freelancer_rating', 'Рейтинг исполнителя')->sortable();
-        $grid->column('favorite_orders', 'Заказы');
-        $grid->column('favorite_routes', 'Маршруты');
         $grid->column('google_id', 'Код Гугл');
         $grid->column('facebook_id', 'Код Фейсбук');
 

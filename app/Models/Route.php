@@ -202,45 +202,6 @@ class Route extends Model
     ### QUERIES ###
 
     /**
-     * Получить список избранных маршрутов авторизированного пользователя.
-     *
-     * @return array|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public static function getFavorites()
-    {
-        $user = request()->user();
-
-        if (empty($user->favorite_routes)) {
-            return [];
-        }
-
-        return static::whereIn('id', explode(',', $user->favorite_routes))
-            ->with([
-                'user' => function ($query) {
-                    $query->select([
-                        'id',
-                        'name',
-                        'surname',
-                        'creator_rating',
-                        'freelancer_rating',
-                        'photo',
-                        'favorite_orders',
-                        'favorite_routes',
-                        DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders')
-                    ]);
-                },
-                'from_country',
-                'from_city',
-                'to_country',
-                'to_city',
-            ])
-            ->withCount(['rates' => function ($query) use ($user) {
-                $query->whereParentId(0)->whereUserId($user->id);
-            }])
-            ->get();
-    }
-
-    /**
      * Возвращает маршрут по его коду вместе со всеми отношениями.
      *
      * @param int $id

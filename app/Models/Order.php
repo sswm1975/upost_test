@@ -38,7 +38,6 @@ class Order extends Model
     protected $appends = [
         'short_name',
         'status_name',
-        'is_favorite',
         'images_thumb',
         'images_medium',
         'images_original',
@@ -130,17 +129,6 @@ class Order extends Model
         if (is_array($json)) return $json;
 
         return json_decode($json, true);
-    }
-
-    public function getIsFavoriteAttribute(): bool
-    {
-        $user = request()->user();
-
-        if (empty($user->favorite_orders)) {
-            return false;
-        }
-
-        return in_array($this->id, explode(',', $user->favorite_orders));
     }
 
     ### SETTERS ###
@@ -337,44 +325,5 @@ class Order extends Model
             ->when($only_new, function ($query) {
                 return $query->where('orders.created_at', '>', DB::Raw('IFNULL(routes.viewed_orders_at, "1900-01-01 00:00:00")'));
             });
-    }
-
-    /**
-     * Получить список избранных заказов авторизированного пользователя.
-     *
-     * @return array|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public static function getFavorites()
-    {
-        $user = request()->user();
-
-        if (empty($user->favorite_orders)) {
-            return [];
-        }
-
-        return static::whereIn('id', explode(',', $user->favorite_orders))
-            ->with([
-                'user' => function ($query) {
-                    $query->select([
-                        'id',
-                        'name',
-                        'surname',
-                        'creator_rating',
-                        'freelancer_rating',
-                        'photo',
-                        'favorite_orders',
-                        'favorite_routes',
-                        DB::raw('(select count(*) from `orders` where `users`.`id` = `orders`.`user_id` and `status` = "successful") as successful_orders')
-                    ]);
-                },
-                'from_country',
-                'from_city',
-                'to_country',
-                'to_city',
-            ])
-            ->withCount(['rates' => function ($query) use ($user) {
-                $query->whereUserId($user->id);
-            }])
-            ->get();
     }
 }

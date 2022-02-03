@@ -31,8 +31,6 @@ use Illuminate\Support\Facades\Date;
  * @property string|null $validation Признак проверки пользователя
  * @property string|null $role Роль
  * @property string $photo Ссылка на фотографию (аватар)
- * @property string|null $favorite_orders Список избранных заказов
- * @property string|null $favorite_routes Список избранных маршрутов
  * @property string|null $resume Биография/Резюме
  * @property string $wallet Баланс в долларах
  * @property string $creator_rating Рейтинг заказчика
@@ -46,8 +44,6 @@ use Illuminate\Support\Facades\Date;
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
  * @property-read \App\Models\City|null $city
  * @property-read string $age
- * @property-read int $favorite_orders_count
- * @property-read int $favorite_routes_count
  * @property-read string $full_name
  * @property-read string $gender_name
  * @property-read string $last_active_human
@@ -82,8 +78,6 @@ use Illuminate\Support\Facades\Date;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFacebookId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereFavoriteOrders($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereFavoriteRoutes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFreelancerRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGoogleId($value)
@@ -117,8 +111,6 @@ class User extends Authenticatable
         'validation_name',
         'photo_thumb',
         'photo_original',
-        'favorite_orders_count',
-        'favorite_routes_count',
         'register_date_human',
         'last_active_human',
         'age',
@@ -289,20 +281,6 @@ class User extends Authenticatable
     public function getLastActiveHumanAttribute(): string
     {
         return Carbon::parse($this->last_active)->diffForHumans();
-    }
-
-    public function getFavoriteOrdersCountAttribute(): int
-    {
-        if (is_null($this->favorite_orders)) return 0;
-
-        return substr_count($this->favorite_orders, ',') + 1;
-    }
-
-    public function getFavoriteRoutesCountAttribute(): int
-    {
-        if (is_null($this->favorite_routes)) return 0;
-
-        return substr_count($this->favorite_routes, ',') + 1;
     }
 
     ### LINKS ###
