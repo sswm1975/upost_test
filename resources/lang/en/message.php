@@ -83,8 +83,8 @@ return [
             'active'     => 'Active',
             'in_work'    => 'In work',
             'closed'     => 'Closed',
-            'banned'     => 'Banned',
             'successful' => 'Successful',
+            'banned'     => 'Banned',
         ],
     ],
 
@@ -94,8 +94,8 @@ return [
             'active'     => 'Active',
             'in_work'    => 'In work',
             'closed'     => 'Closed',
-            'banned'     => 'Banned',
             'successful' => 'Successful',
+            'banned'     => 'Banned',
         ],
     ],
 

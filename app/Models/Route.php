@@ -19,7 +19,7 @@ class Route extends Model
     const STATUS_IN_WORK    = 'in_work';
     const STATUS_SUCCESSFUL = 'successful';
     const STATUS_CLOSED     = 'closed';
-    const STATUS_BAN        = 'ban';
+    const STATUS_BANNED     = 'banned';
 
     const STATUSES = [
         self::STATUS_ALL,
@@ -27,7 +27,7 @@ class Route extends Model
         self::STATUS_IN_WORK,
         self::STATUS_SUCCESSFUL,
         self::STATUS_CLOSED,
-        self::STATUS_BAN,
+        self::STATUS_BANNED,
     ];
 
     protected $table = 'routes';

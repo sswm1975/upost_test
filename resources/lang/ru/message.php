@@ -80,11 +80,11 @@ return [
     # Order attributes
     'order' => [
         'statuses' => [
-            'active'     => 'Активный',
+            'active'     => 'Активная',
             'in_work'    => 'В работе',
-            'closed'     => 'Закрытый',
-            'banned'     => 'Забаненный',
-            'successful' => 'Успешный',
+            'closed'     => 'Закрытая',
+            'successful' => 'Успешная',
+            'banned'     => 'Запрещённая',
         ],
     ],
 
@@ -94,8 +94,8 @@ return [
             'active'     => 'Активный',
             'in_work'    => 'В работе',
             'closed'     => 'Закрытый',
-            'banned'     => 'Забаненный',
             'successful' => 'Успешный',
+            'banned'     => 'Запрещённый',
         ],
     ],
 
@@ -110,7 +110,7 @@ return [
             'approved' => 'Одобренная',
             'dispute'  => 'Спорная',
             'done'     => 'Выполненная',
-            'banned'   => 'Запрещенная',
+            'banned'   => 'Запрещённая',
         ],
     ],
 ];

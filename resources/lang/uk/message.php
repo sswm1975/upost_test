@@ -79,11 +79,11 @@ return [
     # Order attributes
     'order' => [
         'statuses' => [
-            'active'     => 'Активний',
+            'active'     => 'Активна',
             'in_work'    => 'В роботі',
-            'closed'     => 'Закритий',
+            'closed'     => 'Закрита',
+            'successful' => 'Успішна',
             'banned'     => 'Заборонений',
-            'successful' => 'Успішний',
         ],
     ],
 
@@ -93,8 +93,8 @@ return [
             'active'     => 'Активний',
             'in_work'    => 'В роботі',
             'closed'     => 'Закритий',
-            'banned'     => 'Заборонений',
             'successful' => 'Успішний',
+            'banned'     => 'Заборонений',
         ],
     ],
     # Rate attributes
