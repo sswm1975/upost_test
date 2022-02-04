@@ -134,6 +134,8 @@ class ClientController extends AdminController
         $grid->column('freelancer_rating', 'Рейтинг исполнителя')->sortable();
         $grid->column('google_id', 'Код Гугл');
         $grid->column('facebook_id', 'Код Фейсбук');
+        $grid->column('created_at', 'Создано')->sortable();
+        $grid->column('updated_at', 'Изменено')->sortable();
 
         # EXPORT TO EXCEL
         $grid->exporter(new ExcelExpoter);
