@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Support\Facades\Date;
+use App\Models\Traits\TimestampSerializable;
 
 /**
  * App\Models\User
@@ -100,6 +101,7 @@ use Illuminate\Support\Facades\Date;
  */
 class User extends Authenticatable
 {
+    use TimestampSerializable;
     use Notifiable;
 
     protected $guarded = ['id'];
