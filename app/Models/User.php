@@ -34,8 +34,8 @@ use App\Models\Traits\TimestampSerializable;
  * @property string $photo Ссылка на фотографию (аватар)
  * @property string|null $resume Биография/Резюме
  * @property string $wallet Баланс в долларах
- * @property string $creator_rating Рейтинг заказчика
- * @property string $freelancer_rating Рейтинг исполнителя
+ * @property int $scores_count Количество баллов
+ * @property int $reviews_count Количество отзывов
  * @property string|null $api_token Токен для работы через API
  * @property string|null $google_id ID пользователя Google
  * @property string|null $facebook_id ID пользователя Facebook
@@ -50,6 +50,7 @@ use App\Models\Traits\TimestampSerializable;
  * @property-read string $last_active_human
  * @property-read string $photo_original
  * @property-read string $photo_thumb
+ * @property-read string $rating
  * @property-read string $register_date_human
  * @property-read string $short_name
  * @property-read string $status_name
@@ -75,11 +76,9 @@ use App\Models\Traits\TimestampSerializable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCardNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatorRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFacebookId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereFreelancerRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGoogleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
@@ -91,7 +90,9 @@ use App\Models\Traits\TimestampSerializable;
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePhoto($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRegisterDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereResume($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereReviewsCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereScoresCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereSurname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
@@ -116,6 +117,7 @@ class User extends Authenticatable
         'register_date_human',
         'last_active_human',
         'age',
+        'rating',
     ];
 
     const STATUS_ACTIVE = 'active';
@@ -163,8 +165,8 @@ class User extends Authenticatable
         'gender',               # стать
         'photo',                # фото
         'resume',               # біографія
-        'freelancer_rating',    # рейтинг фрілансера
-        'creator_rating',       # рейтинг виконавця
+        'scores_count',         # количество баллов
+        'reviews_count',        # количество отзывов
         'city_id',              # місто
         'validation',           # статус верифікації даних користувача
     ];
@@ -244,6 +246,11 @@ class User extends Authenticatable
     public function getAgeAttribute(): string
     {
         return Carbon::parse($this->birthday)->age;
+    }
+
+    public function getRatingAttribute(): string
+    {
+        return round($this->reviews_count ? $this->scores_count / $this->reviews_count : 0, 2);
     }
 
     public function getPhotoAttribute($photo): string

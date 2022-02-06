@@ -184,7 +184,7 @@ class RateController extends Controller
         $rate = Rate::whereKey($rate_id)
             ->with([
                 'order:id,name,price,currency,price_usd,products_count,status,images',
-                'route.user:id,name,surname,photo,creator_rating,status,gender,birthday,validation,last_active,register_date',
+                'route.user:id,name,surname,photo,rating,reviews_count,status,gender,birthday,validation,last_active,register_date',
                 'route.to_country',
                 'route.to_city',
             ])

@@ -176,9 +176,10 @@ class AuthController extends Controller
 
         if (! $user) throw new ErrorException(__('message.user_not_found'));
 
-        $user->loadCount(['orders', 'routes']);
-
         unset($user->password, $user->api_token);
+
+        # добавляем кол-во заказов и маршрутов по пользователю
+//        $user->loadCount(['orders', 'routes']);
 
         return response()->json([
             'status' => true,
