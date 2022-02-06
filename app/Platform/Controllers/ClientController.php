@@ -44,7 +44,7 @@ class ClientController extends AdminController
             });
 
             $filter->column(1 / 2, function ($filter) {
-                $filter->group('creator_rating', 'Рейтинг заказчика', function ($group) {
+                $filter->group('scores_count', 'Кол-во баллов', function ($group) {
                     $group->gt('больше чем');
                     $group->lt('меньше чем');
                     $group->nlt('не меньше чем');
@@ -52,7 +52,7 @@ class ClientController extends AdminController
                     $group->equal('равно');
                     $group->notEqual('не равно');
                 });
-                $filter->group('freelancer_rating', 'Рейтинг исполнителя', function ($group) {
+                $filter->group('reviews_count', 'Кол-во отзывов', function ($group) {
                     $group->gt('больше чем');
                     $group->lt('меньше чем');
                     $group->nlt('не меньше чем');
@@ -130,8 +130,9 @@ class ClientController extends AdminController
         $grid->column('register_date', 'Зарегистрирован')->sortable();
         $grid->column('last_active', 'Последняя активность')->sortable();
         $grid->column('role', 'Роль')->sortable();
-        $grid->column('creator_rating', 'Рейтинг заказчика')->sortable();
-        $grid->column('freelancer_rating', 'Рейтинг исполнителя')->sortable();
+        $grid->column('scores_count', 'Кол-во баллов')->sortable();
+        $grid->column('reviews_count', 'Кол-во отзывов')->sortable();
+        $grid->column('rating', 'Рейтинг');
         $grid->column('google_id', 'Код Гугл');
         $grid->column('facebook_id', 'Код Фейсбук');
         $grid->column('created_at', 'Создано')->sortable();
