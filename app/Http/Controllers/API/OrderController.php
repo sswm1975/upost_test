@@ -439,10 +439,10 @@ class OrderController extends Controller
                 return $query->where('orders.status', $filters['status']);
             })
             ->when(!empty($filters['date_from']), function ($query) use ($filters) {
-                return $query->where('orders.fromdate', '>=', $filters['date_from']);
+                return $query->where('orders.register_date', '>=', $filters['date_from']);
             })
             ->when(!empty($filters['date_to']), function ($query) use ($filters) {
-                return $query->where('orders.tilldate', '<=', $filters['date_to']);
+                return $query->where('orders.deadline', '<=', $filters['date_to']);
             })
             ->when(!empty($filters['city_from']), function ($query) use ($filters) {
                 return $query->whereIn('orders.from_city_id', $filters['city_from']);
