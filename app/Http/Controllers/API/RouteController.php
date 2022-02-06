@@ -76,7 +76,8 @@ class RouteController extends Controller
         $affected = $route->update($data);
 
         return response()->json([
-            'status' => $affected,
+            'status'   => $affected,
+            'route_id' => $route_id,
         ]);
     }
 
