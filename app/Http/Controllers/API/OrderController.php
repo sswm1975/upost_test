@@ -7,12 +7,14 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\Country;
 use App\Models\Order;
 use App\Models\Chat;
 use App\Models\Route;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\CurrencyRate;
+use App\Models\WaitRange;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -272,53 +274,33 @@ class OrderController extends Controller
     }
 
     /**
-     * Вывод выбранного заказа.
+     * Вывод выбранного заказа для редактирования.
      *
      * @param int $order_id
-     * @param Request $request
      * @return JsonResponse
      * @throws ErrorException
      */
-    public function showOrder(int $order_id, Request $request): JsonResponse
+    public function showOrderForEdit(int $order_id): JsonResponse
     {
-        $order = end($this->getOrdersByFilter($request->user(), compact('order_id'))['data']);
+        $order = Order::whereKey($order_id)
+            ->owner()
+            ->with([
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+                'wait_range',
+            ])
+            ->first()
+            ->toArray();
 
-        if (!$order) throw new ErrorException(__('message.order_not_found'));
-
-        $similar_orders = $this->getOrdersByFilter(
-            $request->user(),
-            [
-                'without_order_id' => $order['id'],
-                'city_from' => [$order['from_city_id']],
-                'city_to' => [$order['to_city_id']],
-                'show' => 3,
-            ]
-        )['data'];
-
-        if (empty($similar_orders)) {
-            $similar_orders = $this->getOrdersByFilter(
-                $request->user(),
-                [
-                    'without_order_id' => $order['id'],
-                    'show' => 3,
-                ]
-            )['data'];
-        }
-
-        $last_orders = $this->getOrdersByFilter(
-            $request->user(),
-            [
-                'without_order_id' => $order['id'],
-                'user_id' => $order['user_id'],
-                'show' => 3,
-            ]
-        )['data'];
+        if (! $order) throw new ErrorException(__('message.order_not_found'));
 
         return response()->json([
-            'status' => true,
-            'order' => null_to_blank($order),
-            'similar_orders' => null_to_blank($similar_orders),
-            'more_orders' => null_to_blank($last_orders),
+            'status'                => true,
+            'order'                 => null_to_blank($order),
+            'countries_with_cities' => Country::getCountriesWithCities(),
+            'wait_ranges'           => WaitRange::getWaitRanges(),
         ]);
     }
 
@@ -573,7 +555,7 @@ class OrderController extends Controller
         $order->strikes = $strikes;
 
         if (count($strikes) >= static::COUNT_STRIKES_FOR_BAN) {
-            $order->status = Order::STATUS_BAN;
+            $order->status = Order::STATUS_BANNED;
 
             event(new OrderBanned($order));
         }

@@ -79,8 +79,8 @@ Route::namespace('API')->group(function ($route) {
         # Вивід моїх замовлень
         $route->get('my/show', 'OrderController@showMyOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-        # Вивід конкретного замовлення
-        $route->get('{order_id}/show', 'OrderController@showOrder');
+        # Вивід конкретного замовлення для редагування
+        $route->get('{order_id}/show', 'OrderController@showOrderForEdit')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Підбір маршруту для замовлення
         $route->get('{order_id}/selection_route', 'OrderController@selectionRoute');
