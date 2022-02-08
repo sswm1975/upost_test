@@ -4441,7 +4441,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/show?user_id=15&show=1&status=active&page-number=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=₴&category[]=1&category[]=2&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/orders/show?user_id=15&show=1&status=active&page-number=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=₴&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -4525,16 +4525,6 @@
 											"key": "currency",
 											"value": "₴",
 											"description": "Валюта, в якій передається ціна (uah, rub, usd, eur) (опціонально)"
-										},
-										{
-											"key": "category[]",
-											"value": "1",
-											"description": "Категорія товарів"
-										},
-										{
-											"key": "category[]",
-											"value": "2",
-											"description": "Категорія товарів"
 										},
 										{
 											"key": "lang",
@@ -6195,17 +6185,17 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "job_id",
-											"value": "1",
+											"key": "rate_id",
+											"value": "10",
 											"type": "text"
 										},
 										{
-											"key": "rating",
+											"key": "scores",
 											"value": "5",
 											"type": "text"
 										},
 										{
-											"key": "comment",
+											"key": "text",
 											"value": "Круто, спасибо.",
 											"type": "text"
 										}
