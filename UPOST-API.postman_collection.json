@@ -6222,66 +6222,31 @@
 							"response": []
 						},
 						{
-							"name": "Показати відгуки",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/reviews/show?lang=uk&user_id=19",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"reviews",
-										"show"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
-										},
-										{
-											"key": "user_id",
-											"value": "19",
-											"description": "Код користувача"
-										},
-										{
-											"key": "review_type",
-											"value": "freelancer",
-											"description": "Тип відгука (creator, freelancer) - опціонально",
-											"disabled": true
-										}
-									]
+							"name": "Отримати рейтинг (перерахунок)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"user_id\", 22);"
+										],
+										"type": "text/javascript"
+									}
 								}
-							},
-							"response": []
-						},
-						{
-							"name": "Отримати рейтинг",
+							],
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/reviews/show?lang=uk&user_id=5",
+									"raw": "{{host}}/{{endpoint}}/reviews/{{user_id}}/calc",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
 										"reviews",
-										"show"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk"
-										},
-										{
-											"key": "user_id",
-											"value": "5"
-										}
+										"{{user_id}}",
+										"calc"
 									]
 								}
 							},
