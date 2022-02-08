@@ -2,23 +2,28 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Review extends Model
 {
-    public const TYPE_CREATOR = 'creator';
-    public const TYPE_FREELANCER = 'freelancer';
+    use TimestampSerializable;
 
-    public $timestamps = false;
     protected $guarded = ['id'];
+    public $timestamps = false;
+
+    const USER_TYPE_CUSTOMER = 'customer';
+    const USER_TYPE_PERFORMER = 'performer';
+
+    ### BOOT MODEL ###
 
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
+            $model->user_id = request()->user()->id;
             $model->created_at = $model->freshTimestamp();
         });
 
@@ -27,20 +32,14 @@ class Review extends Model
         });
     }
 
-    public function getTypeAttribute($value)
+    ### SETTERS ###
+
+    public function setTextAttribute($value)
     {
-        return __("message.type_{$value}");
+        $this->attributes['text'] = !empty($value) ? strip_tags(strip_unsafe($value)) : null;
     }
 
-    /**
-     * Связь с заказом или маршрутом.
-     *
-     * @return MorphTo
-     */
-    public function reviewable()
-    {
-        return $this->morphTo();
-    }
+    ### RELATIONS ###
 
     /**
      * Автор отзыва.
@@ -49,67 +48,29 @@ class Review extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     /**
-     * Получатель отзыва.
+     * Отзыв по ставке.
      *
      * @return BelongsTo
      */
-    public function recipient(): BelongsTo
+    public function rate(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Rate::class);
     }
 
-    /**
-     * Получить количество отзывов по выбранному пользователю и типу пользователя.
-     *
-     * @param int $user_id
-     * @param string|null $type
-     * @return int
-     */
-    public static function getCountReviews(int $user_id, string $type = null): int
-    {
-        return static::whereUserId($user_id)
-            ->when(!is_null($type), function($query) use ($type) {
-                $query->whereType($type);
-            })
-            ->count();
-    }
+    ### SCOPES ###
 
     /**
-     * Получить количество отзывов по выбранному пользователю с типом "Заказчик".
+     * Добавляем условие, что авторизированный пользователь является владельцем отзыва.
      *
-     * @param int $user_id
-     * @return int
-     */
-    public static function getCountReviewsByCreator(int $user_id): int
-    {
-        return static::getCountReviews($user_id, self::TYPE_CREATOR);
-    }
-
-    /**
-     * Получить количество отзывов по выбранному пользователю с типом "Исполнитель".
-     *
-     * @param int $user_id
-     * @return int
-     */
-    public static function getCountReviewsByFreelancer(int $user_id): int
-    {
-        return static::getCountReviews($user_id, self::TYPE_FREELANCER);
-    }
-
-    /**
-     * Получить последний отзыв пользователя.
-     *
-     * @param int $user_id
+     * @param $query
      * @return mixed
      */
-    public static function getLastReview(int $user_id)
+    public function scopeOwner($query)
     {
-        return static::whereUserId($user_id)
-            ->latest()
-            ->first(['rating', 'comment', 'created_at']) ?? [];
+        return $query->where('user_id', request()->user()->id);
     }
 }

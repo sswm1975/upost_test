@@ -5,10 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\Rate;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ReviewController extends Controller
@@ -18,69 +21,62 @@ class ReviewController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
-     * @throws ValidationException
-     * @throws ValidatorException
+     * @throws ErrorException|ValidationException|ValidatorException
      */
     public function addReview(Request $request): JsonResponse
     {
-/*
-        $user_id = $request->user()->id;
+        $user_id = request()->user()->id;
 
         $data = validateOrExit([
-            'job_id'  => 'required|integer|exists:jobs,id|unique:reviews,job_id',
-            'rating'  => 'required|integer',
-            'comment' => 'required|string|max:300',
+            'rate_id' => 'required|integer',
+            'scores'  => 'required|integer|min:1|max:5',
+            'text'    => 'required|string|max:500',
         ]);
 
-        $job = Job::find($data['job_id']);
+        # запрещаем дублировать отзыв
+        $is_double = Review::owner()->whereRateId($data['rate_id'])->count();
+        if ($is_double) throw new ErrorException(__('message.review_add_double'));
 
-        # Отзыв можно оставлять только, если задача выполнена
-        if ($job->status !== Job::STATUS_DONE) {
-            throw new ErrorException(__('message.review_not_ready'));
-        }
-
-        $rate = $job->rate;
-        $order = $rate->order;
-        $route = $rate->route;
-
-        $creator_id = $order->user_id;
-        $freelancer_id = $route->user_id;
+        # авторизированный пользователь должен быть владельцем заказа или маршрута, а ставка быть в статусе выполнена
+        $rate = Rate::whereKey($data['rate_id'])
+            ->whereStatus(Rate::STATUS_DONE)
+            ->where(function ($query) {
+                return $query->owner()->orWhereHas('order', function($query) {
+                    $query->owner();
+                });
+            })
+            ->first(['id', 'user_id', 'order_id']);
 
         # отзыв может оставлять только владелец заказа или маршрута
-        if (!in_array($user_id, [$creator_id, $freelancer_id])) {
-            throw new ErrorException(__('message.review_not_allowed'));
-        }
+        if (! $rate) throw new ErrorException(__('message.review_not_allowed'));
+        $rate->setAppends([]);
 
-        $review = new Review;
-        $review->user_id = $user_id;
-        $review->job_id = $data['job_id'];
-        $review->rating = $data['rating'];
-        $review->comment = htmlentities($data['comment']);
-
-        if ($user_id == $creator_id) {
-            # Отзыв оставляет Заказчик на маршрут, тогда Исполнителю увеличиваем рейтинг
-            User::find($freelancer_id)->increment('freelancer_rating', $data['rating']);
-
-            $review->to_user_id = $freelancer_id;
-            $review->type = Review::TYPE_CREATOR;
-            $model = $route;
+        # определяем, кому делаем отзыв
+        if ($user_id == $rate->user_id) {
+            # получатель отзыва будет владелец Заказа
+            $data['recipient_id'] = Order::find($rate->order_id, ['user_id'])->user_id;
+            $data['recipient_type'] = Review::USER_TYPE_CUSTOMER;
         } else {
-            # Отзыв оставляет Исполнитель на Заказ, тогда Заказчику увеличиваем рейтинг
-            User::find($creator_id)->increment('creator_rating', $data['rating']);
-
-            $review->to_user_id = $creator_id;
-            $review->type = Review::TYPE_FREELANCER;
-            $model = $order;
+            # получатель отзыва будет владелец Маршрута
+            $data['recipient_id'] = $rate->user_id;
+            $data['recipient_type'] = Review::USER_TYPE_PERFORMER;
         }
 
-        $model->review()->save($review);
+        # создаем отзыв
+        Review::create($data);
+
+        # получателю отзыва увеличиваем рейтинг
+        User::whereKey($data['recipient_id'])
+            ->update([
+                'reviews_count' => DB::raw('reviews_count + 1'),
+                'scores_count'  => DB::raw("scores_count + {$data['rating']}"),
+            ]);
 
         return response()->json([
             'status' => true,
+            'rate'=>$rate,
             'sql' => getSQLForFixDatabase()
         ]);
-*/
     }
 
     /**
