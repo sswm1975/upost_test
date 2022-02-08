@@ -80,57 +80,59 @@ class ReviewController extends Controller
     }
 
     /**
-     * Получить список отзывов.
+     * Получить пересчитанные рейтинги по пользователю в разрезе Заказчика (customer) и Исполнителя (performer).
      *
-     * @param Request $request
+     * @param int $recipient_id
      * @return JsonResponse
-     * @throws ValidationException|ValidatorException
+     * {
+     *     "status": true,
+     *     "ratings": {
+     *         "customer": {
+     *             "count": 3,
+     *             "scores": "13",
+     *             "rating": "4.3"
+     *         },
+     *         "performer": {
+     *             "count": 2,
+     *             "scores": "7",
+     *             "rating": "3.5"
+     *         }
+     *     }
+     * }
      */
-    public function showReviews(Request $request): JsonResponse
+    public function getCalcRating(int $recipient_id): JsonResponse
     {
-/*
-        $filters = validateOrExit([
-            'user_id'  => 'required|integer|exists:users,id',
-            'type'     => 'sometimes|required|in:creator,freelancer',
-        ]);
+        $zero_ratings = [
+            'customer' => [
+                'count'  => 0,
+                'scores' => 0,
+                'rating' => 0,
+            ],
+            'performer' => [
+                'count'  => 0,
+                'scores' => 0,
+                'rating' => 0,
+            ]
+        ];
 
-        $jobs = Job::whereHas('rate', function ($q) use ($filters) {
-            return $q->whereUserId($filters['user_id']);
-        })->get()->pluck('job_id');
+        $selects = [
+            'recipient_type',
+            'COUNT(id) AS count',
+            'SUM(scores) AS scores',
+            'ROUND(SUM(scores) / COUNT(id), 1) AS rating',
+        ];
 
-        $reviews = Review::whereIn('job_id', $jobs)
-            ->when(isset($filters['type']), function ($q) use ($filters) {
-                return $q->whereType($filters['type']);
-            })
-            ->get();
+        $ratings = Review::where('recipient_id', $recipient_id)
+            ->selectRaw(implode(', ', $selects))
+            ->groupBy('recipient_type')
+            ->get()
+            ->keyBy('recipient_type')
+            ->makeHidden('recipient_type')
+            ->toArray();
 
         return response()->json([
-            'status' => true,
-            'number' => count($reviews),
-            'result' => null_to_blank($reviews),
-        ]);
-*/
-    }
-
-    /**
-     * @throws ValidatorException|ValidationException
-     */
-    public function getRating(Request $request)
-    {
-        $data = validateOrExit(['user_id' => 'required|integer|exists:users,id']);
-
-        $user = User::find($data['user_id']);
-
-        $creatorReviews = Review::where(['user_id' => $user->id, 'type' => Review::TYPE_CREATOR])->count();
-        $freelancerReviews = Review::where(['user_id' => $user->id, 'type' => Review::TYPE_FREELANCER])->count();
-
-        $creatorRating = $creatorReviews ? $user->user_creator_rating / $creatorReviews : 0;
-        $freelancerRating = $freelancerReviews ? $user->user_freelancer_rating / $freelancerReviews : 0;
-
-        return response()->json([
-            'status'            => true,
-            'creator_rating'    => round($creatorRating, 1),
-            'freelancer_rating' => round($freelancerRating, 1),
+            'status'  => true,
+            'ratings' => collect($zero_ratings)->merge($ratings)->all(),
         ]);
     }
 }

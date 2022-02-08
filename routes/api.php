@@ -166,6 +166,15 @@ Route::namespace('API')->group(function ($route) {
         # Подтверждение покупки товара заказчиком
         $route->post('{rate_id}/approved', 'RateController@approvedRate');
     });
+
+    # Отзывы
+    $route->prefix('reviews')->group(function ($route) {
+        # Добавить отзыв
+        $route->post('add', 'ReviewController@addReview')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Получить рейтинги на основании перерасчета
+        $route->get('{recipient_id}/calc', 'ReviewController@getCalcRating');
+    });
 });
 
 // Відправка лістів
@@ -176,23 +185,6 @@ Route::group(
     function () {
         # Відправити листа з форми "Є запитання?"
         Route::post('have_question', 'API\MailController@haveQuestion');
-    }
-);
-
-// Відгуки
-Route::group(
-    [
-        'prefix' => 'reviews',
-    ],
-    function () {
-        # Додати відгук
-        Route::post('add', 'API\ReviewController@addReview')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Отримати відгуки
-        Route::get('show', 'API\ReviewController@showReviews');
-
-        # Отримати рейтинг користувача
-        Route::get('rating', 'API\ReviewController@getRating');
     }
 );
 
