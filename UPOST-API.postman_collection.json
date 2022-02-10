@@ -7261,59 +7261,15 @@
 					]
 				},
 				{
-					"name": "Чати",
+					"name": "Чати і Повiдомлення",
 					"item": [
-						{
-							"name": "Додати чат",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "rate_id",
-											"value": "152",
-											"type": "text"
-										},
-										{
-											"key": "order_id",
-											"value": "7",
-											"type": "text"
-										},
-										{
-											"key": "to_user",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "user_id",
-											"value": "1",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/chats/add",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"chats",
-										"add"
-									]
-								}
-							},
-							"response": []
-						},
 						{
 							"name": "Отримати чати",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/chats/show?user_id=1&addressee=11&order_id=3",
+									"raw": "{{host}}/{{endpoint}}/chats/show?count=5&page=1&sorting=asc&filter=all&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -7324,16 +7280,29 @@
 									],
 									"query": [
 										{
-											"key": "user_id",
-											"value": "1"
+											"key": "count",
+											"value": "5",
+											"description": "Кол-во чатов на странице (опционально)"
 										},
 										{
-											"key": "addressee",
-											"value": "11"
+											"key": "page",
+											"value": "1",
+											"description": "Текущая страница  (опционально)"
 										},
 										{
-											"key": "order_id",
-											"value": "3"
+											"key": "sorting",
+											"value": "asc",
+											"description": "Порядок сортировки (asc, desc)  (опционально)"
+										},
+										{
+											"key": "filter",
+											"value": "all",
+											"description": "Фильтр (all, waiting, delivered, closed)  (опционально)"
+										},
+										{
+											"key": "lang",
+											"value": "ru",
+											"description": "Язык"
 										}
 									]
 								}
@@ -7341,18 +7310,7 @@
 							"response": []
 						},
 						{
-							"name": "Видалити чат",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
+							"name": "Додати повiдомлення",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -7361,28 +7319,78 @@
 									"formdata": [
 										{
 											"key": "chat_id",
-											"value": "12",
+											"value": "3",
 											"type": "text"
 										},
 										{
-											"key": "user_id",
-											"value": "1",
+											"key": "text",
+											"value": "Test message",
 											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/chats/delete",
+									"raw": "{{host}}/{{endpoint}}/messages/add",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
-										"chats",
-										"delete"
+										"messages",
+										"add"
 									]
-								},
-								"description": "Видалити чат"
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Отримати повiдомлення",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/messages/show?route_id=123&order_id=55&count=5&page=1&sorting=desc&lang=ru",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"messages",
+										"show"
+									],
+									"query": [
+										{
+											"key": "route_id",
+											"value": "123",
+											"description": "Код маршрута"
+										},
+										{
+											"key": "order_id",
+											"value": "55",
+											"description": "Код заказа"
+										},
+										{
+											"key": "count",
+											"value": "5",
+											"description": "Кол-во чатов на странице (опционально)"
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"description": "Текущая страница  (опционально)"
+										},
+										{
+											"key": "sorting",
+											"value": "desc",
+											"description": "Порядок сортировки (asc, desc)  (опционально)"
+										},
+										{
+											"key": "lang",
+											"value": "ru",
+											"description": "Язык"
+										}
+									]
+								}
 							},
 							"response": []
 						}
@@ -7408,168 +7416,6 @@
 							}
 						}
 					]
-				},
-				{
-					"name": "Повiдомлення",
-					"item": [
-						{
-							"name": "Додати повiдомлення",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "chat_id",
-											"value": "9",
-											"type": "text"
-										},
-										{
-											"key": "rate_id",
-											"value": "291",
-											"type": "text"
-										},
-										{
-											"key": "order_id",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "from_user",
-											"value": "5",
-											"type": "text"
-										},
-										{
-											"key": "to_user",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "message_text",
-											"value": "Test message",
-											"type": "text"
-										},
-										{
-											"key": "message_attach[]",
-											"value": "ZZZ",
-											"type": "text"
-										},
-										{
-											"key": "type",
-											"value": "accepting",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/messages/add",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"messages",
-										"add"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Отримати повiдомлення",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/messages/show?user_id=1&chat_id=7&count=1&pages=1&sort=DESC",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"messages",
-										"show"
-									],
-									"query": [
-										{
-											"key": "user_id",
-											"value": "1"
-										},
-										{
-											"key": "chat_id",
-											"value": "7"
-										},
-										{
-											"key": "count",
-											"value": "1"
-										},
-										{
-											"key": "pages",
-											"value": "1"
-										},
-										{
-											"key": "sort",
-											"value": "DESC"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Підтвердження здійснення покупки (виконавець)",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "chat_id",
-											"value": "9",
-											"type": "text"
-										},
-										{
-											"key": "photos[]",
-											"value": "photo1",
-											"type": "text"
-										},
-										{
-											"key": "photos[]",
-											"value": "photo2",
-											"type": "text"
-										},
-										{
-											"key": "photos[]",
-											"value": "photo3",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/messages/accept_shopping",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"messages",
-										"accept_shopping"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "ru",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"description": "Повiдомлення"
 				},
 				{
 					"name": "Завантаження файлiв",
