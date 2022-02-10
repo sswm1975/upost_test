@@ -175,6 +175,21 @@ Route::namespace('API')->group(function ($route) {
         # Получить рейтинги на основании перерасчета
         $route->get('{recipient_id}/calc', 'ReviewController@getCalcRating');
     });
+
+    # Чаты
+    $route->prefix('chats')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
+        # Получить список чатов
+        $route->get('show', 'ChatController@showChats');
+    });
+
+    # Сообщения
+    $route->prefix('messages')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
+        # Добавить сообщение
+        $route->post('add', 'MessagesController@addMessage');
+
+        # Получить список сообщений
+        $route->get('show', 'MessagesController@showMessages');
+    });
 });
 
 // Відправка лістів
@@ -185,41 +200,6 @@ Route::group(
     function () {
         # Відправити листа з форми "Є запитання?"
         Route::post('have_question', 'API\MailController@haveQuestion');
-    }
-);
-
-// Чати
-Route::group(
-    [
-        'prefix' => 'chats',
-    ],
-    function () {
-        # Додати чат
-        Route::post('add', 'API\ChatController@addChat')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Отримати чат
-        Route::get('show', 'API\ChatController@showChats')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-        # Видалити чат
-        Route::post('delete', 'API\ChatController@deleteChat')->middleware(MIDDLEWARE_AUTH_BASIC);
-    }
-);
-
-// Повідомлення
-Route::group(
-    [
-        'prefix' => 'messages',
-        'middleware' => MIDDLEWARE_AUTH_BASIC,
-    ],
-    function () {
-        # Додати повiдомлення
-        Route::post('add', 'API\MessagesController@addMessage');
-
-        # Отримати повiдомлення
-        Route::get('show', 'API\MessagesController@showMessages');
-
-        # Підтвердження здійснення покупки (виконавець)
-        Route::post('accept_shopping', 'API\MessagesController@acceptShoppingByPerformer');
     }
 );
 

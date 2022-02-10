@@ -3,61 +3,216 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\Chat
  *
- * @property int $id Код чата
- * @property int $rate_id Код ставки
+ * @property int $id Код
+ * @property int $route_id Код маршрута
  * @property int $order_id Код заказа
- * @property int $user_id Код пользователя заказчика
- * @property int $to_user Код пользователя, который сделал ставку
+ * @property int $performer_id Владелец маршрута (Исполнитель)
+ * @property int $customer_id Владелец заказа (Заказчик)
+ * @property int $performer_unread_count Кол-во непрочитанных сообщений исполнителем
+ * @property int $customer_unread_count Кол-во непрочитанных сообщений заказчиком
  * @property string $status Статус
- * @property string|null $last_sms Последнее СМС
- * @property string $created_at Дата создания
- * @property-read \App\Models\Rate $rate
+ * @property string|null $created_at Добавлено
+ * @property string|null $updated_at Изменено
+ * @property-read \App\Models\User $customer
+ * @property-read int $interlocutor_id
+ * @property-read int $interlocutor_unread_count
+ * @property-read \App\Models\User $interlocutor
+ * @property-read \App\Models\Message|null $last_message
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Message[] $messages
+ * @property-read int|null $messages_count
+ * @property-read \App\Models\Order $order
+ * @property-read \App\Models\User $performer
+ * @property-read \App\Models\Route $route
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat closed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat interlocutors()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat waiting()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCustomerUnreadCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Chat whereLastSms($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereOrderId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Chat whereRateId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat wherePerformerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat wherePerformerUnreadCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat whereRouteId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Chat whereToUser($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Chat whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Chat extends Model
 {
     public const STATUS_ACTIVE = 'active';
-    public const STATUS_SUCCESSFUL = 'successful';
+    public const STATUS_CLOSED = 'closed';
 
     public $timestamps = false;
+    protected $guarded = ['id'];
+    protected $appends = ['interlocutor_id', 'interlocutor_unread_count'];
 
-    protected $fillable = [
-        'rate_id',
-        'order_id',
-        'user_id',
-        'to_user',
-        'status',
-        'last_sms',
-    ];
+    ### BOOT ###
 
+    /**
+     * Boot model.
+     *
+     * @return void
+     */
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-            $model->created_at = $model->freshTimestamp();
             $model->status = self::STATUS_ACTIVE;
-            $model->last_sms = '';
+            $model->created_at = $model->freshTimestamp();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_at = $model->freshTimestamp();
         });
     }
 
-    public function rate()
+    ### GETTERS ###
+
+    /**
+     * Определяем код пользователя, который является собеседником с авторизированным пользователем.
+     *
+     * @return int
+     */
+    public function getInterlocutorIdAttribute(): int
     {
-        return $this->belongsTo(Rate::class, 'rate_id');
+        return request()->user()->id == $this->performer_id ? $this->customer_id : $this->performer_id;
+    }
+
+    /**
+     * Получить количество непрочитанных сообщений от собеседника.
+     *
+     * @return int
+     */
+    public function getInterlocutorUnreadCountAttribute(): int
+    {
+        return request()->user()->id == $this->performer_id ? $this->customer_unread_count : $this->performer_unread_count;
+    }
+
+    ### RELATIONS ###
+
+    /**
+     * Маршрут.
+     *
+     * @return BelongsTo
+     */
+    public function route(): BelongsTo
+    {
+        return $this->belongsTo(Route::class);
+    }
+
+    /**
+     * Заказ.
+     *
+     * @return BelongsTo
+     */
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    /**
+     * Владелец маршрута (Исполнитель).
+     *
+     * @return BelongsTo
+     */
+    public function performer(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Владелец заказа (Заказчик).
+     *
+     * @return BelongsTo
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Собеседник чата.
+     *
+     * @return BelongsTo
+     */
+    public function interlocutor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'interlocutor_id', 'id');
+    }
+
+    /**
+     * Сообщения по чату.
+     *
+     * @return HasMany
+     */
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    /**
+     * Последнее сообщение по чату.
+     *
+     * @return HasOne
+     */
+    public function last_message(): HasOne
+    {
+        return $this->hasOne(Message::class)->latest();
+    }
+
+    ### SCOPES ###
+
+    /**
+     * Авторизированный пользователь является собеседником чата.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeInterlocutors($query)
+    {
+        return $query->where(function ($q) {
+           $q->where('performer_id', request()->user()->id)
+               ->orWhere('customer_id', request()->user()->id);
+        });
+    }
+
+    /**
+     * Чаты с непрочитанными сообщениями для авторизированного пользователя, так называемые "Чаты в ожидании".
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWaiting($query)
+    {
+        return $query->where(function ($q) {
+            $q->where('performer_id', request()->user()->id)
+                ->where('customer_unread_count', '>', 0);
+        })->orWhere(function ($q) {
+            $q->where('customer_id', request()->user()->id)
+                ->where('performer_unread_count', '>', 0);
+        });
+    }
+
+    /**
+     * Закрытые чаты.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeClosed($query)
+    {
+        return $query->whereStatus(self::STATUS_CLOSED);
     }
 }

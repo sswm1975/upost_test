@@ -2,192 +2,103 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Exceptions\TryException;
-use App\Exceptions\ValidatorException;
+use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
-use App\Models\Rate;
-use Carbon\Carbon;
-use Exception;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use App\Exceptions\ValidatorException;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class ChatController extends Controller
 {
-    /**
-     * Добавить чат.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidatorException|TryException
-     */
-    public function addChat(Request $request): JsonResponse
-    {
-        $validator = Validator::make($request->all(), [
-            'rate_id'   => 'required|integer|exists:rate,id',
-            'order_id'  => 'required|integer|exists:orders,id',
-            'to_user'   => 'required|integer|exists:users,id',
-            'user_id'   => 'required|integer|exists:users,id',
-        ]);
-
-        $data = validateOrExit($validator);
-
-        try {
-            $this->addExtValidate($data);
-
-            Chat::create([
-                'rate_id'     => $data['rate_id'],
-                'order_id'    => $data['order_id'],
-                'user_id'     => $data['user_id'],
-                'to_user'     => $data['to_user'],
-            ]);
-
-            return response()->json([
-                'status' => true,
-            ]);
-        }
-        catch (Exception $e) {
-            throw new TryException($e->getMessage());
-        }
-    }
+    const DEFAULT_PER_PAGE = 5;
+    const DEFAULT_SORTING = 'asc';
+    const LAST_MESSAGE_TEXT_LIMIT = 50;
 
     /**
-     * Получить список чатов.
+     * Получить список чатов для авторизированного пользователя.
      *
-     * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException
-     * @throws TryException
+     * @throws ValidatorException|ValidationException
      */
-    public function showChats(Request $request): JsonResponse
+    public function showChats(): JsonResponse
     {
         $data = validateOrExit([
-            'user_id'   => 'required|integer|exists:users,id',
-            'addressee' => 'integer|exists:users,id',
-            'order_id'  => 'integer|exists:orders,id',
+            'filter'  => 'nullable|in:all,waiting,delivered,closed',
+            'count'   => 'integer',
+            'page'    => 'integer',
+            'sorting' => 'in:asc,desc',
         ]);
 
-        try {
-            $query = Chat::query()
-                ->where('user_id', $data['user_id'])
-                ->orWhere('to_user', $data['user_id']);
+        /**
+         * @var string $filter
+         * @var int|null $count
+         * @var int|null $page
+         * @var string|null $sorting
+         */
+        extract($data);
+        $filter = $filter ?? 'all';
 
-            if(isset($data['addressee'])) {
-                $query = $query->where('to_user', $data['addressee']);
+        $rows = Chat::interlocutors()
+            ->with([
+                'interlocutor:id,name,photo,scores_count,reviews_count',
+                'order:id,name,price,currency,price_usd,user_price,user_currency,user_price_usd,images,status',
+                'last_message',
+                'last_message.user:id,name',
+            ])
+            ->when($filter == 'waiting', function ($query) {
+                return $query->waiting();
+            })
+            ->when($filter == 'delivered', function ($query) {
+                return $query->where('status', 'delivered !!!');
+            })
+            ->when($filter == 'closed', function ($query) {
+                return $query->closed();
+            })
+            ->orderBy('chats.id', $sorting ?? self::DEFAULT_SORTING)
+            ->paginate($count ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $page ?? 1);
+
+        # убираем лишнее
+        $rows->each(function ($chat) {
+            if (isset($chat->last_message->user->full_name)) {
+                $chat->interlocutor->makeHidden('status_name', 'gender_name', 'validation_name', 'register_date_human', 'last_active_human', 'age');
+                $chat->last_message->short_text = Str::limit($chat->last_message->text, self::LAST_MESSAGE_TEXT_LIMIT);
+                $chat->last_message->user_full_name = $chat->last_message->user->full_name;
+                $chat->last_message->makeHidden('user');
             }
+        });
 
-            if(isset($data['order_id'])) {
-                $query = $query->where('order_id', $data['order_id']);
-            }
-
-            $chats = $query->get()->toArray();
-
-            $res = [];
-            foreach ($chats as $chat) {
-                if($chat['status'] == Chat::STATUS_ACTIVE) {
-                    $res[] = $chat;
-                } elseif($chat['user_id'] == $data['user_id']) {
-                    $res[] = $chat;
-                }
-            }
-
-            return response()->json([
-                'status' => true,
-                'number' => count($res),
-                'result' => null_to_blank($res),
-            ]);
-        }
-        catch (Exception $e) {
-            throw new TryException($e->getMessage());
-        }
+        return response()->json([
+            'status' => true,
+            'count'  => $rows->total(),
+            'page'   => $rows->currentPage(),
+            'pages'  => $rows->lastPage(),
+            'chats'  => null_to_blank($rows->toArray()['data']),
+        ]);
     }
 
     /**
-     * Удалить чат
+     * Закрыть чат (только для админа и модератора).
      *
+     * @param int $chat_id
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException
-     * @throws TryException
+     * @throws ErrorException
      */
-    public function deleteChat(Request $request): JsonResponse
+    public function closeChat(int $chat_id, Request $request): JsonResponse
     {
-        $data = validateOrExit([
-            'chat_id' => 'required|integer|exists:chats,id',
-            'user_id' => 'required|integer|exists:users,id',
+        if (! in_array($request->user()->role, [User::ROLE_ADMIN, User::ROLE_MODERATOR])) {
+            throw new ErrorException(__('message.not_have_permission'));
+        }
+
+        $affected_rows = Chat::whereKey($chat_id)->update(['status' => Chat::STATUS_CLOSED]);
+
+        return response()->json([
+            'status'        => $affected_rows > 0,
+            'affected_rows' => $affected_rows,
         ]);
-
-        try {
-            $this->deleteExtValidate($data);
-
-            $affected = DB::table('chats')
-                ->where('id', $data['chat_id'])
-                ->where('user_id', $data['user_id'])
-                ->delete();
-        }
-        catch (Exception $e) {
-            throw new TryException($e->getMessage());
-        }
-
-        return response()->json(['status' => (bool)$affected]);
-    }
-
-    /**
-     * Validation request data for add chat
-     *
-     * @param array $data
-     * @return bool
-     * @throws Exception
-     */
-    private function addExtValidate(array $data): bool
-    {
-        // Check rate_id
-        $count = Rate::whereId($data['rate_id'])->whereOrderId($data['order_id'])->count();
-
-        if ($count == 0) {
-            throw new Exception("This rate belongs to other order");
-        }
-
-        // Check user_id
-        $count = Rate()->query()
-            ->where('id', $data['rate_id'])
-            ->where('who_start', $data['user_id'])
-            ->where('user_id', $data['to_user'])
-            ->count();
-
-        if ($count == 0) {
-            throw new Exception("This User not have permissions for rate");
-        }
-
-        return true;
-    }
-
-    /**
-     * Validation request data for delete chat
-     *
-     * @param array $data
-     * @return bool
-     * @throws Exception
-     */
-    private function deleteExtValidate(array $data): bool
-    {
-        $query = (new Chat())->newQuery();
-        $count = $query->where('id', $data['chat_id'])
-            ->where('status', '<>', Chat::STATUS_ACTIVE)
-            ->count();
-
-        if ($count == 0) {
-            throw new Exception("This chat now is active. Can not delete chat.");
-        }
-
-        $count = Chat::whereId($data['chat_id'])->whereUserId($data['user_id'])->count();
-
-        if ($count == 0) {
-            throw new Exception("This chat created by other user. Can not delete chat.");
-        }
-
-        return true;
     }
 }
