@@ -165,6 +165,16 @@ class Chat extends Model
     }
 
     /**
+     * Ставка по чату.
+     *
+     * @return HasOne
+     */
+    public function rate(): HasOne
+    {
+        return $this->hasOne(Rate::class);
+    }
+
+    /**
      * Последнее сообщение по чату.
      *
      * @return HasOne
@@ -204,6 +214,19 @@ class Chat extends Model
         })->orWhere(function ($q) {
             $q->where('customer_id', request()->user()->id)
                 ->where('performer_unread_count', '>', 0);
+        });
+    }
+
+    /**
+     * Чаты, по которым ставка находится в статусе "Доставка".
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeDelivered($query)
+    {
+        return $query->whereHas('rate', function ($q) {
+            $q->whereIn('status', Rate::STATUSES_DELIVERED);
         });
     }
 

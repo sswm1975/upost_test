@@ -46,6 +46,14 @@ class Rate extends Model
         self::STATUS_BANNED,
     ];
 
+    # статусы доставки
+    public const STATUSES_DELIVERED = [
+        self::STATUS_ACCEPTED,
+        self::STATUS_BUYED,
+        self::STATUS_APPROVED,
+        self::STATUS_DONE,
+    ];
+
     ### GETTERS ###
 
     public function getStatusNameAttribute(): string
