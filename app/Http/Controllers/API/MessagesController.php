@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class MessagesController extends Controller
@@ -74,24 +75,17 @@ class MessagesController extends Controller
          */
         extract($data);
 
+        $auth_user_id = $request->user()->id;
         $route = Route::find($route_id, ['user_id']);
         $order = Order::find($order_id, ['user_id']);
 
         # авторизированный пользователь должен быть владельцем заказа или маршрута
-        if (empty($route) || empty($order) || !in_array($request->user()->id, [$route->user_id, $order->user_id])) {
+        if (empty($route) || empty($order) || !in_array($auth_user_id, [$route->user_id, $order->user_id])) {
             throw new ErrorException(__('message.not_have_permission'));
         }
 
-        $chat = Chat::whereRouteId($route_id)->whereOrderId($order_id)->first();
-
-        if (empty($chat)) {
-            $chat = Chat::create([
-                'route_id'     => $route_id,
-                'order_id'     => $order_id,
-                'performer_id' => $route->user_id,
-                'customer_id'  => $order->user_id,
-            ]);
-        }
+        # ищем существующий чат или создаем новый чат
+        $chat = Chat::searchOrCreate($route_id, $order_id, $route->user_id, $order->user_id);
 
         # дополняем Чат данными об Исполнителе, Заказчике, Маршруте и Заказе
         $chat->load([
@@ -104,6 +98,12 @@ class MessagesController extends Controller
             'route.to_city',
             'order:id,name,price,currency,price_usd,user_price,user_currency,user_price_usd,images,status',
         ]);
+
+        # обнуляем счетчик "Кол-во непрочитанных сообщений по чату"
+        $field = $auth_user_id == $chat->performer_id ? 'customer_unread_count' : 'performer_unread_count';
+        if ($chat->$field) {
+            DB::table('chats')->where('id', $chat->id)->update([$field => 0]);
+        }
 
         # получаем сообщения по чату
         $rows = Message::whereChatId($chat->id)
@@ -118,6 +118,7 @@ class MessagesController extends Controller
             'pages'    => $rows['last_page'],
             'chat'     => null_to_blank($chat),
             'messages' => null_to_blank($rows['data']),
+            'sql'=>getSQLForFixDatabase()
         ]);
     }
 }

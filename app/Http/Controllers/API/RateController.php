@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\Chat;
 use App\Models\Order;
 use App\Models\Rate;
 use App\Models\Transaction;
@@ -51,6 +52,14 @@ class RateController extends Controller
         $is_double = Rate::active()->where(Arr::only($data, ['user_id', 'order_id', 'route_id']))->count();
         if ($is_double) throw new ErrorException(__('message.rate_add_double'));
 
+        # узнаем владельца заказа
+        $order_user_id = Order::find($data['order_id'], 'user_id')->user_id;
+
+        # ищем существующий чат или создаем новый чат
+        $chat = Chat::searchOrCreate($data['route_id'], $data['order_id'], $data['user_id'], $order_user_id);
+        $data['chat_id'] = $chat->id;
+
+        # создаем ставку
         Rate::create($data);
 
         return response()->json(['status' => true]);

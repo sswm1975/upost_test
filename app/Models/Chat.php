@@ -70,6 +70,8 @@ class Chat extends Model
 
         static::creating(function ($model) {
             $model->status = self::STATUS_ACTIVE;
+            $model->customer_unread_count = 0;
+            $model->performer_unread_count = 0;
             $model->created_at = $model->freshTimestamp();
         });
 
@@ -214,5 +216,27 @@ class Chat extends Model
     public function scopeClosed($query)
     {
         return $query->whereStatus(self::STATUS_CLOSED);
+    }
+
+    ### QUERIES ###
+
+    /**
+     * Возвращает существующий чат или создает новый чат.
+     *
+     * @param int $route_id
+     * @param int $order_id
+     * @param int $performer_id
+     * @param int $customer_id
+     * @return Chat|Model
+     */
+    public static function searchOrCreate(int $route_id, int $order_id, int $performer_id, int $customer_id)
+    {
+        return static::firstOrCreate([
+            'route_id' => $route_id,
+            'order_id' => $order_id,
+        ], [
+            'performer_id' => $performer_id,
+            'customer_id'  => $customer_id,
+        ]);
     }
 }
