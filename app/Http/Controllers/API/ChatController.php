@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
-use App\Models\Rate;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -51,7 +50,7 @@ class ChatController extends Controller
                 'last_message.user:id,name',
             ])
             ->withCount(['rate as is_delivered' => function ($query) {
-                $query->whereIn('status', Rate::STATUSES_DELIVERED);
+                $query->delivered();
             }])
             ->when($filter == 'waiting', function ($query) {
                 return $query->waiting();

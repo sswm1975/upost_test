@@ -226,7 +226,7 @@ class Chat extends Model
     public function scopeDelivered($query)
     {
         return $query->whereHas('rate', function ($q) {
-            $q->whereIn('status', Rate::STATUSES_DELIVERED);
+            $q->delivered();
         });
     }
 

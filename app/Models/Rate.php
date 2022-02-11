@@ -140,6 +140,17 @@ class Rate extends Model
     }
 
     /**
+     * Ставки, которые находятся в одном из статусов "Доставка".
+     *
+     * @param $query
+     * @return mixed
+     */
+    function scopeDelivered($query)
+    {
+        return $query->whereIn('status', self::STATUSES_DELIVERED);
+    }
+
+    /**
      * Получить ставку(и) владельца по списку ключей и выбранным статусам.
      *
      * @param $query
