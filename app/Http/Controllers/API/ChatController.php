@@ -28,6 +28,7 @@ class ChatController extends Controller
     {
         $data = validateOrExit([
             'filter'  => 'nullable|in:all,waiting,delivered,closed',
+            'search'  => 'nullable|string|censor',
             'count'   => 'integer',
             'page'    => 'integer',
             'sorting' => 'in:asc,desc',
@@ -35,6 +36,7 @@ class ChatController extends Controller
 
         /**
          * @var string $filter
+         * @var string|null $search
          * @var int|null $count
          * @var int|null $page
          * @var string|null $sorting
@@ -60,6 +62,9 @@ class ChatController extends Controller
             })
             ->when($filter == 'closed', function ($query) {
                 return $query->closed();
+            })
+            ->when(!empty($search), function ($query) use ($search) {
+                return $query->searchMessage($search);
             })
             ->orderBy('chats.id', $sorting ?? self::DEFAULT_SORTING)
             ->paginate($count ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $page ?? 1);

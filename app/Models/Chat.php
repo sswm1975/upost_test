@@ -231,6 +231,20 @@ class Chat extends Model
     }
 
     /**
+     * Чаты, по которым в сообщениях есть поисковая строка.
+     *
+     * @param $query
+     * @param string $search
+     * @return mixed
+     */
+    public function scopeSearchMessage($query, string $search)
+    {
+        return $query->whereHas('messages', function ($q) use ($search) {
+            $q->where('text', 'like', '%'.$search.'%');
+        });
+    }
+
+    /**
      * Закрытые чаты.
      *
      * @param $query
