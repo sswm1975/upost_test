@@ -319,6 +319,10 @@ class OrderController extends Controller
                 'to_country',
                 'to_city',
                 'wait_range',
+                'user',
+            ])
+            ->withCount([
+                'rates as has_rate',
             ])
             ->first();
 
@@ -326,7 +330,7 @@ class OrderController extends Controller
 
         return response()->json([
             'status' => true,
-            'order'  => null_to_blank($order),
+            'order'  => null_to_blank($order->toArray()),
         ]);
     }
 
