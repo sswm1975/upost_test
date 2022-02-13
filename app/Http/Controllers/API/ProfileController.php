@@ -60,16 +60,6 @@ class ProfileController extends Controller
         $user->load(['city.country']);
         $user->loadCount(['orders', 'routes']);
 
-        # добавляем кол-во заказов, как Заказчик и как Исполнитель (фрилансер)
-        $user->creator_count = Review::getCountReviewsByCreator($user->id);
-        $user->freelancer_count = Review::getCountReviewsByFreelancer($user->id);
-
-        # добавляем количество отзывов
-        $user->reviews_count = Review::getCountReviews($user->id);
-
-        # получить последний отзыв
-        $last_review = Review::getLastReview($user->id);
-
         # добавляем последние 2 заказа, созданные пользователем
         $last_orders = (new OrderController)->getOrdersByFilter($user, [
             'user_id' => $user->id,
@@ -86,7 +76,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'status' => true,
-            'result' => null_to_blank(compact('user','last_review', 'last_orders', 'last_routes')),
+            'result' => null_to_blank(compact('user', 'last_orders', 'last_routes')),
         ]);
     }
 
