@@ -343,4 +343,31 @@ class RateController extends Controller
 
         return response()->json(['status' => true]);
     }
+
+    /**
+     * Получить ставки по выбранному заказу.
+     *
+     * @param int $order_id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function showRatesByOrder(int $order_id, Request $request):JsonResponse
+    {
+        $rates = Rate::whereOrderId($order_id)
+            ->when($request->filled('user_id'), function ($query) use ($request) {
+                return $query->whereUserId($request->input('user_id'));
+            })
+            ->with([
+                'user:' . implode(',', User::FIELDS_FOR_SHOW),
+                'route.from_country',
+                'route.from_city',
+            ])
+            ->oldest()
+            ->get();
+
+        return response()->json([
+            'status' => true,
+            'rates'  => null_to_blank($rates),
+        ]);
+    }
 }

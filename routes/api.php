@@ -168,6 +168,9 @@ Route::namespace('API')->group(function ($route) {
 
         # Подтверждение покупки товара заказчиком
         $route->post('{rate_id}/approved', 'RateController@approvedRate');
+
+        # Получить ставки по выбранному заказу
+        $route->get('order/{id}/show', 'RateController@showRatesByOrder');
     });
 
     # Отзывы
