@@ -274,7 +274,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Вывод выбранного заказа для редактирования.
+     * Вывод выбранного заказа для редактирования владельцем.
      *
      * @param int $order_id
      * @return JsonResponse
@@ -291,8 +291,7 @@ class OrderController extends Controller
                 'to_city',
                 'wait_range',
             ])
-            ->first()
-            ->toArray();
+            ->first();
 
         if (! $order) throw new ErrorException(__('message.order_not_found'));
 
@@ -301,6 +300,33 @@ class OrderController extends Controller
             'order'                 => null_to_blank($order),
             'countries_with_cities' => Country::getCountriesWithCities(),
             'wait_ranges'           => WaitRange::getWaitRanges(),
+        ]);
+    }
+
+    /**
+     * Вывод выбранного заказа.
+     *
+     * @param int $order_id
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function showOrder(int $order_id): JsonResponse
+    {
+        $order = Order::whereKey($order_id)
+            ->with([
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+                'wait_range',
+            ])
+            ->first();
+
+        if (! $order) throw new ErrorException(__('message.order_not_found'));
+
+        return response()->json([
+            'status' => true,
+            'order'  => null_to_blank($order),
         ]);
     }
 
