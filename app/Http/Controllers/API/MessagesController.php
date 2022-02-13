@@ -50,7 +50,7 @@ class MessagesController extends Controller
     }
 
     /**
-     * Получить список сообщений.
+     * Получить список сообщений по кодам маршрута и заказа.
      *
      * @param Request $request
      * @return JsonResponse
@@ -118,7 +118,6 @@ class MessagesController extends Controller
             'pages'    => $rows['last_page'],
             'chat'     => null_to_blank($chat),
             'messages' => null_to_blank($rows['data']),
-            'sql'=>getSQLForFixDatabase()
         ]);
     }
 }

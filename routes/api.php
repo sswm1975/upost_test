@@ -186,6 +186,9 @@ Route::namespace('API')->group(function ($route) {
     $route->prefix('chats')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
         # Получить список чатов
         $route->get('show', 'ChatController@showChats');
+
+        # Получить список сообщений по коду чата
+        $route->get('{chat_id}/messages/show', 'ChatController@showMessages');
     });
 
     # Сообщения
@@ -193,7 +196,7 @@ Route::namespace('API')->group(function ($route) {
         # Добавить сообщение
         $route->post('add', 'MessagesController@addMessage');
 
-        # Получить список сообщений
+        # Получить список сообщений по кодам маршрута и заказа
         $route->get('show', 'MessagesController@showMessages');
     });
 });
