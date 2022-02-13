@@ -6134,6 +6134,50 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Отримати ставки по замовленню",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"order_id\", 54);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/order/{{order_id}}/show?user_id=1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"order",
+										"{{order_id}}",
+										"show"
+									],
+									"query": [
+										{
+											"key": "user_id",
+											"value": "1"
+										},
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -7332,6 +7376,12 @@
 											"key": "text",
 											"value": "Test message",
 											"type": "text"
+										},
+										{
+											"key": "files[]",
+											"value": "",
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
