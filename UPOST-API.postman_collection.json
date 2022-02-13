@@ -7360,47 +7360,65 @@
 							"response": []
 						},
 						{
-							"name": "Додати повiдомлення",
+							"name": "Отримати повiдомлення по коду чату",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"chat_id\", 3);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "chat_id",
-											"value": "3",
-											"type": "text"
-										},
-										{
-											"key": "text",
-											"value": "Test message",
-											"type": "text"
-										},
-										{
-											"key": "files[]",
-											"value": "",
-											"type": "text",
-											"disabled": true
-										}
-									]
-								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/messages/add",
+									"raw": "{{host}}/{{endpoint}}/chats/{{chat_id}}/messages/show",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"{{endpoint}}",
+										"chats",
+										"{{chat_id}}",
 										"messages",
-										"add"
+										"show"
+									],
+									"query": [
+										{
+											"key": "count",
+											"value": "5",
+											"description": "Кол-во чатов на странице (опционально)",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"description": "Текущая страница  (опционально)",
+											"disabled": true
+										},
+										{
+											"key": "sorting",
+											"value": "desc",
+											"description": "Порядок сортировки (asc, desc)  (опционально)",
+											"disabled": true
+										},
+										{
+											"key": "lang",
+											"value": "ru",
+											"description": "Язык",
+											"disabled": true
+										}
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Отримати повiдомлення",
+							"name": "Отримати повiдомлення по кодам маршруту та замовлення",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -7445,6 +7463,46 @@
 											"value": "ru",
 											"description": "Язык"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Додати повiдомлення",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "chat_id",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "text",
+											"value": "Test message",
+											"type": "text"
+										},
+										{
+											"key": "files[]",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/messages/add",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"messages",
+										"add"
 									]
 								}
 							},
