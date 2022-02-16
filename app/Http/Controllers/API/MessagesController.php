@@ -70,24 +70,32 @@ class MessagesController extends Controller
         /**
          * @var int $route_id
          * @var int $order_id
-         * @var int|null $count
-         * @var int|null $page
-         * @var string|null $sorting
          */
         extract($data);
 
-        $auth_user_id = $request->user()->id;
         $route = Route::find($route_id, ['user_id']);
         $order = Order::find($order_id, ['user_id']);
 
         # авторизированный пользователь должен быть владельцем заказа или маршрута
-        if (empty($route) || empty($order) || !in_array($auth_user_id, [$route->user_id, $order->user_id])) {
+        if (empty($route) || empty($order) || !in_array($request->user()->id, [$route->user_id, $order->user_id])) {
             throw new ErrorException(__('message.not_have_permission'));
         }
 
-        # ищем существующий чат или создаем новый чат
+        # ищем существующий чат или создаем новый
         $chat = Chat::searchOrCreate($route_id, $order_id, $route->user_id, $order->user_id);
 
+        return static::getMessages($chat, $data);
+    }
+
+    /**
+     * Получить сообщения по чату.
+     *
+     * @param Chat $chat
+     * @param array $data
+     * @return JsonResponse
+     */
+    public static function getMessages(Chat &$chat, array &$data): JsonResponse
+    {
         # дополняем Чат данными об Исполнителе, Заказчике, Маршруте и Заказе
         $chat->load([
             'performer:id,name,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
@@ -101,16 +109,16 @@ class MessagesController extends Controller
         ]);
 
         # обнуляем счетчик "Кол-во непрочитанных сообщений по чату"
-        $field = $auth_user_id == $chat->performer_id ? 'customer_unread_count' : 'performer_unread_count';
+        $field = request()->user()->id == $chat->performer_id ? 'customer_unread_count' : 'performer_unread_count';
         if ($chat->$field) {
             DB::table('chats')->where('id', $chat->id)->update([$field => 0]);
         }
 
         # получаем сообщения по чату сгруппированные по дате создания
-        if ($is_group_by_date ?? true) {
+        if ($data['is_group_by_date'] ?? true) {
             $messages = Message::whereChatId($chat->id)
                 ->selectRaw('*, DATE(created_at) AS created_date')
-                ->orderBy('id', $sorting ?? self::DEFAULT_SORTING)
+                ->orderBy('id', $data['sorting'] ?? self::DEFAULT_SORTING)
                 ->get()
                 ->groupBy('created_date')
                 ->makeHidden('created_date')
@@ -125,8 +133,8 @@ class MessagesController extends Controller
 
         # получаем сообщения по чату с пагинацией
         $messages = Message::whereChatId($chat->id)
-            ->orderBy('id', $sorting ?? self::DEFAULT_SORTING)
-            ->paginate($count ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $page ?? 1)
+            ->orderBy('id', $data['sorting'] ?? self::DEFAULT_SORTING)
+            ->paginate($data['count'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page'] ?? 1)
             ->toArray();
 
         return response()->json([

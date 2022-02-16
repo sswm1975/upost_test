@@ -5,12 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
-use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Exceptions\ValidatorException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -130,73 +128,13 @@ class ChatController extends Controller
             'sorting'          => 'in:asc,desc',
         ]);
 
-        /**
-         * @var bool $is_group_by_date
-         * @var int|null $count
-         * @var int|null $page
-         * @var string|null $sorting
-         */
-        extract($data);
-
-        $chat = Chat::find($chat_id);
-
-        if (! $chat) throw new ErrorException(__('message.chat_not_found'));
-
-        $auth_user_id = $request->user()->id;
+        if (! $chat = Chat::find($chat_id)) throw new ErrorException(__('message.chat_not_found'));
 
         # авторизированный пользователь должен быть владельцем заказа или маршрута
-        if (! in_array($auth_user_id, [$chat->performer_id, $chat->customer_id])) {
+        if (! in_array($request->user()->id, [$chat->performer_id, $chat->customer_id])) {
             throw new ErrorException(__('message.not_have_permission'));
         }
 
-        # дополняем Чат данными об Исполнителе, Заказчике, Маршруте и Заказе
-        $chat->load([
-            'performer:id,name,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
-            'customer:id,name,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
-            'route',
-            'route.from_country',
-            'route.from_city',
-            'route.to_country',
-            'route.to_city',
-            'order:id,name,price,currency,price_usd,user_price,user_currency,user_price_usd,images,status',
-        ]);
-
-        # обнуляем счетчик "Кол-во непрочитанных сообщений по чату"
-        $field = $auth_user_id == $chat->performer_id ? 'customer_unread_count' : 'performer_unread_count';
-        if ($chat->$field) {
-            DB::table('chats')->where('id', $chat->id)->update([$field => 0]);
-        }
-
-        # получаем сообщения по чату сгруппированные по дате создания
-        if ($is_group_by_date ?? true) {
-            $messages = Message::whereChatId($chat->id)
-                ->selectRaw('*, DATE(created_at) AS created_date')
-                ->orderBy('id', $sorting ?? self::DEFAULT_SORTING)
-                ->get()
-                ->groupBy('created_date')
-                ->makeHidden('created_date')
-                ->all();
-
-            return response()->json([
-                'status'   => true,
-                'chat'     => null_to_blank($chat),
-                'messages' => null_to_blank($messages),
-            ]);
-        }
-
-        # получаем сообщения по чату с пагинацией
-        $messages = Message::whereChatId($chat->id)
-            ->orderBy('id', $sorting ?? self::DEFAULT_SORTING)
-            ->paginate($count ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $page ?? 1)
-            ->toArray();
-
-        return response()->json([
-            'status'   => true,
-            'count'    => $messages['total'],
-            'page'     => $messages['current_page'],
-            'pages'    => $messages['last_page'],
-            'chat'     => null_to_blank($chat),
-            'messages' => null_to_blank($messages['data']),
-        ]);
+        return MessagesController::getMessages($chat, $data);
     }
 }
