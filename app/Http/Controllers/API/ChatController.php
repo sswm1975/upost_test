@@ -17,7 +17,7 @@ use Illuminate\Validation\ValidationException;
 class ChatController extends Controller
 {
     const DEFAULT_PER_PAGE = 5;
-    const DEFAULT_SORTING = 'asc';
+    const DEFAULT_SORTING = 'desc';
     const LAST_MESSAGE_TEXT_LIMIT = 50;
 
     /**
@@ -124,12 +124,14 @@ class ChatController extends Controller
     public function showMessages(int $chat_id, Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'count'    => 'integer',
-            'page'     => 'integer',
-            'sorting'  => 'in:asc,desc',
+            'is_group_by_date' => 'boolean',
+            'count'            => 'integer',
+            'page'             => 'integer',
+            'sorting'          => 'in:asc,desc',
         ]);
 
         /**
+         * @var bool $is_group_by_date
          * @var int|null $count
          * @var int|null $page
          * @var string|null $sorting
@@ -165,19 +167,36 @@ class ChatController extends Controller
             DB::table('chats')->where('id', $chat->id)->update([$field => 0]);
         }
 
-        # получаем сообщения по чату
-        $rows = Message::whereChatId($chat->id)
+        # получаем сообщения по чату сгруппированные по дате создания
+        if ($is_group_by_date ?? true) {
+            $messages = Message::whereChatId($chat->id)
+                ->selectRaw('*, DATE(created_at) AS created_date')
+                ->orderBy('id', $sorting ?? self::DEFAULT_SORTING)
+                ->get()
+                ->groupBy('created_date')
+                ->makeHidden('created_date')
+                ->all();
+
+            return response()->json([
+                'status'   => true,
+                'chat'     => null_to_blank($chat),
+                'messages' => null_to_blank($messages),
+            ]);
+        }
+
+        # получаем сообщения по чату с пагинацией
+        $messages = Message::whereChatId($chat->id)
             ->orderBy('id', $sorting ?? self::DEFAULT_SORTING)
             ->paginate($count ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $page ?? 1)
             ->toArray();
 
         return response()->json([
             'status'   => true,
-            'count'    => $rows['total'],
-            'page'     => $rows['current_page'],
-            'pages'    => $rows['last_page'],
+            'count'    => $messages['total'],
+            'page'     => $messages['current_page'],
+            'pages'    => $messages['last_page'],
             'chat'     => null_to_blank($chat),
-            'messages' => null_to_blank($rows['data']),
+            'messages' => null_to_blank($messages['data']),
         ]);
     }
 }
