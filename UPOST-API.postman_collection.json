@@ -6152,7 +6152,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/order/{{order_id}}/show?user_id=1",
+									"raw": "{{host}}/{{endpoint}}/rates/order/{{order_id}}/show?user_id=22&lang=uk",
 									"host": [
 										"{{host}}"
 									],
@@ -6166,13 +6166,12 @@
 									"query": [
 										{
 											"key": "user_id",
-											"value": "1"
+											"value": "22"
 										},
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 										}
 									]
 								}
@@ -7376,7 +7375,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/chats/{{chat_id}}/messages/show",
+									"raw": "{{host}}/{{endpoint}}/chats/{{chat_id}}/messages/show?is_group_by_date=1&count=5&page=1&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -7389,28 +7388,30 @@
 									],
 									"query": [
 										{
+											"key": "is_group_by_date",
+											"value": "1",
+											"description": "Группировать сообщения по дате (1-по-умолчанию или 0)"
+										},
+										{
 											"key": "count",
 											"value": "5",
-											"description": "Кол-во чатов на странице (опционально)",
-											"disabled": true
+											"description": "Кол-во чатов на странице (опционально)"
 										},
 										{
 											"key": "page",
 											"value": "1",
-											"description": "Текущая страница  (опционально)",
-											"disabled": true
+											"description": "Текущая страница  (опционально)"
 										},
 										{
 											"key": "sorting",
-											"value": "desc",
+											"value": "asc",
 											"description": "Порядок сортировки (asc, desc)  (опционально)",
 											"disabled": true
 										},
 										{
 											"key": "lang",
 											"value": "ru",
-											"description": "Язык",
-											"disabled": true
+											"description": "Язык"
 										}
 									]
 								}
@@ -7423,7 +7424,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/messages/show?route_id=123&order_id=55&count=5&page=1&sorting=desc&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/messages/show?route_id=123&order_id=77&is_group_by_date=1&count=5&page=1&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -7440,8 +7441,13 @@
 										},
 										{
 											"key": "order_id",
-											"value": "55",
+											"value": "77",
 											"description": "Код заказа"
+										},
+										{
+											"key": "is_group_by_date",
+											"value": "1",
+											"description": "Группировать сообщения по дате (1-по-умолчанию или 0)"
 										},
 										{
 											"key": "count",
@@ -7455,8 +7461,9 @@
 										},
 										{
 											"key": "sorting",
-											"value": "desc",
-											"description": "Порядок сортировки (asc, desc)  (опционально)"
+											"value": "asc",
+											"description": "Порядок сортировки (asc, desc)  (опционально)",
+											"disabled": true
 										},
 										{
 											"key": "lang",
