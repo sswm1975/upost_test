@@ -105,7 +105,7 @@ class MessagesController extends Controller
             'route.from_city',
             'route.to_country',
             'route.to_city',
-            'order:id,name,price,currency,price_usd,user_price,user_currency,user_price_usd,images,status',
+            'order',
             'rate'
         ]);
 
