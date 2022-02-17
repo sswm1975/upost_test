@@ -7375,7 +7375,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/chats/{{chat_id}}/messages/show?is_group_by_date=1&count=5&page=1&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/chats/{{chat_id}}/messages/show?is_group_by_date=0&count=5&page=1&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -7389,8 +7389,8 @@
 									"query": [
 										{
 											"key": "is_group_by_date",
-											"value": "1",
-											"description": "Группировать сообщения по дате (1-по-умолчанию или 0)"
+											"value": "0",
+											"description": "Группировать по дате сообщения (опционально): \n1 - да (по умолчанию)\n0 - нет, используется пагинация"
 										},
 										{
 											"key": "count",
@@ -7447,7 +7447,7 @@
 										{
 											"key": "is_group_by_date",
 											"value": "1",
-											"description": "Группировать сообщения по дате (1-по-умолчанию или 0)"
+											"description": "Группировать по дате сообщения (опционально): \n1 - да (по умолчанию)\n0 - нет, используется пагинация"
 										},
 										{
 											"key": "count",
@@ -7494,10 +7494,9 @@
 											"type": "text"
 										},
 										{
-											"key": "files[]",
+											"key": "images[]",
 											"value": "",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										}
 									]
 								},
@@ -7583,7 +7582,7 @@
 										{
 											"key": "type",
 											"value": "order",
-											"description": "Тип сущності: order/user/rate",
+											"description": "Тип сущності: order/user/rate/chat",
 											"type": "text"
 										},
 										{
