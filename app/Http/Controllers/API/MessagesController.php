@@ -29,10 +29,10 @@ class MessagesController extends Controller
     public function addMessage(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'chat_id' => 'required|integer',
-            'text'    => 'required|string|censor',
-            'files'   => 'nullable|array|max:8',
-            'files.*' => 'nullable|string',
+            'chat_id'  => 'required|integer',
+            'text'     => 'required|string|censor',
+            'images'   => 'nullable|array|max:8',
+            'images.*' => 'nullable|string',
         ]);
 
         $auth_user_id = $request->user()->id;

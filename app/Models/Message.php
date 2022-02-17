@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $chat_id Код чата
  * @property int $user_id Автор сообщения
  * @property string $text Текст сообщения
- * @property array|null $files Прикрепленные файлы
+ * @property array|null $images Прикрепленные картинки
  * @property string|null $created_at Добавлено
  * @property string|null $updated_at Изменено
  * @property-read \App\Models\Chat $chat
@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Message query()
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereFiles($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereImages($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUpdatedAt($value)
@@ -34,7 +34,11 @@ class Message extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
     protected $casts = [
-        'files' => 'array',
+        'images' => 'array',
+    ];
+    protected $appends = [
+        'images_thumb',
+        'images_original',
     ];
 
     ### BOOT ###
@@ -57,6 +61,46 @@ class Message extends Model
         });
     }
 
+    public function getImagesAttribute($images): array
+    {
+        if (is_null($images)) return [];
+
+        if (is_string($images)) {
+            $images = json_decode($images);
+        }
+
+        $link_images = [];
+        foreach ($images as $image) {
+            $link_images[] = asset("storage/{$this->user_id}/chats/{$image}");
+        }
+
+        return $link_images;
+    }
+
+    public function getImagesThumbAttribute(): array
+    {
+        if (is_null($this->images)) return [];
+
+        $images = [];
+        foreach ($this->images as $image) {
+            $images[] = str_replace('image_', 'image_thumb_', $image);
+        }
+
+        return $images;
+    }
+
+    public function getImagesOriginalAttribute(): array
+    {
+        if (is_null($this->images)) return [];
+
+        $images = [];
+        foreach ($this->images as $image) {
+            $images[] = str_replace('image_', 'image_original_', $image);
+        }
+
+        return $images;
+    }
+
     ### SETTERS ###
 
     public function setTextAttribute($value)
@@ -64,18 +108,18 @@ class Message extends Model
         $this->attributes['text'] = strip_tags(strip_unsafe($value), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
     }
 
-    public function setFilesAttribute($files)
+    public function setImagesAttribute($images)
     {
-        if (empty($files)) {
-            $this->attributes['files'] = null;
+        if (empty($images)) {
+            $this->attributes['images'] = null;
         }
 
-        foreach ($files as $key => $file) {
+        foreach ($images as $key => $file) {
             $uri_parts = explode('/', $file);
-            $files[$key] = end($uri_parts);
+            $images[$key] = end($uri_parts);
         }
 
-        $this->attributes['files'] = json_encode($files);
+        $this->attributes['images'] = json_encode($images);
     }
 
     ### RELATIONS ###
