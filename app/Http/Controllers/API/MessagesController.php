@@ -106,6 +106,7 @@ class MessagesController extends Controller
             'route.to_country',
             'route.to_city',
             'order:id,name,price,currency,price_usd,user_price,user_currency,user_price_usd,images,status',
+            'rate'
         ]);
 
         # обнуляем счетчик "Кол-во непрочитанных сообщений по чату"
