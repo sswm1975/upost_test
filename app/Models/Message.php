@@ -105,7 +105,7 @@ class Message extends Model
 
     public function setTextAttribute($value)
     {
-        $this->attributes['text'] = strip_tags(strip_unsafe($value), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+        $this->attributes['text'] = strip_tags(strip_unsafe($value), ['p', 'span', 'b', 'i', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br']);
     }
 
     public function setImagesAttribute($images)
