@@ -152,7 +152,7 @@ return [
             'not_phone' => 'It is forbidden to leave contact details in resume.',
         ],
         'text' => [
-            'censor' => 'There are obscene words in the order.',
+            'censor' => 'There are obscene words in the text.',
             'not_phone' => 'It is forbidden to leave contact details in order.',
         ],
     ],
