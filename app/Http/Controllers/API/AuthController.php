@@ -49,13 +49,13 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function social(Request $request): JsonResponse
     {
         $data = $request->all();
-
         if (empty($data['provider']) || empty($data['identifier']) || empty($data['email'])) {
-            return response()->json(['status' => false]);
+            throw new ErrorException(__('message.auth_failed'), 403);
         }
 
         # поле с идентификатором соц.сети (google_id или facebook_id)
@@ -84,7 +84,12 @@ class AuthController extends Controller
                     'url'         => env('WORDPRESS_URL') . 'log-in/?change_password',
                 ];
 
-                Mail::to($user->email)->send(new SocialChangePassword($info));
+                try {
+                    Mail::to($user->email)->send(new SocialChangePassword($info));
+                } catch (\Exception $e) {
+                    $msg = printf('При отправке почтового уведомления на почтовый ящик %s возникла ошибка %s', $user->email, $e->getMessage());
+                    throw new ErrorException($msg, 403);
+                }
             }
         }
 
