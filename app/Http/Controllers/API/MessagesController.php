@@ -96,7 +96,7 @@ class MessagesController extends Controller
      */
     public static function getMessages(Chat &$chat, array &$data): JsonResponse
     {
-        # дополняем Чат данными об Исполнителе, Заказчике, Маршруте и Заказе
+        # дополняем Чат данными об Исполнителе, Заказчике, Маршруте, Заказе и Ставке
         $chat->load([
             'performer:id,name,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
             'customer:id,name,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
