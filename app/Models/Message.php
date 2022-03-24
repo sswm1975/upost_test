@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Traits\TimestampSerializable;
 
 /**
  * App\Models\Message
@@ -31,10 +32,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Message extends Model
 {
+    use TimestampSerializable;
+
     public $timestamps = false;
     protected $guarded = ['id'];
     protected $casts = [
         'images' => 'array',
+    ];
+    protected $dates = [
+	    'created_at',
+        'updated_at',
     ];
     protected $appends = [
         'images_thumb',
