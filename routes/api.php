@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-const MIDDLEWARE_AUTH_BASIC = 'auth:api';
+defined('MIDDLEWARE_AUTH_BASIC') or define('MIDDLEWARE_AUTH_BASIC', 'auth:api');
 
 Route::namespace('API')->group(function ($route) {
     # Аутентифікація

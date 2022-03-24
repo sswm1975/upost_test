@@ -14,6 +14,7 @@
         "ext-json": "*",
         "ext-libxml": "*",
         "ext-zlib": "*",
+        "beyondcode/laravel-websockets": "^1.13",
         "doctrine/migrations": "^3.2",
         "encore/laravel-admin": "^1.8",
         "fideloper/proxy": "^4.4",
