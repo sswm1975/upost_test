@@ -89,6 +89,8 @@ class Chat extends Model
      */
     public function getInterlocutorIdAttribute(): int
     {
+        if (empty(request()->user()->id)) return 0;
+
         return request()->user()->id == $this->performer_id ? $this->customer_id : $this->performer_id;
     }
 
@@ -99,6 +101,8 @@ class Chat extends Model
      */
     public function getInterlocutorUnreadCountAttribute(): int
     {
+        if (empty(request()->user()->id)) return 0;
+
         return request()->user()->id == $this->performer_id ? $this->customer_unread_count : $this->performer_unread_count;
     }
 

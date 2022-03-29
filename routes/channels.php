@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Chat;
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -13,6 +15,19 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+/**
+ * Канал для чата.
+ *
+ * Условия доступа:
+ * - канал должен существовать;
+ * - пользователь является участником чата;
+ * - пользователь является админом или модератором.
+ */
+Broadcast::channel('chat.{chat_id}', function ($user, $chat_id) {
+    $chat = Chat::find($chat_id);
+
+    return isset($chat->id) && (
+            in_array($user->id, [$chat->performer_id, $chat->customer_id]) ||
+            in_array($user->role, [User::ROLE_ADMIN, User::ROLE_MODERATOR])
+        );
 });

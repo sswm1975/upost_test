@@ -70,14 +70,10 @@ class Message extends Model
 
     public function getImagesAttribute($images): array
     {
-        if (is_null($images)) return [];
-
-        if (is_string($images)) {
-            $images = json_decode($images);
-        }
+        if (empty($images)) return [];
 
         $link_images = [];
-        foreach ($images as $image) {
+        foreach (json_decode($images) as $image) {
             $link_images[] = asset("storage/{$this->user_id}/chats/{$image}");
         }
 

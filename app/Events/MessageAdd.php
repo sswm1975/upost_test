@@ -34,7 +34,7 @@ class MessageAdd implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('chat.' . $this->message->chat_id);
+        return new PrivateChannel('chat.' . $this->message->chat_id);
     }
 
     /**
@@ -44,7 +44,7 @@ class MessageAdd implements ShouldBroadcastNow
      */
     public function broadcastAs()
     {
-        return 'message.created';
+        return 'message.add';
     }
 
     /**
