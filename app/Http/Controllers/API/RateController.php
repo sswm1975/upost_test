@@ -31,7 +31,7 @@ class RateController extends Controller
         return  [
             'route_id' => 'required|integer|exists:routes,id,status,active,user_id,'.request()->user()->id,
             'order_id' => 'required|integer|exists:orders,id,status,active',
-            'deadline' => 'required|date|after_or_equal:'.date('Y-m-d'),
+            'deadline' => 'required|date_format:Y-m-d|after_or_equal:'.date('Y-m-d'),
             'amount'   => 'required|numeric',
             'currency' => 'required|in:' . implode(',', config('app.currencies')),
             'comment'  => 'required|string|censor|max:1000',
