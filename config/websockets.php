@@ -31,6 +31,7 @@ return [
             'capacity' => null,
             'enable_client_messages' => false,
             'enable_statistics' => false,
+            'encrypted' => true,
         ],
     ],
 
@@ -70,7 +71,7 @@ return [
      */
     'middleware' => [
         'web',
-        Authorize::class,
+//        Authorize::class,
     ],
 
     'statistics' => [
@@ -128,6 +129,8 @@ return [
          * Passphrase for your local_cert file.
          */
         'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
+
+        'verify_peer' => false,
     ],
 
     /*
