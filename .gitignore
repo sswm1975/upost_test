@@ -3,6 +3,7 @@
 /public/storage
 /public/content
 /storage/*.key
+/storage/platform
 /vendor
 !/vendor
 /vendor/*
