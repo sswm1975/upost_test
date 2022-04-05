@@ -53,6 +53,9 @@ Route::group([
 
         # Жалобы
         $router->resource('complaints', 'ComplaintController')->names('complaints');
+
+        # Проблемы
+        $router->resource('problems', 'ProblemController')->names('problems');
     });
 
     # Пункты меню "Админка"
