@@ -15,6 +15,10 @@ class MessageObserver
      */
     public function created(Message $message)
     {
-        broadcast(new MessageAdd($message))->toOthers();
+        try {
+            broadcast(new MessageAdd($message))->toOthers();
+        } catch (\Exception $e) {
+
+        }
     }
 }
