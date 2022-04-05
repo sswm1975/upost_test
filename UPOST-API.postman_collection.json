@@ -7938,7 +7938,7 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/disputes/{{dispute_id}}/change_deadline",
+									"raw": "{{host}}/{{endpoint}}/disputes/{{dispute_id}}/change_deadline?lang=uk",
 									"host": [
 										"{{host}}"
 									],
@@ -7947,6 +7947,32 @@
 										"disputes",
 										"{{dispute_id}}",
 										"change_deadline"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Список проблем",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/disputes/problems",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"disputes",
+										"problems"
 									],
 									"query": [
 										{
