@@ -19,6 +19,7 @@ return [
     'order_exists'            => 'Заказ существует.',
     'route_not_found'         => 'Маршрут не найден.',
     'route_exists'            => 'Маршрут существует.',
+    'dispute_exists'          => 'Спор существует.',
     'rate_not_found'          => 'Ставка не найдена.',
     'rate_add_double'         => 'Дублирующая ставка.',
     'who_start_incorrect'     => 'Поле Пользователь не корректен.',

@@ -199,6 +199,18 @@ Route::namespace('API')->group(function ($route) {
         # Получить список сообщений по кодам маршрута и заказа
         $route->get('show', 'MessagesController@showMessages');
     });
+
+    # Споры
+    $route->prefix('disputes')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
+        # Создать спор
+        $route->post('create', 'DisputeController@create');
+
+        # Изменить статус спора
+        $route->post('{dispute_id}/change_status', 'DisputeController@changeStatus');
+
+        # Изменить дату дедлайна спора
+        $route->post('{dispute_id}/change_deadline', 'DisputeController@changeDeadline');
+    });
 });
 
 // Відправка лістів
@@ -249,17 +261,6 @@ Route::get('parser', 'API\ParserController')->middleware(MIDDLEWARE_AUTH_BASIC);
 
 // Завантаження файлу
 Route::post('upload', 'API\UploadController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-// Спори
-Route::group(
-    [
-        'prefix' => 'disputes',
-    ],
-    function () {
-        # Відкрити спор на завдання
-        Route::post('add', 'API\DisputeController@addDispute')->middleware(MIDDLEWARE_AUTH_BASIC);
-    }
-);
 
 // Заяви
 Route::group(

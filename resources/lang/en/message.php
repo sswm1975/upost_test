@@ -19,6 +19,7 @@ return [
     'order_exists'            => 'Order exists.',
     'route_not_found'         => 'Route not found.',
     'route_exists'            => 'Route exists.',
+    'dispute_exists'          => 'Dispute exists.',
     'rate_not_found'          => 'Rate not found.',
     'rate_add_double'         => 'Is double rate.',
     'who_start_incorrect'     => 'The field who_start incorrect.',

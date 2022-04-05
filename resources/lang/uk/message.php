@@ -19,6 +19,7 @@ return [
     'order_exists'            => 'Замовлення існує.',
     'route_not_found'         => 'Маршрут не знайдено.',
     'route_exists'            => 'Маршрут існує.',
+    'dispute_exists'          => 'Суперечка існує.',
     'rate_not_found'          => 'Ставку не знайдено.',
     'rate_add_double'         => 'Дублююча ставка.',
     'who_start_incorrect'     => 'Поле Користувач помилковий.',

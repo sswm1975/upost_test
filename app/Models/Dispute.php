@@ -3,54 +3,48 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\TimestampSerializable;
 
-/**
- * App\Models\Dispute
- *
- * @property int $id Код
- * @property int $user_id Код пользователя
- * @property int $rate_id Код ставки
- * @property int $problem_id Код проблемы
- * @property string $comment Комментарий
- * @property array $files Файлы
- * @property \Illuminate\Support\Carbon $created_at Дата добавления
- * @property \Illuminate\Support\Carbon|null $updated_at Дата изменения
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute query()
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereComment($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereFiles($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereRateId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereProblemId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUserId($value)
- * @mixin \Eloquent
- */
 class Dispute extends Model
 {
-    protected $primaryKey = 'dispute_id';
+    use TimestampSerializable;
 
-    protected $fillable = [
-        'user_id',
-        'rate_id',
-        'problem_id',
-        'files',
-        'comment',
+    public const STATUS_ACTIVE  = 'active';
+    public const STATUS_IN_WORK = 'in_work';
+    public const STATUS_CLOSED  = 'closed';
+
+    const STATUSES = [
+        self::STATUS_ACTIVE,
+        self::STATUS_IN_WORK,
+        self::STATUS_CLOSED,
     ];
 
-    protected $casts = [
-        'files' => 'array',
+    public $timestamps = false;
+    protected $guarded = ['id'];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deadline',
     ];
 
+    ### BOOT ###
 
+    /**
+     * Boot model.
+     *
+     * @return void
+     */
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
             $model->user_id = request()->user()->id;
+            $model->created_at = $model->freshTimestamp();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_at = $model->freshTimestamp();
         });
     }
 }
