@@ -24,12 +24,12 @@ class Problem extends Model
     }
 
     /**
-     * Получить список всех проблем или выбранной проблемы.
+     * Получить справочник проблем для спора или выбранной проблемы.
      *
      * @param int $id
      * @return array
      */
-    public static function getProblems(int $id = 0): array
+    public static function getList(int $id = 0): array
     {
         return static::query()
             ->when(!empty($id), function ($query) use ($id) {
@@ -37,7 +37,6 @@ class Problem extends Model
             })
             ->language()
             ->addSelect('id')
-            ->oldest('id')
             ->get()
             ->toArray();
     }

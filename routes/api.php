@@ -210,6 +210,9 @@ Route::namespace('API')->group(function ($route) {
 
         # Изменить дату дедлайна спора
         $route->post('{dispute_id}/change_deadline', 'DisputeController@changeDeadline');
+
+        # Получить справочник проблем для спора или выбранной проблемы.
+        $route->get('problems/{id?}', 'DisputeController@getProblems');
     });
 });
 

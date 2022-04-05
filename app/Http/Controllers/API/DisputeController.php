@@ -127,4 +127,15 @@ class DisputeController extends Controller
 
         return response()->json(['status' => $affected_rows > 0]);
     }
+
+    /**
+     * Получить справочник проблем для спора или выбранной проблемы.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getProblems(int $id = 0): JsonResponse
+    {
+        return response()->json(Problem::getList($id));
+    }
 }
