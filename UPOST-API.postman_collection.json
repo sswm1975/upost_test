@@ -3177,6 +3177,182 @@
 							"response": []
 						},
 						{
+							"name": "Авторизація через соц.мережу",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "provider",
+											"value": "google",
+											"description": "google/facebook",
+											"type": "text"
+										},
+										{
+											"key": "identifier",
+											"value": "103185108710960191999",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "pupkin@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "webSiteURL",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "profileURL",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "photoURL",
+											"value": "https://lh3.googleusercontent.com/a-/AOh14Gj9Rh86OkXfTKuSXZrUYO6Psb9EAcUzAyItvivD3g=s96-c",
+											"type": "text"
+										},
+										{
+											"key": "displayName",
+											"value": "Вася Пупкин",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "Вася",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "Пупкин",
+											"type": "text"
+										},
+										{
+											"key": "gender",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "uk",
+											"type": "text"
+										},
+										{
+											"key": "age",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "birthDay",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "birthMonth",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "birthYear",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "emailVerified",
+											"value": "pupkin@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "region",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "zip",
+											"value": "null",
+											"type": "text"
+										},
+										{
+											"key": "data",
+											"value": "[]",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/auth/social",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"auth",
+										"social"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Припинення сеансу",
 							"event": [
 								{
@@ -5747,7 +5923,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"rate_id\", 6);"
+											"pm.variables.set(\"rate_id\", 10);"
 										],
 										"type": "text/javascript"
 									}
@@ -5761,17 +5937,17 @@
 									"formdata": [
 										{
 											"key": "route_id",
-											"value": "123",
+											"value": "92",
 											"type": "text"
 										},
 										{
 											"key": "order_id",
-											"value": "58",
+											"value": "36",
 											"type": "text"
 										},
 										{
 											"key": "amount",
-											"value": "105",
+											"value": "100",
 											"type": "text"
 										},
 										{
@@ -5781,12 +5957,12 @@
 										},
 										{
 											"key": "deadline",
-											"value": "2022-02-06",
+											"value": "2022-04-21",
 											"type": "text"
 										},
 										{
 											"key": "comment",
-											"value": "test",
+											"value": "my test comment",
 											"type": "text"
 										},
 										{
@@ -7485,7 +7661,7 @@
 									"formdata": [
 										{
 											"key": "chat_id",
-											"value": "3",
+											"value": "1",
 											"type": "text"
 										},
 										{
@@ -7496,7 +7672,8 @@
 										{
 											"key": "images[]",
 											"value": "",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
@@ -7618,10 +7795,10 @@
 					"description": "Завантаження файлiв"
 				},
 				{
-					"name": "Спори",
+					"name": "Суперечки",
 					"item": [
 						{
-							"name": "Відкрити спор на завдання",
+							"name": "Створення суперечки",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -7629,28 +7806,35 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "job_id",
-											"value": "1",
-											"description": "Код замовлення",
-											"type": "text"
-										},
-										{
 											"key": "problem_id",
 											"value": "1",
 											"description": "Код проблеми",
 											"type": "text"
 										},
 										{
-											"key": "comment",
+											"key": "rate_id",
+											"value": "10",
+											"description": "Код ставки",
+											"type": "text"
+										},
+										{
+											"key": "chat_id",
+											"value": "3",
+											"description": "Код чату",
+											"type": "text"
+										},
+										{
+											"key": "text",
 											"value": "test",
 											"description": "Коментар",
 											"type": "text"
 										},
 										{
-											"key": "files[]",
+											"key": "images[]",
 											"value": "file.png",
 											"description": "Масив файлів",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
@@ -7663,6 +7847,106 @@
 										"{{endpoint}}",
 										"disputes",
 										"add"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Змінити статус суперечки",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"dispute_id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "status",
+											"value": "active",
+											"description": "Статус",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/disputes/{{dispute_id}}/change_status",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"disputes",
+										"{{dispute_id}}",
+										"change_status"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Змінити дату дедлайна суперечки",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"dispute_id\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "deadline",
+											"value": "2022-04-06",
+											"description": "Нова дата дедлайну",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/disputes/{{dispute_id}}/change_deadline",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"disputes",
+										"{{dispute_id}}",
+										"change_deadline"
 									],
 									"query": [
 										{
