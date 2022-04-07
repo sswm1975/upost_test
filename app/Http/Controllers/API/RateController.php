@@ -192,7 +192,7 @@ class RateController extends Controller
         # ищем активную ставку, где владельцем активного заказа является авторизированный пользователь
         $rate = Rate::whereKey($rate_id)
             ->with([
-                'order:id,name,price,currency,price_usd,products_count,status,images',
+                'order:id,name,price,currency,price_usd,products_count,status,user_id,images',
                 'route.user:id,name,surname,photo,scores_count,reviews_count,status,gender,birthday,validation,last_active,register_date',
                 'route.to_country',
                 'route.to_city',
