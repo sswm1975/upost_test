@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\Problem;
 use App\Models\Rate;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -67,6 +69,37 @@ class DisputeController extends Controller
     }
 
     /**
+     * Получить данные спора.
+     *
+     * @param int $id
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function show(int $id): JsonResponse
+    {
+        $dispute = Dispute::whereKey($id)
+            ->with([
+                'user' => function ($query) {
+                    $query->select(User::FIELDS_FOR_SHOW);
+                },
+                'closed_user' => function ($query) {
+                    $query->select(User::FIELDS_FOR_SHOW);
+                },
+                'rate',
+                'chat',
+                'message',
+            ])
+            ->first();
+
+        if (! $dispute) throw new ErrorException(__('message.dispute_not_found'));
+
+        return response()->json([
+            'status'  => true,
+            'dispute' => null_to_blank($dispute),
+        ]);
+    }
+
+    /**
      * Добавить спор.
      *
      * @param Request $request
@@ -94,18 +127,55 @@ class DisputeController extends Controller
 
     /**
      * Изменить статус спора.
+     * (доступно только для администратора)
      *
      * @param int $id
      * @return JsonResponse
-     * @throws ValidationException|ValidatorException
+     * @throws ErrorException|ValidationException|ValidatorException
      */
     public function changeStatus(int $id): JsonResponse
     {
+        if (request()->user()->role != User::ROLE_ADMIN) {
+            throw new ErrorException(__('message.not_have_permission'));
+        }
+
         $data = validateOrExit([
             'status' => 'required|in:' . implode(',', Dispute::STATUSES),
         ]);
 
         $affected_rows = Dispute::whereKey($id)->update($data);
+
+        return response()->json(['status' => $affected_rows > 0]);
+    }
+
+    /**
+     * Взять спор в работу.
+     * (доступно только для администратора)
+     *
+     * @param int $id
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function takeOn(int $id): JsonResponse
+    {
+        if (request()->user()->role != User::ROLE_ADMIN) {
+            throw new ErrorException(__('message.not_have_permission'));
+        }
+
+        $affected_rows = Dispute::whereKey($id)->update(['status' => Dispute::STATUS_IN_WORK]);
+
+        return response()->json(['status' => $affected_rows > 0]);
+    }
+
+    /**
+     * Закрыть спор.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function close(int $id): JsonResponse
+    {
+        $affected_rows = Dispute::whereKey($id)->update(['status' => Dispute::STATUS_CLOSED]);
 
         return response()->json(['status' => $affected_rows > 0]);
     }

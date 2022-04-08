@@ -205,8 +205,17 @@ Route::namespace('API')->group(function ($route) {
         # Создать спор
         $route->post('create', 'DisputeController@create');
 
+        # Получить данные спора
+        $route->get('{id}/show', 'DisputeController@show');
+
         # Изменить статус спора
         $route->post('{dispute_id}/change_status', 'DisputeController@changeStatus');
+
+        # Взять спор в работу
+        $route->post('{dispute_id}/take_on', 'DisputeController@takeOn');
+
+        # Закрыть спор
+        $route->post('{dispute_id}/close', 'DisputeController@close');
 
         # Изменить дату дедлайна спора
         $route->post('{dispute_id}/change_deadline', 'DisputeController@changeDeadline');

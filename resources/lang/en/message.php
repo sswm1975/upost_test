@@ -20,6 +20,7 @@ return [
     'route_not_found'         => 'Route not found.',
     'route_exists'            => 'Route exists.',
     'dispute_exists'          => 'Dispute exists.',
+    'dispute_not_found'       => 'Dispute not found.',
     'rate_not_found'          => 'Rate not found.',
     'rate_add_double'         => 'Is double rate.',
     'who_start_incorrect'     => 'The field who_start incorrect.',
@@ -115,4 +116,12 @@ return [
         ],
     ],
 
+    # Dispute attributes
+    'dispute' => [
+        'statuses' => [
+            'active'   => 'Active',
+            'in_work'  => 'In work',
+            'closed'   => 'Closed',
+        ],
+    ],
 ];

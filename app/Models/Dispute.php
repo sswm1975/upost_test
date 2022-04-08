@@ -4,7 +4,44 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\TimestampSerializable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * App\Models\Dispute
+ *
+ * @property int $id Код
+ * @property int $problem_id Код проблема
+ * @property int $user_id Код пользователя
+ * @property int $rate_id Код ставки
+ * @property int $chat_id Код чата
+ * @property int $message_id Код сообщения
+ * @property string $status Статус спора
+ * @property \Illuminate\Support\Carbon|null $created_at Добавлено
+ * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property \Illuminate\Support\Carbon|null $deadline Дедлайн
+ * @property int|null $closed_user_id Код пользователя закрывший спор
+ * @property-read \App\Models\Chat $chat
+ * @property-read \App\Models\User|null $closed_user
+ * @property-read string $status_name
+ * @property-read \App\Models\Message $message
+ * @property-read \App\Models\Rate $rate
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereChatId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereClosedUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereMessageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereProblemId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereRateId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Dispute extends Model
 {
     use TimestampSerializable;
@@ -26,6 +63,9 @@ class Dispute extends Model
         'updated_at',
         'deadline',
     ];
+    protected $appends = [
+        'status_name',
+    ];
 
     ### BOOT ###
 
@@ -45,6 +85,44 @@ class Dispute extends Model
 
         static::updating(function ($model) {
             $model->updated_at = $model->freshTimestamp();
+
+            if ($model->status == self::STATUS_CLOSED) {
+                $model->closed_user_id = request()->user()->id;
+            }
         });
+    }
+
+    ### GETTERS ###
+
+    public function getStatusNameAttribute(): string
+    {
+        return __("message.dispute.statuses.$this->status");
+    }
+
+    ### LINKS ###
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id')->withDefault();
+    }
+
+    public function closed_user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_user_id');
+    }
+
+    public function rate(): BelongsTo
+    {
+        return $this->belongsTo(Rate::class, 'rate_id');
+    }
+
+    public function chat(): BelongsTo
+    {
+        return $this->belongsTo(Chat::class, 'chat_id');
+    }
+
+    public function message(): BelongsTo
+    {
+        return $this->belongsTo(Message::class, 'message_id');
     }
 }

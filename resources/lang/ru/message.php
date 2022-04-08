@@ -20,6 +20,7 @@ return [
     'route_not_found'         => 'Маршрут не найден.',
     'route_exists'            => 'Маршрут существует.',
     'dispute_exists'          => 'Спор существует.',
+    'dispute_not_found'       => 'Спор не найден.',
     'rate_not_found'          => 'Ставка не найдена.',
     'rate_add_double'         => 'Дублирующая ставка.',
     'who_start_incorrect'     => 'Поле Пользователь не корректен.',
@@ -112,6 +113,15 @@ return [
             'dispute'  => 'Спорная',
             'done'     => 'Выполненная',
             'banned'   => 'Запрещённая',
+        ],
+    ],
+
+    # Dispute attributes
+    'dispute' => [
+        'statuses' => [
+            'active'   => 'Активная',
+            'in_work'  => 'В работе',
+            'closed'   => 'Закрытая',
         ],
     ],
 ];

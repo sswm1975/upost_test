@@ -20,6 +20,7 @@ return [
     'route_not_found'         => 'Маршрут не знайдено.',
     'route_exists'            => 'Маршрут існує.',
     'dispute_exists'          => 'Суперечка існує.',
+    'dispute_not_found'       => 'Суперечка не існує.',
     'rate_not_found'          => 'Ставку не знайдено.',
     'rate_add_double'         => 'Дублююча ставка.',
     'who_start_incorrect'     => 'Поле Користувач помилковий.',
@@ -98,6 +99,7 @@ return [
             'banned'     => 'Заборонений',
         ],
     ],
+    
     # Rate attributes
     'rate' => [
         'statuses' => [
@@ -110,6 +112,15 @@ return [
             'dispute'  => 'Спірна',
             'done'     => 'Виконана',
             'banned'   => 'Заборонена',
+        ],
+    ],
+
+    # Dispute attributes
+    'dispute' => [
+        'statuses' => [
+            'active'   => 'Активна',
+            'in_work'  => 'В роботі',
+            'closed'   => 'Закрита',
         ],
     ],
 ];
