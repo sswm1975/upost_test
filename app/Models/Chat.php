@@ -56,6 +56,10 @@ class Chat extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
     protected $appends = ['interlocutor_id', 'interlocutor_unread_count'];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
 
     ### BOOT ###
 

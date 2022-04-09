@@ -6,6 +6,7 @@ use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
+use App\Models\Order;
 use App\Models\Problem;
 use App\Models\Rate;
 use App\Models\User;
@@ -168,16 +169,34 @@ class DisputeController extends Controller
     }
 
     /**
-     * Закрыть спор.
+     * Закрыть спор и связанные сущности.
      *
      * @param int $id
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function close(int $id): JsonResponse
     {
-        $affected_rows = Dispute::whereKey($id)->update(['status' => Dispute::STATUS_CLOSED]);
+        # ищем сущности, которые нужно закрыть
+        $dispute = Dispute::find($id);
+        $chat = Chat::find($dispute->chat_id);
+        $rate = Rate::find($dispute->rate_id);
+        $order = Order::find($rate->order_id);
 
-        return response()->json(['status' => $affected_rows > 0]);
+        # закрыть диспут может только заказчик, или исполнитель, или админ
+        if (! in_array(request()->user()->id, [$chat->performer_id, $chat->customer_id]) && request()->user()->role != User::ROLE_ADMIN) {
+            throw new ErrorException(__('message.not_have_permission'));
+        }
+
+        # закрываем (меняем статусы)
+        $order->update(['status' => Order::STATUS_SUCCESSFUL]);
+        $rate->update(['status' => Rate::STATUS_DONE]);
+        $chat->update(['status' => Chat::STATUS_CLOSED]);
+        $dispute->update(['status' => Dispute::STATUS_CLOSED]);
+
+        return response()->json([
+            'status' => true,
+        ]);
     }
 
     /**
