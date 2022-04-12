@@ -101,6 +101,11 @@ class Dispute extends Model
 
     ### LINKS ###
 
+    public function problem(): BelongsTo
+    {
+        return $this->belongsTo(Problem::class, 'problem_id');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id')->withDefault();

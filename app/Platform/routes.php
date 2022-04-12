@@ -27,6 +27,9 @@ Route::group([
     $router->get('routes', 'RouteController@index')->name('routes.index');
     $router->get('routes/{id}', 'RouteController@show')->name('routes.show');
 
+    # Споры
+    $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes');
+
     # Обратная связь
     $router->get('feedback', 'FeedbackController@index')->name('feedback.index');
     $router->get('feedback/{id}', 'FeedbackController@show')->name('feedback.show');
