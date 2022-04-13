@@ -71,7 +71,7 @@ return [
      */
     'middleware' => [
         'web',
-//        Authorize::class,
+        Authorize::class,
     ],
 
     'statistics' => [
@@ -130,6 +130,9 @@ return [
          */
         'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
 
+        /*
+         * Требовать проверки используемого SSL-сертификата.
+         */
         'verify_peer' => false,
     ],
 
