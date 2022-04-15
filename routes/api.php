@@ -163,6 +163,9 @@ Route::namespace('API')->group(function ($route) {
         # Подтверждение покупки товара исполнителем (Путешественник по ставке купил товар)
         $route->post('{rate_id}/buyed', 'RateController@buyedRate');
 
+        # Получение товара заказчиком
+        $route->post('{rate_id}/successful', 'RateController@successfulRate');
+
         # Получить ставки по выбранному заказу
         $route->get('order/{id}/show', 'RateController@showRatesByOrder');
     });

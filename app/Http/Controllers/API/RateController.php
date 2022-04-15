@@ -14,6 +14,7 @@ use App\Modules\Liqpay;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -320,6 +321,34 @@ class RateController extends Controller
         ]);
 
         return response()->json(['status' => $affected]);
+    }
+
+    /**
+     * Получение товара заказчиком.
+     * - операция только для владельца заказа
+     * - ставка должна быть в статусе buyed
+     * - заказ должен быть в статусе in_work
+     *
+     * @param int $rate_id
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function successfulRate(int $rate_id): JsonResponse
+    {
+        $rate = Rate::byKeyForOwnerOrder($rate_id, [Rate::STATUS_BUYED], [Order::STATUS_IN_WORK])->first();
+
+        if (! $rate) throw new ErrorException(__('message.rate_not_found'));
+
+        # меняем всем статусы
+        Order::whereKey($rate->order_id)->update(['status' => Order::STATUS_SUCCESSFUL, 'updated_at' => Date::now()]);
+        Chat::whereKey($rate->chat_id)->update(['status' => Chat::STATUS_CLOSED, 'updated_at' => Date::now()]);
+
+        $rate->status = Rate::STATUS_SUCCESSFUL;
+        $rate->save();
+
+        return response()->json([
+            'status' => true,
+        ]);
     }
 
     /**

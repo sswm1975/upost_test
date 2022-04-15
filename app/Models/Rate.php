@@ -24,14 +24,16 @@ class Rate extends Model
         'images_thumb',
     ];
 
-    public const STATUS_ACTIVE   = 'active';    # владелец маршрута создал ставку
-    public const STATUS_CANCELED = 'canceled';  # владелец маршрута отменил ставку
-    public const STATUS_REJECTED = 'rejected';  # владелец заказа отклонил ставку
-    public const STATUS_ACCEPTED = 'accepted';  # владелец заказа принял ставку и успешно оплатил за товар
-    public const STATUS_BUYED    = 'buyed';     # владелец маршрута купил товар, сфотографировал и ждёт одобрения от заказчика
-    public const STATUS_DISPUTE  = 'dispute';   # возникли разногласия по ставке
-    public const STATUS_DONE     = 'done';      # владелец маршрута купил товар, сфотографировал и ждёт одобрения от заказчика
-    public const STATUS_BANNED   = 'banned';    # забаненная ставка за нарушения, устанавливается администрацией
+    public const STATUS_ACTIVE     = 'active';     # владелец маршрута создал ставку
+    public const STATUS_CANCELED   = 'canceled';   # владелец маршрута отменил ставку
+    public const STATUS_REJECTED   = 'rejected';   # владелец заказа отклонил ставку
+    public const STATUS_ACCEPTED   = 'accepted';   # владелец заказа принял ставку и успешно оплатил за товар
+    public const STATUS_BUYED      = 'buyed';      # владелец маршрута купил товар
+    public const STATUS_SUCCESSFUL = 'successful'; # владелец заказа получил от путешественника товар
+    public const STATUS_DONE       = 'done';       # администрация перечислила деньги владельцу маршрута, ставка выполнена
+    public const STATUS_DISPUTE    = 'dispute';    # возникли разногласия по ставке
+    public const STATUS_FAILED     = 'failed';     # владелец заказа отказался от заказа после спора
+    public const STATUS_BANNED     = 'banned';     # забаненная ставка за нарушения, устанавливается администрацией
 
     public const STATUSES = [
         self::STATUS_ACTIVE,
@@ -39,8 +41,10 @@ class Rate extends Model
         self::STATUS_REJECTED,
         self::STATUS_ACCEPTED,
         self::STATUS_BUYED,
-        self::STATUS_DISPUTE,
+        self::STATUS_SUCCESSFUL,
         self::STATUS_DONE,
+        self::STATUS_DISPUTE,
+        self::STATUS_FAILED,
         self::STATUS_BANNED,
     ];
 
@@ -48,7 +52,6 @@ class Rate extends Model
     public const STATUSES_DELIVERED = [
         self::STATUS_ACCEPTED,
         self::STATUS_BUYED,
-        self::STATUS_DONE,
     ];
 
     ### GETTERS ###

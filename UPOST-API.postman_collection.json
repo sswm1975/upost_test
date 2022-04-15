@@ -6243,6 +6243,49 @@
 							"response": []
 						},
 						{
+							"name": "Отримання товару замовником",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"rate_id\", 10);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/successful",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"{{rate_id}}",
+										"successful"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Отримати ставки по замовленню",
 							"event": [
 								{
