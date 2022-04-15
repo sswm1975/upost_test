@@ -323,28 +323,6 @@ class RateController extends Controller
     }
 
     /**
-     * Подтверждение покупки товара заказчиком.
-     * - операция только для владельца заказа
-     * - ставка должна быть в статусе accepted
-     * - заказ должен быть в статусе in_work
-     *
-     * @param int $rate_id
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function approvedRate(int $rate_id): JsonResponse
-    {
-        $rate = Rate::byKeyForOwnerOrder($rate_id, [Rate::STATUS_BUYED], [Order::STATUS_IN_WORK])->first(['id']);
-
-        if (! $rate) throw new ErrorException(__('message.rate_not_found'));
-
-        $rate->status = Rate::STATUS_APPROVED;
-        $rate->save();
-
-        return response()->json(['status' => true]);
-    }
-
-    /**
      * Получить ставки по выбранному заказу.
      *
      * @param int $order_id

@@ -29,7 +29,6 @@ class Rate extends Model
     public const STATUS_REJECTED = 'rejected';  # владелец заказа отклонил ставку
     public const STATUS_ACCEPTED = 'accepted';  # владелец заказа принял ставку и успешно оплатил за товар
     public const STATUS_BUYED    = 'buyed';     # владелец маршрута купил товар, сфотографировал и ждёт одобрения от заказчика
-    public const STATUS_APPROVED = 'approved';  # владелец заказа одобрил покупку
     public const STATUS_DISPUTE  = 'dispute';   # возникли разногласия по ставке
     public const STATUS_DONE     = 'done';      # владелец маршрута купил товар, сфотографировал и ждёт одобрения от заказчика
     public const STATUS_BANNED   = 'banned';    # забаненная ставка за нарушения, устанавливается администрацией
@@ -40,7 +39,6 @@ class Rate extends Model
         self::STATUS_REJECTED,
         self::STATUS_ACCEPTED,
         self::STATUS_BUYED,
-        self::STATUS_APPROVED,
         self::STATUS_DISPUTE,
         self::STATUS_DONE,
         self::STATUS_BANNED,
@@ -50,7 +48,6 @@ class Rate extends Model
     public const STATUSES_DELIVERED = [
         self::STATUS_ACCEPTED,
         self::STATUS_BUYED,
-        self::STATUS_APPROVED,
         self::STATUS_DONE,
     ];
 
