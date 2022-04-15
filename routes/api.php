@@ -88,9 +88,6 @@ Route::namespace('API')->group(function ($route) {
         # Підбір маршруту для замовлення
         $route->get('{order_id}/selection_route', 'OrderController@selectionRoute');
 
-        # Підтвердити виконання замовлення
-        $route->post('confirm', 'OrderController@confirmOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
-
         # Закриття замовлення
         $route->post('{order_id}/close', 'OrderController@closeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 

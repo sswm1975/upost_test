@@ -509,55 +509,6 @@ class OrderController extends Controller
     }
 
     /**
-     * Подтвердить выполнение заказа.
-     *
-     * @param Request $request
-     * @return Request
-     * @throws ValidatorException
-     * @throws TryException
-     */
-    public function confirmOrder(Request $request): JsonResponse
-    {
-        $data = validateOrExit([
-            'chat_id'        => 'required|integer|exists:chats,chat_id',
-            'user_id'        => 'required|integer|exists:users,id',
-        ]);
-
-        try {
-            $this->confirmExtValidate($data);
-        }
-        catch (Exception $e) {
-            throw new TryException($e->getMessage());
-        }
-
-        return response()->json([
-            'status' => true
-        ]);
-    }
-
-    /**
-     * confirm order validation
-     *
-     * @param array $data
-     * @return bool
-     * @throws Exception
-     */
-    private function confirmExtValidate(array $data): bool
-    {
-        $query = (new Chat())->newQuery();
-        $count = $query->where('chat_id', $data['chat_id'])
-            ->where('user_id', $data['user_id'])
-            ->count();
-
-        if($count == 0) {
-            throw new Exception("This chat belongs to other user");
-        }
-
-        return true;
-    }
-
-
-    /**
      * Пожаловаться на заказ.
      *
      * @param int $order_id

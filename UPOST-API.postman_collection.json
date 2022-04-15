@@ -4752,36 +4752,6 @@
 							"response": []
 						},
 						{
-							"name": "Пiдтвердити виконання замовлення",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/confirm?chat_id=7&user_id=1",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"orders",
-										"confirm"
-									],
-									"query": [
-										{
-											"key": "chat_id",
-											"value": "7"
-										},
-										{
-											"key": "user_id",
-											"value": "1"
-										}
-									]
-								},
-								"description": "Пiдтвердити виконання замовлення"
-							},
-							"response": []
-						},
-						{
 							"name": "Закриття замовлення",
 							"event": [
 								{
