@@ -307,7 +307,7 @@ class RateController extends Controller
      */
     public function buyedRate(int $rate_id): JsonResponse
     {
-        if (! $rate = Rate::isOwnerByKey($rate_id, [Rate::STATUS_ACCEPTED])->first(['id'])) {
+        if (! $rate = Rate::whereKey($rate_id)->first(['id'])) {
             throw new ErrorException(__('message.rate_not_found'));
         }
 
