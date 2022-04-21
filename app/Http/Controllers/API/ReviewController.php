@@ -69,13 +69,12 @@ class ReviewController extends Controller
         User::whereKey($data['recipient_id'])
             ->update([
                 'reviews_count' => DB::raw('reviews_count + 1'),
-                'scores_count'  => DB::raw("scores_count + {$data['rating']}"),
+                'scores_count'  => DB::raw("scores_count + {$data['scores']}"),
             ]);
 
         return response()->json([
             'status' => true,
-            'rate'=>$rate,
-            'sql' => getSQLForFixDatabase()
+            'rate'   => $rate,
         ]);
     }
 
