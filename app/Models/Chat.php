@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Chat
@@ -56,10 +57,7 @@ class Chat extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
     protected $appends = ['interlocutor_id', 'interlocutor_unread_count'];
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
+    protected $dates = ['created_at', 'updated_at',];
 
     ### BOOT ###
 
@@ -203,8 +201,7 @@ class Chat extends Model
     public function scopeInterlocutors($query)
     {
         return $query->where(function ($q) {
-           $q->where('performer_id', request()->user()->id)
-               ->orWhere('customer_id', request()->user()->id);
+            $q->where('performer_id', request()->user()->id)->orWhere('customer_id', request()->user()->id);
         });
     }
 
@@ -217,11 +214,9 @@ class Chat extends Model
     public function scopeWaiting($query)
     {
         return $query->where(function ($q) {
-            $q->where('performer_id', request()->user()->id)
-                ->where('customer_unread_count', '>', 0);
+            $q->where('performer_id', request()->user()->id)->where('customer_unread_count', '>', 0);
         })->orWhere(function ($q) {
-            $q->where('customer_id', request()->user()->id)
-                ->where('performer_unread_count', '>', 0);
+            $q->where('customer_id', request()->user()->id)->where('performer_unread_count', '>', 0);
         });
     }
 
@@ -248,7 +243,7 @@ class Chat extends Model
     public function scopeSearchMessage($query, string $search)
     {
         return $query->whereHas('messages', function ($q) use ($search) {
-            $q->where('text', 'like', '%'.$search.'%');
+            $q->where('text', 'like', '%' . $search . '%');
         });
     }
 
@@ -276,12 +271,22 @@ class Chat extends Model
      */
     public static function searchOrCreate(int $route_id, int $order_id, int $performer_id, int $customer_id)
     {
-        return static::firstOrCreate([
-            'route_id' => $route_id,
-            'order_id' => $order_id,
-        ], [
-            'performer_id' => $performer_id,
-            'customer_id'  => $customer_id,
-        ]);
+        return static::firstOrCreate(['route_id' => $route_id, 'order_id' => $order_id,], ['performer_id' => $performer_id, 'customer_id' => $customer_id,]);
+    }
+
+    /**
+     * Получить количество непрочитанных сообщений.
+     *
+     * @param int $user_id
+     * @return int
+     */
+    public static function getCountUnreadMessages(int $user_id): int
+    {
+        return (int) Chat::whereStatus(self::STATUS_ACTIVE)
+            ->where(function ($query) use ($user_id) {
+                $query->where('customer_id', $user_id)->where('customer_unread_count', '>', 0);
+            })->orWhere(function ($query) use ($user_id) {
+                $query->where('performer_id', $user_id)->where('performer_unread_count', '>', 0);
+            })->sum(DB::raw('customer_unread_count + performer_unread_count'));
     }
 }

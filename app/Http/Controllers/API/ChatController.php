@@ -146,20 +146,11 @@ class ChatController extends Controller
      */
     public function getCountUnreadMessages(): JsonResponse
     {
-        $count = Chat::whereStatus(Chat::STATUS_ACTIVE)
-            ->where(function($query) {
-                $query->where('customer_id', request()->user()->id)->where('customer_unread_count', '>', 0);
-
-            })
-            ->orWhere(function($query) {
-                $query->where('performer_id', request()->user()->id)->where('performer_unread_count', '>', 0);
-
-            })
-            ->sum(DB::raw('customer_unread_count + performer_unread_count'));
+        $user_id = request()->user()->id;
 
         return response()->json([
             'status' => true,
-            'count'  => $count,
+            'count'  => Chat::getCountUnreadMessages($user_id),
         ]);
     }
 }
