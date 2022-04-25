@@ -186,6 +186,9 @@ Route::namespace('API')->group(function ($route) {
 
         # Получить список сообщений по коду чата
         $route->get('{chat_id}/messages/show', 'ChatController@showMessages');
+
+        # Получить количество непрочитанных сообщений
+        $route->get('get_count_unread_messages', 'ChatController@getCountUnreadMessages');
     });
 
     # Сообщения

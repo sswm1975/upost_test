@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Exceptions\ValidatorException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -136,5 +137,29 @@ class ChatController extends Controller
         }
 
         return MessagesController::getMessages($chat, $data);
+    }
+
+    /**
+     * Получить количество непрочитанных сообщений.
+     *
+     * @return JsonResponse
+     */
+    public function getCountUnreadMessages(): JsonResponse
+    {
+        $count = Chat::whereStatus(Chat::STATUS_ACTIVE)
+            ->where(function($query) {
+                $query->where('customer_id', request()->user()->id)->where('customer_unread_count', '>', 0);
+
+            })
+            ->orWhere(function($query) {
+                $query->where('performer_id', request()->user()->id)->where('performer_unread_count', '>', 0);
+
+            })
+            ->sum(DB::raw('customer_unread_count + performer_unread_count'));
+
+        return response()->json([
+            'status' => true,
+            'count'  => $count,
+        ]);
     }
 }

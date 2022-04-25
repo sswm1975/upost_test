@@ -5972,7 +5972,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"rate_id\", 6);"
+											"pm.variables.set(\"rate_id\", 10);"
 										],
 										"type": "text/javascript"
 									}
@@ -5982,7 +5982,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/show?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/show",
 									"host": [
 										"{{host}}"
 									],
@@ -5996,7 +5996,8 @@
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
 										}
 									]
 								}
@@ -7515,7 +7516,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"chat_id\", 3);"
+											"pm.variables.set(\"chat_id\", 1);"
 										],
 										"type": "text/javascript"
 									}
@@ -7620,6 +7621,25 @@
 											"value": "ru",
 											"description": "Язык"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Отримати кількість непрочитаних повiдомлень",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/chats/get_count_unread_messages",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"chats",
+										"get_count_unread_messages"
 									]
 								}
 							},
@@ -7733,7 +7753,7 @@
 										{
 											"key": "type",
 											"value": "order",
-											"description": "Тип сущності: order/user/rate/chat",
+											"description": "Тип сущності: order/user/rate/chat/dispute",
 											"type": "text"
 										},
 										{
