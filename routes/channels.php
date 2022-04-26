@@ -31,3 +31,10 @@ Broadcast::channel('chat.{chat_id}', function ($user, $chat_id) {
             in_array($user->role, [User::ROLE_ADMIN, User::ROLE_MODERATOR])
         );
 });
+
+/**
+ * Канал для пользователя.
+ */
+Broadcast::channel('user.{user_id}', function ($user, $user_id) {
+    return (int) $user->id === (int) $user_id;
+});

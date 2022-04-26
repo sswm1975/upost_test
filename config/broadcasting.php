@@ -38,7 +38,7 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'encrypted' => env('PUSHER_APP_SCHEME') == 'https',
-                'host' => '185.25.116.73',
+                'host' => env('PUSHER_APP_SCHEME') == 'https' ? '185.25.116.73' : '127.0.0.1',
                 'port' => 6001,
                 'scheme' => env('PUSHER_APP_SCHEME'),
                 'curl_options' => [

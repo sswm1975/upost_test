@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\MessagesCounterUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
@@ -46,7 +47,27 @@ class MessagesController extends Controller
 
         $chat->increment($auth_user_id == $chat->performer_id ? 'customer_unread_count' : 'performer_unread_count');
 
+        $recipient_id = $auth_user_id == $chat->performer_id ? $chat->customer_id : $chat->performer_id;
+        $this->broadcastCountUnreadMessages($recipient_id);
+
         return response()->json(['status' => true]);
+    }
+
+    /**
+     * Броадкастим количество непрочитанных сообщений.
+     *
+     * @param int $recipient_id
+     */
+    private function broadcastCountUnreadMessages(int $recipient_id)
+    {
+        try {
+            broadcast(new MessagesCounterUpdate([
+                'user_id'         => $recipient_id,
+                'unread_messages' => Chat::getCountUnreadMessages($recipient_id),
+            ]));
+        } catch (\Exception $e) {
+
+        }
     }
 
     /**
