@@ -131,7 +131,7 @@ class MessagesController extends Controller
         ]);
 
         # обнуляем счетчик "Кол-во непрочитанных сообщений по чату"
-        $field = request()->user()->id == $chat->performer_id ? 'customer_unread_count' : 'performer_unread_count';
+        $field = request()->user()->id == $chat->performer_id ? 'performer_unread_count' : 'customer_unread_count';
         if ($chat->$field) {
             DB::table('chats')->where('id', $chat->id)->update([$field => 0]);
         }

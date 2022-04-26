@@ -282,11 +282,16 @@ class Chat extends Model
      */
     public static function getCountUnreadMessages(int $user_id): int
     {
-        return (int) Chat::whereStatus(self::STATUS_ACTIVE)
-            ->where(function ($query) use ($user_id) {
-                $query->where('customer_id', $user_id)->where('customer_unread_count', '>', 0);
-            })->orWhere(function ($query) use ($user_id) {
-                $query->where('performer_id', $user_id)->where('performer_unread_count', '>', 0);
-            })->sum(DB::raw('customer_unread_count + performer_unread_count'));
+        $customer_unread_count = Chat::where('status', self::STATUS_ACTIVE)
+            ->where('customer_id', $user_id)
+            ->where('customer_unread_count', '>', 0)
+            ->sum('customer_unread_count');
+
+        $performer_unread_count = Chat::where('status', self::STATUS_ACTIVE)
+            ->where('performer_id', $user_id)
+            ->where('performer_unread_count', '>', 0)
+            ->sum('performer_unread_count');
+
+        return (int) $customer_unread_count + (int) $performer_unread_count;
     }
 }
