@@ -203,7 +203,7 @@ Route::namespace('API')->group(function ($route) {
     # Споры
     $route->prefix('disputes')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
         # Создать спор
-        $route->post('create', 'DisputeController@create');
+        $route->post('add', 'DisputeController@add');
 
         # Получить данные спора
         $route->get('{id}/show', 'DisputeController@show');

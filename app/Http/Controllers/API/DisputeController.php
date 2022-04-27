@@ -107,7 +107,7 @@ class DisputeController extends Controller
      * @return JsonResponse
      * @throws ValidatorException|ValidationException
      */
-    public function create(Request $request): JsonResponse
+    public function add(Request $request): JsonResponse
     {
         $data = $this->rules4saveDispute();
 
