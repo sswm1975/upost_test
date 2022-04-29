@@ -30,6 +30,9 @@ Route::group([
     # Споры
     $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes');
 
+    # Чаты
+    $router->get('chats', 'ChatController@index')->name('chats.index');
+
     # Обратная связь
     $router->get('feedback', 'FeedbackController@index')->name('feedback.index');
     $router->get('feedback/{id}', 'FeedbackController@show')->name('feedback.show');

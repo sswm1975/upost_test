@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -51,6 +52,8 @@ use Illuminate\Support\Facades\DB;
  */
 class Chat extends Model
 {
+    use TimestampSerializable;
+
     public const STATUS_ACTIVE = 'active';
     public const STATUS_CLOSED = 'closed';
 
@@ -83,6 +86,16 @@ class Chat extends Model
     }
 
     ### GETTERS ###
+
+    /**
+     * Получить наименование статуса в зависимости от текущей локали.
+     *
+     * @return string
+     */
+    public function getStatusNameAttribute(): string
+    {
+        return __("message.chat.statuses.$this->status");
+    }
 
     /**
      * Определяем код пользователя, который является собеседником с авторизированным пользователем.
@@ -248,6 +261,17 @@ class Chat extends Model
     }
 
     /**
+     * Активные чаты.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('chats.status', self::STATUS_ACTIVE);
+    }
+
+    /**
      * Закрытые чаты.
      *
      * @param $query
@@ -255,7 +279,7 @@ class Chat extends Model
      */
     public function scopeClosed($query)
     {
-        return $query->whereStatus(self::STATUS_CLOSED);
+        return $query->where('chats.status', self::STATUS_CLOSED);
     }
 
     ### QUERIES ###
