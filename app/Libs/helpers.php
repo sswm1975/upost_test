@@ -28,6 +28,20 @@ function null_to_blank($data = []): array
 }
 
 /**
+ * Получить системное сообщение в зависимости от локали пользователя.
+ *
+ * @param null $text
+ * @return string
+ */
+function system_message($text = null): string
+{
+    if (empty($text)) return '';
+    $locale = app()->getLocale();
+
+    return config("system_messages.$text.$locale", $text);
+}
+
+/**
  * Validate a base64 content.
  *
  * @author Ahmed Fathy, https://stackoverflow.com/questions/51419310/validating-base64-image-laravel/52914093#52914093

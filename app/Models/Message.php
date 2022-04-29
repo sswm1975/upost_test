@@ -68,6 +68,28 @@ class Message extends Model
         });
     }
 
+    /**
+     * Если пользователя нет (NULL), то это системный пользователь, возвращаем 0.
+     *
+     * @param $user_id
+     * @return int
+     */
+    public function getUserIdAttribute($user_id): int
+    {
+        return $user_id ?: 0;
+    }
+
+    /**
+     * Для системных сообщений в таблице хранится алиас, а клиенту отдаем текст в локали пользователя.
+     *
+     * @param $text
+     * @return string
+     */
+    public function getTextAttribute($text): string
+    {
+        return empty($this->user_id) ? system_message($text) : $text;
+    }
+
     public function getImagesAttribute($images): array
     {
         if (empty($images)) return [];
