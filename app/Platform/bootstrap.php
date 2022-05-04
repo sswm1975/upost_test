@@ -40,7 +40,7 @@ const ADMIN_LANGUAGES = [
     'en' => '🇬🇧',
 ];
 
-Admin::favicon(config('app.url').'favicon.png');
+Admin::favicon(config('app.url').'/favicon.png');
 
 # Разрешаем перетаскивать модалки
 Admin::js('vendor/laravel-admin/AdminLTE/plugins/jQuery/draggable.min.js');
