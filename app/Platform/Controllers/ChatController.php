@@ -2,8 +2,12 @@
 
 namespace App\Platform\Controllers;
 
+use App\Events\MessagesCounterUpdate;
 use App\Models\Chat;
+use App\Models\Message;
 use Encore\Admin\Grid;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ChatController extends AdminController
 {
@@ -93,7 +97,9 @@ class ChatController extends AdminController
         $grid->column('status')->sortable();
         $grid->column('created_at')->sortable();
         $grid->column('updated_at')->sortable();
-        $grid->column('messages_cnt')->sortable();
+        $grid->column('messages_cnt')
+            ->ajaxModal(ChatMessage::class)
+            ->sortable();
 
         $grid->column('customer_id', 'CId')->sortable();
         $grid->column('customer_name', 'Customer');
@@ -122,5 +128,45 @@ class ChatController extends AdminController
         $grid->column('exists_dispute', 'Dispute');
 
         return $grid;
+    }
+
+    /**
+     * Добавить сообщение.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addMessage(Request $request): JsonResponse
+    {
+        $chat = Chat::find($request->get('chat_id'));
+
+        Message::create($request->all());
+
+        $chat->customer_unread_count = $chat->customer_unread_count + 1;
+        $chat->performer_unread_count = $chat->performer_unread_count + 1;
+        $chat->save();
+
+        $this->broadcastCountUnreadMessages($chat->customer_id, $chat->customer_unread_count);
+        $this->broadcastCountUnreadMessages($chat->performer_id, $chat->performer_unread_count);
+
+        return response()->json(['status' => true]);
+    }
+
+    /**
+     * Броадкастим количество непрочитанных сообщений.
+     *
+     * @param int $recipient_id
+     * @param int $unread_messages
+     */
+    private function broadcastCountUnreadMessages(int $recipient_id, int $unread_messages)
+    {
+        try {
+            broadcast(new MessagesCounterUpdate([
+                'user_id'         => $recipient_id,
+                'unread_messages' => $unread_messages,
+            ]));
+        } catch (\Exception $e) {
+
+        }
     }
 }
