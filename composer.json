@@ -34,10 +34,11 @@
         "spatie/eloquent-sortable": "^3.11"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.6",
+        "barryvdh/laravel-ide-helper": "^2.8",
         "facade/ignition": "^2.12",
         "mockery/mockery": "^1.4",
-        "nunomaduro/collision": "^4.3",
-        "barryvdh/laravel-ide-helper": "^2.8"
+        "nunomaduro/collision": "^4.3"
     },
     "config": {
         "optimize-autoloader": true,
