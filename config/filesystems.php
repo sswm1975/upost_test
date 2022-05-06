@@ -66,9 +66,9 @@ return [
 
         'admin' => [
             'driver' => 'local',
-            'root' => public_path('platform'),
+            'root' => public_path('upload'),
             'visibility' => 'public',
-            'url' => env('APP_URL').'/platform',
+            'url' => env('APP_URL').'/upload',
         ],
 
     ],
