@@ -194,6 +194,16 @@ class Chat extends Model
     }
 
     /**
+     * Спор по чату.
+     *
+     * @return HasOne
+     */
+    public function dispute(): HasOne
+    {
+        return $this->hasOne(Dispute::class);
+    }
+
+    /**
      * Последнее сообщение по чату.
      *
      * @return HasOne
@@ -280,6 +290,17 @@ class Chat extends Model
     public function scopeClosed($query)
     {
         return $query->where('chats.status', self::STATUS_CLOSED);
+    }
+
+    /**
+     * Чаты, по которым есть спор.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeExistsDispute($query)
+    {
+        return $query->whereHas('dispute');
     }
 
     ### QUERIES ###

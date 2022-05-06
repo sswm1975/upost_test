@@ -5,6 +5,7 @@ namespace App\Platform\Controllers;
 use App\Models\Chat;
 use App\Models\Message;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\DB;
 
 class ChatMessage implements Renderable
 {
@@ -68,6 +69,7 @@ class ChatMessage implements Renderable
         }
 
         $messages = Message::with('user:id,name,surname,photo,role')
+            ->addSelect(DB::raw('*, (select 1 from disputes where message_id = messages.id) AS is_dispute_message'))
             ->where('chat_id', $id)
             ->get();
 

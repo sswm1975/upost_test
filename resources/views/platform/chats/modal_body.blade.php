@@ -79,6 +79,9 @@
         background-color: crimson;
         color:white;
     }
+    .is_dispute_message {
+        border: 2px solid red;
+    }
     .attachfiles {
         display: inline-flex;
         flex-flow: row;
@@ -126,7 +129,7 @@
                 <figure class="message__author-pic" title="{{ $user_name }}">
                     <img src="{{ $user_photo }}">
                 </figure>
-                <div class="message__text">
+                <div class="message__text {{ $message->is_dispute_message ? 'is_dispute_message' : ''}}">
                     <p>{{ $message->text }}</p>
                     @forelse($message->images_thumb as $image)
                         <div class="attachfiles">
