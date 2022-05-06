@@ -23,6 +23,7 @@ use Encore\Admin\Grid\Column;
 use App\Platform\Extensions\Grid\Displayers\AjaxModal;
 use App\Platform\Extensions\Grid\Displayers\Orderable;
 use App\Platform\Extensions\Nav;
+use Encore\Admin\Show;
 
 /**
  * Статусы для переключателя SWITCH
@@ -76,6 +77,12 @@ Form::init(function (Form $form) {
     });
 });
 
+Show::init(function (Show $show) {
+    $show->panel()->tools(function ($tools) {
+        $tools->disableEdit();
+        $tools->disableDelete();
+    });
+});
 
 Column::extend('ajaxModal', AjaxModal::class);
 Column::extend('orderable', Orderable::class);

@@ -72,6 +72,10 @@ Route::group([
         'middleware' => 'admin.permission:allow,administrator',
         'as'         => 'auth.',
     ], function (Router $router) {
+        # Информация о проекте
         $router->get('info', 'InfoController@index')->name('info');
+
+        # Пользователи (вместо дефолтного Encore\Admin\Controllers\UserController)
+        $router->resource('users', 'UserController')->names('admin.auth.users');
     });
 });
