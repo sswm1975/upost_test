@@ -45,6 +45,7 @@ class ChatController extends AdminController
                 chats.status,
                 chats.created_at,
                 chats.updated_at,
+                chats.lock_status,
 
                 IFNULL((SELECT COUNT(1) FROM messages WHERE chat_id = chats.id), 0) AS messages_cnt,
 
@@ -94,7 +95,12 @@ class ChatController extends AdminController
 
         # COLUMNS
         $grid->column('id', )->sortable();
-        $grid->column('status')->sortable();
+        $grid->column('status')->showOtherField('status_name')->sortable();
+        $grid->column('lock_status')
+            ->display(function ($lock) {
+                return Chat::LOCK_STATUSES[$lock];
+            })
+            ->sortable();
         $grid->column('created_at')->sortable();
         $grid->column('updated_at')->sortable();
         $grid->column('messages_cnt')

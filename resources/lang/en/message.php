@@ -45,6 +45,7 @@ return [
     'statement_not_found'     => 'Statement not found.',
     'job_not_found'           => 'Job not found.',
     'image_not_found'         => 'Image not found.',
+    'lock_add_message'        => 'It is forbidden to add a message.',
 
     'verification_code' => [
         'incorrect'         => 'Verification code is incorrect',
@@ -113,6 +114,14 @@ return [
             'dispute'  => 'Dispute',
             'done'     => 'Done',
             'banned'   => 'Banned',
+        ],
+    ],
+
+    # Chat attributes	
+    'chat' => [
+        'statuses' => [
+            'active'     => 'Active',
+            'closed'     => 'Closed',
         ],
     ],
 

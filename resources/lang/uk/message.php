@@ -44,6 +44,7 @@ return [
     'statement_not_found'     => 'Заяву не знайдено.',
     'job_not_found'           => 'Завдання не знайдено.',
     'image_not_found'         => 'Зображення не знайдено.',
+    'lock_add_message'        => 'Заборонено добавляти повідомлення',
 
     'verification_code' => [
         'incorrect'         => 'Код підтвердження невірний',
@@ -115,12 +116,20 @@ return [
         ],
     ],
 
+    # Chat attributes	
+    'chat' => [
+        'statuses' => [
+            'active'   => 'Активний',
+            'closed'   => 'Закритий',
+        ],
+    ],
+
     # Dispute attributes
     'dispute' => [
         'statuses' => [
-            'active'   => 'Активна',
+            'active'   => 'Активний',
             'in_work'  => 'В роботі',
-            'closed'   => 'Закрита',
+            'closed'   => 'Закритий',
         ],
     ],
 ];

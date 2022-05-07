@@ -16,6 +16,7 @@ class ChatMessage implements Renderable
                 chats.status,
                 chats.created_at,
                 chats.updated_at,
+                chats.lock_status,
 
                 IFNULL((SELECT COUNT(1) FROM messages WHERE chat_id = chats.id), 0) AS messages_cnt,
 

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
  * @property int $performer_unread_count Кол-во непрочитанных сообщений исполнителем
  * @property int $customer_unread_count Кол-во непрочитанных сообщений заказчиком
  * @property string $status Статус
+ * @property string $lock_status Статус блокировки*
  * @property string|null $created_at Добавлено
  * @property string|null $updated_at Изменено
  * @property-read \App\Models\User $customer
@@ -56,6 +57,24 @@ class Chat extends Model
 
     public const STATUS_ACTIVE = 'active';
     public const STATUS_CLOSED = 'closed';
+
+    public const LOCK_STATUS_WITHOUT_LOCK = 'without_lock';
+    public const LOCK_STATUS_ADD_MESSAGE_LOCK_ONLY_CUSTOMER = 'lock_add_message_only_customer';
+    public const LOCK_STATUS_ADD_MESSAGE_LOCK_ONLY_PERFORMER = 'lock_add_message_only_performer';
+    public const LOCK_STATUS_ADD_MESSAGE_LOCK_ALL = 'lock_add_message_all';
+    public const LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_CUSTOMER = 'permit_one_message_only_customer';
+    public const LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_PERFORMER = 'permit_one_message_only_performer';
+    public const LOCK_STATUS_PERMIT_ONE_MESSAGE_ALL = 'permit_one_message_all';
+
+    public const LOCK_STATUSES = [
+        self::LOCK_STATUS_WITHOUT_LOCK                      => 'Без блокировки',
+        self::LOCK_STATUS_ADD_MESSAGE_LOCK_ONLY_CUSTOMER    => 'Блокировано только заказчику',
+        self::LOCK_STATUS_ADD_MESSAGE_LOCK_ONLY_PERFORMER   => 'Блокировано только исполнителю',
+        self::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL              => 'Блокировано всем',
+        self::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_CUSTOMER  => 'Разрешено одно сообщение заказчику',
+        self::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_PERFORMER => 'Разрешено одно сообщение исполнителю',
+        self::LOCK_STATUS_PERMIT_ONE_MESSAGE_ALL            => 'Разрешено всем по одному сообщению',
+    ];
 
     public $timestamps = false;
     protected $guarded = ['id'];

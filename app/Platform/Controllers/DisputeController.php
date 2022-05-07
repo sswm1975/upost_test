@@ -2,6 +2,7 @@
 
 namespace App\Platform\Controllers;
 
+use App\Models\Chat;
 use App\Models\Dispute;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
@@ -43,6 +44,9 @@ class DisputeController extends AdminController
             })
             ->sortable();
         $grid->column('status', 'Статус')->showOtherField('status_name')->sortable();
+        $grid->column('chat.lock_status', 'Статус блокировки')
+            ->editable('select', Chat::LOCK_STATUSES)
+            ->sortable();
         $grid->column('created_at', 'Создано')->sortable();
         $grid->column('updated_at', 'Изменено')->sortable();
 
@@ -66,6 +70,8 @@ class DisputeController extends AdminController
         $form->display('id', 'Код');
         $form->date('deadline', 'Дата дедлайна');
         $form->select('status', 'Статус')->options($statuses);
+        $form->select('chat.lock_status', 'Статус блокировки')
+            ->options(Chat::LOCK_STATUSES);
 
         return $form;
     }

@@ -43,9 +43,44 @@ class MessagesController extends Controller
             throw new ErrorException(__('message.not_have_permission'));
         }
 
+        # проверки на блокировку создания сообщения
+        if (
+            $chat->lock_status == Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL ||
+            ($auth_user_id == $chat->customer_id && in_array($chat->lock_status, [Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ONLY_CUSTOMER, Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_PERFORMER])) ||
+            ($auth_user_id == $chat->performer_id && in_array($chat->lock_status, [Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ONLY_PERFORMER, Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_CUSTOMER]))
+        ) {
+            return response()->json([
+                'status' => false,
+                'errors' => [__('message.lock_add_message')],
+            ]);
+        }
+
         Message::create($data);
 
-        $chat->increment($auth_user_id == $chat->performer_id ? 'customer_unread_count' : 'performer_unread_count');
+        # меняем статусы блокировки
+        $extra = [];
+        if ($auth_user_id == $chat->customer_id) {
+            # заказчику было разрешено одно сообщение - меняем на блокировку всем
+            if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_CUSTOMER) {
+                $extra = ['lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL];
+            }
+            # всем было разрешено одно сообщение - меняем на разрешено исполнителю одно сообщение
+            if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ALL) {
+                $extra = ['lock_status' => Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_PERFORMER];
+            }
+        }
+        if ($auth_user_id == $chat->performer_id) {
+            # исполнителю было разрешено одно сообщение - меняем на блокировку всем
+            if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_PERFORMER) {
+                $extra = ['lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL];
+            }
+            # всем было разрешено одно сообщение - меняем на разрешено заказчику одно сообщение
+            if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ALL) {
+                $extra = ['lock_status' => Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_CUSTOMER];
+            }
+        }
+
+        $chat->increment($auth_user_id == $chat->performer_id ? 'customer_unread_count' : 'performer_unread_count', 1, $extra);
 
         $recipient_id = $auth_user_id == $chat->performer_id ? $chat->customer_id : $chat->performer_id;
         $this->broadcastCountUnreadMessages($recipient_id);
