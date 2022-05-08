@@ -44,7 +44,7 @@ return [
     'statement_not_found'     => 'Заяву не знайдено.',
     'job_not_found'           => 'Завдання не знайдено.',
     'image_not_found'         => 'Зображення не знайдено.',
-    'lock_add_message'        => 'Заборонено добавляти повідомлення',
+    'lock_add_message'        => 'Заборонено добавляти повідомлення.',
 
     'verification_code' => [
         'incorrect'         => 'Код підтвердження невірний',

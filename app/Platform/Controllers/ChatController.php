@@ -43,9 +43,9 @@ class ChatController extends AdminController
             ->selectRaw("
                 chats.id,
                 chats.status,
+                chats.lock_status,
                 chats.created_at,
                 chats.updated_at,
-                chats.lock_status,
 
                 IFNULL((SELECT COUNT(1) FROM messages WHERE chat_id = chats.id), 0) AS messages_cnt,
 
@@ -93,6 +93,13 @@ class ChatController extends AdminController
             ->leftJoin('cities AS cfr','cfr.id', 'r.from_city_id')
             ->leftJoin('cities AS ctr','ctr.id', 'r.to_city_id');
 
+        # COLORS ROW GRID
+        $grid->rows(function (Grid\Row $row) {
+            if ($row->exists_dispute) {
+                $row->setAttributes(['class' => 'danger']);
+            }
+        });
+
         # COLUMNS
         $grid->column('id', )->sortable();
         $grid->column('status')->showOtherField('status_name')->sortable();
@@ -130,8 +137,6 @@ class ChatController extends AdminController
         $grid->column('route_to_country', 'Country To');
         $grid->column('route_to_city', 'City To');
         $grid->column('route_deadline', 'Deadline');
-
-        $grid->column('exists_dispute', 'Dispute');
 
         return $grid;
     }

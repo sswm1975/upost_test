@@ -82,7 +82,7 @@ class ChatMessage implements Renderable
             ->render();
 
         $footer = view('platform.chats.modal_footer')
-            ->with('chat_id', $chat->id)
+            ->with('chat', $chat)
             ->render();
 
         return compact('title', 'content', 'footer');

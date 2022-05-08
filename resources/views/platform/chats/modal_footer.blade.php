@@ -20,7 +20,7 @@
 
 <form class="send_form">
     {{ csrf_field() }}
-    <input type="hidden" name="chat_id" value="{{ $chat_id }}">
+    <input type="hidden" name="chat_id" value="{{ $chat->id }}">
     <input type="hidden" name="user_id" value="{{ Admin::user()->user_id }}">
     <textarea name="text" placeholder="Сообщение"></textarea>
     <button class="btn btn-success submit">Отправить</button>
@@ -30,7 +30,7 @@
     function reload_chat() {
         let $modal_body = $('#grid-ajax-modal .modal-body');
         let prev_content = $modal_body.html();
-        $.get('/platform/_handle_renderable_?renderable=App_Platform_Controllers_ChatMessage&key={{ $chat_id }}', function (data) {
+        $.get('/platform/_handle_renderable_?renderable=App_Platform_Controllers_ChatMessage&key={{ $chat->id }}', function (data) {
             let content = data.content || '';
             if (prev_content == content) return;
             $modal_body.html(content);
