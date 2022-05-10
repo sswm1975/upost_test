@@ -109,7 +109,7 @@ class ChatController extends AdminController
         $grid->column('created_at')->sortable();
         $grid->column('updated_at')->sortable();
         $grid->column('messages_cnt')
-            ->ajaxModal(ChatMessage::class)
+            ->ajaxModal(ChatMessage::class, 700)
             ->sortable();
 
         $grid->column('customer_id', 'CId')->sortable();

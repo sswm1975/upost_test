@@ -4,6 +4,13 @@
             <i class="fa fa-comments-o"></i>&nbsp;Чат
         </a>
     </li>
+    @if($exists_dispute)
+        <li>
+            <a href="#dispute" data-toggle="tab">
+                <i class="fa fa-gavel"></i>&nbsp;Спор
+            </a>
+        </li>
+    @endif
     <li>
         <a href="#customer" data-toggle="tab">
             <i class="fa fa-user-o"></i>&nbsp;Заказчик

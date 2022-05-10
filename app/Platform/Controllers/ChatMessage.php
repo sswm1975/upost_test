@@ -3,6 +3,7 @@
 namespace App\Platform\Controllers;
 
 use App\Models\Chat;
+use App\Models\Dispute;
 use App\Models\Message;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\DB;
@@ -97,15 +98,26 @@ class ChatMessage implements Renderable
             return [];
         }
 
+        if ($chat->exists_dispute) {
+            $dispute = Dispute::with('problem', 'message')
+                ->where('chat_id', $chat->id)
+                ->first();
+        } else {
+            $dispute = null;
+        }
+
         $messages = Message::with('user:id,name,surname,photo,role')
             ->addSelect(DB::raw('*, EXISTS(SELECT 1 FROM disputes WHERE message_id = messages.id) AS is_dispute_message'))
             ->where('chat_id', $id)
             ->get();
 
-        $title = view('platform.chats.modal_title')->render();
+        $title = view('platform.chats.modal_title')
+            ->with('exists_dispute', $chat->exists_dispute)
+            ->render();
 
         $content = view('platform.chats.modal_body')
             ->with('chat', $chat)
+            ->with('dispute', $dispute)
             ->with('messages', $messages)
             ->render();
 

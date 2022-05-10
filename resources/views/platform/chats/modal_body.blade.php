@@ -135,11 +135,7 @@
                 </div>
             @else
                 @php
-                    if ($message->user->role == 'admin') {
-                        $user = 'admin';
-                    }  else {
-                        $user = $message->user_id == $chat->customer_id ? 'customer' : 'performer';
-                    }
+                    $user = $message->user->role == 'admin' ? 'admin' : ($message->user_id == $chat->customer_id ? 'customer' : 'performer');
                     $user_name = $message->user->full_name;
                     $user_photo = $message->user->photo ?: '/img/empty-user.png';
                 @endphp
@@ -163,6 +159,53 @@
             @endif
         @endforeach
     </div>
+
+    @if ($chat->exists_dispute)
+        <div class="tab-pane" id="dispute">
+            <div class="row" style="padding: 15px 0;">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <span class="input-group-addon">Проблема №{{ $dispute->problem->id }}</span>
+                        <input type="text" class="form-control form-control" value="{{ $dispute->problem->name }}" readonly>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">Инициатор {{ $dispute->user_id == $chat->customer_id ? 'Заказчик' : 'Исполнитель' }}</span>
+                        <input type="text" class="form-control form-control" value="{{ $dispute->user_id == $chat->customer_id ? $chat->customer_name : $chat->performer_name }}" readonly>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">Создано</span>
+                        <input class="form-control form-control-sm" value="{{ formatDateTime($dispute->created_at, false) }}" title="{{ formatDateTime($dispute->created_at) }}" readonly>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">Дедлайн</span>
+                        <input class="form-control form-control-sm" value="{{ formatDateTime($dispute->deadline, false) }}" readonly>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">Дней на рассмотрение</span>
+                        <input class="form-control form-control-sm" value="{{ $dispute->problem->days }}" readonly>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">Состояние</span>
+                        <input class="form-control form-control-sm" value="{{ $dispute->status }}" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" style="padding: 0">
+                <label class="control-label">Описание</label>
+                <div class="form-control" style="height:auto;" readonly>
+                    <p><?= $dispute->message->text ?></p>
+                    @forelse($dispute->message->images_thumb as $image)
+                        <div class="attachfiles">
+                            <a href="{{ $dispute->message->images_original[$loop->index] }}" class="attach-image" target="_blank">
+                                <img src="{{ $image }}">
+                            </a>
+                        </div>
+                    @empty
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    @endif
 
     <div class="tab-pane" id="customer">
         <div class="row" style="padding: 15px 0;">
@@ -300,9 +343,8 @@
                 </div>
             </div>
             <div class="col-sm-4" style="padding-left: 0">
-
                 @php($images = json_decode($chat->order_images))
-                <div id="order_carousel" class="carousel slide" data-ride="carousel" style="padding: 5px;border: 1px solid #f4f4f4;background-color:white;width:185px;">
+                <div id="order_carousel" class="carousel slide" data-ride="carousel" style="padding: 5px;border: 1px solid #f4f4f4;background-color:white;width:215px;">
                     <ol class="carousel-indicators">
                         @foreach($images as $key => $image)
                             <li data-target="#order_carousel" data-slide-to="{{$key}}" class="{{ $key == 0 ? 'active' : '' }}"></li>
@@ -312,7 +354,7 @@
                         @foreach($images as $key => $image)
                             @php($image = asset("storage/{$chat->customer_id}/orders/{$image}"))
                             <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                <img src="{{ $image }}" style='max-width:185px;max-height:300px;display: block;margin-left: auto;margin-right: auto;'>
+                                <img src="{{ $image }}" style='max-width:215px;max-height:300px;display: block;margin-left: auto;margin-right: auto;'>
                             </div>
                         @endforeach
                     </div>
@@ -323,7 +365,6 @@
                         <span class="fa fa-angle-right"></span>
                     </a>
                 </div>
-
             </div>
         </div>
         <div class="col-md-12" style="padding: 0">
@@ -390,7 +431,7 @@
             <div class="col-sm-4" style="padding-left: 0">
                 @isset($chat->rate_images)
                     @php($images = json_decode($chat->rate_images))
-                    <div id="rate_carousel" class="carousel slide" data-ride="carousel" style="padding: 5px;border: 1px solid #f4f4f4;background-color:white;width:185px;">
+                    <div id="rate_carousel" class="carousel slide" data-ride="carousel" style="padding: 5px;border: 1px solid #f4f4f4;background-color:white;width:215px;">
                         <ol class="carousel-indicators">
                             @foreach($images as $key => $image)
                                 <li data-target="#rate_carousel" data-slide-to="{{$key}}" class="{{ $key == 0 ? 'active' : '' }}"></li>
@@ -400,7 +441,7 @@
                             @foreach($images as $key => $image)
                                 @php($image = asset("storage/{$chat->performer_id}/orders/{$image}"))
                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
-                                    <img src="{{ $image }}" style='max-width:185px;max-height:300px;display: block;margin-left: auto;margin-right: auto;'>
+                                    <img src="{{ $image }}" style='max-width:215px;max-height:300px;display: block;margin-left: auto;margin-right: auto;'>
                                 </div>
                             @endforeach
                         </div>

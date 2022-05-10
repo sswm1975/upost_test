@@ -34,10 +34,11 @@ class DisputeController extends AdminController
         # COLUMNS
         $grid->column('id', 'Код')->sortable();
         $grid->column('problem_id', 'Код проблемы')->sortable();
-        $grid->column('problem.name_ru', 'Проблема');
+        $grid->column('problem.name', 'Проблема');
         $grid->column('user_id', 'Код клиента')->sortable();
         $grid->column('user.full_name', 'Клиент');
         $grid->column('message.text', 'Описание');
+        $grid->column('problem.days', 'Дней')->help('Кол-во дней на рассмотрение проблемы');
         $grid->column('deadline', 'Дата дедлайна')
             ->display(function () {
                 return isset($this->deadline) ? $this->deadline->format('Y-m-d') : '';

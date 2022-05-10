@@ -18,6 +18,9 @@
     }
 </style>
 
+<p style="text-align: left;margin: 0 0 5px;font-size: 12px;color: gray;">
+    Статус блокировки чата: <b>{{ \App\Models\Chat::LOCK_STATUSES[$chat->lock_status] }}</b>
+</p>
 <form class="send_form">
     {{ csrf_field() }}
     <input type="hidden" name="chat_id" value="{{ $chat->id }}">
