@@ -11,7 +11,7 @@ use Encore\Admin\Show;
 class DisputeController extends AdminController
 {
     protected string $title = 'Споры';
-    protected string $icon = 'fa-bullhorn';
+    protected string $icon = 'fa-gavel';
 
     /**
      * Make a grid builder.
