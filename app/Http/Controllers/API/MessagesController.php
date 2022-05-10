@@ -162,7 +162,9 @@ class MessagesController extends Controller
             'route.to_country',
             'route.to_city',
             'order',
-            'rate'
+            'rate',
+            'dispute',
+            'dispute.problem',
         ]);
 
         # обнуляем счетчик "Кол-во непрочитанных сообщений по чату"
@@ -174,7 +176,7 @@ class MessagesController extends Controller
         # получаем сообщения по чату сгруппированные по дате создания
         if ($data['is_group_by_date'] ?? true) {
             $messages = Message::whereChatId($chat->id)
-                ->selectRaw('*, DATE(created_at) AS created_date')
+                ->selectRaw('*, DATE(created_at) AS created_date, EXISTS(SELECT 1 FROM disputes WHERE message_id = messages.id) AS is_dispute_message')
                 ->orderBy('id', $data['sorting'] ?? self::DEFAULT_SORTING)
                 ->get()
                 ->groupBy('created_date')
@@ -190,6 +192,7 @@ class MessagesController extends Controller
 
         # получаем сообщения по чату с пагинацией
         $messages = Message::whereChatId($chat->id)
+            ->selectRaw('*, EXISTS(SELECT 1 FROM disputes WHERE message_id = messages.id) AS is_dispute_message')
             ->orderBy('id', $data['sorting'] ?? self::DEFAULT_SORTING)
             ->paginate($data['count'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page'] ?? 1)
             ->toArray();

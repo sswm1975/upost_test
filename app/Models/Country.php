@@ -59,6 +59,7 @@ class Country extends Model
     /**
      * Получить список всех стран.
      *
+     * @param int $country_id
      * @return array
      */
     public static function getCountries(int $country_id = 0): array

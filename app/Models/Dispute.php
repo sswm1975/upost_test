@@ -103,7 +103,11 @@ class Dispute extends Model
 
     public function problem(): BelongsTo
     {
-        return $this->belongsTo(Problem::class, 'problem_id');
+        $lang = app()->getLocale();
+
+        return $this->belongsTo(Problem::class, 'problem_id')
+            ->select(['id', "name_{$lang} as name", 'days'])
+            ->withDefault();
     }
 
     public function user(): BelongsTo
