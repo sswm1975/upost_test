@@ -33,6 +33,7 @@ Route::group([
     # Чаты
     $router->get('chats', 'ChatController@index')->name('chats.index');
     $router->post('chats/add_message', 'ChatController@addMessage')->name('chats.add_message');
+    $router->put('chats/{chat}', 'ChatController@update')->name('chats.update');
 
     # Обратная связь
     $router->get('feedback', 'FeedbackController@index')->name('feedback.index');

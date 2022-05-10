@@ -6,6 +6,7 @@ use App\Events\MessagesCounterUpdate;
 use App\Models\Chat;
 use App\Models\Message;
 use Encore\Admin\Grid;
+use Encore\Admin\Form;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -53,7 +54,6 @@ class ChatController extends AdminController
                 TRIM(CONCAT(uc.`surname`, ' ', uc.`name`)) AS customer_name,
                 uc.phone AS customer_phone,
                 uc.email AS customer_email,
-                uc.photo AS customer_photo,
                 chats.customer_unread_count,
 
                 chats.order_id,
@@ -72,7 +72,6 @@ class ChatController extends AdminController
                 TRIM(CONCAT(up.`surname`, ' ', up.`name`)) AS performer_name,
                 up.phone AS performer_phone,
                 up.email AS performer_email,
-                up.photo AS performer_photo,
                 chats.performer_unread_count,
 
                 chats.route_id,
@@ -82,7 +81,7 @@ class ChatController extends AdminController
                 ctr.name_ru AS route_to_city,
                 r.deadline AS route_deadline,
 
-                EXISTS (SELECT 1 FROM disputes WHERE chat_id = chats.id) AS exists_dispute
+                EXISTS(SELECT 1 FROM disputes WHERE chat_id = chats.id) AS exists_dispute
             ")
             ->join('users as uc','uc.id', 'chats.customer_id')
             ->join('users as up','up.id', 'chats.performer_id')
@@ -104,10 +103,9 @@ class ChatController extends AdminController
         $grid->column('id', )->sortable();
         $grid->column('status')->showOtherField('status_name')->sortable();
         $grid->column('lock_status')
-            ->display(function ($lock) {
-                return Chat::LOCK_STATUSES[$lock];
-            })
+            ->editable('select', Chat::LOCK_STATUSES)
             ->sortable();
+
         $grid->column('created_at')->sortable();
         $grid->column('updated_at')->sortable();
         $grid->column('messages_cnt')
@@ -139,6 +137,18 @@ class ChatController extends AdminController
         $grid->column('route_deadline', 'Deadline');
 
         return $grid;
+    }
+
+    /**
+     * Make a form builder.
+     *
+     * @return Form
+     */
+    protected function form(): Form
+    {
+        $form = new Form(new Chat);
+        $form->select('lock_status')->options(Chat::LOCK_STATUSES);
+        return $form;
     }
 
     /**

@@ -81,7 +81,7 @@ EOT;
         $value = is_array($this->value) ? count($this->value) : $this->value;
 
         return <<<EOT
-<a href="#" data-toggle="modal" data-target="#grid-ajax-modal" data-renderable="{$renderable}" data-key="{$this->getKey()}">
+<a href="#grid-ajax-modal" data-toggle="modal" data-renderable="{$renderable}" data-key="{$this->getKey()}">
     <i class="fa fa-clone"></i>&nbsp;&nbsp;{$value}
 </a>
 EOT;

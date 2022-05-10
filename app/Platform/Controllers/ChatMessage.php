@@ -25,17 +25,28 @@ class ChatMessage implements Renderable
                 uc.phone AS customer_phone,
                 uc.email AS customer_email,
                 uc.photo AS customer_photo,
+                uc.gender AS customer_gender,
+                uc.birthday AS customer_birthday,
+                (select name_ru from cities where id = uc.city_id) AS customer_city,
+                uc.card_number AS customer_card_number,
+                uc.resume AS customer_resume,
+                uc.register_date AS customer_register_date,
                 chats.customer_unread_count,
 
                 chats.order_id,
                 o.`name` AS order_name,
                 o.`description` AS order_description,
                 o.product_link AS order_url,
+                (select name_ru from countries where id = o.from_country_id) AS order_from_country,
+                (select name_ru from cities where id = o.from_city_id) AS order_from_city,
+                (select name_ru from countries where id = o.to_country_id) AS order_to_country,
+                (select name_ru from cities where id = o.to_city_id) AS order_to_city,
                 o.price AS order_price,
                 o.currency AS order_currency,
                 o.products_count AS order_products_count,
                 o.user_price AS order_profit_price,
                 o.user_currency AS order_profit_currency,
+                o.created_at AS order_created_at,
                 o.deadline AS order_deadline,
                 o.images AS order_images,
 
@@ -44,14 +55,30 @@ class ChatMessage implements Renderable
                 up.phone AS performer_phone,
                 up.email AS performer_email,
                 up.photo AS performer_photo,
+                up.gender AS performer_gender,
+                up.birthday AS performer_birthday,
+                (select name_ru from cities where id = up.city_id) AS performer_city,
+                up.card_number AS performer_card_number,
+                up.resume AS performer_resume,
+                up.register_date AS performer_register_date,
                 chats.performer_unread_count,
 
                 chats.route_id,
+                r.status AS route_status,
                 cntfr.name_ru AS route_from_country,
                 cfr.name_ru AS route_from_city,
                 cnttr.name_ru AS route_to_country,
                 ctr.name_ru AS route_to_city,
+                r.created_at AS route_created_at,
                 r.deadline AS route_deadline,
+
+                rates.amount AS rate_amount,
+                rates.currency AS rate_currency,
+                rates.comment AS rate_comment,
+                rates.images AS rate_images,
+                rates.status AS rate_status,
+                rates.created_at AS rate_created_at,
+                rates.deadline AS rate_deadline,
 
                 EXISTS (SELECT 1 FROM disputes WHERE chat_id = chats.id) AS exists_dispute
             ")
@@ -59,6 +86,7 @@ class ChatMessage implements Renderable
         ->join('users as up','up.id', 'chats.performer_id')
         ->join('orders AS o','o.id', 'chats.order_id')
         ->join('routes AS r','r.id', 'chats.route_id')
+        ->join('rates','rates.chat_id', 'chats.id')
         ->join('countries AS cntfr','cntfr.id', 'r.from_country_id')
         ->join('countries AS cnttr','cnttr.id', 'r.to_country_id')
         ->leftJoin('cities AS cfr','cfr.id', 'r.from_city_id')
@@ -70,11 +98,11 @@ class ChatMessage implements Renderable
         }
 
         $messages = Message::with('user:id,name,surname,photo,role')
-            ->addSelect(DB::raw('*, (select 1 from disputes where message_id = messages.id) AS is_dispute_message'))
+            ->addSelect(DB::raw('*, EXISTS(SELECT 1 FROM disputes WHERE message_id = messages.id) AS is_dispute_message'))
             ->where('chat_id', $id)
             ->get();
 
-        $title = '<i class="fa fa-commenting"></i> Переписка по чату № ' . $chat->id;
+        $title = view('platform.chats.modal_title')->render();
 
         $content = view('platform.chats.modal_body')
             ->with('chat', $chat)
@@ -85,6 +113,8 @@ class ChatMessage implements Renderable
             ->with('chat', $chat)
             ->render();
 
-        return compact('title', 'content', 'footer');
+        $messages_cnt = count($messages);
+
+        return compact('title', 'content', 'footer', 'messages_cnt');
     }
 }

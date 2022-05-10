@@ -27,13 +27,17 @@
 </form>
 
 <script>
+    localStorage.setItem("messages_cnt", 0);
+    let $modal_body = $('#grid-ajax-modal .modal-body');
+
     function reload_chat() {
-        let $modal_body = $('#grid-ajax-modal .modal-body');
-        let prev_content = $modal_body.html();
+        if (! $('.nav-tabs li:eq(0)').hasClass('active')) return;
+
         $.get('/platform/_handle_renderable_?renderable=App_Platform_Controllers_ChatMessage&key={{ $chat->id }}', function (data) {
-            let content = data.content || '';
-            if (prev_content == content) return;
-            $modal_body.html(content);
+            if (localStorage.getItem("messages_cnt") == data.messages_cnt || 0) return;
+
+            localStorage.setItem("messages_cnt", data.messages_cnt);
+            $modal_body.html(data.content || '');
             $modal_body.scrollTop($modal_body[0].scrollHeight);
         });
     }
@@ -56,4 +60,15 @@
         });
         return false;
     });
+
+    // клик по табам
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        if ($(e.target).attr('href') === '#chat') {
+            $('#grid-ajax-modal .modal-footer').show();
+        } else {
+            $('#grid-ajax-modal .modal-footer').hide();
+        }
+    });
+
+    $('#grid-ajax-modal .modal-footer').show();
 </script>

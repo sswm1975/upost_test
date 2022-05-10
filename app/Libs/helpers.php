@@ -454,3 +454,17 @@ function getGender(string $gender): string
 
     return 'unknown';
 }
+
+/**
+ * Форматирование даты и времени.
+ *
+ * @param string $date
+ * @param bool $is_datetime
+ * @return false|string
+ */
+function formatDateTime($date = '', $is_datetime = true)
+{
+    if (empty($date)) return '';
+
+    return date($is_datetime ? 'd.m.Y H:i:s' : 'd.m.Y', strtotime($date));
+}
