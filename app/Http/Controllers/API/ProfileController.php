@@ -6,16 +6,14 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Mail\SendTokenUserDataChange;
-use App\Models\Review;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\UserChange;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProfileController extends Controller
 {
@@ -167,7 +165,12 @@ class ProfileController extends Controller
         $token = UserChange::create($data)->token;
 
         if ($data['sender'] == 'email') {
-            Mail::to($user->email)->send(new SendTokenUserDataChange($token, $user->lang));
+            $mail = new SendTokenUserDataChange($token, $user->lang);
+            if (! config('app.debug')) {
+                Mail::to($user->email)->send($mail);
+            } else {
+                Log::info(strip_tags($mail->render()));
+            }
 
             return response()->json([
                 'status'  => true,
@@ -213,11 +216,21 @@ class ProfileController extends Controller
      */
     public function updateLogin(Request $request): JsonResponse
     {
+        $auth_user_id =  $request->user()->id;
+
         $data = validateOrExit([
-            'phone'  => 'nullable|required_without:email|phone|unique:users,phone',
-            'email'  => 'nullable|required_without:phone|email|max:30|unique:users,email',
+            'phone'  => 'nullable|required_without:email|phone|unique:users,phone,' . $auth_user_id,
+            'email'  => 'nullable|required_without:phone|email|max:30|unique:users,email,' .  $auth_user_id,
             'sender' => 'in:email',
         ]);
+
+        if (
+            ($data['phone'] == $request->user()->phone && $data['email'] == $request->user()->email) ||
+            ($data['phone'] == $request->user()->phone && empty($data['email'])) ||
+            ($data['email'] == $request->user()->email && empty($data['phone']))
+        ) {
+            throw new ErrorException(__('message.data_not_changed'));
+        }
 
         return $this->sendVerificationCode($request->user(), $data);
     }

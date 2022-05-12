@@ -46,6 +46,7 @@ return [
     'job_not_found'           => 'Job not found.',
     'image_not_found'         => 'Image not found.',
     'lock_add_message'        => 'It is forbidden to add a message.',
+    'data_not_changed'        => 'The data has not changed.',
 
     'verification_code' => [
         'incorrect'         => 'Verification code is incorrect',
@@ -128,9 +129,10 @@ return [
     # Dispute attributes
     'dispute' => [
         'statuses' => [
-            'active'   => 'Active',
-            'in_work'  => 'In work',
-            'closed'   => 'Closed',
+            'active'    => 'Active',
+            'appointed' => 'Appointed',
+            'in_work'   => 'In work',
+            'closed'    => 'Closed',
         ],
     ],
 ];

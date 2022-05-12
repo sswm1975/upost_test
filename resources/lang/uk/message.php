@@ -45,6 +45,7 @@ return [
     'job_not_found'           => 'Завдання не знайдено.',
     'image_not_found'         => 'Зображення не знайдено.',
     'lock_add_message'        => 'Заборонено добавляти повідомлення.',
+    'data_not_changed'        => 'Дані не змінились.',
 
     'verification_code' => [
         'incorrect'         => 'Код підтвердження невірний',
@@ -127,9 +128,10 @@ return [
     # Dispute attributes
     'dispute' => [
         'statuses' => [
-            'active'   => 'Активний',
-            'in_work'  => 'В роботі',
-            'closed'   => 'Закритий',
+            'active'    => 'Активний',
+            'appointed' => 'Призначений',
+            'in_work'   => 'В роботі',
+            'closed'    => 'Закритий',
         ],
     ],
 ];
