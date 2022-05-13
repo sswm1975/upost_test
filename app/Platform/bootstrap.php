@@ -57,9 +57,6 @@ Admin::style(<<<CSS
     .nowrap {white-space: nowrap;}
 CSS);
 
-# Двойной клик на гриде: Переход на просмотр записи
-Admin::script('$("table tbody tr").off("dblclick").on("dblclick", function(){$.pjax({url:"/' . implode('/', request()->segments()) . '/" + $(this).data("key"), container:"#pjax-container"})});');
-
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
     $navbar->right(new Nav\FullScreen());
 });

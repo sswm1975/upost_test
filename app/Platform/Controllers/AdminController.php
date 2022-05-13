@@ -45,6 +45,13 @@ class AdminController extends Controller
     protected bool $enableStyleIndex = true;
 
     /**
+     * Enable double click in grid for index page (Двойной клик на гриде: Переход на просмотр записи).
+     *
+     * @var bool
+     */
+    protected bool $enableDblClick = false;
+
+    /**
      * Position the "Create" button on the right?
      *
      * @var bool
@@ -128,6 +135,10 @@ class AdminController extends Controller
             Admin::style(self::styleIndex());
         }
 
+        if ($this->enableDblClick) {
+            self::scriptEnableDblClick();
+        }
+
         Grid::init(function (Grid $grid) {
             $grid->disableFilter();
             $grid->disableExport();
@@ -163,11 +174,15 @@ EOT
             }
         });
 
-        return $content
-            ->title($this->title())
+        $content->title($this->title())
             ->description($this->description())
-            ->breadcrumb(...$this->breadcrumb())
-            ->body($this->grid());
+            ->breadcrumb(...$this->breadcrumb());
+
+        if (method_exists($this, 'menu')) {
+            $content->row($this->menu());
+        }
+
+        return $content->body($this->grid());
     }
 
     /**
@@ -286,4 +301,11 @@ EOT
 
 EOT;
     }
+
+    # Двойной клик на гриде: Переход на просмотр записи
+    protected static function scriptEnableDblClick()
+    {
+        Admin::script('$("table tbody tr").off("dblclick").on("dblclick", function(){$.pjax({url:"/' . implode('/', request()->segments()) . '/" + $(this).data("key"), container:"#pjax-container"})});');
+    }
+
 }

@@ -423,7 +423,6 @@ function convertPriceToUsd(float $price, string $currency): float
     return $price * $rate;
 }
 
-
 /**
  * Проверить и получить языковую настройку пользователя.
  *
@@ -462,7 +461,7 @@ function getGender(string $gender): string
  * @param bool $is_datetime
  * @return false|string
  */
-function formatDateTime($date = '', $is_datetime = true)
+function formatDateTime(string $date = '', bool $is_datetime = true)
 {
     if (empty($date)) return '';
 
