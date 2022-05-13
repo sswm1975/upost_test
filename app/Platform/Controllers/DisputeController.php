@@ -4,14 +4,41 @@ namespace App\Platform\Controllers;
 
 use App\Models\Chat;
 use App\Models\Dispute;
+use Encore\Admin\Facades\Admin;
+use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\DB;
 
 class DisputeController extends AdminController
 {
     protected string $title = 'Споры';
     protected string $icon = 'fa-gavel';
+
+    /**
+     * Формируем список меню с выбором языка.
+     *
+     * @param string $mailing
+     * @return View
+     */
+    public function menu()
+    {
+        $counts = Dispute::selectRaw('status, count(1) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->toArray();
+
+        $statuses = [];
+        foreach (Dispute::STATUSES as $status) {
+            $statuses[$status] = [
+                'name' => __("message.dispute.statuses.$status"),
+                'count' => $counts[$status] ?? 0,
+            ];
+        }
+
+        return view('platform.disputes.menu')->with('statuses', $statuses);
+    }
 
     /**
      * Make a grid builder.
@@ -20,6 +47,8 @@ class DisputeController extends AdminController
      */
     protected function grid(): Grid
     {
+        $status = request('status', Dispute::STATUS_ACTIVE);
+
         $grid = new Grid(new Dispute);
 
         $grid->disablePagination(false);
@@ -28,16 +57,26 @@ class DisputeController extends AdminController
         $grid->paginate(20);
 
         $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableView();
+            $actions->disableEdit();
             $actions->disableDelete();
         });
 
+        $grid->model()->addSelect(DB::raw('*, IFNULL((SELECT COUNT(1) FROM messages WHERE chat_id = disputes.chat_id), 0) AS messages_cnt'));
+
+        # FILTERS
+        if (Admin::user()->isRole('dispute_manager')) {
+            $grid->model()->where('admin_user_id', Admin::user()->id);
+        }
+        $grid->model()->where('status', $status);
+
         # COLUMNS
         $grid->column('id', 'Код')->sortable();
-        $grid->column('problem_id', 'Код проблемы')->sortable();
+        $grid->column('problem_id', 'Код П.')->sortable();
         $grid->column('problem.name', 'Проблема');
-        $grid->column('user_id', 'Код клиента')->sortable();
+        $grid->column('user_id', 'Код К.')->sortable();
         $grid->column('user.full_name', 'Клиент');
-        $grid->column('message.text', 'Описание');
+        $grid->column('message.text', 'Описание претензии')->limit(40);
         $grid->column('problem.days', 'Дней')->help('Кол-во дней на рассмотрение проблемы');
         $grid->column('deadline', 'Дата дедлайна')
             ->display(function () {
@@ -48,6 +87,20 @@ class DisputeController extends AdminController
         $grid->column('chat.lock_status', 'Статус блокировки')
             ->editable('select', Chat::LOCK_STATUSES)
             ->sortable();
+        if ($status != Dispute::STATUS_ACTIVE) {
+            $grid->column('admin_user_id', 'Код М.')->sortable();
+            $grid->column('admin_user.username', 'Менеджер');
+            $grid->column('messages_cnt', 'Сообщений в чате')
+                ->ajaxModal(ChatMessage::class, 700)
+                ->setAttributes(['align' => 'center'])
+                ->sortable();
+            $grid->column('unread_messages_count', 'Сообщений')
+                ->display(function ($count) {
+                    return $count ? "<span class='label label-danger'>$count</span>" : 'Новых нет';
+                })
+                ->setAttributes(['align' => 'center'])
+                ->help('Количество непрочитанных сообщений');
+        }
         $grid->column('created_at', 'Создано')->sortable();
         $grid->column('updated_at', 'Изменено')->sortable();
 
@@ -69,8 +122,11 @@ class DisputeController extends AdminController
         $form = new Form(new Dispute);
 
         $form->display('id', 'Код');
-        $form->date('deadline', 'Дата дедлайна');
+        if (Admin::user()->isAdministrator()) {
+            $form->select('admin_user_id', 'Менеджер')->options(Administrator::pluck('username', 'id'));
+        }
         $form->select('status', 'Статус')->options($statuses);
+        $form->date('deadline', 'Дата дедлайна');
         $form->select('chat.lock_status', 'Статус блокировки')
             ->options(Chat::LOCK_STATUSES);
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Encore\Admin\Auth\Database\Administrator;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -47,11 +48,13 @@ class Dispute extends Model
     use TimestampSerializable;
 
     public const STATUS_ACTIVE  = 'active';
+    public const STATUS_APPOINTED  = 'appointed';
     public const STATUS_IN_WORK = 'in_work';
     public const STATUS_CLOSED  = 'closed';
 
     const STATUSES = [
         self::STATUS_ACTIVE,
+        self::STATUS_APPOINTED,
         self::STATUS_IN_WORK,
         self::STATUS_CLOSED,
     ];
@@ -88,6 +91,9 @@ class Dispute extends Model
 
             if ($model->status == self::STATUS_CLOSED) {
                 $model->closed_user_id = request()->user()->id;
+            }
+            if ($model->admin_user_id > 0) {
+                $model->status = self::STATUS_APPOINTED;
             }
         });
     }
@@ -133,5 +139,56 @@ class Dispute extends Model
     public function message(): BelongsTo
     {
         return $this->belongsTo(Message::class, 'message_id');
+    }
+
+    public function admin_user(): BelongsTo
+    {
+        return $this->belongsTo(Administrator::class, 'admin_user_id');
+    }
+
+    ### SCOPES ###
+
+    /**
+     * Активные чаты.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('disputes.status', self::STATUS_ACTIVE);
+    }
+
+    /**
+     * Назначенные споры.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeAppointed($query)
+    {
+        return $query->where('disputes.status', self::STATUS_APPOINTED);
+    }
+
+    /**
+     * Споры в работе.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeInWork($query)
+    {
+        return $query->where('disputes.status', self::STATUS_IN_WORK);
+    }
+
+    /**
+     * Закрытые чаты.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeClosed($query)
+    {
+        return $query->where('disputes.status', self::STATUS_CLOSED);
     }
 }

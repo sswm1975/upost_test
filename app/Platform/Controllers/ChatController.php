@@ -81,7 +81,8 @@ class ChatController extends AdminController
                 ctr.name_ru AS route_to_city,
                 r.deadline AS route_deadline,
 
-                EXISTS(SELECT 1 FROM disputes WHERE chat_id = chats.id) AS exists_dispute
+                IFNULL(d.id, 0) AS exists_dispute,
+                IFNULL(d.unread_messages_count, 0) AS unread_messages_count
             ")
             ->join('users as uc','uc.id', 'chats.customer_id')
             ->join('users as up','up.id', 'chats.performer_id')
@@ -90,7 +91,8 @@ class ChatController extends AdminController
             ->join('countries AS cntfr','cntfr.id', 'r.from_country_id')
             ->join('countries AS cnttr','cnttr.id', 'r.to_country_id')
             ->leftJoin('cities AS cfr','cfr.id', 'r.from_city_id')
-            ->leftJoin('cities AS ctr','ctr.id', 'r.to_city_id');
+            ->leftJoin('cities AS ctr','ctr.id', 'r.to_city_id')
+            ->leftJoin('disputes AS d', 'd.chat_id', 'chats.id');
 
         # COLORS ROW GRID
         $grid->rows(function (Grid\Row $row) {
@@ -111,6 +113,13 @@ class ChatController extends AdminController
         $grid->column('messages_cnt')
             ->ajaxModal(ChatMessage::class, 700)
             ->sortable();
+
+        $grid->column('unread_messages_count', 'Unread')
+            ->display(function ($count) {
+                return $count ? "<span class='label label-danger'>$count</span>" : '';
+            })
+            ->setAttributes(['align'=>'center'])
+            ->help('Количество непрочитанных сообщений менеджером');
 
         $grid->column('customer_id', 'CId')->sortable();
         $grid->column('customer_name', 'Customer');
