@@ -168,5 +168,7 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'check' => 'Terms of agreement',
+    ],
 ];

@@ -152,9 +152,10 @@ class AuthController extends Controller
     public function register(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'phone'    => ['required', 'phone', 'unique:users'],
-            'email'    => ['required', 'email', 'max:30', 'unique:users'],
-            'password' => ['required', 'min:6', 'confirmed'],
+            'phone'    => 'required|phone|unique:users',
+            'email'    => 'required|email|max:30|unique:users',
+            'password' => 'required|min:6|confirmed',
+            'check'    => 'required|accepted',
         ]);
 
         $user = User::create($data);
