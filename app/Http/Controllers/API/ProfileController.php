@@ -200,8 +200,8 @@ class ProfileController extends Controller
                 }
                 return true;
             }],
-            'password'     => ['required', 'min:6', 'confirmed'],
-            'sender'       => 'in:email',
+            'password'     => 'required|min:6|confirmed',
+            'sender'       => 'required|in:email',
         ]);
 
         return $this->sendVerificationCode($request->user(), $data);
@@ -212,7 +212,7 @@ class ProfileController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException|ValidatorException
+     * @throws ValidationException|ValidatorException|ErrorException
      */
     public function updateLogin(Request $request): JsonResponse
     {
@@ -221,7 +221,7 @@ class ProfileController extends Controller
         $data = validateOrExit([
             'phone'  => 'nullable|required_without:email|phone|unique:users,phone,' . $auth_user_id,
             'email'  => 'nullable|required_without:phone|email|max:30|unique:users,email,' .  $auth_user_id,
-            'sender' => 'in:email',
+            'sender' => 'required|in:email',
         ]);
 
         if (
@@ -247,7 +247,7 @@ class ProfileController extends Controller
         $data = validateOrExit([
             'card_number' => 'nullable|required_without:card_name|bankcard',
             'card_name'   => 'nullable|required_without:card_number|max:50',
-            'sender'      => 'in:email',
+            'sender'      => 'required|in:email',
         ]);
 
         return $this->sendVerificationCode($request->user(), $data);

@@ -3922,7 +3922,7 @@
 									"formdata": [
 										{
 											"key": "card_number",
-											"value": "5167803207038238",
+											"value": "5375-4115-0260-4544",
 											"description": "Номер пластикової картки",
 											"type": "text"
 										},
@@ -3930,6 +3930,11 @@
 											"key": "card_name",
 											"value": "Вася Пупкин",
 											"description": "Ім'я та призвище на карті",
+											"type": "text"
+										},
+										{
+											"key": "sender",
+											"value": "email",
 											"type": "text"
 										}
 									]
@@ -7526,7 +7531,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/chats/{{chat_id}}/messages/show?is_group_by_date=0&count=5&page=1&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/chats/{{chat_id}}/messages/show?is_group_by_date=1&count=5&sorting=asc&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -7540,7 +7545,7 @@
 									"query": [
 										{
 											"key": "is_group_by_date",
-											"value": "0",
+											"value": "1",
 											"description": "Группировать по дате сообщения (опционально): \n1 - да (по умолчанию)\n0 - нет, используется пагинация"
 										},
 										{
@@ -7551,13 +7556,13 @@
 										{
 											"key": "page",
 											"value": "1",
-											"description": "Текущая страница  (опционально)"
+											"description": "Текущая страница  (опционально)",
+											"disabled": true
 										},
 										{
 											"key": "sorting",
 											"value": "asc",
-											"description": "Порядок сортировки (asc, desc)  (опционально)",
-											"disabled": true
+											"description": "Порядок сортировки (asc, desc)  (опционально)"
 										},
 										{
 											"key": "lang",
@@ -7807,7 +7812,7 @@
 										},
 										{
 											"key": "rate_id",
-											"value": "10",
+											"value": "1",
 											"description": "Код ставки",
 											"type": "text"
 										},
@@ -7819,7 +7824,7 @@
 										},
 										{
 											"key": "text",
-											"value": "test",
+											"value": "Не подобаеться товар",
 											"description": "Коментар",
 											"type": "text"
 										},

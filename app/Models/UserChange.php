@@ -69,6 +69,11 @@ class UserChange extends Model
         $this->attributes['password'] = getHashPassword($value);
     }
 
+    public function setCardNumberAttribute($value)
+    {
+        $this->attributes['card_number'] = str_replace('-', '', $value);
+    }
+
     /**
      * Generate the verification token.
      *
