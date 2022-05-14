@@ -390,12 +390,30 @@ class OrderController extends Controller
 
         $orders = $this->getOrdersByFilter($request->user(), $filters);
 
+        $prices = [
+            'price_min' => 0,
+            'price_max' => 0,
+        ];
+        $shops = [];
+
+        if (!empty($orders['data'])) {
+            $data = collect($orders['data']);
+            $prices = [
+                'price_min' => $data->min('price_usd'),
+                'price_max' => $data->max('price_usd'),
+            ];
+            $shop_slugs = $data->pluck('shop_slug')->unique()->all();
+            $shops = Shop::getBySlugs($shop_slugs);
+        }
+
         return response()->json([
             'status' => true,
             'count'  => $orders['total'],
             'page'   => $orders['current_page'],
             'pages'  => $orders['last_page'],
             'orders' => null_to_blank($orders['data']),
+            'prices' => $prices,
+            'shops'  => $shops,
         ]);
     }
 
