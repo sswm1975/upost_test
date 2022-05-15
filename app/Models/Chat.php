@@ -335,7 +335,10 @@ class Chat extends Model
      */
     public static function searchOrCreate(int $route_id, int $order_id, int $performer_id, int $customer_id)
     {
-        return static::firstOrCreate(['route_id' => $route_id, 'order_id' => $order_id,], ['performer_id' => $performer_id, 'customer_id' => $customer_id,]);
+        return static::firstOrCreate(
+            compact('route_id', 'order_id'),
+            compact('performer_id', 'customer_id')
+        );
     }
 
     /**

@@ -117,9 +117,10 @@ class DisputeController extends Controller
         $message = Message::create(Arr::only($data, ['chat_id', 'text', 'images', 'user_id']));
         $data['message_id'] = $message->id;
 
-        Dispute::create($data);
+        $dispute = Dispute::create($data);
 
-        Rate::find($data['rate_id'])->update(['status' => Rate::STATUS_DISPUTE]);
+        $dispute->chat()->update(['lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL]);
+        $dispute->rate()->update(['status' => Rate::STATUS_DISPUTE]);
 
         return response()->json([
             'status' => true,
