@@ -3,7 +3,7 @@
     .nav-statuses li:first-child {margin-left: 20px;}
     .nav-statuses li a {padding:4px 7px; color:#000; border-width: 1px 2px 0;}
     .nav-statuses li a.active {border-color: lightgray; background: white; border-bottom: 1px solid white;}
-    .nav-statuses .label {padding: 0.2em 0.4em 0.2em;}
+    .nav-statuses .label {padding: 0.1em 0.4em 0.1em 0.3em; border-radius: 50%;}
 </style>
 
 <ul class="nav nav-tabs nav-statuses">
