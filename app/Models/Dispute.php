@@ -92,9 +92,6 @@ class Dispute extends Model
             if ($model->status == self::STATUS_CLOSED) {
                 $model->closed_user_id = request()->user()->id;
             }
-            if ($model->admin_user_id > 0) {
-                $model->status = self::STATUS_APPOINTED;
-            }
         });
     }
 

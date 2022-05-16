@@ -16,24 +16,24 @@ Route::group([
     $router->get('/', 'DashboardController@index')->name('dashboard.index');
 
     # Клиенты
-    $router->get('clients', 'ClientController@index')->name('clients.index');
-    $router->get('clients/{id}', 'ClientController@show')->name('clients.show');
+    $router->get('clients', 'ClientController@index')->name('clients.index')->middleware('admin.permission:check,clients');
+    $router->get('clients/{id}', 'ClientController@show')->name('clients.show')->middleware('admin.permission:check,clients');;
 
     # Заказы
-    $router->get('orders', 'OrderController@index')->name('orders.index');
-    $router->get('orders/{id}', 'OrderController@show')->name('orders.show');
+    $router->get('orders', 'OrderController@index')->name('orders.index')->middleware('admin.permission:check,orders');
+    $router->get('orders/{id}', 'OrderController@show')->name('orders.show')->middleware('admin.permission:check,orders');
 
     # Маршруты
-    $router->get('routes', 'RouteController@index')->name('routes.index');
-    $router->get('routes/{id}', 'RouteController@show')->name('routes.show');
+    $router->get('routes', 'RouteController@index')->name('routes.index')->middleware('admin.permission:check,routes');
+    $router->get('routes/{id}', 'RouteController@show')->name('routes.show')->middleware('admin.permission:check,routes');
 
     # Споры
-    $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes');
+    $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes')->middleware('admin.permission:check,disputes');
 
     # Чаты
-    $router->get('chats', 'ChatController@index')->name('chats.index');
-    $router->post('chats/add_message', 'ChatController@addMessage')->name('chats.add_message');
-    $router->put('chats/{chat}', 'ChatController@update')->name('chats.update');
+    $router->get('chats', 'ChatController@index')->name('chats.index')->middleware('admin.permission:check,chats');
+    $router->post('chats/add_message', 'ChatController@addMessage')->name('chats.add_message')->middleware('admin.permission:check,chats');
+    $router->put('chats/{chat}', 'ChatController@update')->name('chats.update')->middleware('admin.permission:check,chats');
 
     # Обратная связь
     $router->get('feedback', 'FeedbackController@index')->name('feedback.index');

@@ -4,8 +4,10 @@ namespace App\Platform\Controllers;
 
 use App\Models\Chat;
 use App\Models\Dispute;
-use Encore\Admin\Facades\Admin;
+use App\Platform\Actions\Dispute\AppointDispute;
+use App\Platform\Actions\Dispute\InWorkDispute;
 use Encore\Admin\Auth\Database\Administrator;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Encore\Admin\Show;
@@ -17,20 +19,24 @@ class DisputeController extends AdminController
     protected string $icon = 'fa-gavel';
 
     /**
-     * Формируем список меню с выбором языка.
+     * Формируем список меню в разрезе статусов споров.
      *
-     * @param string $mailing
-     * @return View
+     * @return string
      */
-    public function menu()
+    public function menu(): string
     {
         $counts = Dispute::selectRaw('status, count(1) as total')
+            ->when(! Admin::user()->isAdministrator(), function ($query) {
+                return $query->where('admin_user_id', Admin::user()->id);
+            })
             ->groupBy('status')
             ->pluck('total', 'status')
             ->toArray();
 
         $statuses = [];
         foreach (Dispute::STATUSES as $status) {
+            if (Admin::user()->isRole('dispute_manager') && $status == Dispute::STATUS_ACTIVE) continue;
+
             $statuses[$status] = [
                 'name' => __("message.dispute.statuses.$status"),
                 'count' => $counts[$status] ?? 0,
@@ -53,13 +59,28 @@ class DisputeController extends AdminController
 
         $grid->disablePagination(false);
         $grid->disableColumnSelector(false);
+        $grid->disableRowSelector(false);
         $grid->disableCreateButton();
         $grid->paginate(20);
 
+        # Батчевые операции
+        $grid->batchActions(function ($batch) use ($status) {
+            # Назначить спор менеджеру
+            if (Admin::user()->isAdministrator() && $status == Dispute::STATUS_ACTIVE) {
+                $batch->add(new AppointDispute());
+            }
+            # Взять спор в работу
+            if (Admin::user()->inRoles(['administrator', 'dispute_manager']) && $status == Dispute::STATUS_APPOINTED) {
+                $batch->add(new InWorkDispute());
+            }
+        });
+
         $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableView();
-            $actions->disableEdit();
             $actions->disableDelete();
+            if (! Admin::user()->isAdministrator()) {
+                $actions->disableView();
+                $actions->disableEdit();
+            }
         });
 
         $grid->model()->addSelect(DB::raw('*, IFNULL((SELECT COUNT(1) FROM messages WHERE chat_id = disputes.chat_id), 0) AS messages_cnt'));
@@ -84,16 +105,22 @@ class DisputeController extends AdminController
             })
             ->sortable();
         $grid->column('status', 'Статус')->showOtherField('status_name')->sortable();
-        $grid->column('chat.lock_status', 'Статус блокировки')
-            ->editable('select', Chat::LOCK_STATUSES)
-            ->sortable();
+
         if ($status != Dispute::STATUS_ACTIVE) {
             $grid->column('admin_user_id', 'Код М.')->sortable();
             $grid->column('admin_user.username', 'Менеджер');
+        }
+
+        if ($status == Dispute::STATUS_IN_WORK) {
+            $grid->column('chat.lock_status', 'Статус блокировки')
+                ->editable('select', Chat::LOCK_STATUSES)
+                ->sortable();
+
             $grid->column('messages_cnt', 'Сообщений в чате')
                 ->ajaxModal(ChatMessage::class, 700)
                 ->setAttributes(['align' => 'center'])
                 ->sortable();
+
             $grid->column('unread_messages_count', 'Сообщений')
                 ->display(function ($count) {
                     return $count ? "<span class='label label-danger'>$count</span>" : 'Новых нет';
@@ -101,6 +128,7 @@ class DisputeController extends AdminController
                 ->setAttributes(['align' => 'center'])
                 ->help('Количество непрочитанных сообщений');
         }
+
         $grid->column('created_at', 'Создано')->sortable();
         $grid->column('updated_at', 'Изменено')->sortable();
 
@@ -122,13 +150,13 @@ class DisputeController extends AdminController
         $form = new Form(new Dispute);
 
         $form->display('id', 'Код');
+        $form->date('deadline', 'Дата дедлайна');
+        $form->select('chat.lock_status', 'Статус блокировки')->options(Chat::LOCK_STATUSES);
+
         if (Admin::user()->isAdministrator()) {
+            $form->select('status', 'Статус')->options($statuses);
             $form->select('admin_user_id', 'Менеджер')->options(Administrator::pluck('username', 'id'));
         }
-        $form->select('status', 'Статус')->options($statuses);
-        $form->date('deadline', 'Дата дедлайна');
-        $form->select('chat.lock_status', 'Статус блокировки')
-            ->options(Chat::LOCK_STATUSES);
 
         return $form;
     }

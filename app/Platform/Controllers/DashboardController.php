@@ -3,6 +3,7 @@
 namespace App\Platform\Controllers;
 
 use App\Http\Controllers\Controller;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Widgets\InfoBox;
 use Illuminate\Support\Facades\DB;
@@ -22,12 +23,12 @@ class DashboardController extends Controller
             ->title('Доска')
             ->description('&nbsp;')
             ->row(function ($row) {
-                $row->column(6, static::ordersInfoBox());
-                $row->column(6, static::routesInfoBox());
+                if (Admin::user()->can('orders')) $row->column(6, static::ordersInfoBox());
+                if (Admin::user()->can('routes')) $row->column(6, static::routesInfoBox());
             })
             ->row(function ($row) {
-                $row->column(6, static::clientsInfoBox());
-                $row->column(6, static::disputesInfoBox());
+                if (Admin::user()->can('clients')) $row->column(6, static::clientsInfoBox());
+                if (Admin::user()->can('disputes')) $row->column(6, static::disputesInfoBox());
             });
 
     }
