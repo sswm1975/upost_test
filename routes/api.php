@@ -222,6 +222,9 @@ Route::namespace('API')->group(function ($route) {
 
         # Получить справочник проблем для спора или выбранной проблемы.
         $route->get('problems/{id?}', 'DisputeController@getProblems');
+
+        # Получить количество споров по фильтру (используется админкой).
+        $route->get('counter', 'DisputeController@getDisputesCounter')->name('api.disputes.counter');
     });
 });
 

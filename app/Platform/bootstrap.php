@@ -18,6 +18,7 @@
  *
  */
 
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid\Column;
 use App\Platform\Extensions\Grid\Displayers\AjaxModal;
@@ -43,6 +44,8 @@ const ADMIN_LANGUAGES = [
 
 Admin::favicon(config('app.url').'/favicon.png');
 
+if (!Admin::user()) return;
+
 # Разрешаем перетаскивать модалки
 Admin::js('vendor/laravel-admin/AdminLTE/plugins/jQuery/draggable.min.js');
 Admin::script("$('.modal-dialog').draggable({handle: '.modal-header'});");
@@ -57,9 +60,14 @@ Admin::style(<<<CSS
     .nowrap {white-space: nowrap;}
 CSS);
 
+
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
+    if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {
+        $navbar->right(new Nav\DisputesCounter);
+    }
     $navbar->right(new Nav\FullScreen());
 });
+
 
 Form::forget(['map', 'editor']);
 
