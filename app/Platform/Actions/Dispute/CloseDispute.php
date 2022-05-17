@@ -4,16 +4,15 @@ namespace App\Platform\Actions\Dispute;
 
 use App\Models\Dispute;
 use Encore\Admin\Actions\BatchAction;
-use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Facades\Admin;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
-class InWorkDispute extends BatchAction
+class CloseDispute extends BatchAction
 {
-    public $name = 'Взять в работу';
+    public $name = 'Закрыть спор';
 
-    protected $selector = '.inwork-disputes';
+    protected $selector = '.close-disputes';
 
     public function handle(Collection $collection, Request $request)
     {
@@ -22,7 +21,7 @@ class InWorkDispute extends BatchAction
         }
 
         foreach ($collection as $model) {
-            $model->status = Dispute::STATUS_IN_WORK;
+            $model->status = Dispute::STATUS_CLOSED;
             $model->save();
         }
 

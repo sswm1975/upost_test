@@ -5,6 +5,7 @@ namespace App\Platform\Controllers;
 use App\Models\Chat;
 use App\Models\Dispute;
 use App\Platform\Actions\Dispute\AppointDispute;
+use App\Platform\Actions\Dispute\CloseDispute;
 use App\Platform\Actions\Dispute\InWorkDispute;
 use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Facades\Admin;
@@ -69,9 +70,16 @@ class DisputeController extends AdminController
             if (Admin::user()->isAdministrator() && $status == Dispute::STATUS_ACTIVE) {
                 $batch->add(new AppointDispute());
             }
-            # Взять спор в работу
-            if (Admin::user()->inRoles(['administrator', 'dispute_manager']) && $status == Dispute::STATUS_APPOINTED) {
-                $batch->add(new InWorkDispute());
+
+            if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {
+                # Взять спор в работу
+                if ($status == Dispute::STATUS_APPOINTED) {
+                    $batch->add(new InWorkDispute());
+                }
+                # Закрыть спор
+                if ($status == Dispute::STATUS_IN_WORK) {
+                    $batch->add(new CloseDispute());
+                }
             }
         });
 

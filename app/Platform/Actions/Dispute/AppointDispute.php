@@ -18,7 +18,7 @@ class AppointDispute extends BatchAction
     public function handle(Collection $collection, Request $request)
     {
         if (! Admin::user()->isAdministrator()) {
-            return $this->response()->error('Запрещено');
+            return $this->response()->error('Операция запрещена');
         }
 
         foreach ($collection as $model) {
