@@ -59,6 +59,13 @@ class Dispute extends Model
         self::STATUS_CLOSED,
     ];
 
+    const STATUS_COLORS = [
+        Dispute::STATUS_ACTIVE => 'danger',
+        Dispute::STATUS_APPOINTED => 'warning',
+        Dispute::STATUS_IN_WORK => 'success',
+        Dispute::STATUS_CLOSED => 'info',
+    ];
+
     public $timestamps = false;
     protected $guarded = ['id'];
     protected $dates = [
