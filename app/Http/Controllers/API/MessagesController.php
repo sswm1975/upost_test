@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Events\MessagesCounterUpdate;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
+use App\Models\Dispute;
 use App\Models\Message;
 use App\Models\Order;
 use App\Models\Route;
@@ -84,6 +85,11 @@ class MessagesController extends Controller
 
         $recipient_id = $auth_user_id == $chat->performer_id ? $chat->customer_id : $chat->performer_id;
         $this->broadcastCountUnreadMessages($recipient_id);
+
+        # если существует спор, то увеличиваем счетчик непрочитанных сообщений менеджером спора
+        if (Dispute::existsForChat($chat->id)) {
+            $chat->dispute->increment('unread_messages_count');
+        }
 
         return response()->json(['status' => true]);
     }

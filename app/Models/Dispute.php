@@ -60,10 +60,10 @@ class Dispute extends Model
     ];
 
     const STATUS_COLORS = [
-        Dispute::STATUS_ACTIVE => 'danger',
-        Dispute::STATUS_APPOINTED => 'warning',
-        Dispute::STATUS_IN_WORK => 'success',
-        Dispute::STATUS_CLOSED => 'info',
+        self::STATUS_ACTIVE => 'danger',
+        self::STATUS_APPOINTED => 'warning',
+        self::STATUS_IN_WORK => 'success',
+        self::STATUS_CLOSED => 'info',
     ];
 
     public $timestamps = false;
@@ -194,5 +194,17 @@ class Dispute extends Model
     public function scopeClosed($query)
     {
         return $query->where('disputes.status', self::STATUS_CLOSED);
+    }
+
+    /**
+     * Проверка существует ли для чата спор.
+     *
+     * @param $query
+     * @param int $chat_id
+     * @return mixed
+     */
+    public function scopeExistsForChat($query, int $chat_id)
+    {
+        return $query->whereChatId($chat_id)->exists();
     }
 }
