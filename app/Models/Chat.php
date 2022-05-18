@@ -277,6 +277,10 @@ class Chat extends Model
 
     /**
      * Чаты, по которым в сообщениях есть поисковая строка.
+     * Поиск выполняется:
+     * - по тексту сообщения;
+     * - по имени и фамилии заказчика;
+     * - по наименованию заказа.
      *
      * @param $query
      * @param string $search
@@ -286,6 +290,11 @@ class Chat extends Model
     {
         return $query->whereHas('messages', function ($q) use ($search) {
             $q->where('text', 'like', '%' . $search . '%');
+        })->orWhereHas('customer', function ($q) use ($search) {
+            $q->where('surname', 'like', '%' . $search . '%')
+            ->orWhere('name', 'like', '%' . $search . '%');
+        })->orWhereHas('order', function ($q) use ($search) {
+            $q->where('name', 'like', '%' . $search . '%');
         });
     }
 
