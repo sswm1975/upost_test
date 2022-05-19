@@ -138,6 +138,9 @@ return [
         'image' => [
             'base64_image' => 'Image invalid format.',
         ],
+        'photo' => [
+            'base64_image' => 'Image invalid format.',
+        ],
         'phone' => [
             'phone' => 'Phone is incorrect.',
         ],
