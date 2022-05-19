@@ -376,13 +376,13 @@ class OrderController extends Controller
             'date_from'      => 'sometimes|required|date',
             'date_to'        => 'sometimes|required|date|after_or_equal:date_from',
             'city_from'      => 'sometimes|required|array',
-            'city_from.*'    => 'required|integer',
+            'city_from.*'    => 'nullable|integer',
             'city_to'        => 'sometimes|required|array',
-            'city_to.*'      => 'required|integer',
+            'city_to.*'      => 'nullable|integer',
             'country_from'   => 'sometimes|required|array',
-            'country_from.*' => 'required|integer',
+            'country_from.*' => 'nullable|integer',
             'country_to'     => 'sometimes|required|array',
-            'country_to.*'   => 'required|integer',
+            'country_to.*'   => 'nullable|integer',
             'price_from'     => 'sometimes|required|numeric',
             'price_to'       => 'sometimes|required|numeric',
             'currency'       => 'sometimes|required|in:' . implode(',', config('app.currencies')),
@@ -474,16 +474,16 @@ class OrderController extends Controller
             ->when(!empty($filters['date_to']), function ($query) use ($filters) {
                 return $query->where('orders.deadline', '<=', $filters['date_to']);
             })
-            ->when(!empty($filters['city_from']), function ($query) use ($filters) {
+            ->when(!empty(array_filter($filters['city_from'] ?? [])), function ($query) use ($filters) {
                 return $query->whereIn('orders.from_city_id', $filters['city_from']);
             })
-            ->when(!empty($filters['city_to']), function ($query) use ($filters) {
+            ->when(!empty(array_filter($filters['city_to'] ?? [])), function ($query) use ($filters) {
                 return $query->whereIn('orders.to_city_id', $filters['city_to']);
             })
-            ->when(!empty($filters['country_from']), function ($query) use ($filters) {
+            ->when(!empty(array_filter($filters['country_from'] ?? [])), function ($query) use ($filters) {
                 return $query->whereIn('orders.from_country_id', $filters['country_from']);
             })
-            ->when(!empty($filters['country_to']), function ($query) use ($filters) {
+            ->when(!empty(array_filter($filters['country_to'] ?? [])), function ($query) use ($filters) {
                 return $query->whereIn('orders.to_country_id', $filters['country_to']);
             })
             ->when(!empty($filters['price_from']), function ($query) use ($filters, $rate) {
