@@ -34,17 +34,25 @@ HTML;
             'admin_user_id' => Admin::user()->isAdministrator() ? 0 : Admin::user()->id,
         ]);
 
+        $message = Admin::user()->isAdministrator() ? 'Поступ новый спор!': 'Вам назначен спор!';
+
         return <<<SCRIPT
 
-let disputes_counter = $('.navbar-custom-menu').find('#js-disputes_counter');
+
 
 function update_disputes_counter() {
-    $.get('$url', function(response) {
-        disputes_counter.text(response.value ? response.value : '');
-    });
-}
+    let js_disputes_counter = $('.navbar-custom-menu').find('#js-disputes_counter');
+    let disputes_counter = 1*js_disputes_counter.text();
 
-setInterval(update_disputes_counter, 10000);
+    $.get('$url', function(response) {
+        if (response.value > disputes_counter) {
+            $.admin.toastr.warning('$message', 'Внимание', {positionClass:"toast-top-center",timeOut:0});
+        }
+        js_disputes_counter.text(response.value ? response.value : '');
+    });
+};
+
+update_disputes_counter();
 
 SCRIPT;
     }

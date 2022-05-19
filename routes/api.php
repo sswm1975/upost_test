@@ -224,7 +224,7 @@ Route::namespace('API')->group(function ($route) {
         $route->get('problems/{id?}', 'DisputeController@getProblems');
 
         # Получить количество споров по фильтру (используется админкой).
-        $route->get('counter', 'DisputeController@getDisputesCounter')->name('api.disputes.counter');
+        $route->get('counter', 'DisputeController@getDisputesCounter')->name('api.disputes.counter')->withoutMiddleware(MIDDLEWARE_AUTH_BASIC);
     });
 });
 
