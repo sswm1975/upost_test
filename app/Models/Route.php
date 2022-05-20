@@ -120,7 +120,7 @@ class Route extends Model
             return $query->whereIn('status', [self::STATUS_ACTIVE, self::STATUS_IN_WORK]);
         }
         if ($status == self::STATUS_CLOSED) {
-            return $query->whereIn('status', [self::STATUS_CLOSED, self::STATUS_SUCCESSFUL, self::STATUS_BAN]);
+            return $query->whereIn('status', [self::STATUS_CLOSED, self::STATUS_SUCCESSFUL, self::STATUS_BANNED]);
         }
         return $query->where('status', $status);
     }
