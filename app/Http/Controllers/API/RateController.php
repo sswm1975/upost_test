@@ -49,6 +49,13 @@ class RateController extends Controller
     {
         $data = validateOrExit(self::rules4saveRate());
 
+        # проверям запрет на превышение суммы вознаграждения, установленного на заказе
+        $order = Order::find($data['order_id'], ['user_price_usd', 'not_more_price']);
+        $amount_usd = convertPriceToUsd($data['amount'], $data['currency']);
+        if ($order->not_more_price || $amount_usd > $order->user_price_usd) {
+            throw new ErrorException(__('message.rate_exists_limit_user_price'));
+        }
+
         # запрещаем дублировать ставку
         $is_double = Rate::active()->where(Arr::only($data, ['user_id', 'order_id', 'route_id']))->count();
         if ($is_double) throw new ErrorException(__('message.rate_add_double'));
@@ -62,6 +69,8 @@ class RateController extends Controller
 
         # создаем ставку
         Rate::create($data);
+
+        Chat::addSystemMessage($chat->id, 'performer_suggested_route');
 
         return response()->json(['status' => true]);
     }

@@ -31,6 +31,7 @@ return [
     'not_last_rate'           => 'Not last rate.',
     'rate_not_accepted'       => 'Rate not accepted.',
     'rate_accepted'           => 'Rate accepted.',
+    'rate_exists_limit_user_price' => 'The amount of remuneration should not exceed the amount of remuneration indicated on the order.',
     'unique_review'           => 'You have already reviewed this job',
     'review_not_allowed'      => 'You can not leave review for this job',
     'review_not_ready'        => 'You can not leave review for unfinished job',
