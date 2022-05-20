@@ -42,6 +42,7 @@ class DashboardController extends Controller
     {
         $cnt = DB::table('users')
             ->selectRaw('COUNT(1) AS total, IFNULL(SUM(IF(register_date>?,1,0)),0) AS today', [date('Y-m-d') . ' 00:00:00'])
+            ->where('id', '>', 0)
             ->first();
 
         return new InfoBox('Клиенты', 'users', 'yellow', route('platform.clients.index'), "{$cnt->today} / {$cnt->total}");
