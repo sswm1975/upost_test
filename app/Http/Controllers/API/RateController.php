@@ -52,8 +52,8 @@ class RateController extends Controller
         # проверям запрет на превышение суммы вознаграждения, установленного на заказе
         $order = Order::find($data['order_id'], ['user_price_usd', 'not_more_price']);
         $amount_usd = convertPriceToUsd($data['amount'], $data['currency']);
-        if ($order->not_more_price || $amount_usd > $order->user_price_usd) {
-            throw new ErrorException(__('message.rate_exists_limit_user_price'));
+        if ($order->not_more_price && $amount_usd > $order->user_price_usd) {
+            throw new ErrorException(__('message.rate_exists_limit_user_price') . ' ' . $amount_usd);
         }
 
         # запрещаем дублировать ставку
