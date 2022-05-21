@@ -87,7 +87,7 @@ class Message extends Model
      */
     public function getTextAttribute($text): string
     {
-        return empty($this->user_id) ? system_message($text) : $text;
+        return $this->user_id == SYSTEM_USER_ID ? system_message($text) : $text;
     }
 
     public function getImagesAttribute($images): array

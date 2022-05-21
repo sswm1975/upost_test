@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+const SYSTEM_USER_ID = 0;
+
 /**
  * Convert Null to Blank string.
  *

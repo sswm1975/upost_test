@@ -370,4 +370,28 @@ class Chat extends Model
 
         return (int) $customer_unread_count + (int) $performer_unread_count;
     }
+
+    /**
+     * Добавить системное сообщение.
+     *
+     * @param int $chat_id
+     * @param string $alias
+     * @return bool
+     */
+    public static function addSystemMessage(int $chat_id, string $alias): bool
+    {
+        if (! $chat = self::find($chat_id)) return false;
+
+        Message::create([
+            'chat_id' => $chat_id,
+            'user_id' => SYSTEM_USER_ID,
+            'text'    => $alias,
+        ]);
+
+        $chat->customer_unread_count = $chat->customer_unread_count + 1;
+        $chat->performer_unread_count = $chat->performer_unread_count + 1;
+        $chat->save();
+
+        return true;
+    }
 }
