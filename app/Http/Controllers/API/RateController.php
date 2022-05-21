@@ -49,27 +49,27 @@ class RateController extends Controller
     {
         $data = validateOrExit(self::rules4saveRate());
 
-        # проверям запрет на превышение суммы вознаграждения, установленного на заказе
-        $order = Order::find($data['order_id'], ['user_price_usd', 'not_more_price']);
-        $amount_usd = convertPriceToUsd($data['amount'], $data['currency']);
-        if ($order->not_more_price && $amount_usd > $order->user_price_usd) {
-            throw new ErrorException(__('message.rate_exists_limit_user_price') . ' ' . $amount_usd);
+        # запрещаем дублировать ставку
+        $is_double = Rate::active()->where(Arr::only($data, ['user_id', 'order_id', 'route_id']))->exists();
+        if ($is_double) {
+            throw new ErrorException(__('message.rate_add_double'));
         }
 
-        # запрещаем дублировать ставку
-        $is_double = Rate::active()->where(Arr::only($data, ['user_id', 'order_id', 'route_id']))->count();
-        if ($is_double) throw new ErrorException(__('message.rate_add_double'));
-
-        # узнаем владельца заказа
-        $order_user_id = Order::find($data['order_id'], 'user_id')->user_id;
+        # проверяем запрет на превышение суммы вознаграждения, установленного на заказе
+        $order = Order::find($data['order_id'], ['user_price_usd', 'not_more_price', 'user_id']);
+        $amount_usd = convertPriceToUsd($data['amount'], $data['currency']);
+        if ($order->not_more_price && $amount_usd > $order->user_price_usd) {
+            throw new ErrorException(__('message.rate_exists_limit_user_price'));
+        }
 
         # ищем существующий чат или создаем новый чат
-        $chat = Chat::searchOrCreate($data['route_id'], $data['order_id'], $data['user_id'], $order_user_id);
+        $chat = Chat::searchOrCreate($data['route_id'], $data['order_id'], $data['user_id'], $order->user_id);
         $data['chat_id'] = $chat->id;
 
         # создаем ставку
         Rate::create($data);
 
+        # информируем в чат, что путешественник предложил свой маршрут
         Chat::addSystemMessage($chat->id, 'performer_suggested_route');
 
         return response()->json(['status' => true]);
