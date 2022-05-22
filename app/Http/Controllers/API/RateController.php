@@ -190,14 +190,20 @@ class RateController extends Controller
      *
      * @param int $rate_id
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function deleteRate(int $rate_id): JsonResponse
     {
-        $affected = Rate::isOwnerByKey($rate_id, [Rate::STATUS_ACTIVE, Rate::STATUS_CANCELED])->delete();
+        if (! $rate = Rate::isOwnerByKey($rate_id, [Rate::STATUS_ACTIVE, Rate::STATUS_CANCELED])->first()) {
+            throw new ErrorException(__('message.rate_not_found'));
+        }
 
-        return response()->json([
-            'status' => $affected,
-        ]);
+        $rate->delete();
+
+        # информируем в чат, что путешественник удалил свой маршрут
+        Chat::addSystemMessage($rate->chat_id, 'performer_deleted_route');
+
+        return response()->json(['status' => true]);
     }
 
     /**

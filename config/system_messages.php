@@ -16,6 +16,11 @@ return [
         'ru' => 'Путешественник отменил маршрут.',
         'uk' => 'Мандрівник скасував маршрут.',
     ],
+    'performer_deleted_route' => [
+        'en' => 'The traveler deleted a route.',
+        'ru' => 'Путешественник удалил маршрут.',
+        'uk' => 'Мандрівник видалив маршрут.',
+    ],
     'customer_paid_order' => [
         'en' => 'The customer paid for the order.',
         'ru' => 'Заказчик оплатил заказ.',
