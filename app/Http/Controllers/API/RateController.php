@@ -164,18 +164,24 @@ class RateController extends Controller
 
     /**
      * Отменить ставку.
-     * (доступ имеет только владелец ставки; ставка должна быть активной)
+     * (доступ имеет только владелец ставки (исполнитель); ставка должна быть активной)
      *
      * @param int $rate_id
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function cancelRate(int $rate_id): JsonResponse
     {
-        $affected_rows = Rate::isOwnerByKey($rate_id)->update(['status' => Rate::STATUS_CANCELED]);
+        if (! $rate = Rate::isOwnerByKey($rate_id)->first()) {
+            throw new ErrorException(__('message.rate_not_found'));
+        }
 
-        return response()->json([
-            'status' => $affected_rows > 0,
-        ]);
+        $rate->update(['status' => Rate::STATUS_CANCELED]);
+
+        # информируем в чат, что путешественник отменил свой маршрут
+        Chat::addSystemMessage($rate->chat_id, 'performer_canceled_route');
+
+        return response()->json(['status' => true]);
     }
 
     /**
