@@ -332,24 +332,20 @@ class RateController extends Controller
             'payed_at'    => gmdate('Y-m-d H:i:s', strtotime("+2 hours", $liqpay['end_date'] / 1000)),
         ]);
 
-        $rate = Rate::find($rate_id, ['id', 'order_id', 'status', 'is_read']);
-        if (! $rate) throw new ErrorException(__('message.rate_not_found'));
-
-        DB::beginTransaction();
-        try {
-            $rate->status = Rate::STATUS_ACCEPTED;
-            $rate->is_read = true;
-            $rate->save();
-            $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
-            DB::commit();
-            $status = true;
-        } catch (\Exception $e) {
-            DB::rollback();
-            $status = false;
+        if (! $rate = Rate::find($rate_id, ['id', 'order_id', 'status', 'is_read'])) {
+            throw new ErrorException(__('message.rate_not_found'));
         }
 
+        $rate->status = Rate::STATUS_ACCEPTED;
+        $rate->is_read = true;
+        $rate->save();
+        $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
+
+        # информируем в чат, что заказчик оплатил заказ.
+        Chat::addSystemMessage($rate->chat_id, 'customer_paid_order');
+
         return response()->json([
-            'status' => $status,
+            'status' => true,
             'data'   => $liqpay,
         ]);
     }
@@ -364,7 +360,7 @@ class RateController extends Controller
      */
     public function buyedRate(int $rate_id): JsonResponse
     {
-        if (! $rate = Rate::whereKey($rate_id)->first(['id'])) {
+        if (! $rate = Rate::isOwnerByKey($rate_id, [Rate::STATUS_ACCEPTED])->first()) {
             throw new ErrorException(__('message.rate_not_found'));
         }
 
@@ -372,12 +368,15 @@ class RateController extends Controller
             'images' => 'required|array|max:5',
         ]);
 
-        $affected = $rate->update([
+        $rate->update([
             'images' => $data['images'],
             'status' => Rate::STATUS_BUYED,
         ]);
 
-        return response()->json(['status' => $affected]);
+        # информируем в чат, что заказчик оплатил заказ.
+        Chat::addSystemMessage($rate->chat_id, 'performer_buyed_product');
+
+        return response()->json(['status' => true]);
     }
 
     /**
