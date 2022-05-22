@@ -308,4 +308,14 @@ return [
     */
     'liqpay_public_key' => env('LIQPAY_PUBLIC_KEY', ''),
     'liqpay_private_key' => env('LIQPAY_PRIVATE_KEY', ''),
+
+    /*
+    |--------------------------------------------------------------------------
+    | WORDPRESS URL.
+    |--------------------------------------------------------------------------
+    |
+    | Ссылка на клиентскую часть.
+    |
+    */
+    'wordpress_url' => env('WORDPRESS_URL', ''),
 ];
