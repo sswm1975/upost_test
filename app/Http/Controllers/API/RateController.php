@@ -212,19 +212,27 @@ class RateController extends Controller
      *
      * @param int $rate_id
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function rejectRate(int $rate_id): JsonResponse
     {
-        $affected_rows = Rate::whereKey($rate_id)
+        $rate = Rate::whereKey($rate_id)
             ->active()
             ->whereHas('order', function($query) {
                 $query->owner();
             })
-            ->update(['status' => Rate::STATUS_REJECTED, 'is_read' => 1]);
+            ->first();
 
-        return response()->json([
-            'status' => $affected_rows > 0,
-        ]);
+        if (! $rate) {
+            throw new ErrorException(__('message.rate_not_found'));
+        }
+
+        $rate->update(['status' => Rate::STATUS_REJECTED, 'is_read' => 1]);
+
+        # информируем в чат, что путешественник удалил свой маршрут
+        Chat::addSystemMessage($rate->chat_id, 'customer_rejected_route');
+
+        return response()->json(['status' => true]);
     }
 
     /**

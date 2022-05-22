@@ -21,6 +21,11 @@ return [
         'ru' => 'Путешественник удалил маршрут.',
         'uk' => 'Мандрівник видалив маршрут.',
     ],
+    'customer_rejected_route' => [
+        'en' => 'The customer rejected a route.',
+        'ru' => 'Заказчик отклонил маршрут.',
+        'uk' => 'Замовник відхилив маршрут.',
+    ],
     'customer_paid_order' => [
         'en' => 'The customer paid for the order.',
         'ru' => 'Заказчик оплатил заказ.',
