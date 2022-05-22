@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\Order;
 use App\Models\Chat;
+use App\Models\Rate;
 use App\Models\Route;
 use App\Models\Shop;
 use App\Models\User;
@@ -320,7 +321,11 @@ class OrderController extends Controller
                 'to_city',
                 'wait_range',
                 'user',
+                'rates',
             ])
+            ->with(['rates' => function($q) {
+                $q->whereIn('status', [Rate::STATUS_ACCEPTED, Rate::STATUS_BUYED, Rate::STATUS_SUCCESSFUL, Rate::STATUS_DONE]);
+            }])
             ->withCount([
                 'rates as has_rate',
             ])
