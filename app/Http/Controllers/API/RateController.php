@@ -41,6 +41,7 @@ class RateController extends Controller
 
     /**
      * Создать ставку.
+     * (имеет право только владелец маршрута)
      *
      * @return JsonResponse
      * @throws ValidatorException|ValidationException|ErrorException
@@ -77,6 +78,7 @@ class RateController extends Controller
 
     /**
      * Изменить ставку.
+     * (имеет право только владелец маршрута)
      *
      * @param int $rate_id
      * @return JsonResponse
@@ -84,14 +86,38 @@ class RateController extends Controller
      */
     public function updateRate(int $rate_id): JsonResponse
     {
-        if (! $rate = Rate::isOwnerByKey($rate_id)->first(['id'])) {
+        if (! $rate = Rate::isOwnerByKey($rate_id)->first()) {
             throw new ErrorException(__('message.rate_not_found'));
         }
+
+        # общая валидация параметров
         $data = validateOrExit(self::rules4saveRate());
 
-        $affected = $rate->update($data);
+        # проверяем запрет на превышение суммы вознаграждения, установленного на заказе
+        $order = Order::find($data['order_id'], ['user_price_usd', 'not_more_price', 'user_id']);
+        $amount_usd = convertPriceToUsd($data['amount'], $data['currency']);
+        if ($order->not_more_price && $amount_usd > $order->user_price_usd) {
+            throw new ErrorException(__('message.rate_exists_limit_user_price'));
+        }
 
-        return response()->json(['status' => $affected]);
+        # ищем, что изменилось
+        $changes = [];
+        foreach ($data as $key => $value) {
+            if ($rate->$key != $value) {
+                $changes[] = $key . ': ' . $rate->$key . ' > ' . $value;
+            }
+        }
+
+        if (empty($changes)) {
+            return response()->json(['status' => true]);
+        }
+
+        $rate->update($data);
+
+        # информируем в чат, что путешественник обновил свой маршрут
+        Chat::addSystemMessage($rate->chat_id, 'performer_updated_route');
+
+        return response()->json(['status' => true, 'changes' => $changes]);
     }
 
     /**
