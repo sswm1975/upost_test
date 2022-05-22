@@ -14,9 +14,10 @@ class Liqpay
      * @param string $currency
      * @param string $description
      * @param string $language
+     * @param string $callback_url
      * @return array
      */
-    public static function create_params(int $user_id, string $user_name, int $rate_id, float $amount, string $currency, string $description = '', string $language = ''): array
+    public static function create_params(int $user_id, string $user_name, int $rate_id, float $amount, string $currency, string $description = '', string $language = '', string $callback_url = ''): array
     {
         $public_key = config('app.liqpay_public_key');
         $private_key = config('app.liqpay_private_key');
@@ -41,8 +42,8 @@ class Liqpay
             'order_id'         => self::create_order_id(),           # Уникальный ID покупки в Вашем магазине. Максимальная длина 255 символов.
             'language'         => $language,                         # Язык клиента ru, uk, en.
             'paytypes'         => 'card',                            # Указывается способ оплаты, которые будут отображены на чекауте. Возможные значения card - оплата картой, liqpay - через кабинет liqpay, privat24 - через кабинет приват24, masterpass - через кабинет masterpass, moment_part - рассрочка, cash - наличными, invoice - счет на e-mail, qr - сканирование qr-кода. Если параметр не передан, то применяются настройки магазина, вкладка Checkout.
-            'result_url'       => config('app.wordpress_url'),   # URL в Вашем магазине, на который покупатель будет переадресован после завершения покупки.
-            'server_url'       => config('app.wordpress_url'),   # URL API в Вашем магазине для уведомлений об изменении статуса платежа (сервер->сервер).
+            'result_url'       => $callback_url,                     # URL в Вашем магазине, на который покупатель будет переадресован после завершения покупки.
+            'server_url'       => $callback_url,                     # URL API в Вашем магазине для уведомлений об изменении статуса платежа (сервер->сервер).
             'sandbox'          => '1',                               # Включает тестовый режим: 1-Да, 0-Нет. При тестовом режиме средства с карты плательщика не списываются.
         ];
 

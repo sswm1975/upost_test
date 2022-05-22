@@ -219,6 +219,7 @@ class RateController extends Controller
         $amount = $rate->order->price + $rate->amount;
 
         $user = $request->user();
+        $callback_url = request('callback_url', config('app.wordpress_url'));
 
         $params = Liqpay::create_params(
             $user->id,
@@ -228,6 +229,7 @@ class RateController extends Controller
             'UAH',
             'Оплата заказа "' . $rate->order->name . '"',
             'ru',
+            $callback_url,
         );
 
         return response()->json([
