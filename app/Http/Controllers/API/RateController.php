@@ -402,9 +402,10 @@ class RateController extends Controller
         $rate->status = Rate::STATUS_SUCCESSFUL;
         $rate->save();
 
-        return response()->json([
-            'status' => true,
-        ]);
+        # информируем в чат, что заказчик оплатил заказ.
+        Chat::addSystemMessage($rate->chat_id, 'customer_received_order');
+
+        return response()->json(['status' => true]);
     }
 
     /**
