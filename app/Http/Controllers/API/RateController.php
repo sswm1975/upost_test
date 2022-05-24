@@ -63,15 +63,8 @@ class RateController extends Controller
             throw new ErrorException(__('message.rate_exists_limit_user_price'));
         }
 
-        # ищем существующий чат или создаем новый чат
-        $chat = Chat::searchOrCreate($data['route_id'], $data['order_id'], $data['user_id'], $order->user_id);
-        $data['chat_id'] = $chat->id;
-
         # создаем ставку
         Rate::create($data);
-
-        # информируем в чат, что путешественник предложил свой маршрут
-        Chat::addSystemMessage($chat->id, 'performer_suggested_route');
 
         return response()->json(['status' => true]);
     }
@@ -100,24 +93,9 @@ class RateController extends Controller
             throw new ErrorException(__('message.rate_exists_limit_user_price'));
         }
 
-        # ищем, что изменилось
-        $changes = [];
-        foreach ($data as $key => $value) {
-            if ($rate->$key != $value) {
-                $changes[] = $key . ': ' . $rate->$key . ' > ' . $value;
-            }
-        }
-
-        if (empty($changes)) {
-            return response()->json(['status' => true]);
-        }
-
         $rate->update($data);
 
-        # информируем в чат, что путешественник обновил свой маршрут
-        Chat::addSystemMessage($rate->chat_id, 'performer_updated_route');
-
-        return response()->json(['status' => true, 'changes' => $changes]);
+        return response()->json(['status' => true]);
     }
 
     /**
@@ -178,9 +156,6 @@ class RateController extends Controller
 
         $rate->update(['status' => Rate::STATUS_CANCELED]);
 
-        # информируем в чат, что путешественник отменил свой маршрут
-        Chat::addSystemMessage($rate->chat_id, 'performer_canceled_route');
-
         return response()->json(['status' => true]);
     }
 
@@ -199,9 +174,6 @@ class RateController extends Controller
         }
 
         $rate->delete();
-
-        # информируем в чат, что путешественник удалил свой маршрут
-        Chat::addSystemMessage($rate->chat_id, 'performer_deleted_route');
 
         return response()->json(['status' => true]);
     }
@@ -228,9 +200,6 @@ class RateController extends Controller
         }
 
         $rate->update(['status' => Rate::STATUS_REJECTED, 'is_read' => 1]);
-
-        # информируем в чат, что путешественник удалил свой маршрут
-        Chat::addSystemMessage($rate->chat_id, 'customer_rejected_route');
 
         return response()->json(['status' => true]);
     }
@@ -336,13 +305,17 @@ class RateController extends Controller
             throw new ErrorException(__('message.rate_not_found'));
         }
 
+        # ищем существующий чат или создаем новый чат
+        $chat = Chat::searchOrCreate($rate->route_id, $rate->order_id, $rate->user_id, $liqpay['info']['user_id']);
+
         $rate->status = Rate::STATUS_ACCEPTED;
         $rate->is_read = true;
+        $rate->chat_id = $chat->id;
         $rate->save();
         $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
 
         # информируем в чат, что заказчик оплатил заказ.
-        Chat::addSystemMessage($rate->chat_id, 'customer_paid_order');
+        Chat::addSystemMessage($chat->id, 'customer_paid_order');
 
         return response()->json([
             'status' => true,
