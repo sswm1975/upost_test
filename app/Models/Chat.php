@@ -380,13 +380,15 @@ class Chat extends Model
      */
     public static function addSystemMessage(int $chat_id, string $alias): bool
     {
-        if (! $chat = self::find($chat_id)) return false;
+        if (! $chat = self::find($chat_id, ['id', 'customer_unread_count', 'performer_unread_count'])) {
+            return false;
+        }
 
-        Message::create([
-            'chat_id' => $chat_id,
-            'user_id' => SYSTEM_USER_ID,
-            'text'    => $alias,
-        ]);
+        $message = new Message;
+        $message->chat_id = $chat_id;
+        $message->user_id = SYSTEM_USER_ID;
+        $message->text    = $alias;
+        $message->save();
 
         $chat->customer_unread_count = $chat->customer_unread_count + 1;
         $chat->performer_unread_count = $chat->performer_unread_count + 1;

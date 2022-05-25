@@ -48,6 +48,7 @@ return [
     'image_not_found'         => 'Рисунок не найден.',
     'lock_add_message'        => 'Запрещено добавлять сообщение.',
     'data_not_changed'        => 'Данные не изменились.',
+    'update_denied'           => 'Обновление отклонено.',
 
     'verification_code' => [
         'incorrect'         => 'Код подтверждения неверен',
@@ -107,15 +108,16 @@ return [
     # Rate attributes
     'rate' => [
         'statuses' => [
-            'active'   => 'Активная',
-            'canceled' => 'Отмененная',
-            'rejected' => 'Отклоненная',
-            'accepted' => 'Принятая',
-            'buyed'    => 'Оплаченая',
-            'approved' => 'Одобренная',
-            'dispute'  => 'Спорная',
-            'done'     => 'Выполненная',
-            'banned'   => 'Запрещённая',
+            'active'     => 'Активная',
+            'canceled'   => 'Отмененная',
+            'rejected'   => 'Отклоненная',
+            'accepted'   => 'Принятая',
+            'buyed'      => 'Купленная',
+            'successful' => 'Успешная',
+            'done'       => 'Выполненная',
+            'dispute'    => 'Спорная',
+            'failed'     => 'Отказанная',
+            'banned'     => 'Запрещённая',
         ],
     ],
 

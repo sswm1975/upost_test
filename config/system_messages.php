@@ -37,8 +37,8 @@ return [
         'uk' => 'Мандрівник купив товар.',
     ],
     'customer_received_order' => [
-        'en' => 'The customer has received the order.',
-        'ru' => 'Заказчик получил заказ.',
-        'uk' => 'Замовник отримав замовлення.',
+        'en' => 'The customer has received the product.',
+        'ru' => 'Заказчик получил товар.',
+        'uk' => 'Замовник отримав товар.',
     ],
 ];

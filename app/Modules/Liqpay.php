@@ -52,7 +52,7 @@ class Liqpay
         $data = self::encode_params($params);
         $signature = self::str_to_sign($private_key . $data . $private_key);
 
-        return compact('data', 'signature', 'amount', 'currency');
+        return compact('data', 'signature');
     }
 
     /**
@@ -115,24 +115,15 @@ class Liqpay
 
         $sign =  self::str_to_sign($private_key . $data . $private_key);
         if ($sign !== $signature) {
-            return [
-                'status' => false,
-                'error' => 'Сигнатура платежа не прошла проверку!'
-            ];
+            return ['error' => 'Сигнатура платежа не прошла проверку!'];
         }
 
         $decode_data = self::decode_params($data);
         $decode_data['info'] = self::decode_params($decode_data['info']);
         if (empty($decode_data['info'])) {
-            return [
-                'status' => false,
-                'error' => 'Нет дополнительных данных о переводе!'
-            ];
+            return ['error' => 'Нет дополнительных данных о переводе!'];
         }
 
-        return [
-            'status' => true,
-            'data'   => $decode_data,
-        ];
+        return ['data' => $decode_data];
     }
 }

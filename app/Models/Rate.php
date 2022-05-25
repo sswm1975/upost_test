@@ -23,6 +23,10 @@ class Rate extends Model
         'status_name',
         'images_thumb',
     ];
+    protected $attributes = [
+        'status'  => self::STATUS_ACTIVE,
+        'is_read' => false,
+    ];
 
     public const STATUS_ACTIVE     = 'active';     # владелец маршрута создал ставку
     public const STATUS_CANCELED   = 'canceled';   # владелец маршрута отменил ставку
@@ -151,16 +155,16 @@ class Rate extends Model
     }
 
     /**
-     * Получить ставку(и) владельца по списку ключей и выбранным статусам.
+     * Получить ставку по её коду при условии, что авторизированный пользователь является владельцем ставки (маршрута).
      *
      * @param $query
      * @param mixed $id
      * @param array $statuses
      * @return mixed
      */
-    protected function scopeIsOwnerByKey($query, $id, array $statuses = [self::STATUS_ACTIVE])
+    protected function scopeByKeyForRateOwner($query, $id, array $statuses = [self::STATUS_ACTIVE])
     {
-        return $query->owner()->whereKey($id)->whereIn('status', $statuses);
+        return $query->whereKey($id)->owner()->whereIn('status', $statuses);
     }
 
     /**
@@ -172,7 +176,7 @@ class Rate extends Model
      * @param array $order_statuses список статусов для заказа
      * @return mixed
      */
-    protected function scopeByKeyForOwnerOrder($query, $id, array $rate_statuses = [self::STATUS_ACTIVE], array $order_statuses = [])
+    protected function scopeByKeyForOrderOwner($query, $id, array $rate_statuses = [self::STATUS_ACTIVE], array $order_statuses = [])
     {
         return $query->whereKey($id)
             ->whereIn('status', $rate_statuses)

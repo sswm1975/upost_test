@@ -48,6 +48,7 @@ return [
     'image_not_found'         => 'Image not found.',
     'lock_add_message'        => 'It is forbidden to add a message.',
     'data_not_changed'        => 'The data has not changed.',
+    'update_denied'           => 'Update denied.',
 
     'verification_code' => [
         'incorrect'         => 'Verification code is incorrect',
@@ -107,15 +108,16 @@ return [
     # Rate attributes
     'rate' => [
         'statuses' => [
-            'active'   => 'Active',
-            'canceled' => 'Canceled',
-            'rejected' => 'Rejected',
-            'accepted' => 'Accepted',
-            'buyed'    => 'Buyed',
-            'approved' => 'Approved',
-            'dispute'  => 'Dispute',
-            'done'     => 'Done',
-            'banned'   => 'Banned',
+            'active'     => 'Active',
+            'canceled'   => 'Canceled',
+            'rejected'   => 'Rejected',
+            'accepted'   => 'Accepted',
+            'buyed'      => 'Buyed',
+            'successful' => 'Successful',
+            'done'       => 'Done',
+            'dispute'    => 'Dispute',
+            'failed'     => 'Failed',
+            'banned'     => 'Banned',
         ],
     ],
 
