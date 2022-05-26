@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\Order;
-use App\Models\Problem;
+use App\Models\DisputeProblem;
 use App\Models\Rate;
 use App\Models\User;
 use Carbon\Carbon;
@@ -111,7 +111,7 @@ class DisputeController extends Controller
     {
         $data = $this->rules4saveDispute();
 
-        $days = Problem::find($data['problem_id'])->value('days');
+        $days = DisputeProblem::find($data['problem_id'])->value('days');
         $data['deadline'] = Carbon::now()->addDays($days)->toDateString();
 
         $message = Message::create(Arr::only($data, ['chat_id', 'text', 'images', 'user_id']));
@@ -226,7 +226,7 @@ class DisputeController extends Controller
      */
     public function getProblems(int $id = 0): JsonResponse
     {
-        return response()->json(Problem::getList($id));
+        return response()->json(DisputeProblem::getList($id));
     }
 
     /**

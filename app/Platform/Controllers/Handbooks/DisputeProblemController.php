@@ -2,13 +2,13 @@
 
 namespace App\Platform\Controllers\Handbooks;
 
-use App\Models\Problem;
+use App\Models\DisputeProblem;
 use App\Platform\Controllers\AdminController;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Encore\Admin\Show;
 
-class ProblemController extends AdminController
+class DisputeProblemController extends AdminController
 {
     protected string $title = 'Проблемы спора';
     protected string $icon = 'fa-exclamation-triangle';
@@ -24,7 +24,7 @@ class ProblemController extends AdminController
      */
     protected function grid(): Grid
     {
-        $grid = new Grid(new Problem);
+        $grid = new Grid(new DisputeProblem);
 
         # SETTINGS GRID
         $grid->disableColumnSelector(false);
@@ -50,7 +50,7 @@ class ProblemController extends AdminController
      */
     protected function form(): Form
     {
-        $form = new Form(new Problem);
+        $form = new Form(new DisputeProblem);
 
         $form->display('id', 'Код');
         $form->text('name_uk', 'Название 🇺🇦')->required();
@@ -70,6 +70,6 @@ class ProblemController extends AdminController
      */
     protected function detail($id): Show
     {
-        return $this->showFields(Problem::findOrFail($id));
+        return $this->showFields(DisputeProblem::findOrFail($id));
     }
 }

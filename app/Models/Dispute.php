@@ -21,15 +21,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
  * @property \Illuminate\Support\Carbon|null $deadline Дедлайн
  * @property int|null $closed_user_id Код пользователя закрывший спор
+ * @property int|null $admin_user_id Менеджер закрепленный за спором
+ * @property int $unread_messages_count Кол-во непрочитанных сообщений менеджером
+ * @property-read Administrator|null $admin_user
  * @property-read \App\Models\Chat $chat
  * @property-read \App\Models\User|null $closed_user
  * @property-read string $status_name
  * @property-read \App\Models\Message $message
+ * @property-read \App\Models\DisputeProblem $problem
  * @property-read \App\Models\Rate $rate
  * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute active()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute appointed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute closed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute existsForChat(int $chat_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute inWork()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereAdminUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereClosedUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereCreatedAt($value)
@@ -39,6 +49,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereProblemId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereRateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUnreadMessagesCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUserId($value)
  * @mixin \Eloquent
@@ -115,7 +126,7 @@ class Dispute extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(Problem::class, 'problem_id')
+        return $this->belongsTo(DisputeProblem::class, 'problem_id')
             ->select(['id', "name_{$lang} as name", 'days'])
             ->withDefault();
     }
