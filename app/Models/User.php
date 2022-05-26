@@ -167,6 +167,8 @@ class User extends Authenticatable
         'resume',               # біографія
         'scores_count',         # количество баллов
         'reviews_count',        # количество отзывов
+        'failed_delivery_count',# количество неудачных доставок
+        'failed_receive_count', # количество неудачных получений
         'city_id',              # місто
         'validation',           # статус верифікації даних користувача
     ];
