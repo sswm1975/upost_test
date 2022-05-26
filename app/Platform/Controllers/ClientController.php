@@ -130,8 +130,10 @@ class ClientController extends AdminController
         $grid->column('register_date', 'Зарегистрирован')->sortable();
         $grid->column('last_active', 'Последняя активность')->sortable();
         $grid->column('role', 'Роль')->sortable();
-        $grid->column('scores_count', 'Кол-во баллов')->sortable();
-        $grid->column('reviews_count', 'Кол-во отзывов')->sortable();
+        $grid->column('scores_count', 'К-во баллов')->sortable();
+        $grid->column('reviews_count', 'К-во отзывов')->sortable();
+        $grid->column('failed_delivery_count', 'К-во неуд.доставок')->sortable();
+        $grid->column('failed_receive_count', 'К-во неуд.получений')->sortable();
         $grid->column('rating', 'Рейтинг');
         $grid->column('google_id', 'Код Гугл');
         $grid->column('facebook_id', 'Код Фейсбук');

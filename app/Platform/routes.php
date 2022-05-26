@@ -62,8 +62,12 @@ Route::group([
         # Жалобы
         $router->resource('complaints', 'ComplaintController')->names('complaints');
 
-        # Проблемы
-        $router->resource('problems', 'ProblemController')->names('problems');
+        # Проблемы спора
+        $router->resource('dispute_problems', 'DisputeProblemController')->names('dispute_problems');
+
+        # Причины закрытия спора
+        $router->resource('dispute_closed_reasons', 'DisputeClosedReasonController')->names('dispute_closed_reasons');
+
     });
 
     # Пункты меню "Админка"
