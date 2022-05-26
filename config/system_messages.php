@@ -41,4 +41,32 @@ return [
         'ru' => 'Заказчик получил товар.',
         'uk' => 'Замовник отримав товар.',
     ],
+
+    /* Причины закрытия спора */
+    'traveler_not_deliver_product' => [
+        'en' => 'The traveler did not deliver the goods before the deadline.',
+        'ru' => 'Путешественник не доставил товар до дедлайна.',
+        'uk' => 'Мандрівник не доставив товар до дедлайну.',
+    ],
+    'traveler_not_respond' => [
+        'en' => 'The traveler does not respond to messages for more than 3 days.',
+        'ru' => 'Путешественник не отвечает на сообщения более 3 суток.',
+        'uk' => 'Мандрівник не відповідає на повідомлення понад 3 доби.',
+    ],
+    'traveler_provided_defective_product' => [
+        'en' => 'The traveler provided a defective product.',
+        'ru' => 'Путешественник предоставил бракованный товар.',
+        'uk' => 'Мандрівник надав бракований товар.',
+    ],
+    'customer_not_come_product' => [
+        'en' => 'The customer did not come for the goods.',
+        'ru' => 'Заказчик не пришел за товаром.',
+        'uk' => 'Замовник не прийшов по товар.',
+    ],
+    'customer_not_respond' => [
+        'en' => 'The customer does not respond to messages for more than a day.',
+        'ru' => 'Заказчик не отвечает на сообщения более суток.',
+        'uk' => 'Замовник не відповідає на повідомлення понад добу.',
+    ],
+    /* END Причины закрытия спора */
 ];
