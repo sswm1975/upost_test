@@ -62,12 +62,14 @@ class Dispute extends Model
     const STATUS_APPOINTED  = 'appointed';
     const STATUS_IN_WORK = 'in_work';
     const STATUS_CLOSED  = 'closed';
+    const STATUS_CANCELED  = 'canceled';
 
     const STATUSES = [
         self::STATUS_ACTIVE,
         self::STATUS_APPOINTED,
         self::STATUS_IN_WORK,
         self::STATUS_CLOSED,
+        self::STATUS_CANCELED,
     ];
 
     const STATUS_COLORS = [
@@ -75,6 +77,7 @@ class Dispute extends Model
         self::STATUS_APPOINTED => 'warning',
         self::STATUS_IN_WORK => 'success',
         self::STATUS_CLOSED => 'info',
+        self::STATUS_CANCELED => 'default',
     ];
 
     public $timestamps = false;

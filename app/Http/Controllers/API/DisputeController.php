@@ -6,7 +6,6 @@ use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
-use App\Models\Order;
 use App\Models\DisputeProblem;
 use App\Models\Rate;
 use App\Models\User;
@@ -27,7 +26,7 @@ class DisputeController extends Controller
      * @return JsonResponse
      * @throws ValidatorException|ValidationException
      */
-    public function add(Request $request): JsonResponse
+    public function addDispute(Request $request): JsonResponse
     {
         $data =  validateOrExit([
             'problem_id' => 'required|integer',
@@ -55,10 +54,7 @@ class DisputeController extends Controller
             throw new ErrorException(__('message.problem_not_found'));
         }
 
-        # меняем статус ставке
-        $rate->status = Rate::STATUS_DISPUTE;
-        $rate->save();
-
+        # добавляем доп.данные
         $data['chat_id'] = $rate->chat_id;
         $data['deadline'] = Carbon::now()->addDays($problem->days)->toDateString();
 
@@ -69,10 +65,10 @@ class DisputeController extends Controller
         # создаем спор
         $dispute = Dispute::create($data);
 
-        # увеличиваем счетчик непрочитанных сообщений и блокируем чат на добавление новых сообщений
-        $field_unread_count = $auth_user_id == $rate->user_id ? 'customer_unread_count' : 'performer_unread_count';
-        $dispute->chat()->increment($field_unread_count, 1, ['lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL]);
+        # увеличиваем счетчик непрочитанных сообщений
+        $dispute->chat()->increment($auth_user_id == $rate->user_id ? 'customer_unread_count' : 'performer_unread_count');
 
+        # броадкастим кол-во непрочитанных сообщений собеседнику чата
         $recipient_id = $auth_user_id == $rate->user_id ? $rate->order->user_id : $rate->user_id;
         Chat::broadcastCountUnreadMessages($recipient_id);
 
@@ -88,7 +84,7 @@ class DisputeController extends Controller
      * @return JsonResponse
      * @throws ErrorException
      */
-    public function show(int $id): JsonResponse
+    public function showDispute(int $id): JsonResponse
     {
         $dispute = Dispute::whereKey($id)
             ->with([
@@ -113,72 +109,31 @@ class DisputeController extends Controller
     }
 
     /**
-     * Изменить статус спора.
-     * (доступно только для администратора)
+     * Отклонить спор.
      *
      * @param int $id
-     * @return JsonResponse
-     * @throws ErrorException|ValidationException|ValidatorException
-     */
-    public function changeStatus(int $id): JsonResponse
-    {
-        if (request()->user()->role != User::ROLE_ADMIN) {
-            throw new ErrorException(__('message.not_have_permission'));
-        }
-
-        $data = validateOrExit([
-            'status' => 'required|in:' . implode(',', Dispute::STATUSES),
-        ]);
-
-        $affected_rows = Dispute::whereKey($id)->update($data);
-
-        return response()->json(['status' => $affected_rows > 0]);
-    }
-
-    /**
-     * Взять спор в работу.
-     * (доступно только для администратора)
-     *
-     * @param int $id
+     * @param Request $request
      * @return JsonResponse
      * @throws ErrorException
      */
-    public function takeOn(int $id): JsonResponse
+    public function cancelDispute(int $id, Request $request): JsonResponse
     {
-        if (request()->user()->role != User::ROLE_ADMIN) {
-            throw new ErrorException(__('message.not_have_permission'));
+        $dispute = Dispute::query()
+            ->whereKey($id)
+            ->where('user_id', $request->user()->id)
+            ->where('status', '<>', [Dispute::STATUS_CLOSED])
+            ->first();
+
+        if (! $dispute) {
+            throw new ErrorException(__('message.dispute_not_exists'));
         }
 
-        $affected_rows = Dispute::whereKey($id)->update(['status' => Dispute::STATUS_IN_WORK]);
+        # меняем статус спора
+        $dispute->status = Dispute::STATUS_CANCELED;
+        $dispute->save();
 
-        return response()->json(['status' => $affected_rows > 0]);
-    }
-
-    /**
-     * Закрыть спор и связанные сущности.
-     *
-     * @param int $id
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function close(int $id): JsonResponse
-    {
-        # ищем сущности, которые нужно закрыть
-        $dispute = Dispute::find($id);
-        $chat = Chat::find($dispute->chat_id);
-        $rate = Rate::find($dispute->rate_id);
-        $order = Order::find($rate->order_id);
-
-        # закрыть диспут может только заказчик, или исполнитель, или админ
-        if (! in_array(request()->user()->id, [$chat->performer_id, $chat->customer_id]) && request()->user()->role != User::ROLE_ADMIN) {
-            throw new ErrorException(__('message.not_have_permission'));
-        }
-
-        # закрываем (меняем статусы)
-        $order->update(['status' => Order::STATUS_SUCCESSFUL]);
-        $rate->update(['status' => Rate::STATUS_DONE]);
-        $chat->update(['status' => Chat::STATUS_CLOSED]);
-        $dispute->update(['status' => Dispute::STATUS_CLOSED]);
+        # информируем в чат об отклонении спора
+        Chat::addSystemMessage($dispute->chat_id, 'dispute_canceled');
 
         return response()->json([
             'status' => true,
@@ -186,25 +141,7 @@ class DisputeController extends Controller
     }
 
     /**
-     * Изменить дату дедлайна спора.
-     *
-     * @param int $id
-     * @return JsonResponse
-     * @throws ValidatorException|ValidationException
-     */
-    public function changeDeadline(int $id): JsonResponse
-    {
-        $data = validateOrExit([
-            'deadline' => 'required|date_format:Y-m-d|after_or_equal:'.date('Y-m-d'),
-        ]);
-
-        $affected_rows = Dispute::whereKey($id)->update($data);
-
-        return response()->json(['status' => $affected_rows > 0]);
-    }
-
-    /**
-     * Получить справочник проблем для спора или выбранной проблемы.
+     * Получить справочник "Проблемы спора".
      *
      * @param int $id
      * @return JsonResponse

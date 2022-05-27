@@ -7956,13 +7956,13 @@
 										},
 										{
 											"key": "rate_id",
-											"value": "7",
+											"value": "13",
 											"description": "Код ставки",
 											"type": "text"
 										},
 										{
 											"key": "chat_id",
-											"value": "6",
+											"value": "7",
 											"description": "Код чату",
 											"type": "text"
 										},
@@ -8004,13 +8004,56 @@
 							"response": []
 						},
 						{
+							"name": "Відмінити суперечку",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"dispute_id\", 11);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/disputes/{{dispute_id}}/cancel",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"disputes",
+										"{{dispute_id}}",
+										"cancel"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Отримати дані  суперечки",
 							"event": [
 								{
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"dispute_id\", 1);"
+											"pm.variables.set(\"dispute_id\", 11);"
 										],
 										"type": "text/javascript"
 									}
@@ -8036,191 +8079,6 @@
 										"disputes",
 										"{{dispute_id}}",
 										"show"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Змінити статус суперечки",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.variables.set(\"dispute_id\", 1);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "status",
-											"value": "active",
-											"description": "Статус",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/disputes/{{dispute_id}}/change_status",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"disputes",
-										"{{dispute_id}}",
-										"change_status"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Взяти суперечку в роботу (тільки для адміна)",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.variables.set(\"dispute_id\", 1);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/disputes/{{dispute_id}}/take_on",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"disputes",
-										"{{dispute_id}}",
-										"take_on"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Закрити суперечку",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.variables.set(\"dispute_id\", 1);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/disputes/{{dispute_id}}/close",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"disputes",
-										"{{dispute_id}}",
-										"close"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Змінити дату дедлайна суперечки",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.variables.set(\"dispute_id\", 1);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "deadline",
-											"value": "2022-04-06",
-											"description": "Нова дата дедлайну",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/disputes/{{dispute_id}}/change_deadline?lang=uk",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"disputes",
-										"{{dispute_id}}",
-										"change_deadline"
 									],
 									"query": [
 										{

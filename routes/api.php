@@ -203,27 +203,18 @@ Route::namespace('API')->group(function ($route) {
     # Споры
     $route->prefix('disputes')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
         # Создать спор
-        $route->post('add', 'DisputeController@add');
+        $route->post('add', 'DisputeController@addDispute');
 
         # Получить данные спора
-        $route->get('{id}/show', 'DisputeController@show');
+        $route->get('{id}/show', 'DisputeController@showDispute');
 
-        # Изменить статус спора
-        $route->post('{dispute_id}/change_status', 'DisputeController@changeStatus');
+        # Отклонить спор
+        $route->post('{dispute_id}/cancel', 'DisputeController@cancelDispute');
 
-        # Взять спор в работу
-        $route->post('{dispute_id}/take_on', 'DisputeController@takeOn');
-
-        # Закрыть спор
-        $route->post('{dispute_id}/close', 'DisputeController@close');
-
-        # Изменить дату дедлайна спора
-        $route->post('{dispute_id}/change_deadline', 'DisputeController@changeDeadline');
-
-        # Получить справочник проблем для спора или выбранной проблемы.
+        # Получить справочник "Проблемы спора"
         $route->get('problems/{id?}', 'DisputeController@getProblems');
 
-        # Получить количество споров по фильтру (используется админкой).
+        # Получить количество споров по фильтру (используется админкой)
         $route->get('counter', 'DisputeController@getDisputesCounter')->name('api.disputes.counter')->withoutMiddleware(MIDDLEWARE_AUTH_BASIC);
     });
 });

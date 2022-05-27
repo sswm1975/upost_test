@@ -378,7 +378,7 @@ class RateController extends Controller
     /**
      * Получение товара заказчиком.
      * - операция только для владельца заказа
-     * - ставка должна быть в статусе buyed или dispute
+     * - ставка должна быть в статусе buyed
      * - заказ должен быть в статусе in_work
      *
      * @param int $rate_id
@@ -387,7 +387,7 @@ class RateController extends Controller
      */
     public function successfulRate(int $rate_id): JsonResponse
     {
-        $rate = Rate::byKeyForOrderOwner($rate_id, [Rate::STATUS_BUYED, Rate::STATUS_DISPUTE], [Order::STATUS_IN_WORK])->first();
+        $rate = Rate::byKeyForOrderOwner($rate_id, [Rate::STATUS_BUYED], [Order::STATUS_IN_WORK])->first();
         if (! $rate) {
             throw new ErrorException(__('message.rate_not_found'));
         }

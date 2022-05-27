@@ -115,7 +115,6 @@ return [
             'buyed'      => 'Buyed',
             'successful' => 'Successful',
             'done'       => 'Done',
-            'dispute'    => 'Dispute',
             'failed'     => 'Failed',
             'banned'     => 'Banned',
         ],
@@ -136,6 +135,7 @@ return [
             'appointed' => 'Appointed',
             'in_work'   => 'In work',
             'closed'    => 'Closed',
+            'canceled'  => 'Canceled',
         ],
     ],
 ];
