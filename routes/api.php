@@ -208,7 +208,7 @@ Route::namespace('API')->group(function ($route) {
         # Получить данные спора
         $route->get('{id}/show', 'DisputeController@showDispute');
 
-        # Отклонить спор
+        # Отменить спор
         $route->post('{dispute_id}/cancel', 'DisputeController@cancelDispute');
 
         # Получить справочник "Проблемы спора"

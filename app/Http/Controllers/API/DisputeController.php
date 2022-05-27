@@ -109,7 +109,7 @@ class DisputeController extends Controller
     }
 
     /**
-     * Отклонить спор.
+     * Отменить спор.
      *
      * @param int $id
      * @param Request $request
@@ -121,7 +121,7 @@ class DisputeController extends Controller
         $dispute = Dispute::query()
             ->whereKey($id)
             ->where('user_id', $request->user()->id)
-            ->where('status', '<>', [Dispute::STATUS_CLOSED])
+            ->whereNotIn('status', [Dispute::STATUS_CLOSED, Dispute::STATUS_CANCELED])
             ->first();
 
         if (! $dispute) {
