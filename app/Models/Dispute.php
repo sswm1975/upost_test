@@ -58,10 +58,10 @@ class Dispute extends Model
 {
     use TimestampSerializable;
 
-    public const STATUS_ACTIVE  = 'active';
-    public const STATUS_APPOINTED  = 'appointed';
-    public const STATUS_IN_WORK = 'in_work';
-    public const STATUS_CLOSED  = 'closed';
+    const STATUS_ACTIVE  = 'active';
+    const STATUS_APPOINTED  = 'appointed';
+    const STATUS_IN_WORK = 'in_work';
+    const STATUS_CLOSED  = 'closed';
 
     const STATUSES = [
         self::STATUS_ACTIVE,
@@ -86,6 +86,9 @@ class Dispute extends Model
     ];
     protected $appends = [
         'status_name',
+    ];
+    protected $attributes = [
+        'status'  => self::STATUS_ACTIVE,
     ];
 
     ### BOOT ###

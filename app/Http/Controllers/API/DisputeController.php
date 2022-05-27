@@ -21,51 +21,63 @@ use App\Models\Dispute;
 class DisputeController extends Controller
 {
     /**
-     * Правила проверки входных данных запроса при сохранении заказа.
+     * Добавить спор.
      *
-     * @return array
-     * @throws ValidationException|ValidatorException
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
      */
-    protected static function rules4saveDispute(): array
+    public function add(Request $request): JsonResponse
     {
-        return validateOrExit([
-            'problem_id'  => 'required|integer|exists:problems,id',
-            'rate_id'  => [
-                'required',
-                'integer',
-                function ($attribute, $rate_id, $fail) {
-                    $is_permission = Rate::whereKey($rate_id)
-                        ->where('chat_id', request('chat_id', 0))
-                        ->count();
+        $data =  validateOrExit([
+            'problem_id' => 'required|integer',
+            'rate_id'    => 'required|integer',
+            'text'       => 'required|string|censor',
+            'images'     => 'nullable|array|max:8',
+            'images.*'   => 'nullable|string',
+        ]);
 
-                    if (! $is_permission) {
-                        return $fail(__('message.not_have_permission'));
-                    }
+        if (Dispute::whereRateId($data['rate_id'])->where('status', '<>',Dispute::STATUS_CLOSED)->exists()) {
+            throw new ErrorException(__('message.dispute_exists'));
+        }
 
-                    if (Dispute::whereRateId($rate_id)->count()) {
-                        return $fail(__('message.dispute_exists'));
-                    }
-                }
-            ],
-            'chat_id'  => [
-                'required',
-                'integer',
-                function ($attribute, $chat_id, $fail) {
-                    $is_permission = Chat::whereKey($chat_id)
-                        ->where(function($query) {
-                            $user_id = request()->user()->id;
-                            $query->where('performer_id', $user_id)->orWhere('customer_id', $user_id);
-                        })
-                        ->count();
+        $rate = Rate::with('order:id,user_id')
+            ->whereKey($data['rate_id'])
+            ->whereIn('status', [Rate::STATUS_ACCEPTED, Rate::STATUS_BUYED])
+            ->first(['id', 'user_id', 'chat_id', 'order_id']);
 
-                    if (! $is_permission) {
-                        return $fail(__('message.not_have_permission'));
-                    }
-                }
-            ],
-            'text'     => 'required|string|censor',
-            'images'   => 'nullable|array|max:8',
-            'images.*' => 'nullable|string',
+        $auth_user_id = $request->user()->id;
+        if (!$rate || !in_array($auth_user_id, [$rate->user_id, $rate->order->user_id])) {
+            throw new ErrorException(__('message.not_have_permission'));
+        }
+
+        if (! $problem = DisputeProblem::whereKey($data['problem_id'])->active()->first(['days'])) {
+            throw new ErrorException(__('message.problem_not_found'));
+        }
+
+        # меняем статус ставке
+        $rate->status = Rate::STATUS_DISPUTE;
+        $rate->save();
+
+        $data['chat_id'] = $rate->chat_id;
+        $data['deadline'] = Carbon::now()->addDays($problem->days)->toDateString();
+
+        # отправляем в чат сообщение с текстом спора
+        $message = Message::create(Arr::only($data, ['chat_id', 'text', 'images', 'user_id']));
+        $data['message_id'] = $message->id;
+
+        # создаем спор
+        $dispute = Dispute::create($data);
+
+        # увеличиваем счетчик непрочитанных сообщений и блокируем чат на добавление новых сообщений
+        $field_unread_count = $auth_user_id == $rate->user_id ? 'customer_unread_count' : 'performer_unread_count';
+        $dispute->chat()->increment($field_unread_count, 1, ['lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL]);
+
+        $recipient_id = $auth_user_id == $rate->user_id ? $rate->order->user_id : $rate->user_id;
+        Chat::broadcastCountUnreadMessages($recipient_id);
+
+        return response()->json([
+            'status' => true,
         ]);
     }
 
@@ -97,33 +109,6 @@ class DisputeController extends Controller
         return response()->json([
             'status'  => true,
             'dispute' => null_to_blank($dispute),
-        ]);
-    }
-
-    /**
-     * Добавить спор.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidatorException|ValidationException
-     */
-    public function add(Request $request): JsonResponse
-    {
-        $data = $this->rules4saveDispute();
-
-        $days = DisputeProblem::find($data['problem_id'])->value('days');
-        $data['deadline'] = Carbon::now()->addDays($days)->toDateString();
-
-        $message = Message::create(Arr::only($data, ['chat_id', 'text', 'images', 'user_id']));
-        $data['message_id'] = $message->id;
-
-        $dispute = Dispute::create($data);
-
-        $dispute->chat()->update(['lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL]);
-        $dispute->rate()->update(['status' => Rate::STATUS_DISPUTE]);
-
-        return response()->json([
-            'status' => true,
         ]);
     }
 

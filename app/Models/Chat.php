@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Events\MessagesCounterUpdate;
 use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Chat
@@ -15,34 +15,42 @@ use Illuminate\Support\Facades\DB;
  * @property int $id Код
  * @property int $route_id Код маршрута
  * @property int $order_id Код заказа
- * @property int $performer_id Владелец маршрута (Исполнитель)
  * @property int $customer_id Владелец заказа (Заказчик)
- * @property int $performer_unread_count Кол-во непрочитанных сообщений исполнителем
+ * @property int $performer_id Владелец маршрута (Исполнитель)
  * @property int $customer_unread_count Кол-во непрочитанных сообщений заказчиком
+ * @property int $performer_unread_count Кол-во непрочитанных сообщений исполнителем
  * @property string $status Статус
- * @property string $lock_status Статус блокировки*
- * @property string|null $created_at Добавлено
- * @property string|null $updated_at Изменено
+ * @property string $lock_status Статус блокировки
+ * @property \Illuminate\Support\Carbon|null $created_at Добавлено
+ * @property \Illuminate\Support\Carbon|null $updated_at Изменено
  * @property-read \App\Models\User $customer
+ * @property-read \App\Models\Dispute|null $dispute
  * @property-read int $interlocutor_id
  * @property-read int $interlocutor_unread_count
+ * @property-read string $status_name
  * @property-read \App\Models\User $interlocutor
  * @property-read \App\Models\Message|null $last_message
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Message[] $messages
  * @property-read int|null $messages_count
  * @property-read \App\Models\Order $order
  * @property-read \App\Models\User $performer
+ * @property-read \App\Models\Rate|null $rate
  * @property-read \App\Models\Route $route
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat active()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat closed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat delivered()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat existsDispute()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat interlocutors()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat searchMessage(string $search)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat waiting()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCustomerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCustomerUnreadCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat whereLockStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereOrderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat wherePerformerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat wherePerformerUnreadCount($value)
@@ -348,6 +356,23 @@ class Chat extends Model
             compact('route_id', 'order_id'),
             compact('performer_id', 'customer_id')
         );
+    }
+
+    /**
+     * Броадкастим количество непрочитанных сообщений.
+     *
+     * @param int $recipient_id
+     */
+    public static function broadcastCountUnreadMessages(int $recipient_id)
+    {
+        try {
+            broadcast(new MessagesCounterUpdate([
+                'user_id'         => $recipient_id,
+                'unread_messages' => Chat::getCountUnreadMessages($recipient_id),
+            ]));
+        } catch (\Exception $e) {
+
+        }
     }
 
     /**

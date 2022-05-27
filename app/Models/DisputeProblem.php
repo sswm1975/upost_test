@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name_en Наименование на английском
  * @property int $days Количество дней
  * @property int $active Действует (да/нет)
+ * @method static Builder|DisputeProblem active()
  * @method static Builder|DisputeProblem language()
  * @method static Builder|DisputeProblem newModelQuery()
  * @method static Builder|DisputeProblem newQuery()
@@ -43,6 +44,17 @@ class DisputeProblem extends Model
         $lang = app()->getLocale();
 
         return $query->select("name_$lang as name");
+    }
+
+    /**
+     * Активные проблемы.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('active', 1);
     }
 
     /**
