@@ -71,7 +71,8 @@ EOT;
 
         $this->addRenderableModalScript();
 
-        $modal_width = func_num_args() == 2 ? func_get_arg(1) : 0;
+        # во 2-м параметре указывается размер модального окна
+        $modal_width = func_num_args() > 1 ? func_get_arg(1) : 0;
         $html = $this->getModalHtml($modal_width);
         if (!in_array($html, Admin::$html)) {
             Admin::html($html);
@@ -80,8 +81,12 @@ EOT;
         $renderable = str_replace('\\', '_', $renderable);
         $value = is_array($this->value) ? count($this->value) : $this->value;
 
+        # в 3-ем параметре указывается наименование поля, с которого брать значение кода
+        # дефолтно берется с ключевого поля ("id")
+        $id = func_num_args() == 3 ? $this->row->{func_get_arg(2)} : $this->getKey();
+
         return <<<EOT
-<a href="#grid-ajax-modal" data-toggle="modal" data-renderable="{$renderable}" data-key="{$this->getKey()}">
+<a href="#grid-ajax-modal" data-toggle="modal" data-renderable="{$renderable}" data-key="{$id}">
     <i class="fa fa-clone"></i>&nbsp;&nbsp;{$value}
 </a>
 EOT;

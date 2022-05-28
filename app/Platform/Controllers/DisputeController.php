@@ -125,7 +125,7 @@ class DisputeController extends AdminController
                 ->sortable();
 
             $grid->column('messages_cnt', 'Сообщений в чате')
-                ->ajaxModal(ChatMessage::class, 700)
+                ->ajaxModal(ChatMessage::class, 700, 'chat_id')
                 ->setAttributes(['align' => 'center'])
                 ->sortable();
 
