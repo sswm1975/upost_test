@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CloseDispute extends BatchAction
+class CloseDisputeGuiltyPerformer extends BatchAction
 {
     public $name = 'Закрыть спор (виноват путешественник)';
 

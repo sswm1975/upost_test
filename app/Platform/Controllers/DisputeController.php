@@ -5,7 +5,7 @@ namespace App\Platform\Controllers;
 use App\Models\Chat;
 use App\Models\Dispute;
 use App\Platform\Actions\Dispute\AppointDispute;
-use App\Platform\Actions\Dispute\CloseDispute;
+use App\Platform\Actions\Dispute\CloseDisputeGuiltyPerformer;
 use App\Platform\Actions\Dispute\InWorkDispute;
 use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Facades\Admin;
@@ -78,7 +78,7 @@ class DisputeController extends AdminController
                 }
                 # Закрыть спор
                 if ($status == Dispute::STATUS_IN_WORK) {
-                    $batch->add(new CloseDispute());
+                    $batch->add(new CloseDisputeGuiltyPerformer());
                 }
             }
         });
