@@ -119,7 +119,7 @@ class DisputeController extends AdminController
             $grid->column('admin_user.username', 'Менеджер');
         }
 
-        if ($status == Dispute::STATUS_IN_WORK) {
+        if (in_array($status, [Dispute::STATUS_IN_WORK, Dispute::STATUS_CLOSED])) {
             $grid->column('chat.lock_status', 'Статус блокировки')
                 ->editable('select', Chat::LOCK_STATUSES)
                 ->sortable();
@@ -135,6 +135,11 @@ class DisputeController extends AdminController
                 })
                 ->setAttributes(['align' => 'center'])
                 ->help('Количество непрочитанных сообщений');
+        }
+
+        if ($status == Dispute::STATUS_CLOSED) {
+            $grid->column('dispute_closed_reason_id', 'Код причины закрытия')->sortable();
+            $grid->column('reason_closing_description', 'Описание закрытия')->sortable();
         }
 
         $grid->column('created_at', 'Создано')->sortable();

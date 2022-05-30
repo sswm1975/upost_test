@@ -46,6 +46,16 @@ return [
         'ru' => 'Спор отменён.',
         'uk' => 'Суперечка скасована.',
     ],
+    'dispute_close_info_option1' => [
+        'en' => 'What to do next, read the instructions at the link https://post.tantal-web.top/faq/info1.html',
+        'ru' => 'Что делать дальше ознакомьтесь в инструкции по ссылке https://post.tantal-web.top/faq/info1.html',
+        'uk' => 'Що робити далі ознайомтесь в інструкції з посилання на https://post.tantal-web.top/faq/info1.html',
+    ],
+    'dispute_close_info_option2' => [
+        'en' => 'What to do next, read the instructions at the link https://post.tantal-web.top/faq/info2.html',
+        'ru' => 'Что делать дальше ознакомьтесь в инструкции по ссылке https://post.tantal-web.top/faq/info2.html',
+        'uk' => 'Що робити далі ознайомтесь в інструкції з посилання на https://post.tantal-web.top/faq/info2.html',
+    ],
 
     /* Причины закрытия спора */
     'traveler_not_deliver_product' => [
@@ -74,4 +84,6 @@ return [
         'uk' => 'Замовник не відповідає на повідомлення понад добу.',
     ],
     /* END Причины закрытия спора */
+
+
 ];

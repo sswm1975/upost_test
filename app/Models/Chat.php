@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Chat
@@ -400,24 +401,29 @@ class Chat extends Model
      * Добавить системное сообщение.
      *
      * @param int $chat_id
-     * @param string $alias
+     * @param mixed $alias
+     * @param array $extra
      * @return bool
      */
-    public static function addSystemMessage(int $chat_id, string $alias): bool
+    public static function addSystemMessage(int $chat_id, $alias, array $extra = []): bool
     {
-        if (! $chat = self::find($chat_id, ['id', 'customer_unread_count', 'performer_unread_count'])) {
-            return false;
+        if (is_string($alias)) {
+            $alias = [$alias];
+        }
+        foreach ($alias as $text) {
+            $message = new Message;
+            $message->chat_id = $chat_id;
+            $message->user_id = SYSTEM_USER_ID;
+            $message->text    = $text;
+            $message->save();
         }
 
-        $message = new Message;
-        $message->chat_id = $chat_id;
-        $message->user_id = SYSTEM_USER_ID;
-        $message->text    = $alias;
-        $message->save();
-
-        $chat->customer_unread_count = $chat->customer_unread_count + 1;
-        $chat->performer_unread_count = $chat->performer_unread_count + 1;
-        $chat->save();
+        self::whereKey($chat_id)->update(
+            array_merge([
+                'customer_unread_count'  => DB::raw('customer_unread_count + ' . count($alias)),
+                'performer_unread_count' => DB::raw('performer_unread_count + ' . count($alias)),
+            ], $extra)
+        );
 
         return true;
     }
