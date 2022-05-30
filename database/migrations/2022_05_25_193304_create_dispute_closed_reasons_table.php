@@ -16,6 +16,7 @@ class CreateDisputeClosedReasonsTable extends Migration
         Schema::create('dispute_closed_reasons', function (Blueprint $table) {
             $table->tinyIncrements('id')->comment('Код');
             $table->string('name', 100)->comment('Наименование');
+            $table->enum('guilty', ['performer', 'customer'])->nullable()->comment('Виновен: Исполнитель или Заказчик');
             $table->string('alias', 100)->comment('Алиас');
             $table->timestamp('created_at')->nullable()->comment('Добавлено');
             $table->timestamp('updated_at')->nullable()->comment('Изменено');
