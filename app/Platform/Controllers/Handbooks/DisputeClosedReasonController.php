@@ -17,6 +17,11 @@ class DisputeClosedReasonController extends AdminController
         ['text' => 'Справочники', 'icon' => 'book'],
     ];
 
+    const GUILTY = [
+        'performer' => 'Путешественник',
+        'customer'  => 'Заказчик',
+    ];
+
     /**
      * Make a grid builder.
      *
@@ -35,12 +40,14 @@ class DisputeClosedReasonController extends AdminController
 
         $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
             $create->text('name', 'Название')->placeholder('Название')->required();
+            $create->select('guilty', 'Виновен')->options(static::GUILTY)->required();
             $create->text('alias', 'Алиас')->placeholder('Алиас')->required();
         });
 
         # COLUMNS
-        $grid->column('id', 'Код')->sortable();
+        $grid->column('id', 'Код')->setAttributes(['align'=>'center'])->sortable();
         $grid->column('name', 'Название');
+        $grid->column('guilty', 'Виновен')->replace(static::GUILTY)->sortable()->filter(static::GUILTY);
         $grid->column('alias', 'Алиас');
         $grid->column('created_at', 'Создано')->sortable();
         $grid->column('updated_at', 'Изменено')->sortable();
@@ -59,7 +66,8 @@ class DisputeClosedReasonController extends AdminController
 
         $form->display('id', 'Код');
         $form->text('name', 'Название')->required();
-        $form->text('alias', 'Алиас')->required();
+        $form->select('guilty', 'Виновен')->options(static::GUILTY)->required();
+        $form->text('alias', 'Алиас')->required()->help('Новый alias нужно добавить в конфигурационный файл system_messages');
         $form->display('created_at', 'Создано');
         $form->display('updated_at', 'Изменено');
 
