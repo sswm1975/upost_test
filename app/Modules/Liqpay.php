@@ -17,17 +17,14 @@ class Liqpay
      * @param string $callback_url
      * @return array
      */
-    public static function create_params(int $user_id, string $user_name, int $rate_id, float $amount, string $currency, string $description = '', string $language = '', string $callback_url = ''): array
+    public static function create_params(string $user_name, float $amount, string $currency, string $description = '', array $info = [], string $language = '', string $callback_url = ''): array
     {
         $public_key = config('app.liqpay_public_key');
         $private_key = config('app.liqpay_private_key');
 
         $language = $language ?: app()->getLocale();
 
-        $info = self::encode_params([
-            'user_id' => $user_id,
-            'rate_id' => $rate_id,
-        ]);
+        $info = self::encode_params($info);
 
         # см. описание https://www.liqpay.ua/documentation/api/aquiring/checkout/doc
         $params = [

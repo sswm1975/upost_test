@@ -244,33 +244,40 @@ class RateController extends Controller
         }
 
         /* TODO Расчет суммы для оплаты: Нужно реализовать конвертацию цены и дохода; добавить пошлину за ввоз; суммировать все расчеты */
-        $tax = 0;
-        $fee = 0;
-        $amount = $rate->order->price + $rate->amount + $tax + $fee;
+        $order_amount = $rate->order->products_count * $rate->order->price;
+        $delivery_amount = 1 * $rate->amount;
+        $export_tax = 0;
+        $liqpay_fee = round($order_amount * config('liqpay_percent') / 100, 2);
+        $service_fee = round($rate->order->price * config('service_fee_percent') / 100, 2);
+        $total_amount = $rate->order->price + $rate->amount + $export_tax + $liqpay_fee + $service_fee;
         $currency = 'UAH';
 
         $user = $request->user();
         $callback_url = $request->get('callback_url', config('app.wordpress_url'));
 
+        $info = [
+            'user_id'         => $user->id,
+            'rate_id'         => $rate_id,
+            'order_amount'    => $rate->order->products_count * $rate->order->price,
+            'delivery_amount' => $delivery_amount,
+            'export_tax'      => $export_tax,
+            'liqpay_fee'      => $liqpay_fee,
+            'service_fee'     => $service_fee,
+            'total_amount'    => $total_amount,
+            'currency'        => $currency,
+        ];
+
         $params = Liqpay::create_params(
-            $user->id,
             $user->full_name,
-            $rate_id,
-            $amount,
-            $currency,
+            $total_amount,
+            'UAH',
             'Оплата заказа "' . $rate->order->name . '"',
+            $info,
             'ru',
             $callback_url,
         );
 
-        $payment = array_merge($params, [
-            'price'    => 1 * $rate->order->price,
-            'profit'   => 1 * $rate->amount,
-            'tax'      => 1 * $tax,
-            'fee'      => 1 * $fee,
-            'amount'   => 1 * $amount,
-            'currency' => $currency,
-        ]);
+        $payment = array_merge($params, $info);
 
         return response()->json([
             'status'  => true,
@@ -311,13 +318,18 @@ class RateController extends Controller
         }
 
         Transaction::create([
-            'user_id'     => $liqpay['info']['user_id'],
-            'rate_id'     => $rate_id,
-            'amount'      => $liqpay['amount'],
-            'description' => $liqpay['description'],
-            'status'      => $liqpay['status'],
-            'response'    => $liqpay,
-            'payed_at'    => gmdate('Y-m-d H:i:s', strtotime("+2 hours", $liqpay['end_date'] / 1000)),
+            'user_id'         => $liqpay['info']['user_id'],
+            'rate_id'         => $rate_id,
+            'amount'          => $liqpay['amount'],
+            'order_amount'    => $liqpay['info']['order_amount'],
+            'liqpay_fee'      => $liqpay['info']['liqpay_fee'],
+            'delivery_amount' => $liqpay['info']['delivery_amount'],
+            'service_fee'     => $liqpay['info']['service_fee'],
+            'export_tax'      => $liqpay['info']['export_tax'],
+            'description'     => $liqpay['description'],
+            'status'          => $liqpay['status'],
+            'response'        => $liqpay,
+            'payed_at'        => gmdate('Y-m-d H:i:s', strtotime("+2 hours", $liqpay['end_date'] / 1000)),
         ]);
 
         $rate = Rate::find($rate_id);
