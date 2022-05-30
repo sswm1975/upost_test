@@ -11,6 +11,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id Пользователь
  * @property int $rate_id Ставка
  * @property string $amount Сумма
+ * @property string $order_amount Сумма заказа
+ * @property string $delivery_amount Стоимость доставки
+ * @property string $liqpay_fee Комиссия Liqpay
+ * @property string $service_fee Комиссия сервиса
+ * @property string $export_tax Налог на вывоз товара
  * @property string|null $description Описание
  * @property string|null $status Статус
  * @property array|null $response Ответ от сервиса
@@ -22,11 +27,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction query()
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereDeliveryAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereExportTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereRateId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereLiqpayFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereOrderAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction wherePayedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereRateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereResponse($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereServiceFee($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereUserId($value)
