@@ -12,22 +12,11 @@ use Illuminate\Http\Request;
 class AppointDispute extends BatchAction
 {
     public $name = 'Назначить спор менеджеру';
+    protected $selector = '.text-green';
 
-    protected $selector = '.appoint-disputes';
-
-    public function handle(Collection $collection, Request $request)
+    public function authorize(Administrator $user, Collection $model)
     {
-        if (! Admin::user()->isAdministrator()) {
-            return $this->response()->error('Операция запрещена');
-        }
-
-        foreach ($collection as $model) {
-            $model->admin_user_id = $request->get('admin_user_id');
-            $model->status = Dispute::STATUS_APPOINTED;
-            $model->save();
-        }
-
-        return $this->response()->success('Споры назначены менеджерам!')->refresh();
+        return $user->isAdministrator();
     }
 
     public function form()
@@ -35,5 +24,16 @@ class AppointDispute extends BatchAction
         $this->select('admin_user_id', 'Менеджер')
             ->options(Administrator::whereNotNull('user_id')->pluck('username', 'id'))
             ->rules('required');
+    }
+
+    public function handle(Collection $collection, Request $request)
+    {
+        foreach ($collection as $model) {
+            $model->admin_user_id = $request->get('admin_user_id');
+            $model->status = Dispute::STATUS_APPOINTED;
+            $model->save();
+        }
+
+        return $this->response()->success('Споры назначены менеджерам!')->refresh();
     }
 }

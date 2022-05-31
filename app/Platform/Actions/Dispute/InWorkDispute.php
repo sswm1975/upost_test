@@ -12,15 +12,20 @@ use Illuminate\Http\Request;
 class InWorkDispute extends BatchAction
 {
     public $name = 'Взять в работу';
+    protected $selector = '.text-blue';
 
-    protected $selector = '.inwork-disputes';
+    public function authorize(Administrator $user, Collection $model)
+    {
+        return Admin::user()->inRoles(['administrator', 'dispute_manager']);
+    }
+
+    public function dialog()
+    {
+        $this->confirm('Вы точно хотите взять в работу спор?');
+    }
 
     public function handle(Collection $collection, Request $request)
     {
-        if (! Admin::user()->inRoles(['administrator', 'dispute_manager'])) {
-            return $this->response()->error('Операция запрещена');
-        }
-
         foreach ($collection as $model) {
             $model->status = Dispute::STATUS_IN_WORK;
             $model->save();

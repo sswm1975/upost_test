@@ -17,8 +17,7 @@ use Illuminate\Support\Facades\DB;
 class CloseDisputeGuiltyPerformer extends BatchAction
 {
     public $name = 'Закрыть спор (виноват путешественник)';
-
-    protected $selector = '.close-disputes';
+    protected $selector = '.text-blue';
 
     /**
      * Закрыть спор может или Администратор или закрепленный Менеджер по спорам.
@@ -30,6 +29,18 @@ class CloseDisputeGuiltyPerformer extends BatchAction
     public function authorize(Administrator $user, Collection $model)
     {
         return $user->isAdministrator() || $user->id == $model->admin_user_id;
+    }
+
+    public function form()
+    {
+        $this->select('dispute_closed_reason_id', 'Причина')
+            ->placeholder('Выберите причину закрытия')
+            ->options(DisputeClosedReason::whereGuilty('performer')->pluck('name', 'id'))
+            ->rules('required');
+
+        $this->textarea('reason_closing_description', 'Детальное описание закрытия спора')
+            ->placeholder('Введите детальное описание причины закрытия спора')
+            ->rules('required');
     }
 
     public function handle(Collection $collection, Request $request)
@@ -81,18 +92,5 @@ class CloseDisputeGuiltyPerformer extends BatchAction
         }
 
         return $this->response()->success('Выполнено!')->refresh();
-    }
-
-
-    public function form()
-    {
-        $this->select('dispute_closed_reason_id', 'Причина')
-            ->placeholder('Выберите причину закрытия')
-            ->options(DisputeClosedReason::whereGuilty('performer')->pluck('name', 'id'))
-            ->rules('required');
-
-        $this->textarea('reason_closing_description', 'Детальное описание закрытия спора')
-            ->placeholder('Введите детальное описание причины закрытия спора')
-            ->rules('required');
     }
 }
