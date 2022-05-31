@@ -138,4 +138,14 @@ return [
             'canceled'  => 'Отмененный',
         ],
     ],
+
+    # Payment attributes
+    'payment' => [
+        'statuses' => [
+            'active'    => 'Активная',
+            'appointed' => 'Назначена',
+            'rejected'  => 'Отклоненная',
+            'done'      => 'Выполненная',
+        ],
+    ],
 ];

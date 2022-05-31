@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TimestampSerializable;
+use Encore\Admin\Auth\Database\Administrator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Payment
@@ -32,5 +35,70 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Payment extends Model
 {
-    protected $guarded = ['id'];
+    use TimestampSerializable;
+
+    const STATUS_ACTIVE  = 'active';
+    const STATUS_APPOINTED  = 'appointed';
+    const STATUS_DONE = 'done';
+    const STATUS_REJECTED  = 'rejected';
+
+    const STATUSES = [
+        self::STATUS_ACTIVE,
+        self::STATUS_APPOINTED,
+        self::STATUS_DONE,
+        self::STATUS_REJECTED,
+    ];
+
+    const STATUS_COLORS = [
+        self::STATUS_ACTIVE => 'danger',
+        self::STATUS_APPOINTED => 'warning',
+        self::STATUS_DONE => 'success',
+        self::STATUS_REJECTED => 'default',
+    ];
+
+    protected $appends = [
+        'status_name',
+    ];
+    protected $attributes = [
+        'status'  => self::STATUS_ACTIVE,
+    ];
+
+    ### BOOT ###
+
+    /**
+     * Boot model.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_at = $model->freshTimestamp();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_at = $model->freshTimestamp();
+        });
+    }
+
+    ### GETTERS ###
+
+    public function getStatusNameAttribute(): string
+    {
+        return __("message.payment.statuses.$this->status");
+    }
+
+    ### LINKS ###
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id')->withDefault();
+    }
+
+    public function admin_user(): BelongsTo
+    {
+        return $this->belongsTo(Administrator::class, 'admin_user_id');
+    }
 }

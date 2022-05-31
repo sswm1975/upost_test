@@ -138,4 +138,14 @@ return [
             'canceled'  => 'Canceled',
         ],
     ],
+
+    # Payment attributes
+    'payment' => [
+        'statuses' => [
+            'active'    => 'Active',
+            'appointed' => 'Appointed',
+            'rejected'  => 'Rejected',
+            'done'      => 'Done',
+        ],
+    ],
 ];

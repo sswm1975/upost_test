@@ -27,6 +27,9 @@ Route::group([
     $router->get('routes', 'RouteController@index')->name('routes.index')->middleware('admin.permission:check,routes');
     $router->get('routes/{id}', 'RouteController@show')->name('routes.show')->middleware('admin.permission:check,routes');
 
+    # Платежи (Заявки на выплату)
+    $router->resource('payments', 'PaymentController', ['except' => ['delete']])->names('payments')->middleware('admin.permission:check,payments');
+
     # Споры
     $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes')->middleware('admin.permission:check,disputes');
 
