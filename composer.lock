@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b784cd92121b5d9825a9bccd0cd0cf6",
+    "content-hash": "d41c93b966950b8624f74c5b8271c72a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1837,6 +1837,62 @@
             "time": "2022-03-20T21:51:18+00:00"
         },
         {
+            "name": "jxlwqq/code-mirror",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/code-mirror.git",
+                "reference": "741e0905f08757fa3c54b3e9051d95017f336a53"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/code-mirror/zipball/741e0905f08757fa3c54b3e9051d95017f336a53",
+                "reference": "741e0905f08757fa3c54b3e9051d95017f336a53",
+                "shasum": ""
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6|~1.7",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jxlwqq\\CodeMirror\\CodeMirrorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jxlwqq\\CodeMirror\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "jxlwqq",
+                    "email": "jxlwqq@gmail.com"
+                }
+            ],
+            "description": "code editor extension for laravel-admin",
+            "homepage": "https://github.com/jxlwqq/code-mirror",
+            "keywords": [
+                "extension",
+                "laravel-admin"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel-admin-extensions/code-mirror/issues",
+                "source": "https://github.com/laravel-admin-extensions/code-mirror/tree/v1.0.3"
+            },
+            "time": "2020-04-10T03:19:18+00:00"
+        },
+        {
             "name": "jxlwqq/composer-viewer",
             "version": "1.0.3",
             "source": {
@@ -2070,6 +2126,65 @@
                 "source": "https://github.com/laravel-admin-extensions/log-viewer/tree/v1.0.4"
             },
             "time": "2021-10-11T09:34:30+00:00"
+        },
+        {
+            "name": "laravel-admin-ext/php-editor",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/php-editor.git",
+                "reference": "8a41a929f24a5817db23efdc88d6acde39a19796"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/php-editor/zipball/8a41a929f24a5817db23efdc88d6acde39a19796",
+                "reference": "8a41a929f24a5817db23efdc88d6acde39a19796",
+                "shasum": ""
+            },
+            "require": {
+                "jxlwqq/code-mirror": "*",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Encore\\PHPEditor\\PHPEditorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Encore\\PHPEditor\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "song",
+                    "email": "zosong@126.com"
+                }
+            ],
+            "description": "PHP editor extension for laravel-admin based on code-mirror",
+            "homepage": "https://github.com/laravel-admin-ext/php-editor",
+            "keywords": [
+                "code mirror",
+                "editor",
+                "extension",
+                "laravel-admin",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel-admin-extensions/php-editor/issues",
+                "source": "https://github.com/laravel-admin-extensions/php-editor/tree/v1.0.0"
+            },
+            "time": "2018-09-11T17:20:29+00:00"
         },
         {
             "name": "laravel-admin-ext/scheduling",

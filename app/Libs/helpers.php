@@ -2,6 +2,7 @@
 
 use App\Exceptions\ValidatorException;
 use App\Models\CurrencyRate;
+use App\Models\Script;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -468,4 +469,26 @@ function formatDateTime(string $date = '', bool $is_datetime = true)
     if (empty($date)) return '';
 
     return date($is_datetime ? 'd.m.Y H:i:s' : 'd.m.Y', strtotime($date));
+}
+
+/**
+ * Выполнить PHP-скрипт.
+ *
+ * @param string $alias
+ * @param array $params
+ * @return int|mixed
+ */
+function runScript(string $alias = '', array $params = [])
+{
+    if (empty($alias) || empty($params['order_summa_usd'])) {
+        return 0;
+    }
+
+    $code = str_replace(
+        ['<?php', '?>', '{ORDER_SUMMA_USD}'],
+        ['', '', $params['order_summa_usd']],
+        Script::whereAlias($alias)->value('code') ?? 'return 0;'
+    );
+
+    return eval($code);
 }

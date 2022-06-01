@@ -3978,10 +3978,10 @@
          * @return void 
          * @static 
          */ 
-        public static function logQuery($query, $bindings, $time = null)
+        public static function logQuery($query, $bindings, $time = null, $rows = 0)
         {            //Method inherited from \Illuminate\Database\Connection         
                         /** @var \Illuminate\Database\MySqlConnection $instance */
-                        $instance->logQuery($query, $bindings, $time);
+                        $instance->logQuery($query, $bindings, $time, $rows);
         }
                     /**
          * Register a database query listener with the connection.

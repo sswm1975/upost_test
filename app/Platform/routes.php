@@ -49,6 +49,10 @@ Route::group([
     # Настройки
     $router->resource('settings', 'SettingController')->names('settings')->middleware('admin.permission:check,settings');
 
+    # Скрипты
+    $router->resource('admin/scripts', 'Admin\ScriptController')->middleware('admin.permission:allow,administrator');
+    $router->post('admin/scripts/run', 'Admin\ScriptController@runScript')->name('scripts.run')->middleware('admin.permission:allow,administrator');
+
     # Справочники
     $router->group([
         'prefix'     => 'handbooks',
@@ -85,5 +89,7 @@ Route::group([
 
         # Пользователи (вместо дефолтного Encore\Admin\Controllers\UserController)
         $router->resource('users', 'UserController')->names('admin.auth.users');
+
+
     });
 });
