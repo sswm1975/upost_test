@@ -89,6 +89,7 @@ return [
             'active'     => 'Active',
             'in_work'    => 'In work',
             'closed'     => 'Closed',
+            'failed'     => 'Failed',
             'successful' => 'Successful',
             'banned'     => 'Banned',
         ],

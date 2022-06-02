@@ -56,6 +56,8 @@ class Payment extends Model
         self::STATUS_REJECTED => 'default',
     ];
 
+    public $timestamps = false;
+    protected $guarded = ['id'];
     protected $appends = [
         'status_name',
     ];

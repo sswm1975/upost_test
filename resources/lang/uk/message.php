@@ -40,6 +40,7 @@ return [
     'not_have_permission'     => 'У вас немає дозволу.',
     'already_have_complaint'  => 'Уже є скарга від вас.',
     'chat_not_found'          => 'Чат не знайдено.',
+    'exists_active_statement' => 'Існує активне замовлення.',
     'statement_max_limit'     => 'Було створено максимальну кількість пролонгацій.',
     'deadline_not_arrived'    => 'Кінцевий термін не надійшов.',
     'statement_not_found'     => 'Заяву не знайдено.',
@@ -88,6 +89,7 @@ return [
             'active'     => 'Активна',
             'in_work'    => 'В роботі',
             'closed'     => 'Закрита',
+            'failed'     => 'Виконана',
             'successful' => 'Успішна',
             'banned'     => 'Заборонений',
         ],
@@ -137,6 +139,7 @@ return [
             'canceled'  => 'Відмінений',
         ],
     ],
+
     # Payment attributes
     'payment' => [
         'statuses' => [
