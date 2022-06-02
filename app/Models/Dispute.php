@@ -6,6 +6,7 @@ use Encore\Admin\Auth\Database\Administrator;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\Dispute
@@ -165,6 +166,11 @@ class Dispute extends Model
     public function admin_user(): BelongsTo
     {
         return $this->belongsTo(Administrator::class, 'admin_user_id');
+    }
+
+    public function track(): HasOne
+    {
+        return $this->hasOne(Track::class);
     }
 
     ### SCOPES ###

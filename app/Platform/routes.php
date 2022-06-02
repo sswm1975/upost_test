@@ -33,6 +33,9 @@ Route::group([
     # Споры
     $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes')->middleware('admin.permission:check,disputes');
 
+    # Треки доставки
+    $router->resource('tracks', 'TrackController')->names('tracks')->middleware('admin.permission:allow,administrator');
+
     # Чаты
     $router->get('chats', 'ChatController@index')->name('chats.index')->middleware('admin.permission:check,chats');
     $router->post('chats/add_message', 'ChatController@addMessage')->name('chats.add_message')->middleware('admin.permission:check,chats');

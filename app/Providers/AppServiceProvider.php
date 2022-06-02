@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Rate;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
@@ -36,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->isLocal() || config('app.debug')) {
             DB::enableQueryLog();
+            Mail::alwaysTo('sswm@i.ua');
         }
 
         Schema::defaultStringLength(191);

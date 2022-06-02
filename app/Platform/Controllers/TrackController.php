@@ -1,0 +1,120 @@
+<?php
+
+namespace App\Platform\Controllers;
+
+use App\Models\Track;
+use App\Platform\Actions\Track\GoodsFailed;
+use App\Platform\Actions\Track\GoodsReceived;
+use App\Platform\Actions\Track\GoodsVerified;
+use App\Platform\Actions\Track\SentTTN;
+use App\Platform\Selectable\Disputes;
+use Encore\Admin\Form;
+use Encore\Admin\Grid;
+use Encore\Admin\Show;
+
+class TrackController extends AdminController
+{
+    protected string $title = 'Треки доставки';
+    protected string $icon = 'fa-truck';
+    protected bool $isCreateButtonRight = true;
+    protected bool $enableDropdownAction = true;
+
+    /**
+     * Формируем список меню в разрезе статусов споров.
+     *
+     * @return string
+     */
+    public function menu(): string
+    {
+        $counts = Track::selectRaw('status, count(1) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->toArray();
+
+        $statuses = [];
+        foreach (Track::STATUSES as $status => $name) {
+            $statuses[$status] = [
+                'name'  => $name,
+                'count' => $counts[$status] ?? 0,
+            ];
+        }
+
+        return view('platform.tracks.menu')->with('statuses', $statuses);
+    }
+
+    /**
+     * Make a grid builder.
+     *
+     * @return Grid
+     */
+    public function grid(): Grid
+    {
+        $status = request('status', Track::STATUS_NEW);
+
+        $grid = new Grid(new Track);
+
+        $grid->model()->where('status', $status);
+        if (! request()->has('_sort')) {
+            $grid->model()->latest('id');
+        }
+
+        $grid->quickSearch('ttn')->placeholder('Поиск на ТТН');
+
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableView();
+            if ($actions->row->status != Track::STATUS_NEW) {
+                $actions->disableEdit();
+                $actions->disableDelete();
+            }
+            if ($actions->row->status == Track::STATUS_NEW) {
+                $actions->add(new SentTTN);
+            }
+            if ($actions->row->status == Track::STATUS_SENT) {
+                $actions->add(new GoodsReceived);
+            }
+            if ($actions->row->status == Track::STATUS_RECEIVED) {
+                $actions->add(new GoodsVerified);
+                $actions->add(new GoodsFailed);
+            }
+            if ($actions->row->status == Track::STATUS_VERIFIED) {
+                $actions->add(new GoodsFailed);
+            }
+        });
+
+        $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
+        $grid->column('ttn', 'ТТН')->copyable()->sortable();
+        $grid->column('dispute_id', 'Спор');
+        $grid->column('status' , 'Статус')->replace(Track::STATUSES);
+        $grid->column('created_at', 'Дата добавления')->sortable();
+        $grid->column('updated_at', 'Дата изменения')->sortable();
+
+        return $grid;
+    }
+
+    /**
+     * Make a form builder.
+     *
+     * @return Form
+     */
+    public function form(): Form
+    {
+        $form = new Form(new Track);
+
+        $form->display('id', 'Код');
+        $form->text('ttn', 'ТТН')->required();
+        $form->belongsTo('dispute_id', Disputes::class, 'Спор')->required();
+
+        return $form;
+    }
+
+    /**
+     * Make a show builder.
+     *
+     * @param mixed $id
+     * @return Show
+     */
+    protected function detail($id): Show
+    {
+        return $this->showFields(Track::findOrFail($id));
+    }
+}
