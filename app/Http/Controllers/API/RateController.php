@@ -14,6 +14,7 @@ use App\Modules\Liqpay;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
@@ -317,22 +318,7 @@ class RateController extends Controller
             throw new ErrorException('Статус платежа не равен "success" или "sandbox", получен статус "'.$liqpay['status'].'"');
         }
 
-        Transaction::create([
-            'user_id'         => $liqpay['info']['user_id'],
-            'rate_id'         => $rate_id,
-            'amount'          => $liqpay['amount'],
-            'order_amount'    => $liqpay['info']['order_amount'],
-            'liqpay_fee'      => $liqpay['info']['liqpay_fee'],
-            'delivery_amount' => $liqpay['info']['delivery_amount'],
-            'service_fee'     => $liqpay['info']['service_fee'],
-            'export_tax'      => $liqpay['info']['export_tax'],
-            'description'     => $liqpay['description'],
-            'status'          => $liqpay['status'],
-            'response'        => $liqpay,
-            'payed_at'        => gmdate('Y-m-d H:i:s', strtotime("+2 hours", $liqpay['end_date'] / 1000)),
-        ]);
-
-        $rate = Rate::find($rate_id);
+        $rate = Rate::whereKey($rate_id)->whereStatus(Rate::STATUS_ACTIVE)->first();
         if (! $rate) {
             throw new ErrorException(__('message.rate_not_found'));
         }
@@ -340,15 +326,42 @@ class RateController extends Controller
         # ищем существующий чат или создаем новый
         $chat = Chat::searchOrCreate($rate->route_id, $rate->order_id, $rate->user_id, $liqpay['info']['user_id']);
 
-        # информируем в чат, что заказчик оплатил заказ.
-        Chat::addSystemMessage($chat->id, 'customer_paid_order');
+        DB::beginTransaction();
 
-        # обновляем данные по ставке
-        $rate->status = Rate::STATUS_ACCEPTED;
-        $rate->is_read = true;
-        $rate->chat_id = $chat->id;
-        $rate->save();
-        $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
+        try {
+            # обновляем данные по ставке
+            $rate->status = Rate::STATUS_ACCEPTED;
+            $rate->is_read = true;
+            $rate->chat_id = $chat->id;
+            $rate->save();
+            $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
+
+            Transaction::create([
+                'user_id'         => $liqpay['info']['user_id'],
+                'rate_id'         => $rate_id,
+                'amount'          => $liqpay['amount'],
+                'order_amount'    => $liqpay['info']['order_amount'],
+                'liqpay_fee'      => $liqpay['info']['liqpay_fee'],
+                'delivery_amount' => $liqpay['info']['delivery_amount'],
+                'service_fee'     => $liqpay['info']['service_fee'],
+                'export_tax'      => $liqpay['info']['export_tax'],
+                'description'     => $liqpay['description'],
+                'status'          => $liqpay['status'],
+                'response'        => $liqpay,
+                'payed_at'        => gmdate('Y-m-d H:i:s', strtotime("+2 hours", $liqpay['end_date'] / 1000)),
+            ]);
+
+            # информируем в чат, что заказчик оплатил заказ.
+            Chat::addSystemMessage($chat->id, 'customer_paid_order');
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            Log::debug($e->getMessage());
+
+            throw new ErrorException($e->getMessage());
+        }
 
         return response()->json([
             'status' => true,
