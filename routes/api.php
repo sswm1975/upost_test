@@ -101,7 +101,7 @@ Route::namespace('API')->group(function ($route) {
         $route->post('{order_id}/strike', 'OrderController@strikeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Заказы по выбранному маршруту
-        $route->get('route/{route_id}/show', 'OrderController@showOrdersByRoute');
+        $route->get('route/{route_id}/show', 'OrderController@showOrdersByRoute')->middleware(MIDDLEWARE_AUTH_BASIC);
     });
 
     # Маршрути
