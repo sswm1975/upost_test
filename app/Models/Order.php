@@ -18,6 +18,7 @@ class Order extends Model
     const STATUS_ACTIVE = 'active';
     const STATUS_IN_WORK = 'in_work';
     const STATUS_CLOSED = 'closed';
+    const STATUS_FAILED = 'failed';
     const STATUS_BANNED = 'banned';
     const STATUS_SUCCESSFUL = 'successful';
 
@@ -25,6 +26,7 @@ class Order extends Model
         self::STATUS_ACTIVE,
         self::STATUS_IN_WORK,
         self::STATUS_CLOSED,
+        self::STATUS_FAILED,
         self::STATUS_BANNED,
         self::STATUS_SUCCESSFUL,
     ];
@@ -305,7 +307,7 @@ class Order extends Model
             ->whereColumn('orders.from_country_id', 'routes.from_country_id')
             ->whereColumn('orders.to_country_id', 'routes.to_country_id')
             ->where(function($query) {
-                return $query->whereColumn('orders.from_city_id', 'routes.from_city_id')
+                return $query->whereRaw('IFNULL(orders.from_city_id, 0) = IFNULL(routes.from_city_id, 0)')
                     ->orWhere(function ($query) {
                         return $query->whereNull('orders.from_city_id')->where('routes.from_city_id', '>', 0);
                     })
@@ -314,7 +316,7 @@ class Order extends Model
                     });
             })
             ->where(function($query) {
-                return $query->whereColumn('orders.to_city_id', 'routes.to_city_id')
+                return $query->whereRaw('IFNULL(orders.to_city_id, 0) = IFNULL(routes.to_city_id, 0)')
                     ->orWhere(function ($query) {
                         return $query->whereNull('orders.to_city_id')->where('routes.to_city_id', '>', 0);
                     })
