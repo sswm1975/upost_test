@@ -61,16 +61,14 @@ class MailingController extends Controller
      */
     private static function getMailings(): array
     {
-        $mailings = [];
-        $items = collect(Admin::menu())->keyBy('uri')->get('mailings')['children'];
-        foreach ($items as $item) {
-            $key = str_replace('mailings/', '',  $item['uri']);
-            $mailings[$key] = [
-                'title' => $item['title'],
-                'icon'  => $item['icon'],
-            ];
-        }
-        return $mailings;
+        $menuClass = config('admin.database.menu_model');
+
+        return $menuClass::query()
+            ->where('uri', 'like', 'mailings/%')
+            ->selectRaw('replace(uri, "mailings/", "") uri, title, icon')
+            ->get()
+            ->keyBy('uri')
+            ->toArray();
     }
 
     /**
