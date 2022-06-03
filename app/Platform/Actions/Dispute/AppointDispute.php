@@ -3,20 +3,20 @@
 namespace App\Platform\Actions\Dispute;
 
 use App\Models\Dispute;
-use Encore\Admin\Actions\BatchAction;
+use Encore\Admin\Actions\Response;
+use Encore\Admin\Actions\RowAction;
 use Encore\Admin\Auth\Database\Administrator;
-use Encore\Admin\Facades\Admin;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
-class AppointDispute extends BatchAction
+class AppointDispute extends RowAction
 {
     public $name = 'Назначить спор менеджеру';
     protected $selector = '.text-green';
 
-    public function authorize(Administrator $user, Collection $model)
+    public function authorize(Administrator $user, Dispute $model): bool
     {
-        return $user->isAdministrator();
+        return $user->isAdministrator()
+            && $model->status == Dispute::STATUS_ACTIVE;
     }
 
     public function form()
@@ -26,14 +26,14 @@ class AppointDispute extends BatchAction
             ->rules('required');
     }
 
-    public function handle(Collection $collection, Request $request)
+    public function handle(Dispute $model, Request $request): Response
     {
-        foreach ($collection as $model) {
-            $model->admin_user_id = $request->get('admin_user_id');
-            $model->status = Dispute::STATUS_APPOINTED;
-            $model->save();
-        }
+        $model->admin_user_id = $request->get('admin_user_id');
+        $model->status = Dispute::STATUS_APPOINTED;
+        $model->save();
 
-        return $this->response()->success('Споры назначены менеджерам!')->refresh();
+        return $this->response()
+            ->success('Спор назначен менеджеру!')
+            ->refresh();
     }
 }

@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|null $closed_user_id Код пользователя закрывший спор
  * @property int|null $admin_user_id Менеджер закрепленный за спором
  * @property int $unread_messages_count Кол-во непрочитанных сообщений менеджером
+ * @property int|null $dispute_closed_reason_id Причина закрытия спора
+ * @property string|null $reason_closing_description Детальное описание закрытия спора менеджером чата
  * @property-read Administrator|null $admin_user
  * @property-read \App\Models\Chat $chat
  * @property-read \App\Models\User|null $closed_user
@@ -31,6 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read \App\Models\Message $message
  * @property-read \App\Models\DisputeProblem $problem
  * @property-read \App\Models\Rate $rate
+ * @property-read \App\Models\Track|null $track
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute active()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute appointed()
@@ -45,10 +48,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereClosedUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereDisputeClosedReasonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereMessageId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereProblemId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereRateId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereReasonClosingDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUnreadMessagesCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUpdatedAt($value)
@@ -66,19 +71,19 @@ class Dispute extends Model
     const STATUS_CANCELED  = 'canceled';
 
     const STATUSES = [
-        self::STATUS_ACTIVE,
-        self::STATUS_APPOINTED,
-        self::STATUS_IN_WORK,
-        self::STATUS_CLOSED,
-        self::STATUS_CANCELED,
+        self::STATUS_ACTIVE    => 'Активный',
+        self::STATUS_APPOINTED => 'Назначен',
+        self::STATUS_IN_WORK   => 'В работе',
+        self::STATUS_CLOSED    => 'Закрытый',
+        self::STATUS_CANCELED  => 'Отмененный',
     ];
 
     const STATUS_COLORS = [
-        self::STATUS_ACTIVE => 'danger',
+        self::STATUS_ACTIVE    => 'danger',
         self::STATUS_APPOINTED => 'warning',
-        self::STATUS_IN_WORK => 'success',
-        self::STATUS_CLOSED => 'info',
-        self::STATUS_CANCELED => 'default',
+        self::STATUS_IN_WORK   => 'success',
+        self::STATUS_CLOSED    => 'info',
+        self::STATUS_CANCELED  => 'default',
     ];
 
     public $timestamps = false;

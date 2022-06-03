@@ -9,17 +9,16 @@ use App\Platform\Actions\Dispute\CancelDispute;
 use App\Platform\Actions\Dispute\CloseDisputeGuiltyCustomer;
 use App\Platform\Actions\Dispute\CloseDisputeGuiltyPerformer;
 use App\Platform\Actions\Dispute\InWorkDispute;
-use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Encore\Admin\Show;
-use Illuminate\Support\Facades\DB;
 
 class DisputeController extends AdminController
 {
     protected string $title = 'Споры';
     protected string $icon = 'fa-gavel';
+    protected bool $enableDropdownAction = true;
 
     /**
      * Формируем список меню в разрезе статусов споров.
@@ -37,11 +36,11 @@ class DisputeController extends AdminController
             ->toArray();
 
         $statuses = [];
-        foreach (Dispute::STATUSES as $status) {
+        foreach (Dispute::STATUSES as $status => $name) {
             if (Admin::user()->isRole('dispute_manager') && $status == Dispute::STATUS_ACTIVE) continue;
 
             $statuses[$status] = (object) [
-                'name'  => __("message.dispute.statuses.$status"),
+                'name'  => $name,
                 'count' => $counts[$status] ?? 0,
                 'color' => Dispute::STATUS_COLORS[$status] ?? '',
             ];
@@ -61,42 +60,39 @@ class DisputeController extends AdminController
 
         $grid = new Grid(new Dispute);
 
-        $grid->disablePagination(false);
-        $grid->disableColumnSelector(false);
-        $grid->disableRowSelector(false);
-        $grid->disableCreateButton();
-        $grid->paginate(20);
+        $grid->disablePagination(false)
+            ->paginate(20)
+            ->disableCreateButton();
 
-        # Батчевые операции
-        $grid->batchActions(function ($batch) use ($status) {
-            # Назначить спор менеджеру
-            if (Admin::user()->isAdministrator() && $status == Dispute::STATUS_ACTIVE) {
-                $batch->add(new AppointDispute);
-            }
-
-            if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {
-                # Взять спор в работу
-                if ($status == Dispute::STATUS_APPOINTED) {
-                    $batch->add(new InWorkDispute);
-                }
-                # Закрыть спор: 2 варианта
-                if ($status == Dispute::STATUS_IN_WORK) {
-                    $batch->add(new CloseDisputeGuiltyPerformer);
-                    $batch->add(new CloseDisputeGuiltyCustomer);
-                    $batch->add(new CancelDispute);
-                }
-            }
-        });
-
+        # ROW ACTIONS
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
-            if (! Admin::user()->isAdministrator()) {
-                $actions->disableView();
+
+            # Назначить спор менеджеру
+            if (Admin::user()->isAdministrator() && $actions->row->status == Dispute::STATUS_ACTIVE) {
+                $actions->add(new AppointDispute);
+            }
+
+            # Взять спор в работу
+            if ($actions->row->status == Dispute::STATUS_APPOINTED) {
+                $actions->add(new InWorkDispute);
+            }
+
+            # Закрыть спор: 2 варианта
+            if ($actions->row->status == Dispute::STATUS_IN_WORK) {
+                $actions->add(new CloseDisputeGuiltyPerformer);
+                $actions->add(new CloseDisputeGuiltyCustomer);
+                $actions->add(new CancelDispute);
+            }
+
+            # в последнем статусе запрещаем все
+            if (in_array($actions->row->status, [Dispute::STATUS_CLOSED, Dispute::STATUS_CANCELED])) {
                 $actions->disableEdit();
+                $actions->disableView();
             }
         });
 
-        $grid->model()->addSelect(DB::raw('*, IFNULL((SELECT COUNT(1) FROM messages WHERE chat_id = disputes.chat_id), 0) AS messages_cnt'));
+        $grid->model()->selectRaw('*, IFNULL((SELECT COUNT(1) FROM messages WHERE chat_id = disputes.chat_id), 0) AS messages_cnt');
 
         # FILTERS
         if (Admin::user()->isRole('dispute_manager')) {
@@ -160,21 +156,11 @@ class DisputeController extends AdminController
      */
     protected function form(): Form
     {
-        $statuses = [];
-        foreach (Dispute::STATUSES as $status) {
-            $statuses[$status] = __("message.dispute.statuses.$status");
-        }
-
         $form = new Form(new Dispute);
 
         $form->display('id', 'Код');
         $form->date('deadline', 'Дата дедлайна');
         $form->select('chat.lock_status', 'Статус блокировки')->options(Chat::LOCK_STATUSES);
-
-        if (Admin::user()->isAdministrator()) {
-            $form->select('status', 'Статус')->options($statuses);
-            $form->select('admin_user_id', 'Менеджер')->options(Administrator::pluck('username', 'id'));
-        }
 
         return $form;
     }
