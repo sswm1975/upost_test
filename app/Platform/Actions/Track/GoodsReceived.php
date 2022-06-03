@@ -5,31 +5,12 @@ namespace App\Platform\Actions\Track;
 use App\Models\Track;
 use Encore\Admin\Actions\RowAction;
 use Encore\Admin\Actions\Response;
-use Illuminate\Database\Eloquent\Model;
 
 class GoodsReceived extends RowAction
 {
     public $name = 'Товар получен';
+    protected $selector = '.text-green';
 
-    /**
-     * Обработчик.
-     *
-     * @param Model $model
-     * @return Response
-     */
-    public function handle(Model $model)
-    {
-        $model->status = Track::STATUS_RECEIVED;
-        $model->save();
-
-        return $this->response()->success('Успешно изменён статус трека')->refresh();
-    }
-
-    /**
-     * Show dialog box.
-     *
-     * @return void
-     */
     public function dialog()
     {
         $ttn = $this->row()->ttn;
@@ -44,4 +25,13 @@ class GoodsReceived extends RowAction
         );
     }
 
+    public function handle(Track $model): Response
+    {
+        $model->status = Track::STATUS_RECEIVED;
+        $model->save();
+
+        return $this->response()
+            ->success('Успешно изменён статус трека')
+            ->refresh();
+    }
 }

@@ -61,6 +61,7 @@ class PaymentController extends AdminController
             ->disablePagination(false)
             ->paginate(20);
 
+        # ROW ACTIONS
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
             $actions->disableEdit();

@@ -50,38 +50,52 @@ class TrackController extends AdminController
      */
     public function grid(): Grid
     {
-        $status = request('status', Track::STATUS_NEW);
-
         $grid = new Grid(new Track);
 
-        $grid->model()->where('status', $status);
-        if (! request()->has('_sort')) {
-            $grid->model()->latest('id');
-        }
+
+        $grid->disablePagination(false)->paginate(20);
 
         $grid->quickSearch('ttn')->placeholder('Поиск на ТТН');
 
+        # ROW ACTIONS
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableView();
+
+            # Только для статуса новый активны операции Редактировать и Удалить
             if ($actions->row->status != Track::STATUS_NEW) {
                 $actions->disableEdit();
                 $actions->disableDelete();
             }
+
+            # Отправить ТТН
             if ($actions->row->status == Track::STATUS_NEW) {
                 $actions->add(new SentTTN);
             }
+
+            # Товар получен
             if ($actions->row->status == Track::STATUS_SENT) {
                 $actions->add(new GoodsReceived);
             }
+
+            # Товар проверен или испорчен
             if ($actions->row->status == Track::STATUS_RECEIVED) {
                 $actions->add(new GoodsVerified);
                 $actions->add(new GoodsFailed);
             }
+
+            # Товар все-таки испорчен
             if ($actions->row->status == Track::STATUS_VERIFIED) {
                 $actions->add(new GoodsFailed);
             }
         });
 
+        # FILTERS & SORT
+        $grid->model()->where('status', request('status', Track::STATUS_NEW));
+        if (! request()->has('_sort')) {
+            $grid->model()->latest('id');
+        }
+
+        # COLUMNS
         $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
         $grid->column('ttn', 'ТТН')->copyable()->sortable();
         $grid->column('dispute_id', 'Спор');

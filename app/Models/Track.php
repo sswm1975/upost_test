@@ -5,6 +5,27 @@ namespace App\Models;
 use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Track
+ *
+ * @property int $id Код
+ * @property string $ttn ТТН
+ * @property int|null $dispute_id Код спора
+ * @property string $status Статус
+ * @property \Illuminate\Support\Carbon|null $created_at Добавлено
+ * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property-read \App\Models\Dispute|null $dispute
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereDisputeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereTtn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Track extends Model
 {
     use TimestampSerializable;
