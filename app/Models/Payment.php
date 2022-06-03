@@ -37,33 +37,28 @@ class Payment extends Model
 {
     use TimestampSerializable;
 
-    const STATUS_ACTIVE  = 'active';
+    const STATUS_NEW  = 'new';
     const STATUS_APPOINTED  = 'appointed';
     const STATUS_DONE = 'done';
     const STATUS_REJECTED  = 'rejected';
 
     const STATUSES = [
-        self::STATUS_ACTIVE,
-        self::STATUS_APPOINTED,
-        self::STATUS_DONE,
-        self::STATUS_REJECTED,
+        self::STATUS_NEW       => 'Новая',
+        self::STATUS_APPOINTED => 'Назначенная',
+        self::STATUS_DONE      => 'Выполненная',
+        self::STATUS_REJECTED  => 'Отклоненная',
     ];
 
     const STATUS_COLORS = [
-        self::STATUS_ACTIVE => 'danger',
+        self::STATUS_NEW       => 'danger',
         self::STATUS_APPOINTED => 'warning',
-        self::STATUS_DONE => 'success',
-        self::STATUS_REJECTED => 'default',
+        self::STATUS_DONE      => 'success',
+        self::STATUS_REJECTED  => 'default',
     ];
 
     public $timestamps = false;
     protected $guarded = ['id'];
-    protected $appends = [
-        'status_name',
-    ];
-    protected $attributes = [
-        'status'  => self::STATUS_ACTIVE,
-    ];
+    protected $attributes = ['status'  => self::STATUS_NEW];
 
     ### BOOT ###
 
@@ -83,13 +78,6 @@ class Payment extends Model
         static::updating(function ($model) {
             $model->updated_at = $model->freshTimestamp();
         });
-    }
-
-    ### GETTERS ###
-
-    public function getStatusNameAttribute(): string
-    {
-        return __("message.payment.statuses.$this->status");
     }
 
     ### LINKS ###

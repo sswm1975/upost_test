@@ -19,8 +19,7 @@ class CreatePaymentsTable extends Migration
             $table->decimal('amount', 10)->default(0.00)->comment('Сумма');
             $table->string('description')->comment('Описание');
             $table->unsignedInteger('admin_user_id')->nullable()->comment('Менеджер, выполнивший платеж');
-            $table->unsignedInteger('transaction_id')->nullable()->comment('Транзакция по обработке платежа');
-            $table->enum('status', ['active', 'rejected', 'done'])->default('active')->comment('Статус');
+            $table->enum('status', ['new', 'appointed', 'rejected', 'done'])->default('new')->comment('Статус');
             $table->timestamp('created_at')->nullable()->comment('Добавлено');
             $table->timestamp('updated_at')->nullable()->comment('Изменено');
         });

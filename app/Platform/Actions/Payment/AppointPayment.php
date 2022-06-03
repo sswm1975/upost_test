@@ -3,26 +3,19 @@
 namespace App\Platform\Actions\Payment;
 
 use App\Models\Payment;
-use Encore\Admin\Actions\BatchAction;
+use Encore\Admin\Actions\Response;
+use Encore\Admin\Actions\RowAction;
 use Encore\Admin\Auth\Database\Administrator;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
-class AppointPayment extends BatchAction
+class AppointPayment extends RowAction
 {
     public $name = 'Назначить менеджеру';
     protected $selector = '.text-green';
 
-    /**
-     * Назначить заявку на выплату платежа может только Администратор.
-     *
-     * @param Administrator $user
-     * @param Collection $model
-     * @return bool
-     */
-    public function authorize(Administrator $user, Collection $model)
+    public function authorize(Administrator $user, Payment $model): bool
     {
-        return $user->isAdministrator();
+        return $user->isAdministrator() && $model->status == Payment::STATUS_NEW;
     }
 
     public function form()
@@ -32,13 +25,11 @@ class AppointPayment extends BatchAction
             ->rules('required');
     }
 
-    public function handle(Collection $collection, Request $request)
+    public function handle(Payment $model, Request $request): Response
     {
-        foreach ($collection as $model) {
-            $model->admin_user_id = $request->get('admin_user_id');
-            $model->status = Payment::STATUS_APPOINTED;
-            $model->save();
-        }
+        $model->admin_user_id = $request->get('admin_user_id');
+        $model->status = Payment::STATUS_APPOINTED;
+        $model->save();
 
         return $this->response()->success('Платеж назначен менеджеру')->refresh();
     }

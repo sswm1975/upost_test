@@ -4,6 +4,7 @@ namespace App\Platform\Controllers;
 
 use App\Models\Payment;
 use App\Platform\Actions\Payment\AppointPayment;
+use App\Platform\Actions\Payment\DonePayment;
 use App\Platform\Actions\Payment\RejectPayment;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Grid;
@@ -14,9 +15,10 @@ class PaymentController extends AdminController
 {
     protected string $title = 'Заявки на выплату';
     protected string $icon = 'fa-money';
+    protected bool $enableDropdownAction = true;
 
     /**
-     * Формируем список меню в разрезе статусов споров.
+     * Формируем список меню в разрезе статусов платежа.
      *
      * @return array
      */
@@ -31,11 +33,11 @@ class PaymentController extends AdminController
             ->toArray();
 
         $statuses = [];
-        foreach (Payment::STATUSES as $status) {
-            if (Admin::user()->isRole('dispute_manager') && $status == Payment::STATUS_ACTIVE) continue;
+        foreach (Payment::STATUSES as $status => $name) {
+            if (Admin::user()->isRole('finance_manager') && $status == Payment::STATUS_NEW) continue;
 
             $statuses[$status] = (object) [
-                'name'  => __("message.payment.statuses.$status"),
+                'name'  => $name,
                 'count' => $counts[$status] ?? 0,
                 'color' => Payment::STATUS_COLORS[$status] ?? '',
             ];
@@ -51,53 +53,53 @@ class PaymentController extends AdminController
      */
     protected function grid(): Grid
     {
-        $status = request('status', Payment::STATUS_ACTIVE);
+        $status = request('status', Payment::STATUS_NEW);
 
         $grid = new Grid(new Payment);
 
-        $grid->disablePagination(false);
-        $grid->disableColumnSelector(false);
-        $grid->disableRowSelector(false);
-        $grid->disableCreateButton();
-        $grid->paginate(20);
-
-        # Батчевые операции
-        $grid->batchActions(function ($batch) use ($status) {
-            # Назначить спор менеджеру
-            if (Admin::user()->isAdministrator() && $status == Payment::STATUS_ACTIVE) {
-                $batch->add(new AppointPayment);
-            }
-
-            # Отклонить платеж
-            if (Admin::user()->isAdministrator() && in_array($status, [Payment::STATUS_ACTIVE, Payment::STATUS_APPOINTED])) {
-                $batch->add(new RejectPayment);
-            }
-        });
+        $grid->disableCreateButton()
+            ->disablePagination(false)
+            ->paginate(20);
 
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
-            if (! Admin::user()->isAdministrator()) {
-                $actions->disableView();
-                $actions->disableEdit();
+            $actions->disableEdit();
+
+            # Назначить заявку финансовому менеджеру
+            if (Admin::user()->isAdministrator() && $actions->row->status == Payment::STATUS_NEW) {
+                $actions->add(new AppointPayment);
+            }
+
+            # Выполнена заявка
+            if ($actions->row->status == Payment::STATUS_APPOINTED) {
+                $actions->add(new DonePayment);
+            }
+
+            # Отклонить заявку
+            if (in_array($actions->row->status, [Payment::STATUS_NEW, Payment::STATUS_APPOINTED])) {
+                $actions->add(new RejectPayment);
             }
         });
 
-        # FILTERS
-        if (Admin::user()->isRole('dispute_manager')) {
+        # FILTERS & SORT
+        $grid->model()->where('status', $status);
+        if (Admin::user()->isRole('finance_manager')) {
             $grid->model()->where('admin_user_id', Admin::user()->id);
         }
-        $grid->model()->where('status', $status);
+        if (! request()->has('_sort')) {
+            $grid->model()->latest('id');
+        }
 
         # COLUMNS
-        $grid->column('id', 'Код')->sortable();
-        $grid->column('user_id', 'Код К.')->sortable();
+        $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
+        $grid->column('user_id', 'Код К.')->setAttributes(['align' => 'center'])->sortable();
         $grid->column('user.full_name', 'Клиент');
         $grid->column('user.card_number', 'Карта клиента');
-        $grid->column('amount', 'Сумма');
+        $grid->column('amount', 'Сумма')->setAttributes(['align' => 'right'])->sortable();
         $grid->column('description', 'Описание заявки');
-        $grid->column('status', 'Статус')->showOtherField('status_name')->sortable();
+        $grid->column('status', 'Статус')->replace(Payment::STATUSES)->sortable();
 
-        if ($status != Payment::STATUS_ACTIVE) {
+        if ($status != Payment::STATUS_NEW) {
             $grid->column('admin_user_id', 'Код М.')->sortable();
             $grid->column('admin_user.username', 'Менеджер');
         }
