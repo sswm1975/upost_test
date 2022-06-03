@@ -15,6 +15,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 class DisputeController extends AdminController
 {
@@ -24,9 +25,9 @@ class DisputeController extends AdminController
     /**
      * Формируем список меню в разрезе статусов споров.
      *
-     * @return string
+     * @return array
      */
-    public function menu(): string
+    public function menu(): array
     {
         $counts = Dispute::selectRaw('status, count(1) as total')
             ->when(! Admin::user()->isAdministrator(), function ($query) {
@@ -40,13 +41,14 @@ class DisputeController extends AdminController
         foreach (Dispute::STATUSES as $status) {
             if (Admin::user()->isRole('dispute_manager') && $status == Dispute::STATUS_ACTIVE) continue;
 
-            $statuses[$status] = [
-                'name' => __("message.dispute.statuses.$status"),
+            $statuses[$status] = (object) [
+                'name'  => __("message.dispute.statuses.$status"),
                 'count' => $counts[$status] ?? 0,
+                'color' => Dispute::STATUS_COLORS[$status] ?? '',
             ];
         }
 
-        return view('platform.disputes.menu')->with('statuses', $statuses);
+        return compact('statuses');
     }
 
     /**

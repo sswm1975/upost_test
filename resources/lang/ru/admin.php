@@ -37,7 +37,7 @@ return [
     'show'                  => 'Показать',
     'entries'               => 'записей',
     'captcha'               => 'Защитный код',
-    'action'                => 'Опции',
+    'action'                => ' ',
     'title'                 => 'Название',
     'description'           => 'Описание',
     'back'                  => 'Назад',

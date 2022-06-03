@@ -5,7 +5,6 @@ namespace App\Platform\Controllers;
 use App\Models\Payment;
 use App\Platform\Actions\Payment\AppointPayment;
 use App\Platform\Actions\Payment\RejectPayment;
-use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
@@ -19,9 +18,9 @@ class PaymentController extends AdminController
     /**
      * Формируем список меню в разрезе статусов споров.
      *
-     * @return string
+     * @return array
      */
-    public function menu(): string
+    public function menu(): array
     {
         $counts = Payment::selectRaw('status, count(1) as total')
             ->when(! Admin::user()->isAdministrator(), function ($query) {
@@ -35,13 +34,14 @@ class PaymentController extends AdminController
         foreach (Payment::STATUSES as $status) {
             if (Admin::user()->isRole('dispute_manager') && $status == Payment::STATUS_ACTIVE) continue;
 
-            $statuses[$status] = [
-                'name' => __("message.payment.statuses.$status"),
+            $statuses[$status] = (object) [
+                'name'  => __("message.payment.statuses.$status"),
                 'count' => $counts[$status] ?? 0,
+                'color' => Payment::STATUS_COLORS[$status] ?? '',
             ];
         }
 
-        return view('platform.payments.menu')->with('statuses', $statuses);
+        return compact('statuses');
     }
 
     /**

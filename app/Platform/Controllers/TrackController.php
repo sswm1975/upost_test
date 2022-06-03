@@ -22,9 +22,9 @@ class TrackController extends AdminController
     /**
      * Формируем список меню в разрезе статусов споров.
      *
-     * @return string
+     * @return array
      */
-    public function menu(): string
+    public function menu(): array
     {
         $counts = Track::selectRaw('status, count(1) as total')
             ->groupBy('status')
@@ -33,13 +33,14 @@ class TrackController extends AdminController
 
         $statuses = [];
         foreach (Track::STATUSES as $status => $name) {
-            $statuses[$status] = [
+            $statuses[$status] = (object) [
                 'name'  => $name,
                 'count' => $counts[$status] ?? 0,
+                'color' => Track::STATUS_COLORS[$status] ?? '',
             ];
         }
 
-        return view('platform.tracks.menu')->with('statuses', $statuses);
+        return compact('statuses');
     }
 
     /**

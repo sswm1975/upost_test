@@ -17,21 +17,21 @@ class Track extends Model
     const STATUS_CLOSED = 'closed';
 
     const STATUSES = [
-        self::STATUS_NEW => 'Новый',
-        self::STATUS_SENT => 'Отправленный',
+        self::STATUS_NEW      => 'Новый',
+        self::STATUS_SENT     => 'Отправленный',
         self::STATUS_RECEIVED => 'Полученный',
         self::STATUS_VERIFIED => 'Проверен',
-        self::STATUS_FAILED => 'Проблемный',
-        self::STATUS_CLOSED => 'Закрытый',
+        self::STATUS_FAILED   => 'Проблемный',
+        self::STATUS_CLOSED   => 'Закрытый',
     ];
 
     const STATUS_COLORS = [
-        self::STATUS_NEW => 'info',
-        self::STATUS_SENT => 'primary',
+        self::STATUS_NEW      => 'info',
+        self::STATUS_SENT     => 'primary',
         self::STATUS_RECEIVED => 'warning',
         self::STATUS_VERIFIED => 'success',
-        self::STATUS_FAILED => 'danger',
-        self::STATUS_CLOSED => 'default',
+        self::STATUS_FAILED   => 'danger',
+        self::STATUS_CLOSED   => 'default',
     ];
 
     protected $attributes = [

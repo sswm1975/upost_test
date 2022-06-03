@@ -179,7 +179,10 @@ EOT
             ->breadcrumb(...$this->breadcrumb());
 
         if (method_exists($this, 'menu')) {
-            $content->row($this->menu());
+            Admin::style(self::styleMenu());
+            $content->row(
+                view('platform.grid.menu', $this->menu())
+            );
         }
 
         return $content->body($this->grid());
@@ -299,6 +302,21 @@ EOT
             /* Модальное окно: для заголовка меняем курсор */
             .modal-header {cursor: move;}
 
+EOT;
+    }
+    /**
+     * Get index style.
+     *
+     * @return string
+     */
+    protected static function styleMenu(): string
+    {
+        return <<<EOT
+            .box.grid-box {border-top: 0;}
+            .nav-statuses li:first-child {margin-left: 20px;}
+            .nav-statuses li a {padding:4px 7px;}
+            .nav-statuses li a.active {border-color: lightgray; background: white; border-bottom: 1px solid white;}
+            .nav-statuses .label {padding: 0.1em 0.3em; border-radius: 50%;}
 EOT;
     }
 
