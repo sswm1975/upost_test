@@ -30,6 +30,9 @@ Route::group([
     # Платежи (Заявки на выплату)
     $router->resource('payments', 'PaymentController', ['except' => ['delete']])->names('payments')->middleware('admin.permission:check,payments');
 
+    # Транзакции
+    $router->get('transactions', 'TransactionController@index')->name('transactions.index')->middleware('admin.permission:allow,administrator');
+
     # Споры
     $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes')->middleware('admin.permission:check,disputes');
 
@@ -77,7 +80,6 @@ Route::group([
 
         # Причины закрытия спора
         $router->resource('dispute_closed_reasons', 'DisputeClosedReasonController')->names('dispute_closed_reasons');
-
     });
 
     # Пункты меню "Админка"
@@ -92,7 +94,5 @@ Route::group([
 
         # Пользователи (вместо дефолтного Encore\Admin\Controllers\UserController)
         $router->resource('users', 'UserController')->names('admin.auth.users');
-
-
     });
 });

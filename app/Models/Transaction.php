@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Transaction
@@ -44,7 +46,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Transaction extends Model
 {
+    use TimestampSerializable;
+
     protected $guarded = ['id'];
     protected $casts = ['response' => 'array'];
     protected $dates = ['payed_at'];
+
+    ### LINKS ###
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id')->withDefault();
+    }
 }
