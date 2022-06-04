@@ -47,6 +47,7 @@ class MailingController extends Controller
             ->title("<i class='fa {$icon}'></i>&nbsp;{$title}")
             ->description('рассылка')
             ->breadcrumb(
+                ['text' => 'Справочники', 'icon' => 'book'],
                 ['text' => 'Рассылки', 'icon' => 'envelope-o'],
                 ['text' => $mailings[$mailing]['title'], 'icon' => str_replace('fa-', '', $icon)],
             )

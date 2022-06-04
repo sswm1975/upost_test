@@ -52,7 +52,6 @@ class TrackController extends AdminController
     {
         $grid = new Grid(new Track);
 
-
         $grid->disablePagination(false)->paginate(20);
 
         $grid->quickSearch('ttn')->placeholder('Поиск на ТТН');

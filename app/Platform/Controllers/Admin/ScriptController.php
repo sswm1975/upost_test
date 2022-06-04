@@ -68,7 +68,7 @@ class ScriptController extends AdminController
             $form->belongsToMany('to_countries', Countries::class, 'Страны');
         })->tab('Инфо', function ($form) {
             $form->display('id', 'Код');
-            $form->textarea('description', 'Описание')->rows(20);
+            $form->textarea('description', 'Описание')->rows(20)->required();
         })->footer(function ($footer) {
             $footer->disableReset();
         });
