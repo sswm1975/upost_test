@@ -37,9 +37,9 @@ class ReviewController extends Controller
         $is_double = Review::owner()->whereRateId($data['rate_id'])->count();
         if ($is_double) throw new ErrorException(__('message.review_add_double'));
 
-        # авторизированный пользователь должен быть владельцем заказа или маршрута, а ставка быть в статусе выполнена
+        # авторизированный пользователь должен быть владельцем заказа или маршрута, а ставка быть в статусе Успешная или Завершенная
         $rate = Rate::whereKey($data['rate_id'])
-            ->whereStatus(Rate::STATUS_DONE)
+            ->whereIn('status', [Rate::STATUS_SUCCESSFUL, Rate::STATUS_DONE])
             ->where(function ($query) {
                 return $query->owner()->orWhereHas('order', function($query) {
                     $query->owner();
