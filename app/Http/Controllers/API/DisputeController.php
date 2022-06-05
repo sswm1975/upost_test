@@ -24,7 +24,7 @@ class DisputeController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidatorException|ValidationException
+     * @throws ValidatorException|ValidationException|ErrorException
      */
     public function addDispute(Request $request): JsonResponse
     {
@@ -36,7 +36,7 @@ class DisputeController extends Controller
             'images.*'   => 'nullable|string',
         ]);
 
-        if (Dispute::whereRateId($data['rate_id'])->where('status', '<>',Dispute::STATUS_CLOSED)->exists()) {
+        if (Dispute::whereRateId($data['rate_id'])->whereNotIn('status', [Dispute::STATUS_CLOSED, Dispute::STATUS_CANCELED])->exists()) {
             throw new ErrorException(__('message.dispute_exists'));
         }
 
