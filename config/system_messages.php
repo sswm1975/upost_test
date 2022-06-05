@@ -41,6 +41,11 @@ return [
         'ru' => 'Заказчик получил товар.',
         'uk' => 'Замовник отримав товар.',
     ],
+    'dispute_opened' => [
+        'en' => 'The dispute has been opened.',
+        'ru' => 'Открыт спор.',
+        'uk' => 'Відкрита суперечка.',
+    ],
     'dispute_canceled' => [
         'en' => 'The dispute has been canceled.',
         'ru' => 'Спор отменён.',

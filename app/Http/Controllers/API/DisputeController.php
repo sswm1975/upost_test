@@ -54,6 +54,9 @@ class DisputeController extends Controller
             throw new ErrorException(__('message.problem_not_found'));
         }
 
+        # информируем в чат об открытии спора
+        Chat::addSystemMessage($rate->chat_id, 'dispute_opened');
+
         # добавляем доп.данные
         $data['chat_id'] = $rate->chat_id;
         $data['deadline'] = Carbon::now()->addDays($problem->days)->toDateString();
