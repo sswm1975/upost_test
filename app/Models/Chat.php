@@ -403,9 +403,10 @@ class Chat extends Model
      * @param int $chat_id
      * @param mixed $alias
      * @param array $extra
+     * @param array $images
      * @return bool
      */
-    public static function addSystemMessage(int $chat_id, $alias, array $extra = []): bool
+    public static function addSystemMessage(int $chat_id, $alias, array $extra = [], array $images = []): bool
     {
         if (is_string($alias)) {
             $alias = [$alias];
@@ -415,6 +416,9 @@ class Chat extends Model
             $message->chat_id = $chat_id;
             $message->user_id = SYSTEM_USER_ID;
             $message->text    = $text;
+            if (!empty($images)) {
+                $message->images = $images;
+            }
             $message->save();
         }
 
