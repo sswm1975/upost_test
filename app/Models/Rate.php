@@ -73,7 +73,7 @@ class Rate extends Model
 
         $link_images = [];
         foreach ($images as $image) {
-            $link_images[] = asset("storage/{$this->user_id}/rates/{$image}");
+            $link_images[] = asset("storage/{$this->user_id}/chats/{$image}");
         }
 
         return $link_images;

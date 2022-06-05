@@ -391,8 +391,8 @@ class RateController extends Controller
         $rate->status = Rate::STATUS_BUYED;
         $rate->save();
 
-        # информируем в чат, что исполнитель купил товар.
-        Chat::addSystemMessage($rate->chat_id, 'performer_buyed_product');
+        # информируем в чат, что исполнитель купил товар и прикладываем фото к сообщению.
+        Chat::addSystemMessage($rate->chat_id, 'performer_buyed_product', [], $data['images']);
 
         return response()->json([
             'status' => true,
