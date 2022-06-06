@@ -6,6 +6,7 @@ use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Rate extends Model
 {
@@ -127,6 +128,16 @@ class Rate extends Model
     function route(): BelongsTo
     {
         return $this->belongsTo(Route::class, 'route_id', 'id')->withDefault();
+    }
+
+    /**
+     * Споры по ставке.
+     *
+     * @return HasMany
+     */
+    public function disputes(): HasMany
+    {
+        return $this->hasMany(Dispute::class);
     }
 
     ### SCOPES ###

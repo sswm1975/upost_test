@@ -79,6 +79,34 @@ class ReviewController extends Controller
     }
 
     /**
+     * Получить отзывы.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function showReviews(Request $request): JsonResponse
+    {
+        $reviews = Review::query()
+            ->with([
+                'user:id,name,surname,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
+                'rate',
+                'rate.order',
+                'rate.disputes',
+            ])
+            ->whereHas('rate', function ($q) {
+                $q->where('order_id', request()->get('order_id'));
+            })
+            ->get()
+            ->keyBy('recipient_type');
+
+        return response()->json([
+            'status'    => true,
+            'reviews'   => null_to_blank($reviews),
+            'sql' => getSQLForFixDatabase(),
+        ]);
+    }
+
+    /**
      * Получить пересчитанные рейтинги по пользователю в разрезе Заказчика (customer) и Исполнителя (performer).
      *
      * @param int $recipient_id

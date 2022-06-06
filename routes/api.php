@@ -175,6 +175,9 @@ Route::namespace('API')->group(function ($route) {
         # Добавить отзыв
         $route->post('add', 'ReviewController@addReview')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+        # Получить отзывы
+        $route->get('show', 'ReviewController@showReviews');
+
         # Получить рейтинги на основании перерасчета
         $route->get('{recipient_id}/calc', 'ReviewController@getCalcRating');
     });
