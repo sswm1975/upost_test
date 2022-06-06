@@ -83,26 +83,54 @@ class ReviewController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException|ValidationException|ValidatorException
      */
     public function showReviews(Request $request): JsonResponse
     {
+        $data = validateOrExit([
+            'order_id'     => 'integer',
+            'author_id'    => 'integer',
+            'recipient_id' => 'integer',
+        ]);
+
+        $not_params = $request->isNotFilled(['order_id', 'author_id', 'recipient_id']);
+        if ($not_params && empty($data['user_id'])) {
+            throw new ErrorException(__('message.error'));
+        }
+
         $reviews = Review::query()
             ->with([
-                'user:id,name,surname,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
+                'author:' . implode(',', User::FIELDS_FOR_SHOW),
+                'recipient:' . implode(',', User::FIELDS_FOR_SHOW),
                 'rate',
                 'rate.order',
                 'rate.disputes',
             ])
-            ->whereHas('rate', function ($q) {
-                $q->where('order_id', request()->get('order_id'));
+            ->when($request->filled('order_id'), function ($query) use ($request) {
+                return $query->whereHas('rate', function ($q) use ($request) {
+                    $q->where('order_id', $request->get('order_id'));
+                });
+              })
+            ->when($request->filled('author_id'), function ($query) use ($request) {
+                return $query->where('user_id', $request->get('author_id'));
             })
-            ->get()
-            ->keyBy('recipient_type');
+            ->when($request->filled('recipient_id'), function ($query) use ($request) {
+                return $query->where('recipient_id', $request->get('recipient_id'));
+            })
+            # если не указан ни один параметр, то отбираем все отзывы, где авторизированный пользователь был автором или получателем
+            ->when($not_params, function ($query) use ($data) {
+                return $query->where('user_id', $data['user_id'])->orWhere('recipient_id', $data['user_id']);
+            })
+            ->get();
+
+        # если указан код заказа или не указан ни один параметр, то группируем отзывы по типу получателя
+        if ($request->filled('order_id') || $not_params) {
+            $reviews = $reviews->keyBy('recipient_type');
+        }
 
         return response()->json([
             'status'    => true,
             'reviews'   => null_to_blank($reviews),
-            'sql' => getSQLForFixDatabase(),
         ]);
     }
 
