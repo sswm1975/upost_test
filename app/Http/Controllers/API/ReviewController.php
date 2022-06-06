@@ -83,7 +83,7 @@ class ReviewController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException|ValidationException|ValidatorException
+     * @throws ValidationException|ValidatorException
      */
     public function showReviews(Request $request): JsonResponse
     {
@@ -95,7 +95,10 @@ class ReviewController extends Controller
 
         $not_params = $request->isNotFilled(['order_id', 'author_id', 'recipient_id']);
         if ($not_params && empty($data['user_id'])) {
-            throw new ErrorException(__('message.error'));
+            return response()->json([
+                'status'  => true,
+                'reviews' => [],
+            ]);
         }
 
         $reviews = Review::query()
