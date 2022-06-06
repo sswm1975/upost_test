@@ -108,6 +108,7 @@ class ReviewController extends Controller
                 'rate',
                 'rate.order',
                 'rate.disputes',
+                'rate.disputes.problem',
             ])
             ->when($request->filled('order_id'), function ($query) use ($request) {
                 return $query->whereHas('rate', function ($q) use ($request) {
