@@ -6,6 +6,7 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
+use App\Models\Message;
 use App\Models\Order;
 use App\Models\Rate;
 use App\Models\Transaction;
@@ -391,8 +392,16 @@ class RateController extends Controller
         $rate->status = Rate::STATUS_BUYED;
         $rate->save();
 
-        # информируем в чат, что исполнитель купил товар и прикладываем фото к сообщению.
-        Chat::addSystemMessage($rate->chat_id, 'performer_buyed_product', [], $data['images']);
+        # отправляем системное сообщение, что исполнитель купил товар
+        Chat::addSystemMessage($rate->chat_id, 'performer_buyed_product');
+
+        # от имени исполнителя прикладываем фото к сообщению
+        Message::create([
+            'chat_id' => $rate->chat_id,
+            'user_id' => $data['user_id'],
+            'text' => '',
+            'images' => $data['images'],
+        ]);
 
         return response()->json([
             'status' => true,
