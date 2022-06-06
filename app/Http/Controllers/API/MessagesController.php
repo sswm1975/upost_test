@@ -142,8 +142,8 @@ class MessagesController extends Controller
     {
         # дополняем Чат данными об Исполнителе, Заказчике, Маршруте, Заказе и Ставке
         $chat->load([
-            'performer:id,name,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
-            'customer:id,name,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
+            'performer:id,name,surname,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
+            'customer:id,name,surname,photo,birthday,gender,status,validation,register_date,last_active,scores_count,reviews_count',
             'route',
             'route.from_country',
             'route.from_city',
