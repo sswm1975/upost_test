@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\Dispute;
 use App\Models\Order;
 use App\Models\Rate;
 use App\Models\Review;
@@ -87,20 +88,24 @@ class ReviewController extends Controller
      */
     public function showReviews(Request $request): JsonResponse
     {
+        # валидируем
         $data = validateOrExit([
             'order_id'     => 'integer',
             'author_id'    => 'integer',
             'recipient_id' => 'integer',
         ]);
 
+        # не указан ни один параметр, то отдаем пустой массив
         $not_params = $request->isNotFilled(['order_id', 'author_id', 'recipient_id']);
         if ($not_params && empty($data['user_id'])) {
             return response()->json([
                 'status'  => true,
                 'reviews' => [],
+                'disputes' => [],
             ]);
         }
 
+        # получаем отзывы по указанным параметрам
         $reviews = Review::query()
             ->with([
                 'author:' . implode(',', User::FIELDS_FOR_SHOW),
@@ -127,14 +132,28 @@ class ReviewController extends Controller
             })
             ->get();
 
+        # получаем диспуты
+        $disputes = Dispute::query()
+            ->with('problem')
+            ->when($request->filled('order_id'), function ($query) use ($request) {
+                return $query->whereHas('rate', function ($q) use ($request) {
+                    $q->where('order_id', $request->get('order_id'));
+                });
+            })
+            ->when($request->filled('author_id'), function ($query) use ($request) {
+                return $query->where('user_id', $request->get('author_id'));
+            })
+            ->get();
+
         # если указан код заказа или не указан ни один параметр, то группируем отзывы по типу получателя
         if ($request->filled('order_id') || $not_params) {
             $reviews = $reviews->keyBy('recipient_type');
         }
 
         return response()->json([
-            'status'    => true,
-            'reviews'   => null_to_blank($reviews),
+            'status'   => true,
+            'reviews'  => null_to_blank($reviews),
+            'disputes' => null_to_blank($disputes),
         ]);
     }
 
