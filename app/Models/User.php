@@ -36,6 +36,8 @@ use App\Models\Traits\TimestampSerializable;
  * @property string $wallet Баланс в долларах
  * @property int $scores_count Количество баллов
  * @property int $reviews_count Количество отзывов
+ * @property int $failed_delivery_count Количество неудачных доставок
+ * @property int $failed_receive_count Количество неудачных получений
  * @property string|null $api_token Токен для работы через API
  * @property string|null $google_id ID пользователя Google
  * @property string|null $facebook_id ID пользователя Facebook
@@ -79,6 +81,8 @@ use App\Models\Traits\TimestampSerializable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFacebookId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFailedDeliveryCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFailedReceiveCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGoogleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
@@ -98,6 +102,7 @@ use App\Models\Traits\TimestampSerializable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereValidation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereWallet($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User withoutAppends()
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -119,6 +124,7 @@ class User extends Authenticatable
         'age',
         'rating',
     ];
+    public static bool $withoutAppends = false;  # признак, что в модель не нужно добавлять $appends атрибуты (исп. при выгрузке в эксель из админки)
 
     const STATUS_ACTIVE = 'active';
     const STATUS_NOT_ACTIVE = 'not_active';
@@ -350,5 +356,32 @@ class User extends Authenticatable
         if (empty($token)) return false;
 
         return (bool) $query->where('api_token', $token)->count();
+    }
+
+    /**
+     * Скоуп: В модель не добавлять доп.атрибутиты массива $appends.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWithoutAppends($query)
+    {
+        self::$withoutAppends = true;
+
+        return $query;
+    }
+
+    /**
+     * Get all of the appendable values that are arrayable.
+     *
+     * @return array
+     */
+    protected function getArrayableAppends()
+    {
+        if (self::$withoutAppends){
+            return [];
+        }
+
+        return parent::getArrayableAppends();
     }
 }

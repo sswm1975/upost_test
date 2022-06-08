@@ -4,9 +4,9 @@ namespace App\Platform\Controllers;
 
 use App\Models\City;
 use App\Models\User;
+use App\Platform\Exporters\ClientExcelExporter;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-use App\Platform\Extensions\Exporters\ExcelExpoter;
 
 class ClientController extends AdminController
 {
@@ -96,6 +96,12 @@ class ClientController extends AdminController
             });
         })->placeholder('Поиск по имени, телефону, емейлу');
 
+        # MODEL FILTERS & SORT
+        $grid->model()->where('status', request('status', User::STATUS_ACTIVE));
+        if (! request()->has('_sort')) {
+            $grid->model()->latest('id');
+        }
+
         # ROW ACTIONS
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableEdit();
@@ -158,11 +164,11 @@ class ClientController extends AdminController
         $grid->column('rating', 'Рейтинг');
         $grid->column('google_id', 'Код Гугл');
         $grid->column('facebook_id', 'Код Фейсбук');
-        $grid->column('created_at', 'Создано')->sortable();
+        $grid->column('created_at', 'Добавлено')->sortable();
         $grid->column('updated_at', 'Изменено')->sortable();
 
         # EXPORT TO EXCEL
-        $grid->exporter(new ExcelExpoter);
+        $grid->exporter(new ClientExcelExporter);
 
         return $grid;
     }
