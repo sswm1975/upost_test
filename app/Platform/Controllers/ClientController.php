@@ -14,6 +14,30 @@ class ClientController extends AdminController
     protected string $icon = 'fa-users';
 
     /**
+     * Формируем список меню в разрезе статусов споров.
+     *
+     * @return array
+     */
+    public function menu(): array
+    {
+        $counts = User::selectRaw('status, count(1) as total')
+            ->where('id', '>', 0)
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->toArray();
+
+        $statuses = [];
+        foreach (User::STATUSES as $status) {
+            $statuses[$status] = (object) [
+                'name'  => __("message.user.statuses.$status"),
+                'count' => $counts[$status] ?? 0,
+            ];
+        }
+
+        return compact('statuses');
+    }
+
+    /**
      * Make a grid builder.
      *
      * @return Grid
@@ -28,9 +52,9 @@ class ClientController extends AdminController
         $grid->disableExport(false);
         $grid->disableColumnSelector(false);
         $grid->disableCreateButton();
-        $grid->disableActions();
         $grid->paginate(20);
 
+        # FILTERS
         $grid->filter(function ($filter) {
             $filter->disableIdFilter();
 
@@ -63,18 +87,6 @@ class ClientController extends AdminController
             });
         });
 
-        $grid->selector(function (Grid\Tools\Selector $selector) {
-            $statuses = array_combine(User::STATUSES, array_map(function ($status) {
-                return __("message.user.statuses.$status");
-            }, User::STATUSES));
-            $selector->select('status', 'СТАТУС: ', $statuses);
-
-            $genders = array_combine(User::GENDERS, array_map(function ($gender) {
-                return __("message.user.genders.$gender");
-            }, User::GENDERS));
-            $selector->select('gender', 'ПОЛ:', $genders);
-        });
-
         $grid->quickSearch(function ($model, $query) {
             $model->where(function($model) use ($query) {
                 $model->where('name', 'like', "%{$query}%")
@@ -84,13 +96,24 @@ class ClientController extends AdminController
             });
         })->placeholder('Поиск по имени, телефону, емейлу');
 
+        # ROW ACTIONS
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableEdit();
+            $actions->disableDelete();
+        });
+
         # COLUMNS
-        $grid->column('id', 'Код')->sortable();
+        $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
         $grid->column('surname', 'Фамилия')->sortable();
         $grid->column('name', 'Имя')->sortable();
         $grid->column('phone', 'Телефон')->sortable();
         $grid->column('email', 'Емейл')->sortable();
         $grid->column('gender', 'Пол')
+            ->filter(
+                array_combine(User::GENDERS, array_map(function ($gender) {
+                    return __("message.user.genders.$gender");
+                }, User::GENDERS))
+            )
             ->showOtherField('gender_name')
             ->label(['unknown' => 'danger', 'male' => 'primary', 'female' => 'warning'])
             ->sortable();
@@ -102,9 +125,7 @@ class ClientController extends AdminController
             ->setAttributes(['align'=>'center'])
             ->sortable();
         $grid->column('lang', 'Язык')
-            ->display(function ($lang) {
-                return ADMIN_LANGUAGES[$lang];
-            })
+            ->replace(ADMIN_LANGUAGES)
             ->filter(ADMIN_LANGUAGES)
             ->setAttributes(['align'=>'center'])
             ->sortable();
