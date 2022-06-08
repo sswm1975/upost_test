@@ -3883,7 +3883,7 @@
 									"formdata": [
 										{
 											"key": "phone",
-											"value": "+380978800098",
+											"value": "+380680091000",
 											"description": "Старий пароль",
 											"type": "text"
 										},
@@ -4558,7 +4558,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"route_id\", 123);"
+											"pm.variables.set(\"route_id\", 2);"
 										],
 										"type": "text/javascript"
 									}
@@ -6229,12 +6229,12 @@
 									"formdata": [
 										{
 											"key": "data",
-											"value": "eyJwYXltZW50X2lkIjoxOTkwMjU5ODM1LCJhY3Rpb24iOiJwYXkiLCJzdGF0dXMiOiJzYW5kYm94IiwidmVyc2lvbiI6MywidHlwZSI6ImJ1eSIsInBheXR5cGUiOiJjYXJkIiwicHVibGljX2tleSI6InNhbmRib3hfaTY2NjUxNDkwNzgyIiwiYWNxX2lkIjo0MTQ5NjMsIm9yZGVyX2lkIjoiMjAyMjA1MjQyMjI2MzA5NjgwNzUiLCJsaXFwYXlfb3JkZXJfaWQiOiJRQTlGOU9KTzE2NTM0MjA0MTk5NDE0NTEiLCJkZXNjcmlwdGlvbiI6ItCe0L/Qu9Cw0YLQsCDQt9Cw0LrQsNC30LAgXCLQndC+0YPRgtCx0YPQuiBIUCBMYXB0b3AgMTVzLWVxMTA0MnVhXCIiLCJzZW5kZXJfbGFzdF9uYW1lIjoi0KHQtdGA0LPRltC5INCo0LrQvtC00LAiLCJzZW5kZXJfY2FyZF9tYXNrMiI6IjUxNjgyMiowOSIsInNlbmRlcl9jYXJkX2JhbmsiOiJQdWJsaWMgSm9pbiBTdG9jayBDb21wYW55IFJ1c3NpYW4gU3RhbmRhcmQgQmFuayIsInNlbmRlcl9jYXJkX3R5cGUiOiJtYyIsInNlbmRlcl9jYXJkX2NvdW50cnkiOjgwNCwiaXAiOiIxODguMTYzLjE0LjE5NiIsImluZm8iOiJleUoxYzJWeVgybGtJam94TENKeVlYUmxYMmxrSWpveE0zMD0iLCJhbW91bnQiOjk2NTAuMCwiY3VycmVuY3kiOiJVQUgiLCJzZW5kZXJfY29tbWlzc2lvbiI6MC4wLCJyZWNlaXZlcl9jb21taXNzaW9uIjo1Ny45LCJhZ2VudF9jb21taXNzaW9uIjowLjAsImFtb3VudF9kZWJpdCI6OTY1MC4wLCJhbW91bnRfY3JlZGl0Ijo5NjUwLjAsImNvbW1pc3Npb25fZGViaXQiOjAuMCwiY29tbWlzc2lvbl9jcmVkaXQiOjU3LjksImN1cnJlbmN5X2RlYml0IjoiVUFIIiwiY3VycmVuY3lfY3JlZGl0IjoiVUFIIiwic2VuZGVyX2JvbnVzIjowLjAsImFtb3VudF9ib251cyI6MC4wLCJtcGlfZWNpIjoiNyIsImlzXzNkcyI6ZmFsc2UsImxhbmd1YWdlIjoicnUiLCJjcmVhdGVfZGF0ZSI6MTY1MzQyMDQxOTk0MiwiZW5kX2RhdGUiOjE2NTM0MjA0MTk5NjgsInRyYW5zYWN0aW9uX2lkIjoxOTkwMjU5ODM1fQ==",
+											"value": "eyJwYXltZW50X2lkIjoxOTk0MTI5NTcxLCJhY3Rpb24iOiJwYXkiLCJzdGF0dXMiOiJzYW5kYm94IiwidmVyc2lvbiI6MywidHlwZSI6ImJ1eSIsInBheXR5cGUiOiJjYXJkIiwicHVibGljX2tleSI6InNhbmRib3hfaTY2NjUxNDkwNzgyIiwiYWNxX2lkIjo0MTQ5NjMsIm9yZGVyX2lkIjoiMjAyMjA1MzAwODUyNTM1MjAxNTciLCJsaXFwYXlfb3JkZXJfaWQiOiJDOVBWVjgxUzE2NTM4OTAwMjM4MjMwOTAiLCJkZXNjcmlwdGlvbiI6ItCe0L/Qu9Cw0YLQsCDQt9Cw0LrQsNC30LAgXCLQndC+0YPRgtCx0YPQuiBIUCBMYXB0b3AgMTVzLWVxMTA0MnVhXCIiLCJzZW5kZXJfbGFzdF9uYW1lIjoi0KHQtdGA0LPRltC5INCo0LrQvtC00LAiLCJzZW5kZXJfY2FyZF9tYXNrMiI6IjUxNjgyMiowOSIsInNlbmRlcl9jYXJkX2JhbmsiOiJQdWJsaWMgSm9pbiBTdG9jayBDb21wYW55IFJ1c3NpYW4gU3RhbmRhcmQgQmFuayIsInNlbmRlcl9jYXJkX3R5cGUiOiJtYyIsInNlbmRlcl9jYXJkX2NvdW50cnkiOjgwNCwiaXAiOiIxODguMTYzLjE0LjE5NiIsImluZm8iOiJleUoxYzJWeVgybGtJam94TENKeVlYUmxYMmxrSWpveE15d2liM0prWlhKZllXMXZkVzUwSWpvNU5UQXdMQ0prWld4cGRtVnllVjloYlc5MWJuUWlPakUxTUN3aVpYaHdiM0owWDNSaGVDSTZNQ3dpYkdseGNHRjVYMlpsWlNJNk5UY3NJbk5sY25acFkyVmZabVZsSWpveE9UQXNJblJ2ZEdGc1gyRnRiM1Z1ZENJNk9UZzVOeXdpWTNWeWNtVnVZM2tpT2lKVlFVZ2lmUT09IiwiYW1vdW50Ijo5ODk3LjAsImN1cnJlbmN5IjoiVUFIIiwic2VuZGVyX2NvbW1pc3Npb24iOjAuMCwicmVjZWl2ZXJfY29tbWlzc2lvbiI6NTkuMzgsImFnZW50X2NvbW1pc3Npb24iOjAuMCwiYW1vdW50X2RlYml0Ijo5ODk3LjAsImFtb3VudF9jcmVkaXQiOjk4OTcuMCwiY29tbWlzc2lvbl9kZWJpdCI6MC4wLCJjb21taXNzaW9uX2NyZWRpdCI6NTkuMzgsImN1cnJlbmN5X2RlYml0IjoiVUFIIiwiY3VycmVuY3lfY3JlZGl0IjoiVUFIIiwic2VuZGVyX2JvbnVzIjowLjAsImFtb3VudF9ib251cyI6MC4wLCJtcGlfZWNpIjoiNyIsImlzXzNkcyI6ZmFsc2UsImxhbmd1YWdlIjoicnUiLCJjcmVhdGVfZGF0ZSI6MTY1Mzg5MDAyMzgyNSwiZW5kX2RhdGUiOjE2NTM4OTAwMjM4NjEsInRyYW5zYWN0aW9uX2lkIjoxOTk0MTI5NTcxfQ==",
 											"type": "text"
 										},
 										{
 											"key": "signature",
-											"value": "75h/MLd0fT3skE90P37LgR8Gaf0=",
+											"value": "voR5Y0ERwSWsEWiYYMe5uHWPpug=",
 											"type": "text"
 										}
 									]
@@ -6262,12 +6262,12 @@
 											"formdata": [
 												{
 													"key": "data",
-													"value": "eyJwYXltZW50X2lkIjoxOTkwMjU5ODM1LCJhY3Rpb24iOiJwYXkiLCJzdGF0dXMiOiJzYW5kYm94IiwidmVyc2lvbiI6MywidHlwZSI6ImJ1eSIsInBheXR5cGUiOiJjYXJkIiwicHVibGljX2tleSI6InNhbmRib3hfaTY2NjUxNDkwNzgyIiwiYWNxX2lkIjo0MTQ5NjMsIm9yZGVyX2lkIjoiMjAyMjA1MjQyMjI2MzA5NjgwNzUiLCJsaXFwYXlfb3JkZXJfaWQiOiJRQTlGOU9KTzE2NTM0MjA0MTk5NDE0NTEiLCJkZXNjcmlwdGlvbiI6ItCe0L/Qu9Cw0YLQsCDQt9Cw0LrQsNC30LAgXCLQndC+0YPRgtCx0YPQuiBIUCBMYXB0b3AgMTVzLWVxMTA0MnVhXCIiLCJzZW5kZXJfbGFzdF9uYW1lIjoi0KHQtdGA0LPRltC5INCo0LrQvtC00LAiLCJzZW5kZXJfY2FyZF9tYXNrMiI6IjUxNjgyMiowOSIsInNlbmRlcl9jYXJkX2JhbmsiOiJQdWJsaWMgSm9pbiBTdG9jayBDb21wYW55IFJ1c3NpYW4gU3RhbmRhcmQgQmFuayIsInNlbmRlcl9jYXJkX3R5cGUiOiJtYyIsInNlbmRlcl9jYXJkX2NvdW50cnkiOjgwNCwiaXAiOiIxODguMTYzLjE0LjE5NiIsImluZm8iOiJleUoxYzJWeVgybGtJam94TENKeVlYUmxYMmxrSWpveE0zMD0iLCJhbW91bnQiOjk2NTAuMCwiY3VycmVuY3kiOiJVQUgiLCJzZW5kZXJfY29tbWlzc2lvbiI6MC4wLCJyZWNlaXZlcl9jb21taXNzaW9uIjo1Ny45LCJhZ2VudF9jb21taXNzaW9uIjowLjAsImFtb3VudF9kZWJpdCI6OTY1MC4wLCJhbW91bnRfY3JlZGl0Ijo5NjUwLjAsImNvbW1pc3Npb25fZGViaXQiOjAuMCwiY29tbWlzc2lvbl9jcmVkaXQiOjU3LjksImN1cnJlbmN5X2RlYml0IjoiVUFIIiwiY3VycmVuY3lfY3JlZGl0IjoiVUFIIiwic2VuZGVyX2JvbnVzIjowLjAsImFtb3VudF9ib251cyI6MC4wLCJtcGlfZWNpIjoiNyIsImlzXzNkcyI6ZmFsc2UsImxhbmd1YWdlIjoicnUiLCJjcmVhdGVfZGF0ZSI6MTY1MzQyMDQxOTk0MiwiZW5kX2RhdGUiOjE2NTM0MjA0MTk5NjgsInRyYW5zYWN0aW9uX2lkIjoxOTkwMjU5ODM1fQ==",
+													"value": "eyJwYXltZW50X2lkIjoxOTk0MTI5NTcxLCJhY3Rpb24iOiJwYXkiLCJzdGF0dXMiOiJzYW5kYm94IiwidmVyc2lvbiI6MywidHlwZSI6ImJ1eSIsInBheXR5cGUiOiJjYXJkIiwicHVibGljX2tleSI6InNhbmRib3hfaTY2NjUxNDkwNzgyIiwiYWNxX2lkIjo0MTQ5NjMsIm9yZGVyX2lkIjoiMjAyMjA1MzAwODUyNTM1MjAxNTciLCJsaXFwYXlfb3JkZXJfaWQiOiJDOVBWVjgxUzE2NTM4OTAwMjM4MjMwOTAiLCJkZXNjcmlwdGlvbiI6ItCe0L/Qu9Cw0YLQsCDQt9Cw0LrQsNC30LAgXCLQndC+0YPRgtCx0YPQuiBIUCBMYXB0b3AgMTVzLWVxMTA0MnVhXCIiLCJzZW5kZXJfbGFzdF9uYW1lIjoi0KHQtdGA0LPRltC5INCo0LrQvtC00LAiLCJzZW5kZXJfY2FyZF9tYXNrMiI6IjUxNjgyMiowOSIsInNlbmRlcl9jYXJkX2JhbmsiOiJQdWJsaWMgSm9pbiBTdG9jayBDb21wYW55IFJ1c3NpYW4gU3RhbmRhcmQgQmFuayIsInNlbmRlcl9jYXJkX3R5cGUiOiJtYyIsInNlbmRlcl9jYXJkX2NvdW50cnkiOjgwNCwiaXAiOiIxODguMTYzLjE0LjE5NiIsImluZm8iOiJleUoxYzJWeVgybGtJam94TENKeVlYUmxYMmxrSWpveE15d2liM0prWlhKZllXMXZkVzUwSWpvNU5UQXdMQ0prWld4cGRtVnllVjloYlc5MWJuUWlPakUxTUN3aVpYaHdiM0owWDNSaGVDSTZNQ3dpYkdseGNHRjVYMlpsWlNJNk5UY3NJbk5sY25acFkyVmZabVZsSWpveE9UQXNJblJ2ZEdGc1gyRnRiM1Z1ZENJNk9UZzVOeXdpWTNWeWNtVnVZM2tpT2lKVlFVZ2lmUT09IiwiYW1vdW50Ijo5ODk3LjAsImN1cnJlbmN5IjoiVUFIIiwic2VuZGVyX2NvbW1pc3Npb24iOjAuMCwicmVjZWl2ZXJfY29tbWlzc2lvbiI6NTkuMzgsImFnZW50X2NvbW1pc3Npb24iOjAuMCwiYW1vdW50X2RlYml0Ijo5ODk3LjAsImFtb3VudF9jcmVkaXQiOjk4OTcuMCwiY29tbWlzc2lvbl9kZWJpdCI6MC4wLCJjb21taXNzaW9uX2NyZWRpdCI6NTkuMzgsImN1cnJlbmN5X2RlYml0IjoiVUFIIiwiY3VycmVuY3lfY3JlZGl0IjoiVUFIIiwic2VuZGVyX2JvbnVzIjowLjAsImFtb3VudF9ib251cyI6MC4wLCJtcGlfZWNpIjoiNyIsImlzXzNkcyI6ZmFsc2UsImxhbmd1YWdlIjoicnUiLCJjcmVhdGVfZGF0ZSI6MTY1Mzg5MDAyMzgyNSwiZW5kX2RhdGUiOjE2NTM4OTAwMjM4NjEsInRyYW5zYWN0aW9uX2lkIjoxOTk0MTI5NTcxfQ==",
 													"type": "text"
 												},
 												{
 													"key": "signature",
-													"value": "75h/MLd0fT3skE90P37LgR8Gaf0=",
+													"value": "voR5Y0ERwSWsEWiYYMe5uHWPpug=",
 													"type": "text"
 												}
 											]
@@ -6290,7 +6290,7 @@
 									"header": [
 										{
 											"key": "Date",
-											"value": "Wed, 25 May 2022 07:09:06 GMT"
+											"value": "Mon, 30 May 2022 05:55:57 GMT"
 										},
 										{
 											"key": "Server",
@@ -6318,7 +6318,7 @@
 										},
 										{
 											"key": "Content-Length",
-											"value": "1781"
+											"value": "1911"
 										},
 										{
 											"key": "Keep-Alive",
@@ -6334,7 +6334,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"status\": true,\n    \"liqpay\": {\n        \"payment_id\": 1990259835,\n        \"action\": \"pay\",\n        \"status\": \"sandbox\",\n        \"version\": 3,\n        \"type\": \"buy\",\n        \"paytype\": \"card\",\n        \"public_key\": \"sandbox_i66651490782\",\n        \"acq_id\": 414963,\n        \"order_id\": \"20220524222630968075\",\n        \"liqpay_order_id\": \"QA9F9OJO1653420419941451\",\n        \"description\": \"Оплата заказа \\\"Ноутбук HP Laptop 15s-eq1042ua\\\"\",\n        \"sender_last_name\": \"Сергій Шкода\",\n        \"sender_card_mask2\": \"516822*09\",\n        \"sender_card_bank\": \"Public Join Stock Company Russian Standard Bank\",\n        \"sender_card_type\": \"mc\",\n        \"sender_card_country\": 804,\n        \"ip\": \"188.163.14.196\",\n        \"info\": {\n            \"user_id\": 1,\n            \"rate_id\": 13\n        },\n        \"amount\": 9650,\n        \"currency\": \"UAH\",\n        \"sender_commission\": 0,\n        \"receiver_commission\": 57.9,\n        \"agent_commission\": 0,\n        \"amount_debit\": 9650,\n        \"amount_credit\": 9650,\n        \"commission_debit\": 0,\n        \"commission_credit\": 57.9,\n        \"currency_debit\": \"UAH\",\n        \"currency_credit\": \"UAH\",\n        \"sender_bonus\": 0,\n        \"amount_bonus\": 0,\n        \"mpi_eci\": \"7\",\n        \"is_3ds\": false,\n        \"language\": \"ru\",\n        \"create_date\": 1653420419942,\n        \"end_date\": 1653420419968,\n        \"transaction_id\": 1990259835\n    },\n    \"rate\": {\n        \"id\": 13,\n        \"user_id\": 2,\n        \"route_id\": 1,\n        \"order_id\": 1,\n        \"chat_id\": 7,\n        \"amount\": \"150.00\",\n        \"currency\": \"₴\",\n        \"deadline\": \"2022-05-27\",\n        \"comment\": \"Готов доставить\",\n        \"is_read\": true,\n        \"images\": [\n            \"http://upost.test/storage/2/rates/monitor-27-dell-s2721ds-1.jpg\",\n            \"http://upost.test/storage/2/rates/monitor-27-dell-s2721ds-2.jpg\"\n        ],\n        \"status\": \"accepted\",\n        \"created_at\": \"2022-05-24 13:10:11\",\n        \"updated_at\": \"2022-05-25 10:09:08\",\n        \"status_name\": \"Accepted\",\n        \"images_thumb\": [\n            \"http://upost.test/storage/2/rates/monitor-27-dell-s2721ds-1.jpg\",\n            \"http://upost.test/storage/2/rates/monitor-27-dell-s2721ds-2.jpg\"\n        ]\n    }\n}"
+									"body": "{\n    \"status\": true,\n    \"liqpay\": {\n        \"payment_id\": 1994129571,\n        \"action\": \"pay\",\n        \"status\": \"sandbox\",\n        \"version\": 3,\n        \"type\": \"buy\",\n        \"paytype\": \"card\",\n        \"public_key\": \"sandbox_i66651490782\",\n        \"acq_id\": 414963,\n        \"order_id\": \"20220530085253520157\",\n        \"liqpay_order_id\": \"C9PVV81S1653890023823090\",\n        \"description\": \"Оплата заказа \\\"Ноутбук HP Laptop 15s-eq1042ua\\\"\",\n        \"sender_last_name\": \"Сергій Шкода\",\n        \"sender_card_mask2\": \"516822*09\",\n        \"sender_card_bank\": \"Public Join Stock Company Russian Standard Bank\",\n        \"sender_card_type\": \"mc\",\n        \"sender_card_country\": 804,\n        \"ip\": \"188.163.14.196\",\n        \"info\": {\n            \"user_id\": 1,\n            \"rate_id\": 13,\n            \"order_amount\": 9500,\n            \"delivery_amount\": 150,\n            \"export_tax\": 0,\n            \"liqpay_fee\": 57,\n            \"service_fee\": 190,\n            \"total_amount\": 9897,\n            \"currency\": \"UAH\"\n        },\n        \"amount\": 9897,\n        \"currency\": \"UAH\",\n        \"sender_commission\": 0,\n        \"receiver_commission\": 59.38,\n        \"agent_commission\": 0,\n        \"amount_debit\": 9897,\n        \"amount_credit\": 9897,\n        \"commission_debit\": 0,\n        \"commission_credit\": 59.38,\n        \"currency_debit\": \"UAH\",\n        \"currency_credit\": \"UAH\",\n        \"sender_bonus\": 0,\n        \"amount_bonus\": 0,\n        \"mpi_eci\": \"7\",\n        \"is_3ds\": false,\n        \"language\": \"ru\",\n        \"create_date\": 1653890023825,\n        \"end_date\": 1653890023861,\n        \"transaction_id\": 1994129571\n    },\n    \"rate\": {\n        \"id\": 13,\n        \"user_id\": 2,\n        \"route_id\": 1,\n        \"order_id\": 1,\n        \"chat_id\": 7,\n        \"amount\": \"150.00\",\n        \"currency\": \"₴\",\n        \"deadline\": \"2022-05-27\",\n        \"comment\": \"Готов доставить\",\n        \"is_read\": true,\n        \"images\": [\n            \"http://upost.test/storage/2/rates/monitor-27-dell-s2721ds-1.jpg\",\n            \"http://upost.test/storage/2/rates/monitor-27-dell-s2721ds-2.jpg\"\n        ],\n        \"status\": \"accepted\",\n        \"created_at\": \"2022-05-24 13:10:11\",\n        \"updated_at\": \"2022-05-30 08:55:59\",\n        \"status_name\": \"Accepted\",\n        \"images_thumb\": [\n            \"http://upost.test/storage/2/rates/monitor-27-dell-s2721ds-1.jpg\",\n            \"http://upost.test/storage/2/rates/monitor-27-dell-s2721ds-2.jpg\"\n        ]\n    }\n}"
 								}
 							]
 						},
@@ -6555,6 +6555,71 @@
 										"add"
 									],
 									"query": [
+										{
+											"key": "lang",
+											"value": "uk"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Отримати відгуки",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rate_id",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "scores",
+											"value": "5",
+											"type": "text"
+										},
+										{
+											"key": "text",
+											"value": "Круто, спасибо.",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/reviews/show?order_id=1&lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"reviews",
+										"show"
+									],
+									"query": [
+										{
+											"key": "order_id",
+											"value": "1",
+											"description": "Код замовлення"
+										},
+										{
+											"key": "author_id",
+											"value": "1",
+											"description": "Код автора відгука",
+											"disabled": true
+										},
+										{
+											"key": "recipient_id",
+											"value": "2",
+											"description": "Код отримувача відгука",
+											"disabled": true
+										},
 										{
 											"key": "lang",
 											"value": "uk"
@@ -7665,7 +7730,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"chat_id\", 2);"
+											"pm.variables.set(\"chat_id\", 7);"
 										],
 										"type": "text/javascript"
 									}
