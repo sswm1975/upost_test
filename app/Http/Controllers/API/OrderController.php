@@ -197,7 +197,7 @@ class OrderController extends Controller
 
         $route = Route::getByIdWithRelations($route_id);
 
-        $route->viewed_orders_at = Route::freshTimestamp();
+        $route->viewed_orders_at = $route->freshTimestamp();
         $route->save();
 
         if ($filter_type == self::FILTER_ALL) {
