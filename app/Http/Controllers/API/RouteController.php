@@ -198,12 +198,12 @@ class RouteController extends Controller
      *     (
      *       SELECT COUNT(1) FROM rates
      *       WHERE routes.id = rates.route_id
-     *         AND `status` = 'active'
+     *         AND `status` IN ('accepted', 'buyed', 'successful', 'done')
      *     ) AS rates_all_count,
      *     (
      *       SELECT COUNT(1) FROM rates
      *       WHERE routes.id = rates.route_id
-     *         AND `status` = 'active'
+     *         AND `status` IN ('accepted', 'buyed', 'successful', 'done')
      *         AND `is_read` = 0
      *     ) AS rates_new_count,
      * 	   (
@@ -251,10 +251,10 @@ class RouteController extends Controller
                 'to_city',
             ])
             ->withCount(['rates as rates_all_count' => function ($query) {
-                $query->active();
+                $query->сonfirmed();
             }])
             ->withCount(['rates as rates_new_count' => function ($query) {
-                $query->active()->notRead();
+                $query->сonfirmed()->notRead();
             }])
             ->withCount(['order as budget_usd' => function($query) {
                 $query->select(DB::raw('IFNULL(SUM(orders.price_usd), 0)'));

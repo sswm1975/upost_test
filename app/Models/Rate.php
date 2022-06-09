@@ -57,6 +57,14 @@ class Rate extends Model
         self::STATUS_BUYED,
     ];
 
+    # подтвержденные статусы
+    public const STATUSES_CONFIRMED = [
+        self::STATUS_ACCEPTED,
+        self::STATUS_BUYED,
+        self::STATUS_SUCCESSFUL,
+        self::STATUS_DONE,
+    ];
+
     ### GETTERS ###
 
     public function getStatusNameAttribute(): string
@@ -161,6 +169,17 @@ class Rate extends Model
     function scopeDelivered($query)
     {
         return $query->whereIn('status', self::STATUSES_DELIVERED);
+    }
+
+    /**
+     * Подтвержденные ставки.
+     *
+     * @param $query
+     * @return mixed
+     */
+    function scopeConfirmed($query)
+    {
+        return $query->whereIn('status', self::STATUSES_CONFIRMED);
     }
 
     /**
