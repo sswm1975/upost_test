@@ -259,7 +259,7 @@ class OrderController extends Controller
                     $query->whereColumn('rates.route_id', 'routes.id');
                 },
             ])
-            ->searchByRoutes()
+            ->searchByRoutes(false, [Order::STATUS_ACTIVE, Order::STATUS_IN_WORK, Order::STATUS_SUCCESSFUL])
             ->when(!empty($filters['price_from']), function ($query) use ($filters) {
                 return $query->where('orders.price_usd', '>=', $filters['price_from']);
             })

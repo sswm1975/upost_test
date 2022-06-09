@@ -15,22 +15,6 @@ class Order extends Model
 {
     use TimestampSerializable;
 
-    const STATUS_ACTIVE = 'active';
-    const STATUS_IN_WORK = 'in_work';
-    const STATUS_CLOSED = 'closed';
-    const STATUS_FAILED = 'failed';
-    const STATUS_BANNED = 'banned';
-    const STATUS_SUCCESSFUL = 'successful';
-
-    const STATUSES = [
-        self::STATUS_ACTIVE,
-        self::STATUS_IN_WORK,
-        self::STATUS_CLOSED,
-        self::STATUS_FAILED,
-        self::STATUS_BANNED,
-        self::STATUS_SUCCESSFUL,
-    ];
-
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     protected $casts = [
@@ -43,6 +27,22 @@ class Order extends Model
         'images_thumb',
         'images_medium',
         'images_original',
+    ];
+
+    const STATUS_ACTIVE = 'active';
+    const STATUS_IN_WORK = 'in_work';
+    const STATUS_SUCCESSFUL = 'successful';
+    const STATUS_CLOSED = 'closed';
+    const STATUS_FAILED = 'failed';
+    const STATUS_BANNED = 'banned';
+
+    const STATUSES = [
+        self::STATUS_ACTIVE,
+        self::STATUS_IN_WORK,
+        self::STATUS_SUCCESSFUL,
+        self::STATUS_CLOSED,
+        self::STATUS_FAILED,
+        self::STATUS_BANNED,
     ];
 
     public static function boot()
@@ -298,11 +298,12 @@ class Order extends Model
      *
      * @param $query
      * @param bool $only_new - флаг "Только новые заказы"
+     * @param array $statuses - список статусов заказа
      * @return mixed
      */
-    public function scopeSearchByRoutes($query, bool $only_new = false)
+    public function scopeSearchByRoutes($query, bool $only_new = false, array $statuses = [self::STATUS_ACTIVE])
     {
-        return $query->where('orders.status', self::STATUS_ACTIVE)
+        return $query->whereIn('orders.status', $statuses)
             ->whereBetweenColumns('routes.deadline', ['orders.register_date', 'orders.deadline'])
             ->whereColumn('orders.from_country_id', 'routes.from_country_id')
             ->whereColumn('orders.to_country_id', 'routes.to_country_id')

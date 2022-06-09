@@ -178,7 +178,7 @@ class RouteController extends Controller
      *     routes.*,
      *     (
      *       SELECT COUNT(1) FROM orders
-     *       WHERE orders.`status` = 'active'
+     *       WHERE orders.`status` IN ('active')
      *         AND routes.deadline BETWEEN orders.register_date AND orders.deadline
      *         AND orders.from_country_id = routes.from_country_id
      *         AND orders.to_country_id = routes.to_country_id
@@ -187,7 +187,7 @@ class RouteController extends Controller
      *     ) AS orders_cnt,
      *     (
      *       SELECT COUNT(1) FROM orders
-     *       WHERE orders.`status` = 'active'
+     *       WHERE orders.`status` IN ('active')
      *         AND routes.deadline BETWEEN orders.register_date AND orders.deadline
      *         AND orders.from_country_id = routes.from_country_id
      *         AND orders.to_country_id = routes.to_country_id
@@ -236,7 +236,7 @@ class RouteController extends Controller
             $orders_all_count = $orders_new_count = DB::query()->selectRaw('0');
         } else {
             # количество всех заказов
-            $orders_all_count = Order::selectRaw('count(1)')->searchByRoutes()->getQuery();
+            $orders_all_count = Order::selectRaw('count(1)')->searchByRoutes(false)->getQuery();
 
             # количество новых заказов
             $orders_new_count = Order::selectRaw('count(1)')->searchByRoutes(true)->getQuery();
