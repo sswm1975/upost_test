@@ -37,6 +37,13 @@ class Route extends Model
         'status_name',
     ];
 
+    /**
+     * Флаг, что в модель не нужно добавлять $appends атрибуты (исп. при выгрузке в эксель из админки)
+     *
+     * @var bool
+     */
+    public static bool $withoutAppends = false;
+
     ### GETTERS ###
 
     public function getStatusNameAttribute(): string
@@ -197,6 +204,33 @@ class Route extends Model
     public function scopeExistsCityInToCity($query, array $cities)
     {
         return $query->existsCountryOrCity('to_city_id', 'city_id', $cities);
+    }
+
+    /**
+     * Скоуп: В модель не добавлять доп.атрибутиты массива $appends.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWithoutAppends($query)
+    {
+        self::$withoutAppends = true;
+
+        return $query;
+    }
+
+    /**
+     * Get all of the appendable values that are arrayable.
+     *
+     * @return array
+     */
+    protected function getArrayableAppends()
+    {
+        if (self::$withoutAppends){
+            return [];
+        }
+
+        return parent::getArrayableAppends();
     }
 
     ### QUERIES ###

@@ -14,7 +14,7 @@ class ClientController extends AdminController
     protected string $icon = 'fa-users';
 
     /**
-     * Формируем список меню в разрезе статусов споров.
+     * Меню в разрезе статусов.
      *
      * @return array
      */
