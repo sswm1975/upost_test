@@ -35,7 +35,7 @@ class RateController extends Controller
             'deadline' => 'required|date_format:Y-m-d|after_or_equal:'.date('Y-m-d'),
             'amount'   => 'required|numeric',
             'currency' => 'required|in:' . implode(',', config('app.currencies')),
-            'comment'  => 'required|string|censor|max:1000',
+            'comment'  => 'nullable|string|censor|max:1000',
         ];
     }
 
