@@ -8,6 +8,58 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * App\Models\Rate
+ *
+ * @property int $id Код
+ * @property int $user_id Код пользователя
+ * @property int $route_id Код маршрута
+ * @property int $order_id Код заказа
+ * @property int|null $chat_id Код чата
+ * @property string $amount Сумма дохода
+ * @property string $currency Валюта дохода
+ * @property string $deadline Дата выполнения
+ * @property string|null $comment Комментарий
+ * @property bool $viewed_by_customer Новая ставка просмотрена заказчиком?
+ * @property bool $viewed_by_performer Подтвержденная ставка просмотрена исполнителем?
+ * @property array $images Фотографии купленного заказа
+ * @property string $status Статус
+ * @property \Illuminate\Support\Carbon $created_at Добавлено
+ * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Dispute[] $disputes
+ * @property-read int|null $disputes_count
+ * @property-read array $images_thumb
+ * @property-read string $status_name
+ * @property-read \App\Models\Order $order
+ * @property-read \App\Models\Route $route
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate active()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate confirmed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate deadlineTermExpired(int $days = 0)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate deadlineToday()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate delivered()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate notViewedByPerformer()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate owner()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereChatId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereImages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereOrderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRouteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereViewedByCustomer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereViewedByPerformer($value)
+ * @mixin \Eloquent
+ */
 class Rate extends Model
 {
     use TimestampSerializable;

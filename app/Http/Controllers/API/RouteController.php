@@ -251,10 +251,10 @@ class RouteController extends Controller
                 'to_city',
             ])
             ->withCount(['rates as rates_all_count' => function ($query) {
-                $query->сonfirmed();
+                $query->confirmed();
             }])
             ->withCount(['rates as rates_new_count' => function ($query) {
-                $query->сonfirmed()->notViewedByPerformer();
+                $query->confirmed()->notViewedByPerformer();
             }])
             ->withCount(['order as budget_usd' => function($query) {
                 $query->select(DB::raw('IFNULL(SUM(orders.price_usd), 0)'));
