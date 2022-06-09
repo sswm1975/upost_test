@@ -10,6 +10,55 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * App\Models\Route
+ *
+ * @property int $id Код
+ * @property int $user_id Код пользователя
+ * @property int|null $from_country_id Код страны старта
+ * @property int|null $from_city_id Код города старта
+ * @property int|null $to_country_id Код страны окончания
+ * @property int|null $to_city_id Код города окончания
+ * @property string|null $deadline Дата окончания маршрута
+ * @property string $status Статус маршрута
+ * @property \Illuminate\Support\Carbon $created_at Дата добавления
+ * @property \Illuminate\Support\Carbon|null $updated_at Дата обновления
+ * @property string|null $viewed_orders_at Дата просмотра заказов по маршруту
+ * @property-read \App\Models\City|null $from_city
+ * @property-read \App\Models\Country|null $from_country
+ * @property-read string $status_name
+ * @property-read \App\Models\Order|null $order
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
+ * @property-read int|null $rates_count
+ * @property-read \App\Models\Review|null $review
+ * @property-read \App\Models\City|null $to_city
+ * @property-read \App\Models\Country|null $to_country
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Route existsCityInFromCity(array $cities)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route existsCityInToCity(array $cities)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryInFromCountry(array $countries)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryInToCountry(array $countries)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryOrCity(string $routes_field, array $rows)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route filterByStatus($status)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Route newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Route owner()
+ * @method static \Illuminate\Database\Eloquent\Builder|Route query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Route successful()
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereToCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereToCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereViewedOrdersAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route withoutAppends()
+ * @mixin \Eloquent
+ */
 class Route extends Model
 {
     use TimestampSerializable;

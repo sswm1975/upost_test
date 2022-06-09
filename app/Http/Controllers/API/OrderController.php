@@ -4,12 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Events\OrderBanned;
 use App\Exceptions\ErrorException;
-use App\Exceptions\TryException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\Order;
-use App\Models\Chat;
 use App\Models\Rate;
 use App\Models\Route;
 use App\Models\Shop;
@@ -21,7 +19,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use Exception;
 
 class OrderController extends Controller
 {
@@ -199,6 +196,9 @@ class OrderController extends Controller
         ]);
 
         $route = Route::getByIdWithRelations($route_id);
+
+        $route->viewed_orders_at = Route::freshTimestamp();
+        $route->save();
 
         if ($filter_type == self::FILTER_ALL) {
             $orders = $this->getAllOrdersByRoute($route_id, $filters);
