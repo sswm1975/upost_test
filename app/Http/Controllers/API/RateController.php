@@ -9,6 +9,7 @@ use App\Models\Chat;
 use App\Models\Message;
 use App\Models\Order;
 use App\Models\Rate;
+use App\Models\Route;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Modules\Liqpay;
@@ -336,6 +337,7 @@ class RateController extends Controller
             $rate->chat_id = $chat->id;
             $rate->save();
             $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
+            $rate->route()->update(['status' => Route::STATUS_IN_WORK]);
 
             Transaction::create([
                 'user_id'         => $liqpay['info']['user_id'],
