@@ -82,9 +82,8 @@ class Route extends Model
     protected $table = 'routes';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
-    protected $appends = [
-        'status_name',
-    ];
+    protected $dates = ['viewed_orders_at'];
+    protected $appends = ['status_name'];
 
     /**
      * Флаг, что в модель не нужно добавлять $appends атрибуты (исп. при выгрузке в эксель из админки)

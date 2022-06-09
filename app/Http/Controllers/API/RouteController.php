@@ -167,7 +167,6 @@ class RouteController extends Controller
             'page'   => $routes['current_page'],
             'pages'  => $routes['last_page'],
             'routes' => null_to_blank($routes['data']),
-            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
