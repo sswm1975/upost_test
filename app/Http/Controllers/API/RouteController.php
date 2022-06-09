@@ -182,8 +182,8 @@ class RouteController extends Controller
      *         AND routes.deadline BETWEEN orders.register_date AND orders.deadline
      *         AND orders.from_country_id = routes.from_country_id
      *         AND orders.to_country_id = routes.to_country_id
-     *         AND (orders.from_city_id = routes.from_city_id OR orders.from_city_id IS NULL AND routes.from_city_id > 0 OR routes.from_city_id IS NULL AND orders.from_city_id > 0)
-     *         AND (orders.to_city_id = routes.to_city_id OR orders.to_city_id IS NULL AND routes.to_city_id > 0 OR routes.to_city_id IS NULL AND orders.to_city_id > 0)
+     *         AND (IFNULL(orders.from_city_id, 0) = IFNULL(routes.from_city_id, 0) OR orders.from_city_id IS NULL AND routes.from_city_id > 0 OR routes.from_city_id IS NULL AND orders.from_city_id > 0)
+     *         AND (IFNULL(orders.to_city_id, 0) = IFNULL(routes.to_city_id, 0) OR orders.to_city_id IS NULL AND routes.to_city_id > 0 OR routes.to_city_id IS NULL AND orders.to_city_id > 0)
      *     ) AS orders_cnt,
      *     (
      *       SELECT COUNT(1) FROM orders
@@ -191,8 +191,8 @@ class RouteController extends Controller
      *         AND routes.deadline BETWEEN orders.register_date AND orders.deadline
      *         AND orders.from_country_id = routes.from_country_id
      *         AND orders.to_country_id = routes.to_country_id
-     *         AND (orders.from_city_id = routes.from_city_id OR orders.from_city_id IS NULL AND routes.from_city_id > 0 OR routes.from_city_id IS NULL AND orders.from_city_id > 0)
-     *         AND (orders.to_city_id = routes.to_city_id OR orders.to_city_id IS NULL AND routes.to_city_id > 0 OR routes.to_city_id IS NULL AND orders.to_city_id > 0)
+     *         AND (IFNULL(orders.from_city_id, 0) = IFNULL(routes.from_city_id, 0) OR orders.from_city_id IS NULL AND routes.from_city_id > 0 OR routes.from_city_id IS NULL AND orders.from_city_id > 0)
+     *         AND (IFNULL(orders.to_city_id, 0) = IFNULL(routes.to_city_id, 0) OR orders.to_city_id IS NULL AND routes.to_city_id > 0 OR routes.to_city_id IS NULL AND orders.to_city_id > 0)
      *         AND orders.created_at > IFNULL(routes.viewed_orders_at, '1900-01-01 00:00:00')
      *     ) AS orders_new_cnt,
      *     (
@@ -204,7 +204,7 @@ class RouteController extends Controller
      *       SELECT COUNT(1) FROM rates
      *       WHERE routes.id = rates.route_id
      *         AND `status` IN ('accepted', 'buyed', 'successful', 'done')
-     *         AND `is_read` = 0
+     *         AND `viewed_by_performer` = 0
      *     ) AS rates_new_count,
      * 	   (
      *       SELECT IFNULL(SUM(orders.price_usd), 0) FROM orders
@@ -254,7 +254,7 @@ class RouteController extends Controller
                 $query->сonfirmed();
             }])
             ->withCount(['rates as rates_new_count' => function ($query) {
-                $query->сonfirmed()->notRead();
+                $query->сonfirmed()->notViewedByPerformer();
             }])
             ->withCount(['order as budget_usd' => function($query) {
                 $query->select(DB::raw('IFNULL(SUM(orders.price_usd), 0)'));
@@ -338,7 +338,7 @@ class RouteController extends Controller
                 });
             }])
             ->withCount(['rates as rates_read_count' => function ($query) use ($user) {
-                $query->where('is_read', 0)
+                $query->where('viewed_by_customer', 0)
                     ->when(!is_null($user), function ($q) use ($user) {
                         $q->where('user_id', $user->id);
                     });

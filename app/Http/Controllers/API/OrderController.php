@@ -449,7 +449,7 @@ class OrderController extends Controller
                     $query->where('user_id', $user->id ?? 0);
                 },
                 'rates as rates_read_count' => function ($query) use ($user) {
-                    $query->where('is_read', 0)
+                    $query->where('viewed_by_customer', 0)
                         ->when(!is_null($user), function ($q) use ($user) {
                             $q->where('user_id', $user->id);
                         });

@@ -17,16 +17,18 @@ class Rate extends Model
     protected $guarded = ['id'];
     public $timestamps = true;
     protected $casts = [
-        'is_read' => 'boolean',
-        'images'  => 'array',
+        'viewed_by_customer'  => 'boolean',
+        'viewed_by_performer' => 'boolean',
+        'images'              => 'array',
     ];
     protected $appends = [
         'status_name',
         'images_thumb',
     ];
     protected $attributes = [
-        'status'  => self::STATUS_ACTIVE,
-        'is_read' => false,
+        'status'              => self::STATUS_ACTIVE,
+        'viewed_by_customer'  => false,
+        'viewed_by_performer' => false,
     ];
 
     public const STATUS_ACTIVE     = 'active';     # владелец маршрута создал ставку
@@ -213,9 +215,9 @@ class Rate extends Model
             });
     }
 
-    function scopeNotRead($query)
+    function scopeNotViewedByPerformer($query)
     {
-        return $query->where('is_read', 0);
+        return $query->where('viewed_by_performer', 0);
     }
 
     function scopeDeadlineToday($query)

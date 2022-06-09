@@ -145,9 +145,9 @@ class RateController extends Controller
             throw new ErrorException(__('message.rate_not_found'));
         }
 
-        # если ставка не прочитана заказчиком и ставку смотрит владелец заказа, то устанавливаем признак просмотра ставки
-        if (!$rate->is_read && $rate->user_id <> request()->user()->id) {
-            $rate->is_read = true;
+        # если новая ставка не просмотрена заказчиком и ставку смотрит владелец заказа, то устанавливаем флаг просмотра ставки заказчиком
+        if (!$rate->viewed_by_customer && $rate->user_id <> request()->user()->id) {
+            $rate->viewed_by_customer = true;
             $rate->save();
         }
 
@@ -207,7 +207,7 @@ class RateController extends Controller
     public function rejectRate(int $rate_id): JsonResponse
     {
         # доступ к операции имеет только владелец заказа; ставка должна быть в статусе active; статус заказа - любой
-        $rate = Rate::byKeyForOrderOwner($rate_id)->first(['id', 'status', 'is_read']);
+        $rate = Rate::byKeyForOrderOwner($rate_id)->first(['id', 'status', 'viewed_by_customer']);
 
         if (! $rate) {
             throw new ErrorException(__('message.rate_not_found'));
@@ -215,7 +215,7 @@ class RateController extends Controller
 
         # такое сохранение быстрее, чем через update()
         $rate->status = Rate::STATUS_REJECTED;
-        $rate->is_read = true;
+        $rate->viewed_by_customer = true;
         $rate->save();
 
         return response()->json(['status' => true]);
@@ -332,7 +332,7 @@ class RateController extends Controller
         try {
             # обновляем данные по ставке
             $rate->status = Rate::STATUS_ACCEPTED;
-            $rate->is_read = true;
+            $rate->viewed_by_customer = true;
             $rate->chat_id = $chat->id;
             $rate->save();
             $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
