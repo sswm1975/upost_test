@@ -4568,7 +4568,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/route/{{route_id}}/show?lang=ru&filter_type=orders",
+									"raw": "{{host}}/{{endpoint}}/orders/route/{{route_id}}/show?filter_type=orders&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -4580,10 +4580,6 @@
 										"show"
 									],
 									"query": [
-										{
-											"key": "lang",
-											"value": "ru"
-										},
 										{
 											"key": "filter_type",
 											"value": "orders",
@@ -4625,6 +4621,10 @@
 											"key": "page-number",
 											"value": "1",
 											"disabled": true
+										},
+										{
+											"key": "lang",
+											"value": "ru"
 										}
 									]
 								}

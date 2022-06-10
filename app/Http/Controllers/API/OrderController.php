@@ -180,7 +180,6 @@ class OrderController extends Controller
     {
         # проверяем входные данные
         $filters = validateOrExit([
-            'filter_type' => 'required|in:' . implode(',', self::FILTER_TYPES),
             'price_to'    => 'sometimes|required|numeric',
             'price_from'  => 'sometimes|required|numeric',
             'shop'        => 'sometimes|required|array',
@@ -190,7 +189,12 @@ class OrderController extends Controller
             'show'        => 'sometimes|required|integer|min:1',
             'page-number' => 'sometimes|required|integer|min:1',
         ]);
-        $filter_type = $filters['filter_type'];
+
+        # определяем тип фильтра
+        $filter_type = $request->get('filter_type', self::FILTER_TYPE_ORDERS);
+        if (! in_array($filter_type, self::FILTER_TYPES)) {
+            $filter_type = self::FILTER_TYPE_ORDERS;
+        }
 
         # получаем данные конкретного маршрута со связами
         $route = Route::getByIdWithRelations($route_id);
