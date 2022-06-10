@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Administrator|null $admin_user
  * @property-read \App\Models\Chat $chat
  * @property-read \App\Models\User|null $closed_user
+ * @property-read \App\Models\DisputeClosedReason|null $dispute_closed_reason
  * @property-read string $status_name
  * @property-read \App\Models\Message $message
  * @property-read \App\Models\DisputeProblem $problem
@@ -64,10 +65,10 @@ class Dispute extends Model
 {
     use TimestampSerializable;
 
-    const STATUS_ACTIVE  = 'active';
-    const STATUS_APPOINTED  = 'appointed';
-    const STATUS_IN_WORK = 'in_work';
-    const STATUS_CLOSED  = 'closed';
+    const STATUS_ACTIVE    = 'active';
+    const STATUS_APPOINTED = 'appointed';
+    const STATUS_IN_WORK   = 'in_work';
+    const STATUS_CLOSED    = 'closed';
     const STATUS_CANCELED  = 'canceled';
 
     const STATUSES = [
@@ -88,14 +89,8 @@ class Dispute extends Model
 
     public $timestamps = false;
     protected $guarded = ['id'];
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deadline',
-    ];
-    protected $appends = [
-        'status_name',
-    ];
+    protected $dates = ['created_at', 'updated_at', 'deadline'];
+    protected $appends = ['status_name'];
     protected $attributes = [
         'status'  => self::STATUS_ACTIVE,
     ];
@@ -141,6 +136,11 @@ class Dispute extends Model
         return $this->belongsTo(DisputeProblem::class, 'problem_id')
             ->select(['id', "name_{$lang} as name", 'days'])
             ->withDefault();
+    }
+
+    public function dispute_closed_reason(): BelongsTo
+    {
+        return $this->belongsTo(DisputeClosedReason::class, 'dispute_closed_reason_id');
     }
 
     public function user(): BelongsTo

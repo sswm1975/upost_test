@@ -11,15 +11,18 @@ use App\Models\Traits\TimestampSerializable;
  *
  * @property int $id Код
  * @property string $name Наименование
+ * @property string|null $guilty Виновен: Исполнитель или Заказчик
  * @property string $alias Алиас
  * @property \Illuminate\Support\Carbon|null $created_at Добавлено
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property-read string $alias_name
  * @method static Builder|DisputeClosedReason newModelQuery()
  * @method static Builder|DisputeClosedReason newQuery()
  * @method static Builder|DisputeClosedReason query()
  * @method static Builder|DisputeClosedReason quickSearch($search)
  * @method static Builder|DisputeClosedReason whereAlias($value)
  * @method static Builder|DisputeClosedReason whereCreatedAt($value)
+ * @method static Builder|DisputeClosedReason whereGuilty($value)
  * @method static Builder|DisputeClosedReason whereId($value)
  * @method static Builder|DisputeClosedReason whereName($value)
  * @method static Builder|DisputeClosedReason whereUpdatedAt($value)
@@ -32,6 +35,14 @@ class DisputeClosedReason extends Model
     protected $table = 'dispute_closed_reasons';
     protected $primaryKey = 'id';
     protected $fillable = ['name', 'alias'];
+    protected $appends = ['alias_name'];
+
+    ### GETTERS ###
+
+    public function getAliasNameAttribute(): string
+    {
+        return system_message($this->alias);
+    }
 
     ### SCOPES ###
 

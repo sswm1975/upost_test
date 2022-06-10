@@ -91,15 +91,14 @@ class DisputeController extends Controller
     {
         $dispute = Dispute::whereKey($id)
             ->with([
+                'problem',
                 'user' => function ($query) {
-                    $query->select(User::FIELDS_FOR_SHOW);
-                },
-                'closed_user' => function ($query) {
                     $query->select(User::FIELDS_FOR_SHOW);
                 },
                 'rate',
                 'chat',
                 'message',
+                'dispute_closed_reason',
             ])
             ->first();
 
