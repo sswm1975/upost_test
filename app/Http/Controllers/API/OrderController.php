@@ -33,16 +33,16 @@ class OrderController extends Controller
     /** @var int Количество страйков, за которое выдается бан (заказ переводится в статус ban) */
     const COUNT_STRIKES_FOR_BAN = 50;
 
-    /** @var array Типы фильтров для отбора заказов (Все, Принятые, Мои предложения, Доставленные) */
-    const FILTER_ALL = 'all';
-    const FILTER_ACCEPTED = 'accepted';
-    const FILTER_SUGGESTIONS = 'suggestions';
-    const FILTER_DELIVERED = 'delivered';
+    /** @var array Типы фильтров для отбора заказов (Заказы, Мои предложения, Принятые, Доставлено) */
+    const FILTER_TYPE_ORDERS = 'orders';
+    const FILTER_TYPE_MY_OFFERS = 'my_offers';
+    const FILTER_TYPE_ACCEPTED = 'accepted';
+    const FILTER_TYPE_DELIVERED = 'delivered';
     const FILTER_TYPES = [
-        self::FILTER_ALL,
-        self::FILTER_ACCEPTED,
-        self::FILTER_SUGGESTIONS,
-        self::FILTER_DELIVERED,
+        self::FILTER_TYPE_ORDERS,
+        self::FILTER_TYPE_MY_OFFERS,
+        self::FILTER_TYPE_ACCEPTED,
+        self::FILTER_TYPE_DELIVERED,
     ];
 
     /**
@@ -169,22 +169,18 @@ class OrderController extends Controller
     }
 
     /**
-     * Заказы по маршруту.
+     * Заказы по выбранному маршруту.
      *
      * @param int $route_id
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
-     * @throws ValidatorException
+     * @throws ValidationException|ValidatorException|ErrorException
      */
     public function showOrdersByRoute(int $route_id, Request $request): JsonResponse
     {
-        $filter_type = $request->get('filter_type', self::FILTER_ALL);
-        if (!array_key_exists($request->get('filter_type'), self::FILTER_TYPES)) {
-            $filter_type = self::FILTER_ALL;
-        }
-
+        # проверяем входные данные
         $filters = validateOrExit([
+            'filter_type' => 'required|in:' . implode(',', self::FILTER_TYPES),
             'price_to'    => 'sometimes|required|numeric',
             'price_from'  => 'sometimes|required|numeric',
             'shop'        => 'sometimes|required|array',
@@ -194,56 +190,30 @@ class OrderController extends Controller
             'show'        => 'sometimes|required|integer|min:1',
             'page-number' => 'sometimes|required|integer|min:1',
         ]);
+        $filter_type = $filters['filter_type'];
 
+        # получаем данные конкретного маршрута со связами
         $route = Route::getByIdWithRelations($route_id);
 
-        $route->viewed_orders_at = $route->freshTimestamp();
-        $route->save();
-
-        if ($filter_type == self::FILTER_ALL) {
-            $orders = $this->getAllOrdersByRoute($route_id, $filters);
-        } else {
-            $orders = [];
+        # ругаемся, если нет маршрута
+        if (! $route) {
+            throw new ErrorException(__('message.route_not_found'));
         }
 
-        $prices = [
-            'price_min' => 0,
-            'price_max' => 0,
-        ];
-        $shops = [];
-
-        if (!empty($orders['data'])) {
-            $data = collect($orders['data']);
-            $prices = [
-                'price_min' => $data->min('price_usd'),
-                'price_max' => $data->max('price_usd'),
-            ];
-            $shop_slugs = $data->pluck('shop_slug')->unique()->all();
-            $shops = Shop::getBySlugs($shop_slugs);
+        # если заказы просматривает владелец маршрута, то обновляем дату "Просмотра заказов"
+        if ($filter_type == self::FILTER_TYPE_ORDERS && $route->user_id == $request->user()->id) {
+            $route->viewed_orders_at = $route->freshTimestamp();
+            $route->save();
         }
 
-        return response()->json([
-            'status' => true,
-            'route'  => null_to_blank($route),
-            'orders' => null_to_blank($orders['data']),
-            'count'  => $orders['total'],
-            'page'   => $orders['current_page'],
-            'pages'  => $orders['last_page'],
-            'prices' => $prices,
-            'shops'  => $shops,
-        ]);
-    }
+        # в разрезе всех типов фильтра подсчитываем кол-во заказов
+        $counters = [];
+        foreach (self::FILTER_TYPES as $type) {
+            $counters[$type] = self::prepareOrdersByRoute($route_id, $type, $filters)->count();
+        }
 
-    /**
-     * Получить список заказов по выбранному маршруту и фильтру "all-Заказы".
-     *
-     * @param int $route_id
-     * @param array $filters
-     * @return mixed
-     */
-    public function getAllOrdersByRoute(int $route_id, array $filters = [])
-    {
-        return Order::join('routes', 'routes.id', DB::raw($route_id))
+        # получаем список заказов
+        $orders = self::prepareOrdersByRoute($route_id, $filter_type, $filters)
             ->with([
                 'user' => function ($query) {
                     $query->select(User::FIELDS_FOR_SHOW)->withCount('successful_orders');
@@ -259,19 +229,88 @@ class OrderController extends Controller
                     $query->whereColumn('rates.route_id', 'routes.id');
                 },
             ])
-            ->searchByRoutes(false, [Order::STATUS_ACTIVE, Order::STATUS_IN_WORK, Order::STATUS_SUCCESSFUL])
-            ->when(!empty($filters['price_from']), function ($query) use ($filters) {
-                return $query->where('orders.price_usd', '>=', $filters['price_from']);
-            })
-            ->when(!empty($filters['price_to']), function ($query) use ($filters) {
-                return $query->where('orders.price_usd', '<=', $filters['price_to']);
-            })
-            ->when(!empty($filters['shop']), function ($query) use ($filters) {
-                return $query->whereIn('orders.shop_slug', $filters['shop']);
-            })
             ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
             ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1)
             ->toArray();
+
+        $prices = [
+            'price_min' => 0,
+            'price_max' => 0,
+        ];
+        $shops = [];
+
+        if (!empty($orders['data'])) {
+            $data = collect($orders['data']);
+            $prices = [
+                'price_min' => $data->min('price_usd'),
+                'price_max' => $data->max('price_usd'),
+            ];
+            $shop_slugs = array_filter($data->pluck('shop_slug')->unique()->all());
+            $shops = $shop_slugs ? Shop::getBySlugs($shop_slugs) : [];
+        }
+
+        return response()->json([
+            'status'   => true,
+            'route'    => null_to_blank($route),
+            'orders'   => null_to_blank($orders['data']),
+            'counters' => $counters,
+            'count'    => $orders['total'],
+            'page'     => $orders['current_page'],
+            'pages'    => $orders['last_page'],
+            'prices'   => $prices,
+            'shops'    => $shops,
+        ]);
+    }
+
+    /**
+     * Подготовить запрос для отбора списка заказов по выбранному маршруту, типу фильтра и дополнительным параметрам.
+     *
+     * @param int    $route_id     Код маршрута
+     * @param string $filter_type  Тип фильтра (перечень см. в self::FILTER_TYPES)
+     * @param array  $filters      Критерии отбора заказов
+     * @return \Illuminate\Database\Eloquent\Builder|Order
+     */
+    protected static function prepareOrdersByRoute(int $route_id, string $filter_type = self::FILTER_TYPE_ORDERS, array $filters = [])
+    {
+        $orders = Order::query();
+
+        # пункт "Заказы": заказы, по которым есть подходящий маршрут и находятся в статусе active или in_work
+        if ($filter_type == self::FILTER_TYPE_ORDERS) {
+            $orders->join('routes', 'routes.id', DB::raw($route_id))
+                ->searchByRoutes(false, [Order::STATUS_ACTIVE, Order::STATUS_IN_WORK]);
+
+        # пункт "Мои предложения": заказы в статусе active и по заказу есть ставка владельца маршрута
+        } elseif ($filter_type == self::FILTER_TYPE_MY_OFFERS) {
+            $orders->active()
+                ->whereHas('rates', function ($query) use ($route_id) {
+                    $query->whereRouteId($route_id);
+                });
+
+        # пункт "Принятые": заказы, по которым есть ставка владельца маршрута со статусом accepted или buyed
+        } elseif ($filter_type == self::FILTER_TYPE_ACCEPTED) {
+            $orders->whereHas('rates', function ($query) use ($route_id) {
+                $query->whereRouteId($route_id)->whereIn('status', [Rate::STATUSES_DELIVERED]);
+            });
+
+        # пункт "Доставлено": заказы, по которым есть ставка владельца маршрута со статусом successful или done
+        } elseif ($filter_type == self::FILTER_TYPE_DELIVERED) {
+            $orders = Order::whereHas('rates', function ($query) use ($route_id) {
+                $query->whereRouteId($route_id)->whereIn('status', [Rate::STATUS_SUCCESSFUL, Rate::STATUS_DONE]);
+            });
+        }
+
+        # дополнительные параметры фильтрации
+        $orders->when(!empty($filters['price_from']), function ($query) use ($filters) {
+            return $query->where('orders.price_usd', '>=', $filters['price_from']);
+        })
+        ->when(!empty($filters['price_to']), function ($query) use ($filters) {
+            return $query->where('orders.price_usd', '<=', $filters['price_to']);
+        })
+        ->when(!empty($filters['shop']), function ($query) use ($filters) {
+            return $query->whereIn('orders.shop_slug', $filters['shop']);
+        });
+
+        return $orders;
     }
 
     /**

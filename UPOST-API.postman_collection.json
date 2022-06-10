@@ -4552,7 +4552,7 @@
 							"response": []
 						},
 						{
-							"name": "Список замовленнь по маршруту",
+							"name": "Список замовлень по маршруту",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -4568,7 +4568,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/route/{{route_id}}/show?lang=ru&filter_type=all",
+									"raw": "{{host}}/{{endpoint}}/orders/route/{{route_id}}/show?lang=ru&filter_type=orders",
 									"host": [
 										"{{host}}"
 									],
@@ -4586,8 +4586,8 @@
 										},
 										{
 											"key": "filter_type",
-											"value": "all",
-											"description": "Типы фильтра для отбора заказов (all, accepted, suggestions, delivered / Все, Принятые, Мои предложения, Доставленные)"
+											"value": "orders",
+											"description": "Тип отбора заказов (orders, my_offers, accepted, delivered / Заказы, Мои предложения, Принятые,  Доставлено)"
 										},
 										{
 											"key": "price_from",

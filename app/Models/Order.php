@@ -11,6 +11,91 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+/**
+ * App\Models\Order
+ *
+ * @property int $id Код
+ * @property int $user_id Код пользователя
+ * @property string $name Наименование
+ * @property string|null $slug Слаг
+ * @property string|null $product_link Ссылка на товар в интернет магазине
+ * @property string|null $shop_slug Слаг магазина
+ * @property string $price Цена
+ * @property string|null $currency Валюта
+ * @property string $price_usd Цена в долларах
+ * @property int|null $products_count Количество товаров
+ * @property string|null $description Описание заказа
+ * @property array $images Фотографии заказа
+ * @property int|null $from_country_id Код страны начала заказа
+ * @property int|null $from_city_id Код города начала заказа
+ * @property int|null $to_country_id Код страны окончания заказа
+ * @property int|null $to_city_id Код города окончания заказа
+ * @property string $register_date Дата регистрации
+ * @property string|null $deadline Дата окончания заказа
+ * @property int|null $wait_range_id Код диапазона ожидания
+ * @property string $user_price Сумма дохода
+ * @property string|null $user_currency Валюта дохода
+ * @property string $user_price_usd Сумма дохода в долларах
+ * @property int $not_more_price Признак "Не принимать ставки выше данной цены"
+ * @property int $is_user_active Признак активности пользователя
+ * @property int $looks Количество просмотров
+ * @property string $status Статус заказа
+ * @property array|null $strikes Жалобы
+ * @property \Illuminate\Support\Carbon|null $created_at Добавлено
+ * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property-read \App\Models\City|null $from_city
+ * @property-read \App\Models\Country|null $from_country
+ * @property-read array $images_medium
+ * @property-read array $images_original
+ * @property-read array $images_thumb
+ * @property-read string $short_name
+ * @property-read string $status_name
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
+ * @property-read int|null $rates_count
+ * @property-read \App\Models\Review|null $review
+ * @property-read \App\Models\City|null $to_city
+ * @property-read \App\Models\Country|null $to_country
+ * @property-read \App\Models\User $user
+ * @property-read \App\Models\WaitRange|null $wait_range
+ * @method static \Illuminate\Database\Eloquent\Builder|Order active()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order owner()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order ownerWithStatuses(array $statuses = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Order query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order searchByRoutes(bool $only_new = false, array $statuses = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Order successful()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereImages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereIsUserActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereLooks($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereNotMorePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePriceUsd($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereProductLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereProductsCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereRegisterDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereShopSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereStrikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereToCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereToCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserPriceUsd($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereWaitRangeId($value)
+ * @mixin \Eloquent
+ */
 class Order extends Model
 {
     use TimestampSerializable;
