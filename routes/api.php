@@ -208,11 +208,14 @@ Route::namespace('API')->group(function ($route) {
         # Создать спор
         $route->post('add', 'DisputeController@addDispute');
 
-        # Получить данные спора
-        $route->get('{id}/show', 'DisputeController@showDispute');
+        # Получить спор по коду
+        $route->get('{id}/show', 'DisputeController@showDisputeById');
+
+        # Получить список споров по фильтру
+        $route->get('show', 'DisputeController@showDispute');
 
         # Отменить спор
-        $route->post('{dispute_id}/cancel', 'DisputeController@cancelDispute');
+        $route->post('{id}/cancel', 'DisputeController@cancelDispute');
 
         # Получить справочник "Проблемы спора"
         $route->get('problems/{id?}', 'DisputeController@getProblems');

@@ -81,32 +81,78 @@ class DisputeController extends Controller
     }
 
     /**
-     * Получить данные спора.
+     * Получить спор по коду.
      *
      * @param int $id
      * @return JsonResponse
-     * @throws ErrorException
+     * @throws ValidatorException|ValidationException
      */
-    public function showDispute(int $id): JsonResponse
+    public function showDisputeById(int $id): JsonResponse
     {
-        $dispute = Dispute::whereKey($id)
+        return self::showDispute(request()->merge(['dispute_id' => $id]));
+    }
+
+    /**
+     * Получить список споров по фильтру.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function showDispute(Request $request): JsonResponse
+    {
+        validateOrExit([
+            'dispute_id' => 'nullable|integer',
+            'order_id'   => 'nullable|integer',
+            'route_id'   => 'nullable|integer',
+            'rate_id'    => 'nullable|integer',
+            'chat_id'    => 'nullable|integer',
+            'status'     => 'nullable|in:' . implode(',', array_keys(Dispute::STATUSES)),
+        ]);
+
+        $disputes = Dispute::query()
+            ->when($request->filled('dispute_id'), function ($query) use ($request) {
+                return $query->whereKey($request->get('dispute_id'));
+            })
+            ->when($request->filled('order_id'), function ($query) use ($request) {
+                return $query->whereHas('rate', function ($q) {
+                    $q->whereOrderId(request('order_id'));
+                });
+            })
+            ->when($request->filled('route_id'), function ($query) use ($request) {
+                return $query->whereHas('rate', function ($q) {
+                    $q->whereRouteId(request('route_id'));
+                });
+            })
+            ->when($request->filled('rate_id'), function ($query) use ($request) {
+                return $query->whereRateId($request->get('rate_id'));
+            })
+            ->when($request->filled('chat_id'), function ($query) use ($request) {
+                return $query->whereChatId($request->get('chat_id'));
+            })
+            ->when($request->filled('status'), function ($query) use ($request) {
+                return $query->whereStatus($request->get('status'));
+            })
+            ->when($request->isNotFilled(['dispute_id', 'order_id', 'route_id', 'rate_id', 'chat_id']), function ($query) use ($request) {
+                return $query->whereUserId($request->user()->id);
+            })
             ->with([
                 'problem',
                 'user' => function ($query) {
                     $query->select(User::FIELDS_FOR_SHOW);
                 },
                 'rate',
+                'rate.order',
+                'rate.route',
                 'chat',
                 'message',
                 'dispute_closed_reason',
             ])
-            ->first();
-
-        if (! $dispute) throw new ErrorException(__('message.dispute_not_found'));
+            ->get();
 
         return response()->json([
-            'status'  => true,
-            'dispute' => null_to_blank($dispute),
+            'status'   => true,
+            'disputes' => null_to_blank($disputes),
         ]);
     }
 

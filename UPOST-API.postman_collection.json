@@ -3793,7 +3793,7 @@
 										{
 											"key": "currency",
 											"value": "$",
-											"description": "Валюта (uah, rub, usd, eur) - опціонально",
+											"description": "Валюта (₴, ₽, $, €) - опціонально",
 											"type": "text"
 										}
 									]
@@ -5881,7 +5881,7 @@
 										{
 											"key": "comment",
 											"value": "test",
-											"description": "Коментар",
+											"description": "Коментар (опціонально)",
 											"type": "text"
 										},
 										{
@@ -8112,13 +8112,13 @@
 							"response": []
 						},
 						{
-							"name": "Отримати дані  суперечки",
+							"name": "Отримати  суперечку по коду",
 							"event": [
 								{
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"dispute_id\", 11);"
+											"pm.variables.set(\"dispute_id\", 13);"
 										],
 										"type": "text/javascript"
 									}
@@ -8146,6 +8146,80 @@
 										"show"
 									],
 									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Отримати дані  суперечки по фильтру",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/disputes/show?dispute_id=13&order_id=1&route_id=1&rate_id=13&chat_id=7&status=active&lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"disputes",
+										"show"
+									],
+									"query": [
+										{
+											"key": "dispute_id",
+											"value": "13",
+											"description": "Код суперечки - опціонально"
+										},
+										{
+											"key": "order_id",
+											"value": "1",
+											"description": "Код замовлення - опціонально"
+										},
+										{
+											"key": "route_id",
+											"value": "1",
+											"description": "Код маршруту - опціонально"
+										},
+										{
+											"key": "rate_id",
+											"value": "13",
+											"description": "Код ставки - опціонально"
+										},
+										{
+											"key": "chat_id",
+											"value": "7",
+											"description": "Код чату - опціонально"
+										},
+										{
+											"key": "status",
+											"value": "active",
+											"description": "Статус суперечки - опціонально (active, appointed, in_work, closed, canceled)"
+										},
 										{
 											"key": "lang",
 											"value": "uk",
