@@ -230,8 +230,8 @@ class OrderController extends Controller
             ])
             ->withCount([
                 'rates as rates_count',
-                'rates as has_rate' => function ($query) {
-                    $query->whereColumn('rates.route_id', 'routes.id');
+                'rates as has_rate' => function ($query) use ($route) {
+                    $query->where('rates.route_id', DB::raw($route->id));
                 },
             ])
             ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
@@ -278,7 +278,6 @@ class OrderController extends Controller
             'pages'    => $orders['last_page'],
             'prices'   => $prices,
             'shops'    => $shops,
-            'sql' =>getSQLForFixDatabase()
         ]);
     }
 
@@ -309,7 +308,7 @@ class OrderController extends Controller
         # пункт "Принятые": заказы, по которым есть ставка владельца маршрута со статусом accepted или buyed
         } elseif ($filter_type == self::FILTER_TYPE_ACCEPTED) {
             $orders->whereHas('rates', function ($query) use ($route_id) {
-                $query->whereRouteId($route_id)->whereIn('status', [Rate::STATUSES_DELIVERED]);
+                $query->whereRouteId($route_id)->whereIn('status', [Rate::STATUS_ACCEPTED, Rate::STATUS_BUYED]);
             });
 
         # пункт "Доставлено": заказы, по которым есть ставка владельца маршрута со статусом successful или done
