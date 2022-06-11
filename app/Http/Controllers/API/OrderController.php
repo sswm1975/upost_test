@@ -226,6 +226,7 @@ class OrderController extends Controller
                 'from_city',
                 'to_country',
                 'to_city',
+                'rates',
             ])
             ->withCount([
                 'rates as rates_count',
@@ -234,8 +235,22 @@ class OrderController extends Controller
                 },
             ])
             ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
-            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1)
-            ->toArray();
+            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1);
+
+        # если установлен фильтр "Принятые" и заказы просматривает владелец маршрута
+        if ($filter_type == self::FILTER_TYPE_ACCEPTED && $route->user_id == $request->user()->id) {
+            foreach ($orders as $order) {
+                foreach ($order->rates as $rate) {
+                    # если ставка по заказу создана владельцем маршрута, то устанавливаем TRUE для "Подтвержденная ставка просмотрена исполнителем?"
+                    if ($rate->user_id == $route->user_id) {
+                        $rate->viewed_by_performer = true;
+                        $rate->save();
+                    }
+                }
+            }
+        }
+
+        $orders = $orders->toArray();
 
         $prices = [
             'price_min' => 0,
@@ -263,6 +278,7 @@ class OrderController extends Controller
             'pages'    => $orders['last_page'],
             'prices'   => $prices,
             'shops'    => $shops,
+            'sql' =>getSQLForFixDatabase()
         ]);
     }
 
