@@ -158,6 +158,10 @@ class Rate extends Model
 
     public function setCommentAttribute($value)
     {
+        if (empty($images)) {
+            $this->attributes['comment'] = null;
+        }
+
         $this->attributes['comment'] = strip_tags(strip_unsafe($value), ['br']);
     }
 
