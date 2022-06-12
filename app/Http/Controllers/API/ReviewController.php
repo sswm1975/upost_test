@@ -90,9 +90,10 @@ class ReviewController extends Controller
     {
         # валидируем
         $data = validateOrExit([
-            'order_id'     => 'integer',
-            'author_id'    => 'integer',
-            'recipient_id' => 'integer',
+            'order_id'       => 'integer',
+            'author_id'      => 'integer',
+            'recipient_id'   => 'integer',
+            'recipient_type' => 'nullable|in:customer,performer'
         ]);
 
         # не указан ни один параметр, то отдаем пустой массив
@@ -129,6 +130,9 @@ class ReviewController extends Controller
             })
             ->when($request->filled('recipient_id'), function ($query) use ($request) {
                 return $query->where('recipient_id', $request->get('recipient_id'));
+            })
+            ->when($request->filled('recipient_type'), function ($query) use ($request) {
+                return $query->where('recipient_type', $request->get('recipient_type'));
             })
             # если не указан ни один параметр, то отбираем все отзывы, где авторизированный пользователь был автором или получателем
             ->when($not_params, function ($query) use ($data) {
