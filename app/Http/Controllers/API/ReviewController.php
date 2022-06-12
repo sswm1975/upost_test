@@ -110,7 +110,7 @@ class ReviewController extends Controller
             # треба в масив даних по відгуку додати статус відгуку, статусів може бути 2: visible, hidden
             # visible - тоді, коли на заказ вже є два відгуки, тобто, якшо на один і той самий заказ залишили відгук і замовник і виконавець.
             # hidden - тільки якшо відгук тільки 1. якшо наприклад виконавець лишив відгук, а замовник ще не лишив.
-            ->selectRaw('reviews.*, (SELECT IF(COUNT(id) = 2, "visible", "hidden") FROM reviews WHERE rate_id = reviews.rate_id) AS status')
+            ->selectRaw('reviews.*, (SELECT IF(COUNT(r.id) = 2, "visible", "hidden") FROM reviews r WHERE r.rate_id = reviews.rate_id) AS status')
             ->with([
                 'author:' . implode(',', User::FIELDS_FOR_SHOW),
                 'recipient:' . implode(',', User::FIELDS_FOR_SHOW),
