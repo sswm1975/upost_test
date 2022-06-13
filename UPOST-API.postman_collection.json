@@ -5201,9 +5201,9 @@
 											"disabled": true
 										},
 										{
-											"key": "user_id",
+											"key": "owner_user_id",
 											"value": "15",
-											"description": "Код користувача (опційно)",
+											"description": "Код власника маршруту (опціонально)",
 											"disabled": true
 										},
 										{

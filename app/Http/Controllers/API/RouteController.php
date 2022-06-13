@@ -281,7 +281,7 @@ class RouteController extends Controller
         $filters = validateOrExit([
             'id'                => 'sometimes|required|array',
             'id.*'              => 'required|integer',
-            'user_id'           => 'sometimes|required|integer',
+            'owner_user_id'     => 'sometimes|required|integer',
             'status'            => 'sometimes|required|in:' .  implode(',', Route::STATUSES),
             'date_from'         => 'sometimes|required|date',
             'date_to'           => 'sometimes|required|date|after_or_equal:date_from',
@@ -358,8 +358,8 @@ class RouteController extends Controller
             ->when(!empty($filters['without_id']), function ($query) use ($filters) {
                 return $query->where('id', '!=', $filters['without_id']);
             })
-            ->when(!empty($filters['user_id']), function ($query) use ($filters) {
-                return $query->where('user_id', $filters['user_id']);
+            ->when(!empty($filters['owner_user_id']), function ($query) use ($filters) {
+                return $query->where('user_id', $filters['owner_user_id']);
             })
             ->when(!empty($filters['date_from']), function ($query) use ($filters) {
                 return $query->where('fromdate', '>=', $filters['date_from']);

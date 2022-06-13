@@ -66,7 +66,7 @@ class ProfileController extends Controller
 
         # добавляем последние 2 маршрута, созданные пользователем
         $last_routes = (new RouteController)->getRoutesByFilter($user, [
-            'user_id' => $user->id,
+            'owner_user_id' => $user->id,
             'show' => 2,
         ])['data'] ?? '';
 
