@@ -21,7 +21,7 @@ class CancelDispute extends RowAction
 
     public function dialog()
     {
-        $this->confirm('Вы точно хотите отменить выбранные споры?');
+        $this->confirm('Вы точно хотите отменить спор?');
     }
 
     public function handle(Dispute $model, Request $request): Response
