@@ -3,16 +3,16 @@
 namespace App\Platform\Controllers;
 
 use App\Models\Setting;
-use App\Platform\Extensions\Exporters\ExcelExpoter;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
 class SettingController extends AdminController
 {
-    protected string $title = 'Настройки';
+    protected string $title = 'Константы';
     protected string $icon = 'fa-gear';
     protected bool $isCreateButtonRight = true;
+    protected bool $enableDropdownAction = true;
 
     /**
      * Make a grid builder.
@@ -24,8 +24,6 @@ class SettingController extends AdminController
         $grid = new Grid(new Setting);
 
         # SETTINGS GRID
-        $grid->disableExport(false);
-        $grid->disableColumnSelector(false);
         $grid->quickSearch(function ($model, $query) {
             $model->where(function($model) use ($query) {
                 $model->where('name', 'like', "%{$query}%")
@@ -34,15 +32,12 @@ class SettingController extends AdminController
         })->placeholder('Поиск на наименованию и описанию');
 
         # COLUMNS
-        $grid->column('id', 'Код')->sortable();
+        $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
         $grid->column('name', 'Наименование')->copyable()->filter('like')->sortable();
         $grid->column('value', 'Значение')->filter('like')->sortable();
         $grid->column('description' , 'Описание')->filter('like');
         $grid->column('created_at', 'Дата добавления')->sortable();
         $grid->column('updated_at', 'Дата изменения')->sortable();
-
-        # EXPORT TO EXCEL
-        $grid->exporter(new ExcelExpoter());
 
         return $grid;
     }
