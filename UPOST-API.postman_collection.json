@@ -4558,7 +4558,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"route_id\", 2);"
+											"pm.variables.set(\"route_id\", 107);"
 										],
 										"type": "text/javascript"
 									}
@@ -4637,7 +4637,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/show?user_id=15&show=1&status=active&page-number=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=₴&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/orders/show?owner_user_id=15&show=1&status=active&page-number=1&date_from=2021-06-01&date_to=2021-06-05&city_from[]=4&city_from[]=3&city_to[]=2&city_to[]=3&country_from[]=3&country_to[]=2&price_from=100&price_to=250&currency=₴&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -4648,9 +4648,9 @@
 									],
 									"query": [
 										{
-											"key": "user_id",
+											"key": "owner_user_id",
 											"value": "15",
-											"description": "Код користувача (опціонально)"
+											"description": "Код власника замовлення (опціонально)"
 										},
 										{
 											"key": "show",
@@ -6574,26 +6574,10 @@
 								"header": [],
 								"body": {
 									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "rate_id",
-											"value": "10",
-											"type": "text"
-										},
-										{
-											"key": "scores",
-											"value": "5",
-											"type": "text"
-										},
-										{
-											"key": "text",
-											"value": "Круто, спасибо.",
-											"type": "text"
-										}
-									]
+									"formdata": []
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/reviews/show?order_id=1&lang=uk",
+									"raw": "{{host}}/{{endpoint}}/reviews/show?author_id=30&recipient_type=customer",
 									"host": [
 										"{{host}}"
 									],
@@ -6605,24 +6589,30 @@
 									"query": [
 										{
 											"key": "order_id",
-											"value": "1",
-											"description": "Код замовлення"
-										},
-										{
-											"key": "author_id",
-											"value": "1",
-											"description": "Код автора відгука",
+											"value": "38",
+											"description": "Код замовлення",
 											"disabled": true
 										},
 										{
+											"key": "author_id",
+											"value": "30",
+											"description": "Код автора відгука"
+										},
+										{
 											"key": "recipient_id",
-											"value": "2",
+											"value": "30",
 											"description": "Код отримувача відгука",
 											"disabled": true
 										},
 										{
 											"key": "lang",
-											"value": "uk"
+											"value": "uk",
+											"disabled": true
+										},
+										{
+											"key": "recipient_type",
+											"value": "customer",
+											"description": "Отримувач відгука (customer - замовник, performer - виконавець)"
 										}
 									]
 								}

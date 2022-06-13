@@ -430,7 +430,7 @@ class OrderController extends Controller
     {
         $filters = validateOrExit([
             'order_id'       => 'sometimes|required|integer',
-            'user_id'        => 'sometimes|required|integer',
+            'owner_user_id'  => 'sometimes|required|integer',
             'status'         => 'sometimes|required|in:' .  implode(',', Order::STATUSES),
             'sorting'        => 'sometimes|required|in:asc,desc',
             'sort_by'        => 'sometimes|required|in:date,price',
@@ -525,8 +525,8 @@ class OrderController extends Controller
             ->when(!empty($filters['without_order_id']), function ($query) use ($filters) {
                 return $query->where('orders.id', '!=', $filters['without_order_id']);
             })
-            ->when(!empty($filters['user_id']), function ($query) use ($filters) {
-                return $query->where('orders.user_id', $filters['user_id']);
+            ->when(!empty($filters['owner_user_id']), function ($query) use ($filters) {
+                return $query->where('orders.user_id', $filters['owner_user_id']);
             })
             ->when(!empty($filters['status']), function ($query) use ($filters) {
                 return $query->where('orders.status', $filters['status']);
