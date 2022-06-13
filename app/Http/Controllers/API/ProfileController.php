@@ -60,7 +60,7 @@ class ProfileController extends Controller
 
         # добавляем последние 2 заказа, созданные пользователем
         $last_orders = (new OrderController)->getOrdersByFilter($user, [
-            'user_id' => $user->id,
+            'owner_user_id' => $user->id,
             'show' => 3,
         ])['data'] ?? '';
 

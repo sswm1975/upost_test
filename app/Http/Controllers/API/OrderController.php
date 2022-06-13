@@ -406,7 +406,7 @@ class OrderController extends Controller
     public function showMyOrders(Request $request): JsonResponse
     {
         $user = $request->user();
-        $filters = array_merge(['user_id' => $user->id], $request->all());
+        $filters = array_merge(['owner_user_id' => $user->id], $request->all());
 
         $orders = $this->getOrdersByFilter($user, $filters);
 
