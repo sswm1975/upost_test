@@ -94,6 +94,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserPriceUsd($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereWaitRangeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order withoutAppends()
  * @mixin \Eloquent
  */
 class Order extends Model
@@ -113,6 +114,13 @@ class Order extends Model
         'images_medium',
         'images_original',
     ];
+
+    /**
+     * Флаг, что в модель не нужно добавлять $appends атрибуты (исп. при выгрузке в эксель из админки)
+     *
+     * @var bool
+     */
+    public static bool $withoutAppends = false;
 
     const STATUS_ACTIVE = 'active';
     const STATUS_IN_WORK = 'in_work';
@@ -413,5 +421,32 @@ class Order extends Model
             ->when($only_new, function ($query) {
                 return $query->where('orders.created_at', '>', DB::Raw('IFNULL(routes.viewed_orders_at, "1900-01-01 00:00:00")'));
             });
+    }
+
+    /**
+     * Скоуп: В модель не добавлять доп.атрибуты массива $appends.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWithoutAppends($query)
+    {
+        self::$withoutAppends = true;
+
+        return $query;
+    }
+
+    /**
+     * Get all of the appendable values that are arrayable.
+     *
+     * @return array
+     */
+    protected function getArrayableAppends()
+    {
+        if (self::$withoutAppends){
+            return [];
+        }
+
+        return parent::getArrayableAppends();
     }
 }

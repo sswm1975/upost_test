@@ -255,7 +255,7 @@ class Route extends Model
     }
 
     /**
-     * Скоуп: В модель не добавлять доп.атрибутиты массива $appends.
+     * Скоуп: В модель не добавлять доп.атрибуты массива $appends.
      *
      * @param $query
      * @return mixed

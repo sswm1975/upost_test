@@ -4,14 +4,37 @@ namespace App\Platform\Controllers;
 
 use App\Models\Order;
 use App\Models\Shop;
+use App\Platform\Exporters\OrderExcelExporter;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-use App\Platform\Extensions\Exporters\ExcelExpoter;
 
 class OrderController extends AdminController
 {
     protected string $title = 'Заказы';
     protected string $icon = 'fa-shopping-bag';
+
+    /**
+     * Меню в разрезе статусов.
+     *
+     * @return array
+     */
+    public function menu(): array
+    {
+        $counts = Order::selectRaw('status, count(1) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->toArray();
+
+        $statuses = [];
+        foreach (Order::STATUSES as $status) {
+            $statuses[$status] = (object) [
+                'name'  => __("message.order.statuses.$status"),
+                'count' => $counts[$status] ?? 0,
+            ];
+        }
+
+        return compact('statuses');
+    }
 
     /**
      * Make a grid builder.
@@ -26,18 +49,10 @@ class OrderController extends AdminController
         $grid->disablePagination(false);
         $grid->disableFilter(false);
         $grid->disableExport(false);
+        $grid->disableRowSelector(false);
         $grid->disableColumnSelector(false);
         $grid->disableCreateButton();
-        $grid->disableActions();
         $grid->paginate(20);
-
-        $grid->selector(function (Grid\Tools\Selector $selector) {
-            $statuses = array_combine(Order::STATUSES, array_map(function ($status) {
-                return __("message.order.statuses.$status");
-            }, Order::STATUSES));
-
-            $selector->select('status', 'СТАТУС: ', $statuses);
-        });
 
         $grid->quickSearch(function ($model, $query) {
             $model->where(function($model) use ($query) {
@@ -46,9 +61,18 @@ class OrderController extends AdminController
             });
         })->placeholder('Поиск по названию');
 
+        # EXPORT TO EXCEL
+        $grid->exporter(new OrderExcelExporter);
+
+        # MODEL FILTERS & SORT
+        $grid->model()->where('status', request('status', Order::STATUS_ACTIVE));
+        if (! request()->has('_sort')) {
+            $grid->model()->latest('id');
+        }
+
         # COLUMNS
-        $grid->column('id', 'Код')->sortable();
-        $grid->column('user_id', 'Код клиента')->sortable();
+        $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
+        $grid->column('user_id', 'Код клиента')->setAttributes(['align' => 'center'])->sortable();
         $grid->column('user.full_name', 'ФИО клиента');
         $grid->column('name', 'Наименование')->sortable();
         $grid->column('slug', 'Слаг')->sortable();
@@ -109,7 +133,6 @@ class OrderController extends AdminController
             ->filter('range')
             ->setAttributes(['align'=>'right'])
             ->sortable();
-
         $grid->column('not_more_price', 'Выше не принимать')
             ->showYesNo()
             ->setAttributes(['align'=>'center'])
@@ -118,7 +141,7 @@ class OrderController extends AdminController
         $grid->column('from_city.name', 'Город откуда');
         $grid->column('to_country.name', 'Страна куда');
         $grid->column('to_city.name', 'Город куда');
-        $grid->column('wait_range.name', 'Ждём');
+        $grid->column('wait_range.name', 'Готов ждать');
         $grid->column('register_date', 'Зарегистрирован')->sortable();
         $grid->column('deadline', 'Дата дедлайна')->sortable();
         $grid->column('looks', 'Просмотров')->setAttributes(['align'=>'center'])->sortable();
@@ -133,8 +156,11 @@ class OrderController extends AdminController
         $grid->column('created_at', 'Создано')->sortable();
         $grid->column('updated_at', 'Изменено')->sortable();
 
-        # EXPORT TO EXCEL
-        $grid->exporter(new ExcelExpoter);
+        # ROW ACTIONS
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableEdit();
+            $actions->disableDelete();
+        });
 
         return $grid;
     }
