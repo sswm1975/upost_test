@@ -22,6 +22,24 @@ class DisputeClosedReasonController extends AdminController
         'customer'  => 'Заказчик',
     ];
 
+    public function menu(): array
+    {
+        $counts = DisputeClosedReason::selectRaw('guilty, count(1) as total')
+            ->groupBy('guilty')
+            ->pluck('total', 'guilty')
+            ->toArray();
+
+        $statuses = [];
+        foreach (self::GUILTY as $status => $name) {
+            $statuses[$status] = (object) [
+                'name'  => $name,
+                'count' => $counts[$status] ?? 0,
+            ];
+        }
+
+        return compact('statuses');
+    }
+
     /**
      * Make a grid builder.
      *
@@ -31,26 +49,21 @@ class DisputeClosedReasonController extends AdminController
     {
         $grid = new Grid(new DisputeClosedReason);
 
-        # SETTINGS GRID
-        $grid->disableColumnSelector(false);
+        # FILTERS
+        $grid->model()->where('guilty', request('status', array_key_first(self::GUILTY)));
 
-        $grid->quickSearch(function ($model, $search) {
-            $model->quickSearch($search);
-        })->placeholder('Поиск...');
-
+        # QUICK CREATE
         $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
             $create->text('name', 'Название')->placeholder('Название')->required();
-            $create->select('guilty', 'Виновен')->options(static::GUILTY)->required();
+            $create->select('guilty', 'Виновен')->options(self::GUILTY)->required();
             $create->text('alias', 'Алиас')->placeholder('Алиас')->required();
         });
 
         # COLUMNS
         $grid->column('id', 'Код')->setAttributes(['align'=>'center'])->sortable();
         $grid->column('name', 'Название');
-        $grid->column('guilty', 'Виновен')->replace(static::GUILTY)->sortable()->filter(static::GUILTY);
+        $grid->column('guilty', 'Виновен')->replace(self::GUILTY)->sortable()->filter(self::GUILTY);
         $grid->column('alias', 'Алиас');
-        $grid->column('created_at', 'Создано')->sortable();
-        $grid->column('updated_at', 'Изменено')->sortable();
 
         return $grid;
     }
@@ -66,7 +79,7 @@ class DisputeClosedReasonController extends AdminController
 
         $form->display('id', 'Код');
         $form->text('name', 'Название')->required();
-        $form->select('guilty', 'Виновен')->options(static::GUILTY)->required();
+        $form->select('guilty', 'Виновен')->options(self::GUILTY)->required();
         $form->text('alias', 'Алиас')->required()->help('Новый alias нужно добавить в конфигурационный файл system_messages');
         $form->display('created_at', 'Создано');
         $form->display('updated_at', 'Изменено');
