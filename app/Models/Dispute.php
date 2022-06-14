@@ -91,9 +91,7 @@ class Dispute extends Model
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at', 'deadline'];
     protected $appends = ['status_name'];
-    protected $attributes = [
-        'status'  => self::STATUS_ACTIVE,
-    ];
+    protected $attributes = ['status'  => self::STATUS_ACTIVE];
 
     ### BOOT ###
 

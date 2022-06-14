@@ -31,6 +31,7 @@ class DisputeProblem extends Model
 {
     protected $table = 'dispute_problems';
     protected $fillable = ['name_uk', 'name_ru', 'name_en'];
+    protected $attributes = ['active' => VALUE_ACTIVE];
     public $timestamps = false;
 
     /**
@@ -54,7 +55,7 @@ class DisputeProblem extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('active', 1);
+        return $query->where('active', VALUE_ACTIVE);
     }
 
     /**

@@ -24,7 +24,7 @@ class DisputeProblemController extends AdminController
             ->pluck('total', 'active')
             ->toArray();
 
-        $statuses = ['1' => 'Действующие', '0' => 'Не активные'];
+        $statuses = [VALUE_ACTIVE => 'Действующие', VALUE_NOT_ACTIVE => 'Не активные'];
         foreach ($statuses as $status => $name) {
             $statuses[$status] = (object) [
                 'name'  => $name,
@@ -35,6 +35,7 @@ class DisputeProblemController extends AdminController
 
         return compact('statuses');
     }
+
     /**
      * Make a grid builder.
      *
@@ -44,14 +45,10 @@ class DisputeProblemController extends AdminController
     {
         $grid = new Grid(new DisputeProblem);
 
-        # SETTINGS GRID
-        $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableDelete();
-        });
+        # FILTERS
+        $grid->model()->where('active', request('status', VALUE_ACTIVE));
 
-        # FILTERS & SORT
-        $grid->model()->where('active', request('status', 1));
-
+        # QUICK CREATE
         $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
             $create->text('name_uk')->placeholder('Название 🇺🇦')->required();
             $create->text('name_ru')->placeholder('Название 🇷🇺')->required();

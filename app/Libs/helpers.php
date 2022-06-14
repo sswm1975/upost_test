@@ -8,7 +8,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+# Код системного пользователя в таблице users (от этого пользователя отправляются системные сообщения)
 const SYSTEM_USER_ID = 0;
+
+# Значения для поля active: 1/0
+const VALUE_ACTIVE = 1;
+const VALUE_NOT_ACTIVE = 0;
 
 /**
  * Convert Null to Blank string.
