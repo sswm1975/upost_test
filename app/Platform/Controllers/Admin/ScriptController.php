@@ -86,7 +86,7 @@ class ScriptController extends AdminController
             $form->text('alias', 'Алиас')->placeholder('Алиас скрипта')->required();
             $form->php('code', 'Скрипт')->height(310)->default("<?php\n\nreturn 0;")->required();
             $form->divider('<b>Тестирование</b>');
-            $form->currency('order_summa_usd', 'ORDER_SUMMA_USD')->help('Сумма в долларах, макрос {<b class="color: #01a252">ORDER_SUMMA_USD</b>}');
+            $form->currency('order_summa_usd', 'ORDER_SUMMA_USD')->help('Сумма в долларах, макрос {<b style="color: #01a252">ORDER_SUMMA_USD</b>}');
             $form->html('<a class="btn btn-sm btn-danger js-run_script"><i class="fa fa-code"></i>&nbsp;&nbsp;RUN SCRIPT</a>');
         })->tab('Экспорт', function ($form) {
             $form->belongsToMany('from_countries', Countries::class, 'Страны');
