@@ -56,7 +56,7 @@ Route::group([
     $router->resource('settings', 'SettingController')->names('settings')->middleware('admin.permission:check,settings');
 
     # Скрипты
-    $router->resource('admin/scripts', 'Admin\ScriptController')->middleware('admin.permission:allow,administrator');
+    $router->resource('admin/scripts', 'Admin\ScriptController')->except(['delete'])->middleware('admin.permission:allow,administrator');
     $router->post('admin/scripts/run', 'Admin\ScriptController@runScript')->name('scripts.run')->middleware('admin.permission:allow,administrator');
 
     # Справочники

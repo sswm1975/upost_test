@@ -14,6 +14,7 @@ const SYSTEM_USER_ID = 0;
 # Значения для поля active: 1/0
 const VALUE_ACTIVE = 1;
 const VALUE_NOT_ACTIVE = 0;
+const VALUES_ACTING = [VALUE_ACTIVE => 'Действующие', VALUE_NOT_ACTIVE => 'Не активные'];
 
 /**
  * Convert Null to Blank string.
@@ -496,4 +497,25 @@ function runScript(string $alias = '', array $params = [])
     );
 
     return eval($code);
+}
+
+/**
+ * Подсветка синтаксиса.
+ *
+ * @param string $text
+ * @return string
+ */
+function highlightText(string $text): string
+{
+    $text = trim($text);
+    $text = highlight_string($text, true);
+    $text = trim($text);
+    $text = preg_replace("|^\\<code\\>\\<span style\\=\"color\\: #[a-fA-F0-9]{0,6}\"\\>|", "", $text, 1);  // remove prefix
+    $text = preg_replace("|\\</code\\>\$|", "", $text, 1);  // remove suffix 1
+    $text = trim($text);  // remove line breaks
+    $text = preg_replace("|\\</span\\>\$|", "", $text, 1);  // remove suffix 2
+    $text = trim($text);  // remove line breaks
+    $text = preg_replace("|^(\\<span style\\=\"color\\: #[a-fA-F0-9]{0,6}\"\\>)(&lt;\\?php)(.*?)(\\</span\\>)(.*?)|", "$5", $text);  // remove custom added "<?php "
+
+    return $text;
 }
