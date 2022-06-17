@@ -50,6 +50,8 @@ if (!Admin::user()) return;
 Admin::js('vendor/laravel-admin/AdminLTE/plugins/jQuery/draggable.min.js');
 Admin::script("$('.modal-dialog').draggable({handle: '.modal-header'});");
 
+Admin::js('https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.7/highcharts.js');
+
 # Подгружаем fix-стили
 Admin::style(<<<CSS
     /* Меню в сайдбаре: увеличиваем ширину пунктов меню */
