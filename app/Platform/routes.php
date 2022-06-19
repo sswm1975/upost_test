@@ -80,6 +80,9 @@ Route::group([
 
         # Причины закрытия спора
         $router->resource('dispute_closed_reasons', 'DisputeClosedReasonController')->names('dispute_closed_reasons');
+
+        # Курсы валют
+        $router->get('currencies', 'CurrenciesController@index');
     });
 
     # Пункты меню "Админка"
