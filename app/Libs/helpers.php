@@ -1,7 +1,7 @@
 <?php
 
 use App\Exceptions\ValidatorException;
-use App\Models\CurrencyRate;
+use App\Models\Currency;
 use App\Models\Script;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -408,28 +408,28 @@ function getCurrencyNameBySymbol(string $symbol): string
 /**
  * Возвращает текущий курс для выбранной валюты.
  *
- * @param string $currency Наименование валюты (uah, usd, rub, eur)
+ * @param string $currency Наименование валюты (₴, $, €, ₽)
  * @return mixed
  */
-function getCurrencyRate(string $currency = '')
+function getCurrencyRate(string $currency)
 {
-    return CurrencyRate::getRate($currency);
+    return config('rates.' . $currency, 1);
 }
 
 /**
- * Конвертация цены выбранной валюты в долларовый эквивалент.
+ * Конвертация суммы выбранной валюты в долларовый эквивалент.
  *
- * @param float $price Цена
+ * @param float  $amount   Сумма
  * @param string $currency Наименование валюты (₴, $, €, ₽)
  * @return float
  */
-function convertPriceToUsd(float $price, string $currency): float
+function convertPriceToUsd(float $amount, string $currency): float
 {
-    if ($currency == '$') return $price;
+    if ($currency == config('app.default_currency')) return $amount;
 
     $rate = getCurrencyRate($currency);
 
-    return $price * $rate;
+    return round($amount / $rate, 2);
 }
 
 /**

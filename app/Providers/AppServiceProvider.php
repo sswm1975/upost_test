@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Currency;
 use App\Models\Rate;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
@@ -44,6 +45,9 @@ class AppServiceProvider extends ServiceProvider
 
         # Кэширование таблицы settings и занесение их в App Config, т.е. потом можно вызывать, к примеру config('default_language')
         Setting::initCache();
+
+        # Кэширование текущих курсов из таблицы currencies и занесение их в App Config, т.е. потом можно вызывать, к примеру config('rates.$')
+        Currency::initCache();
 
         /**
          * Для операции "Сброс пароля" избавляемся от маршрута ниже (для API он не нужен):

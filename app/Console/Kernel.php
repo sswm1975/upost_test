@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\SendMailDeadlineRate::class,
+        Commands\FillCurrencyRates::class,
     ];
 
     /**
@@ -37,6 +38,13 @@ class Kernel extends ConsoleKernel
             ->description('Закрыть просроченные ставки')
             ->dailyAt('10:00')
             ->timezone('Europe/Kiev');
+
+        $schedule->command('fill:currency_rates')
+            ->name('fill_currency_rates')
+            ->description('Обновить курсы валют (сервис fixer.io)')
+            ->dailyAt('08:00')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path('logs/fill_currency_rates.log'));
     }
 
     /**
