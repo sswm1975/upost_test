@@ -27,6 +27,36 @@ class SchedulingController
     }
 
     /**
+     * Load log-file
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function loadLog(Request $request)
+    {
+        $scheduling = new Scheduling();
+
+        try {
+            $output = $scheduling->loadLog($request->get('id'));
+
+            return [
+                'status'    => true,
+                'message'   => 'success',
+                'data'      => $output,
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status'    => false,
+                'message'   => 'failed',
+                'data'      => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Run task.
+     *
      * @param Request $request
      *
      * @return array

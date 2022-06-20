@@ -44,6 +44,7 @@ class Scheduling extends Extension
                 'nextRunDate'   => $event->nextRunDate()->format('Y-m-d H:i:s'),
                 'description'   => $event->description,
                 'readable'      => CronSchedule::fromCronString($event->expression)->asNaturalLanguage(),
+                'output'        => $event->output,
             ];
         }
 
@@ -105,7 +106,8 @@ class Scheduling extends Extension
         $event = $this->getKernelEvents()[$id - 1];
 
         if (PHP_OS_FAMILY === 'Windows') {
-            $event->command = Str::of($event->command)->replace('php-cgi.exe', 'php.exe');
+            $event->command = Str::of($event->command)->replace('php-cgi.exe', config('admin.php'));
+            $event->command = Str::of($event->command)->replace('""', config('admin.php'));
         }
 
         $event->sendOutputTo($this->getOutputTo());
@@ -113,6 +115,25 @@ class Scheduling extends Extension
         $event->run(app());
 
         return $this->readOutput();
+    }
+
+    /**
+     * Load log file.
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public function loadLog($id)
+    {
+        /** @var \Illuminate\Console\Scheduling\Event $event */
+        $event = $this->getKernelEvents()[$id - 1];
+
+        if (!file_exists($event->output)) {
+            return "File {$event->output} not exists!";
+        }
+
+        return file_get_contents($event->output);
     }
 
     /**
@@ -160,6 +181,7 @@ class Scheduling extends Extension
             /* @var \Illuminate\Routing\Router $router */
             $router->get('helpers/scheduling', 'Encore\Admin\Scheduling\SchedulingController@index')->name('scheduling-index');
             $router->post('helpers/scheduling/run', 'Encore\Admin\Scheduling\SchedulingController@runEvent')->name('scheduling-run');
+            $router->post('helpers/scheduling/load-log', 'Encore\Admin\Scheduling\SchedulingController@loadLog')->name('scheduling-load_log');
         });
     }
 

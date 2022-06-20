@@ -1,5 +1,6 @@
 <script data-exec-on-popstate>
     $(function () {
+
         $('.run-task').click(function (e) {
             var id = $(this).data('id');
             NProgress.start();
@@ -16,6 +17,24 @@
                 }
             });
         });
+
+        $('.load-log').click(function (e) {
+            var id = $(this).data('id');
+            NProgress.start();
+            $.ajax({
+                method: 'POST',
+                url: '{{ route('scheduling-load_log') }}',
+                data: {id: id, _token: LA.token},
+                success: function (data) {
+                    if (typeof data === 'object') {
+                        $('.output-box').removeClass('hide');
+                        $('.output-box .output-body').html(data.data);
+                    }
+                    NProgress.done();
+                }
+            });
+        });
+
     });
 </script>
 
@@ -42,6 +61,7 @@
                 <th>Next run time</th>
                 <th>Description</th>
                 <th>Run</th>
+                <th>Log</th>
             </tr>
             @foreach($events as $index => $event)
             <tr>
@@ -51,6 +71,11 @@
                 <td>{{ $event['nextRunDate'] }}</td>
                 <td>{{ $event['description'] }}</td>
                 <td><a class="btn btn-xs btn-primary run-task" data-id="{{ $index+1 }}">Run</a></td>
+                @if($event['output'])
+                <td><a class="btn btn-xs btn-default load-log" data-id="{{ $index+1 }}" title="Load log file {{ $event['output'] }}"><span class="fa fa-eye"></span></a></td>
+                @else
+                <td></td>
+                @endif
             </tr>
             @endforeach
             </tbody>
