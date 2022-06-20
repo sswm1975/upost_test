@@ -4733,13 +4733,13 @@
 							"response": []
 						},
 						{
-							"name": "Підбір маршруту для замовлення",
+							"name": "По замовленню підібрать маршрути",
 							"event": [
 								{
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 19);"
+											"pm.variables.set(\"order_id\", 2);"
 										],
 										"type": "text/javascript"
 									}
@@ -4749,7 +4749,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/selection_route",
+									"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/selection_routes?owner_user_id=2&lang=uk",
 									"host": [
 										"{{host}}"
 									],
@@ -4757,14 +4757,18 @@
 										"{{endpoint}}",
 										"orders",
 										"{{order_id}}",
-										"selection_route"
+										"selection_routes"
 									],
 									"query": [
 										{
+											"key": "owner_user_id",
+											"value": "2",
+											"description": "Код власника маршруту (опційно)"
+										},
+										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 										}
 									]
 								}
@@ -5370,13 +5374,13 @@
 							"response": []
 						},
 						{
-							"name": "Підбір замовлення для маршруту",
+							"name": "Підбір замовлень для маршруту",
 							"event": [
 								{
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"route_id\", 58);"
+											"pm.variables.set(\"route_id\", 2);"
 										],
 										"type": "text/javascript"
 									}
@@ -5386,7 +5390,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/selection_order",
+									"raw": "{{host}}/{{endpoint}}/routes/{{route_id}}/selection_orders",
 									"host": [
 										"{{host}}"
 									],
@@ -5394,7 +5398,7 @@
 										"{{endpoint}}",
 										"routes",
 										"{{route_id}}",
-										"selection_order"
+										"selection_orders"
 									],
 									"query": [
 										{

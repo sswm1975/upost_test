@@ -85,8 +85,8 @@ Route::namespace('API')->group(function ($route) {
         # Вивід конкретного замовлення для редагування
         $route->get('{order_id}/edit', 'OrderController@showOrderForEdit')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-        # Підбір маршруту для замовлення
-        $route->get('{order_id}/selection_route', 'OrderController@selectionRoute');
+        # Для замовлення підібрать маршрути
+        $route->get('{order_id}/selection_routes', 'OrderController@selectionRoutes');
 
         # Закриття замовлення
         $route->post('{order_id}/close', 'OrderController@closeOrder')->middleware(MIDDLEWARE_AUTH_BASIC);

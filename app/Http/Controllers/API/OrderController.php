@@ -561,21 +561,26 @@ class OrderController extends Controller
     }
 
     /**
-     * Подобрать маршрут для заказа.
+     * Для заказа подобрать маршруты.
      *
      * @param int $order_id
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
+     * @throws ErrorException|ValidationException|ValidatorException
      */
-    public function selectionRoute(int $order_id, Request $request):JsonResponse
+    public function selectionRoutes(int $order_id, Request $request):JsonResponse
     {
+        validateOrExit(['owner_user_id' => 'nullable|integer']);
+
         if (! $order = Order::find($order_id, ['from_country_id', 'to_country_id', 'register_date', 'deadline'])) {
             throw new ErrorException(__('message.order_not_found'));
         }
 
         $routes = Route::query()
             ->with([
+                'user' => function ($query) {
+                    $query->select(User::FIELDS_FOR_SHOW);
+                },
                 'from_country',
                 'to_country',
                 'from_city',
@@ -584,7 +589,10 @@ class OrderController extends Controller
             ->where('status', Route::STATUS_ACTIVE)
             ->where('from_country_id', $order->from_country_id)
             ->where('to_country_id', $order->to_country_id)
-            ->where('deadline', '>=', $order->deadline)
+            ->whereBetween('deadline', [$order->register_date, $order->deadline])
+            ->when($request->filled('owner_user_id'), function ($query) use ($request) {
+                return $query->where('user_id', $request->get('owner_user_id'));
+            })
             ->get()
             ->toArray();
 
