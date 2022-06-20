@@ -386,25 +386,34 @@ class RouteController extends Controller
 
 
     /**
-     * Подобрать заказ для маршрута.
+     * Подобрать заказы для маршрута.
      *
      * @param int $route_id
      * @param Request $request
      * @return JsonResponse
      * @throws ErrorException
      */
-    public function selectionOrder(int $route_id, Request $request):JsonResponse
+    public function selectionOrders(int $route_id, Request $request):JsonResponse
     {
         if (!$route = Route::find($route_id)) {
             throw new ErrorException(__('message.route_not_found'));
         }
 
         $orders = Order::query()
+            ->with([
+                'user' => function ($query) {
+                    $query->select(User::FIELDS_FOR_SHOW);
+                },
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+            ])
             ->where('user_id',  $request->user()->id)
             ->where('status', Order::STATUS_ACTIVE)
-            ->where('from_country', $route->route_from_country)
-            ->where('fromdate', '>=', $route->fromdate)
-            ->where('tilldate', '<=', $route->tilldate)
+            ->where('from_country_id', $route->from_country_id)
+            ->where('to_country_id', $route->to_country_id)
+            ->whereBetween('deadline', [$route->created_at, $route->deadline . ' 23:59:59'])
             ->get()
             ->toArray();
 

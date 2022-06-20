@@ -127,8 +127,8 @@ Route::namespace('API')->group(function ($route) {
         # Закриття декілька маршрутів
         $route->post('close', 'RouteController@closeRoutes')->middleware(MIDDLEWARE_AUTH_BASIC);
 
-        # Підбір замовлення для маршруту
-        $route->get('{route_id}/selection_order', 'RouteController@selectionOrder')->middleware(MIDDLEWARE_AUTH_BASIC);
+        # Підбір замовлень для маршруту
+        $route->get('{route_id}/selection_orders', 'RouteController@selectionOrders')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Лічильник переглядів
         $route->post('{route_id}/add_look', 'RouteController@addLook');
