@@ -481,10 +481,10 @@ function formatDateTime(string $date = '', bool $is_datetime = true)
  * Рассчитать налог.
  *
  * @param string $alias
- * @param array $params
- * @return int|mixed
+ * @param float $amount
+ * @return int
  */
-function calcTax(string $alias = '', float $amount = 0)
+function calcTax(string $alias = '', float $amount = 0): int
 {
     if (empty($alias) || empty($amount)) {
         return 0;
