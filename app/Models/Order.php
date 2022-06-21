@@ -41,8 +41,10 @@ use Illuminate\Support\Str;
  * @property int $looks Количество просмотров
  * @property string $status Статус заказа
  * @property array|null $strikes Жалобы
- * @property \Illuminate\Support\Carbon|null $created_at Добавлено
- * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property string|null $created_at Добавлено
+ * @property string|null $updated_at Изменено
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderCalculation[] $calculations
+ * @property-read int|null $calculations_count
  * @property-read \App\Models\City|null $from_city
  * @property-read \App\Models\Country|null $from_country
  * @property-read array $images_medium
@@ -50,6 +52,7 @@ use Illuminate\Support\Str;
  * @property-read array $images_thumb
  * @property-read string $short_name
  * @property-read string $status_name
+ * @property-read string $total_amount
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
  * @property-read \App\Models\Review|null $review
@@ -109,6 +112,7 @@ class Order extends Model
         'strikes' => 'array',
     ];
     protected $appends = [
+        'total_amount',
         'short_name',
         'status_name',
         'images_thumb',
@@ -140,6 +144,11 @@ class Order extends Model
     ];
 
     ### GETTERS ###
+
+    public function getTotalAmountAttribute(): string
+    {
+        return $this->price * $this->products_count;
+    }
 
     public function getShortNameAttribute(): string
     {
