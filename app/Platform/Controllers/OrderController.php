@@ -7,6 +7,7 @@ use App\Models\Shop;
 use App\Platform\Exporters\OrderExcelExporter;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 
 class OrderController extends AdminController
 {
@@ -65,7 +66,10 @@ class OrderController extends AdminController
         $grid->exporter(new OrderExcelExporter);
 
         # MODEL FILTERS & SORT
-        $grid->model()->where('status', request('status', Order::STATUS_ACTIVE));
+        $grid->model()
+            ->where('status', request('status', Order::STATUS_ACTIVE))
+            ->with('calculations')
+            ->withCount('calculations');
         if (! request()->has('_sort')) {
             $grid->model()->latest('id');
         }
@@ -110,18 +114,40 @@ class OrderController extends AdminController
             ->setAttributes(['align'=>'center'])
             ->sortable();
         $grid->column('price', 'Цена')
+            ->price()
             ->filter('range')
             ->setAttributes(['align'=>'right'])
+            ->sortable();
+        $grid->column('total_amount', 'Сумма')
+            ->price()
+            ->setAttributes(['align'=>'center'])
             ->sortable();
         $grid->column('currency', 'Валюта')
             ->filter(array_combine(config('app.currencies'), config('app.currencies')))
             ->setAttributes(['align'=>'center'])
             ->sortable();
         $grid->column('price_usd', 'Цена в $')
+            ->price()
             ->filter('range')
             ->setAttributes(['align'=>'right'])
             ->sortable();
+        $grid->column('taxes_fees_modal', 'Taxes/Fees')
+            ->modal('Налоги и комиссии', function ($model) {
+                $calculations = $model->calculations->map(function ($calculation) {
+                    return $calculation->only(['id', 'type', 'name', 'amount', 'created_at', 'updated_at']);
+                })->toArray();
+
+                return new Table(['Код', 'Тип', 'Наименование', 'Сумма', 'Добавлено', 'Изменено'], $calculations);
+            })
+            ->display(function($value) {
+                if (empty($this->calculations_count)) return '';
+
+                return "{$value}&nbsp;<span class='label label-default'>{$this->calculations_count}</span>";
+            })
+            ->setAttributes(['align'=>'center'])
+            ->sortable();
         $grid->column('user_price', 'Доход')
+            ->price()
             ->filter('range')
             ->setAttributes(['align'=>'right'])
             ->sortable();
@@ -130,6 +156,7 @@ class OrderController extends AdminController
             ->setAttributes(['align'=>'center'])
             ->sortable();
         $grid->column('user_price_usd', 'Доход в $')
+            ->price()
             ->filter('range')
             ->setAttributes(['align'=>'right'])
             ->sortable();
