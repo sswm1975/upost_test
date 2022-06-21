@@ -4,7 +4,7 @@ namespace App\Modules;
 
 use App\Models\Order;
 use App\Models\OrderCalculation;
-use App\Models\Script;
+use App\Models\Tax;
 use Carbon\Carbon;
 use ParseError;
 
@@ -79,7 +79,7 @@ class Calculations
     protected static function calcTaxes(string $type, int $country_id, float $amount, int $order_id): array
     {
         # узнаем список налогов по коду страны
-        $taxes = Script::$type($country_id)->toArray();
+        $taxes = Tax::$type($country_id)->toArray();
 
         if (empty($taxes)) {
             return [];

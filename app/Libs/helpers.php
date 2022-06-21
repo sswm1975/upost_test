@@ -1,8 +1,8 @@
 <?php
 
 use App\Exceptions\ValidatorException;
-use App\Models\Currency;
-use App\Models\Script;
+use App\Models\Tax;
+use App\Modules\Calculations;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -478,25 +478,21 @@ function formatDateTime(string $date = '', bool $is_datetime = true)
 }
 
 /**
- * Выполнить PHP-скрипт.
+ * Рассчитать налог.
  *
  * @param string $alias
  * @param array $params
  * @return int|mixed
  */
-function runScript(string $alias = '', array $params = [])
+function calcTax(string $alias = '', float $amount = 0)
 {
-    if (empty($alias) || empty($params['order_summa_usd'])) {
+    if (empty($alias) || empty($amount)) {
         return 0;
     }
 
-    $code = str_replace(
-        ['<?php', '?>', '{ORDER_SUMMA_USD}'],
-        ['', '', $params['order_summa_usd']],
-        Script::whereAlias($alias)->value('code') ?? 'return 0;'
-    );
+    $code = Tax::whereAlias($alias)->value('code') ?? '';
 
-    return eval($code);
+    return Calculations::runScript($code, $amount);
 }
 
 /**
