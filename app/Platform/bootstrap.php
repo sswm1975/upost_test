@@ -102,3 +102,7 @@ Column::extend('showOtherField', function ($value, $field) {
     return !empty($value) ? $this->$field : '';
 });
 
+Column::extend('price', function ($value, $decimals = 2, $decimal_separator = ".", $thousands_separator = ",") {
+    return number_format($value, $decimals, $decimal_separator, $thousands_separator);
+});
+
