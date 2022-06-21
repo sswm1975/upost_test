@@ -2,25 +2,27 @@
 
 namespace App\Platform\Controllers\Admin;
 
-use App\Models\Script;
+use App\Models\Tax;
+use App\Modules\Calculations;
 use App\Platform\Controllers\AdminController;
 use App\Platform\Selectable\Countries;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Encore\Admin\Show;
+use Illuminate\Http\Request;
 use Jxlwqq\CodeMirror\CodeMirror;
 
-class ScriptController extends AdminController
+class TaxController extends AdminController
 {
-    protected string $title = 'Скрипты';
+    protected string $title = 'Налоги';
     protected string $icon = 'fa-code';
     protected bool $isCreateButtonRight = true;
     protected bool $enableDblClick = true;
 
     public function menu(): array
     {
-        $counts = Script::selectRaw('active, count(1) as total')
+        $counts = Tax::selectRaw('active, count(1) as total')
             ->groupBy('active')
             ->pluck('total', 'active')
             ->toArray();
@@ -43,7 +45,7 @@ class ScriptController extends AdminController
      */
     protected function grid(): Grid
     {
-        $grid = new Grid(new Script);
+        $grid = new Grid(new Tax);
 
         # FILTERS
         $grid->model()->where('active', request('status', VALUE_ACTIVE));
@@ -55,8 +57,8 @@ class ScriptController extends AdminController
         $grid->column('id', 'Код');
         $grid->column('name', 'Название');
         $grid->column('alias', 'Алиас');
-        $grid->column('from_countries','Экспорт')->belongsToMany(Countries::class, 'script_from_country');
-        $grid->column('to_countries','Импорт')->belongsToMany(Countries::class, 'script_to_country');
+        $grid->column('export_countries','Экспорт')->belongsToMany(Countries::class, 'tax_export');
+        $grid->column('import_countries','Импорт')->belongsToMany(Countries::class, 'tax_import');
         $grid->column('active', 'Действует')->switch(SWITCH_YES_NO)->sortable();
         $grid->column('created_at', 'Создано');
         $grid->column('updated_at', 'Изменено');
@@ -71,7 +73,7 @@ class ScriptController extends AdminController
      */
     protected function form(): Form
     {
-        Admin::disablePjax();
+//        Admin::disablePjax();
 
         # подгружаем стили подстветки для PHP-кода
         Admin::css(CodeMirror::ASSETS_PATH.'theme/3024-night.css');
@@ -79,19 +81,19 @@ class ScriptController extends AdminController
         # подгружаем скрипт по тестированию PHP-кода
         Admin::script(self::scriptTesting());
 
-        $form = new Form(new Script);
+        $form = new Form(new Tax);
 
         $form->tab('Основное', function ($form) {
-            $form->text('name', 'Название')->placeholder('Название скрипта')->required();
-            $form->text('alias', 'Алиас')->placeholder('Алиас скрипта')->required();
+            $form->text('name', 'Название')->placeholder('Название налога')->required();
+            $form->text('alias', 'Алиас')->placeholder('Алиас')->required();
             $form->php('code', 'Скрипт')->height(310)->default("<?php\n\nreturn 0;")->required();
             $form->divider('<b>Тестирование</b>');
             $form->currency('order_summa_usd', 'ORDER_SUMMA_USD')->help('Сумма в долларах, макрос {<b style="color: #01a252">ORDER_SUMMA_USD</b>}');
             $form->html('<a class="btn btn-sm btn-danger js-run_script"><i class="fa fa-code"></i>&nbsp;&nbsp;RUN SCRIPT</a>');
         })->tab('Экспорт', function ($form) {
-            $form->belongsToMany('from_countries', Countries::class, 'Страны');
+            $form->belongsToMany('export_countries', Countries::class, 'Страны');
         })->tab('Импорт', function ($form) {
-            $form->belongsToMany('to_countries', Countries::class, 'Страны');
+            $form->belongsToMany('import_countries', Countries::class, 'Страны');
         })->tab('Инфо', function ($form) {
             $form->display('id', 'Код');
             $form->textarea('description', 'Описание')->rows(20)->required();
@@ -111,7 +113,7 @@ class ScriptController extends AdminController
     {
         Admin::style('.col-md-12:nth-child(2) {width:30%}');
 
-        $script = Script::with(['from_countries', 'to_countries'])->findOrFail($id);
+        $script = Tax::with(['export_countries', 'import_countries'])->findOrFail($id);
 
         $show = new Show($script);
 
@@ -126,7 +128,7 @@ class ScriptController extends AdminController
         $show->field('description', 'Описание')->unescape()->as(function ($description) {
             return "<pre>{$description}</pre>";
         });
-        $show->from_countries('Экспорт', function ($country) {
+        $show->export_countries('Экспорт', function ($country) {
             $country->disableFilter();
             $country->disableExport();
             $country->disablePagination();
@@ -138,7 +140,7 @@ class ScriptController extends AdminController
             $country->column('id', 'Код');
             $country->column('name_ru', 'Наименование');
         });
-        $show->to_countries('Импорт', function ($country) {
+        $show->import_countries('Импорт', function ($country) {
             $country->disableFilter();
             $country->disableExport();
             $country->disablePagination();
@@ -157,17 +159,15 @@ class ScriptController extends AdminController
     /**
      * Выполнить PHP-скрипт.
      *
-     * @return mixed
+     * @param Request $request
+     * @return int
      */
-    public function runScript()
+    public function runScript(Request $request): int
     {
-        $code = str_replace(
-            ['<?php', '?>', '{ORDER_SUMMA_USD}'],
-            ['', '', request('order_summa_usd', 0)],
-            request('code', 'return 0;')
-        );
+        $code = $request->get('code', '');
+        $amount = $request->get('order_summa_usd', 0);
 
-        return eval($code);
+        return Calculations::runScript($code, $amount);
     }
 
     /**
@@ -177,7 +177,7 @@ class ScriptController extends AdminController
      */
     private static function scriptTesting(): string
     {
-        $url = route('platform.scripts.run');
+        $url = route('platform.taxes.run_script');
 
         return <<<EOD
 
