@@ -103,6 +103,7 @@ class Order extends Model
 
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
+    public $timestamps = false;
     protected $casts = [
         'images' => 'array',
         'strikes' => 'array',
@@ -137,21 +138,6 @@ class Order extends Model
         self::STATUS_FAILED,
         self::STATUS_BANNED,
     ];
-
-    public static function boot()
-    {
-        parent::boot();
-
-        self::creating(function ($model) {
-            $model->slug = Str::slug($model->name) . '-'. Str::random(8);
-            $model->register_date = Date::now()->format('Y-m-d');
-        });
-
-        self::saving(function ($model) {
-            $model->price_usd = convertPriceToUsd($model->price, $model->currency);
-            $model->user_price_usd = convertPriceToUsd($model->user_price, $model->user_currency);
-        });
-    }
 
     ### GETTERS ###
 
@@ -346,6 +332,11 @@ class Order extends Model
     public function review(): MorphOne
     {
         return $this->morphOne(Review::class, 'reviewable');
+    }
+
+    public function calculations(): HasMany
+    {
+        return $this->hasMany(OrderCalculation::class, 'order_id', 'id');
     }
 
     ### SCOPES ###

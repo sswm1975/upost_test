@@ -24,9 +24,11 @@ class Calculations
      * Выполнить расчет комиссий и налогов по заказу.
      *
      * @param Order $order
+     * @param bool $recalculation
      * @return void
+     * @throws \Exception
      */
-    public static function run(Order $order)
+    public static function run(Order $order, bool $recalculation = false)
     {
         # рассчитываем суммы комиссий
         $fees = static::calcFees($order->price_usd, $order->id);
@@ -39,6 +41,11 @@ class Calculations
 
         # объединяем все расчеты
         $calculations = array_merge($fees, $export, $import);
+
+        # если установлен флаг пересчета, то удаляем предыдущие расчеты
+        if ($recalculation) {
+            OrderCalculation::whereOrderId($order->id)->delete();
+        }
 
         # расчеты заносим в таблицу
         OrderCalculation::insert($calculations);
