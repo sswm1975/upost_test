@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Jobs\OrderCalculationJob;
+use App\Jobs\OrderDeductionJob;
 use App\Models\Order;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
@@ -21,7 +21,7 @@ class OrderObserver
     public function created(Order $order)
     {
         # после создания заказа рассчитываем по нему налоги и комиссии
-        OrderCalculationJob::dispatch($order);
+        OrderDeductionJob::dispatch($order);
     }
 
     public function updating(Order $order)
@@ -39,7 +39,7 @@ class OrderObserver
             || $order->currency != $order->getOriginal('currency')
             || $order->products_count != $order->getOriginal('products_count')
         ) {
-            OrderCalculationJob::dispatch($order, true);
+            OrderDeductionJob::dispatch($order, true);
         }
     }
 }

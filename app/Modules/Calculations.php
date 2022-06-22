@@ -3,7 +3,7 @@
 namespace App\Modules;
 
 use App\Models\Order;
-use App\Models\OrderCalculation;
+use App\Models\OrderDeduction;
 use App\Models\Tax;
 use Carbon\Carbon;
 use ParseError;
@@ -44,11 +44,11 @@ class Calculations
 
         # если установлен флаг пересчета, то удаляем предыдущие расчеты
         if ($recalculation) {
-            OrderCalculation::whereOrderId($order->id)->delete();
+            OrderDeduction::whereOrderId($order->id)->delete();
         }
 
         # расчеты заносим в таблицу
-        OrderCalculation::insert($calculations);
+        OrderDeduction::insert($calculations);
     }
 
     /**

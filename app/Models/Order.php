@@ -43,8 +43,8 @@ use Illuminate\Support\Str;
  * @property array|null $strikes Жалобы
  * @property string|null $created_at Добавлено
  * @property string|null $updated_at Изменено
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderCalculation[] $calculations
- * @property-read int|null $calculations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderDeduction[] $deductions
+ * @property-read int|null $deductions_count
  * @property-read \App\Models\City|null $from_city
  * @property-read \App\Models\Country|null $from_country
  * @property-read array $images_medium
@@ -65,6 +65,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order owner()
  * @method static \Illuminate\Database\Eloquent\Builder|Order ownerWithStatuses(array $statuses = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Order isOwnerByKey($id, array $statuses = [self::STATUS_ACTIVE])
  * @method static \Illuminate\Database\Eloquent\Builder|Order query()
  * @method static \Illuminate\Database\Eloquent\Builder|Order searchByRoutes(bool $only_new = false, array $statuses = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Order successful()
@@ -343,9 +344,9 @@ class Order extends Model
         return $this->morphOne(Review::class, 'reviewable');
     }
 
-    public function calculations(): HasMany
+    public function deductions(): HasMany
     {
-        return $this->hasMany(OrderCalculation::class, 'order_id', 'id');
+        return $this->hasMany(OrderDeduction::class, 'order_id', 'id');
     }
 
     ### SCOPES ###
@@ -383,7 +384,7 @@ class Order extends Model
      */
     protected function scopeIsOwnerByKey($query, $id, array $statuses = [self::STATUS_ACTIVE])
     {
-        return $query->owner()->whereKey($id)->whereIn('status', $statuses);
+        return $query->whereKey($id)->ownerWithStatuses($statuses);
     }
 
     /**
