@@ -408,7 +408,11 @@ class RouteController extends Controller
                 'from_city',
                 'to_country',
                 'to_city',
+                'deductions',
             ])
+            ->withCount(['deductions AS deductions_sum' => function($query) {
+                $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
+            }])
             ->where('user_id',  $request->user()->id)
             ->where('status', Order::STATUS_ACTIVE)
             ->where('from_country_id', $route->from_country_id)

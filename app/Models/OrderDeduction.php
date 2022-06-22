@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name Наименование вычета
  * @property string $amount Сумма (в долларах)
  * @property \Illuminate\Support\Carbon $created_at Добавлено
- * @property \Illuminate\Support\Carbon|null $updated_at Изменено
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction query()
@@ -24,10 +23,20 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction whereOrderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class OrderDeduction extends Model
 {
     use TimestampSerializable;
+
+    public $timestamps = false;
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_at = $model->freshTimestamp();
+        });
+    }
 }

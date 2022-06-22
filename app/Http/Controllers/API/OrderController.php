@@ -227,6 +227,7 @@ class OrderController extends Controller
                 'to_country',
                 'to_city',
                 'rates',
+                'deductions',
             ])
             ->withCount([
                 'rates as rates_count',
@@ -234,6 +235,9 @@ class OrderController extends Controller
                     $query->where('rates.route_id', DB::raw($route->id));
                 },
             ])
+            ->withCount(['deductions AS deductions_sum' => function($query) {
+                $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
+            }])
             ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
             ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1);
 
@@ -380,6 +384,7 @@ class OrderController extends Controller
                 'wait_range',
                 'user',
                 'rates',
+                'deductions',
             ])
             ->with(['rates' => function($q) {
                 $q->whereIn('status', [Rate::STATUS_ACCEPTED, Rate::STATUS_BUYED, Rate::STATUS_SUCCESSFUL, Rate::STATUS_DONE]);
@@ -387,6 +392,9 @@ class OrderController extends Controller
             ->withCount([
                 'rates as has_rate',
             ])
+            ->withCount(['deductions AS deductions_sum' => function($query) {
+                $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
+            }])
             ->first();
 
         if (! $order) throw new ErrorException(__('message.order_not_found'));
@@ -489,7 +497,7 @@ class OrderController extends Controller
      */
     public function getOrdersByFilter(?User $user, array $filters = []): array
     {
-        $rate = !empty($filters['currency']) ? CurrencyRate::getRate($filters['currency']) : 1;
+        $rate = !empty($filters['currency']) ? getCurrencyRate($filters['currency']) : 1;
 
         return Order::query()
             ->with([
@@ -500,7 +508,11 @@ class OrderController extends Controller
                 'from_city',
                 'to_country',
                 'to_city',
+                'deductions',
             ])
+            ->withCount(['deductions AS deductions_sum' => function($query) {
+                $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
+            }])
 /*
             ->withCount([
                 'rates as has_rate' => function ($query) use ($user) {

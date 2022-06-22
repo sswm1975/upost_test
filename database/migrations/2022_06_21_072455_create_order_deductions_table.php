@@ -20,7 +20,6 @@ class CreateOrderDeductionsTable extends Migration
             $table->string('name', 50)->comment('Наименование вычета');
             $table->decimal('amount', 10)->default(0.00)->comment('Сумма (в долларах)');
             $table->timestamp('created_at')->comment('Добавлено');
-            $table->timestamp('updated_at')->nullable()->comment('Изменено');
 
             $table->foreign('order_id', 'FK_order_deductions_orders')
                 ->references('id')->on('orders')
