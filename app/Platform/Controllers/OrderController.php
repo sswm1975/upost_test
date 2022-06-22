@@ -68,8 +68,8 @@ class OrderController extends AdminController
         # MODEL FILTERS & SORT
         $grid->model()
             ->where('status', request('status', Order::STATUS_ACTIVE))
-            ->with('calculations')
-            ->withCount('calculations');
+            ->with('deductions')
+            ->withCount('deductions');
         if (! request()->has('_sort')) {
             $grid->model()->latest('id');
         }
@@ -132,17 +132,17 @@ class OrderController extends AdminController
             ->setAttributes(['align'=>'right'])
             ->sortable();
         $grid->column('taxes_fees_modal', 'Taxes/Fees')
-            ->modal('Налоги и комиссии', function ($model) {
-                $calculations = $model->calculations->map(function ($calculation) {
-                    return $calculation->only(['id', 'type', 'name', 'amount', 'created_at', 'updated_at']);
+            ->modal('Удержания: Налоги и комиссии', function ($model) {
+                $deductions = $model->deductions->map(function ($deductions) {
+                    return $deductions->only(['id', 'type', 'name', 'amount', 'created_at', 'updated_at']);
                 })->toArray();
 
-                return new Table(['Код', 'Тип', 'Наименование', 'Сумма', 'Добавлено', 'Изменено'], $calculations);
+                return new Table(['Код', 'Тип удержания', 'Наименование', 'Сумма', 'Добавлено', 'Изменено'], $deductions);
             })
             ->display(function($value) {
-                if (empty($this->calculations_count)) return '';
+                if (empty($this->deductions_count)) return '';
 
-                return "{$value}&nbsp;<span class='label label-default'>{$this->calculations_count}</span>";
+                return "{$value}&nbsp;<span class='label label-default'>{$this->deductions_count}</span>";
             })
             ->setAttributes(['align'=>'center'])
             ->sortable();
