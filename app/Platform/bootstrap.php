@@ -44,13 +44,14 @@ const ADMIN_LANGUAGES = [
 
 Admin::favicon(config('app.url').'/favicon.png');
 
-if (!Admin::user()) return;
+if (in_array(request()->getRequestUri(), ['/platform/auth/login', '/platform/auth/logout'])) return;
 
 # Разрешаем перетаскивать модалки
 Admin::js('vendor/laravel-admin/AdminLTE/plugins/jQuery/draggable.min.js');
 Admin::script("$('.modal-dialog').draggable({handle: '.modal-header'});");
 
-Admin::js('https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.7/highcharts.js');
+Admin::js('https://unpkg.com/chart.js@3.8.0/dist/chart.min.js');
+Admin::js('https://unpkg.com/@chartisan/chartjs@2.1.0/dist/chartisan_chartjs.umd.js');
 
 # Подгружаем fix-стили
 Admin::style(<<<CSS
@@ -64,9 +65,9 @@ CSS);
 
 
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
-    if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {
-        $navbar->right(new Nav\DisputesCounter);
-    }
+//    if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {
+//        $navbar->right(new Nav\DisputesCounter);
+//    }
     $navbar->right(new Nav\FullScreen());
 });
 

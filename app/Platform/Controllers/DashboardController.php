@@ -4,7 +4,10 @@ namespace App\Platform\Controllers;
 
 use App\Http\Controllers\Controller;
 use Encore\Admin\Facades\Admin;
+use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
+use Encore\Admin\Layout\Row;
+use Encore\Admin\Widgets\Box;
 use Encore\Admin\Widgets\InfoBox;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +25,12 @@ class DashboardController extends Controller
         return $content
             ->title('Доска')
             ->description('&nbsp;')
+            ->row(function (Row $row) {
+                $row->column(12, function (Column $column) {
+                    $box = new Box('Заказы за последние 30 дней', $this->chart());
+                    $column->append($box);
+                });
+            })
             ->row(function ($row) {
                 if (Admin::user()->can('orders')) $row->column(6, static::ordersInfoBox());
                 if (Admin::user()->can('routes')) $row->column(6, static::routesInfoBox());
@@ -30,7 +39,23 @@ class DashboardController extends Controller
                 if (Admin::user()->can('clients')) $row->column(6, static::clientsInfoBox());
                 if (Admin::user()->can('disputes')) $row->column(6, static::disputesInfoBox());
             });
+    }
 
+    protected function chart(): string
+    {
+        $url = route('charts.sample_chart');
+
+        Admin::script(<<<SCRIPT
+new Chartisan({
+    el: '#chart',
+    url: '$url',
+    hooks: new ChartisanHooks()
+        .datasets('line')
+        .colors()
+});
+SCRIPT);
+
+        return '<div id="chart" style="height: 300px;"></div>';
     }
 
     /**
