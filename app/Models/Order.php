@@ -20,9 +20,9 @@ use Illuminate\Support\Str;
  * @property string|null $slug Слаг
  * @property string|null $product_link Ссылка на товар в интернет магазине
  * @property string|null $shop_slug Слаг магазина
- * @property string $price Цена
+ * @property mixed $price Цена
  * @property string|null $currency Валюта
- * @property string $price_usd Цена в долларах
+ * @property mixed $price_usd Цена в долларах
  * @property int|null $products_count Количество товаров
  * @property string|null $description Описание заказа
  * @property array $images Фотографии заказа
@@ -33,9 +33,9 @@ use Illuminate\Support\Str;
  * @property string $register_date Дата регистрации
  * @property string|null $deadline Дата окончания заказа
  * @property int|null $wait_range_id Код диапазона ожидания
- * @property string $user_price Сумма дохода
+ * @property mixed $user_price Сумма дохода
  * @property string|null $user_currency Валюта дохода
- * @property string $user_price_usd Сумма дохода в долларах
+ * @property mixed $user_price_usd Сумма дохода в долларах
  * @property int $not_more_price Признак "Не принимать ставки выше данной цены"
  * @property int $is_user_active Признак активности пользователя
  * @property int $looks Количество просмотров
@@ -109,8 +109,12 @@ class Order extends Model
     protected $guarded = ['id'];
     public $timestamps = false;
     protected $casts = [
-        'images' => 'array',
-        'strikes' => 'array',
+        'price'          => 'decimal:2',
+        'price_usd'      => 'decimal:2',
+        'user_price'     => 'decimal:2',
+        'user_price_usd' => 'decimal:2',
+        'images'         => 'array',
+        'strikes'        => 'array',
     ];
     protected $appends = [
         'total_amount',

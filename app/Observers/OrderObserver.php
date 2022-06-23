@@ -15,7 +15,7 @@ class OrderObserver
         $order->price_usd = convertPriceToUsd($order->price * $order->products_count, $order->currency);
         $order->user_price_usd = convertPriceToUsd($order->user_price, $order->user_currency);
         $order->created_at = Date::now()->toDateTimeString();
-        $order->register_date = Date::now()->format('Y-m-d');
+        $order->register_date = Date::now()->toDateString();
     }
 
     public function created(Order $order)
@@ -26,19 +26,26 @@ class OrderObserver
 
     public function updating(Order $order)
     {
-        $order->price_usd = convertPriceToUsd($order->price * $order->products_count, $order->currency);
-        $order->user_price_usd = convertPriceToUsd($order->user_price, $order->user_currency);
-        $order->updated_at = Date::now()->toDateTimeString();
+        # если изменилась цена, количество или валюта товара, то пересчитываем цену в долларах
+        if ($order->isDirty(['price', 'products_count', 'currency'])) {
+            $order->price_usd = convertPriceToUsd($order->price * $order->products_count, $order->currency);
+        }
+
+        # если изменилась сумма или валюта вознаграждения, то пересчитываем вознаграждение в долларах
+        if ($order->isDirty(['user_price', 'user_currency'])) {
+            $order->user_price_usd = convertPriceToUsd($order->user_price, $order->user_currency);
+        }
+
+        # если были правки, то фиксируем дату изменения
+        if ($order->isDirty()) {
+            $order->updated_at = Date::now()->toDateTimeString();
+        }
     }
 
     public function updated(Order $order)
     {
         # если по заказу были изменения полей, которые влияют на общую стоимость заказа, то пересчитываем налоги и комиссии
-        if (
-               $order->price != $order->getOriginal('price')
-            || $order->currency != $order->getOriginal('currency')
-            || $order->products_count != $order->getOriginal('products_count')
-        ) {
+        if ($order->wasChanged(['price', 'currency', 'products_count'])) {
             OrderDeductionJob::dispatch($order, true);
         }
     }
