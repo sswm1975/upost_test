@@ -86,13 +86,15 @@ class CurrenciesController extends AdminController
             date,
             SUM(IF(currency_id="₴", rate, NULL)) AS rate_uah,
             SUM(IF(currency_id="€", rate, NULL)) AS rate_eur,
-            SUM(IF(currency_id="₽", rate, NULL)) AS rate_rub
+            SUM(IF(currency_id="₽", rate, NULL)) AS rate_rub,
+            MAX(created_at) AS created_at
         ')->groupBy('date')->latest('date');
 
         $grid->column('date', 'Дата');
         $grid->column('rate_uah', 'UAH')->setAttributes(['align' => 'right']);
         $grid->column('rate_eur', 'EUR')->setAttributes(['align' => 'right']);
         $grid->column('rate_rub', 'RUB')->setAttributes(['align' => 'right']);
+        $grid->column('created_at', 'Загружено');
 
         return $grid;
     }
