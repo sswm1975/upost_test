@@ -12,12 +12,12 @@ use App\Models\Rate;
 use App\Models\Route;
 use App\Models\Shop;
 use App\Models\User;
-use App\Models\CurrencyRate;
 use App\Models\WaitRange;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
@@ -87,6 +87,8 @@ class OrderController extends Controller
         $exists_order = Order::where(Arr::only($data, ['user_id', 'name', 'price', 'from_country_id', 'to_country_id']))->count();
         if ($exists_order) throw new ErrorException(__('message.order_exists'));
 
+        static::checkExistsImages($data['images'], $data['user_id']);
+
         $order = Order::create($data);
 
         return response()->json([
@@ -113,6 +115,8 @@ class OrderController extends Controller
         }
 
         $data = validateOrExit(self::rules4saveOrder());
+
+        static::checkExistsImages($data['images'], $data['user_id']);
 
         $affected = $order->update($data);
 
@@ -681,5 +685,21 @@ class OrderController extends Controller
             'status' => true,
             'looks'  => $order->order_look,
         ]);
+    }
+
+    /**
+     * Проверить существование изображений по заказу.
+     *
+     * @param array $images
+     * @param int $user_id
+     * @throws ErrorException
+     */
+    private static function checkExistsImages(array $images, int $user_id)
+    {
+        foreach ($images as $image) {
+            if (! Storage::disk('public')->exists($user_id . '/orders/' . $image)) {
+                throw new ErrorException(__('message.file_not_exists') . $image);
+            };
+        }
     }
 }

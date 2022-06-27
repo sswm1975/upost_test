@@ -49,6 +49,7 @@ return [
     'lock_add_message'        => 'Запрещено добавлять сообщение.',
     'data_not_changed'        => 'Данные не изменились.',
     'update_denied'           => 'Обновление отклонено.',
+    'file_not_exists'         => 'Файл не существует: ',
 
     'verification_code' => [
         'incorrect'         => 'Код подтверждения неверен',
@@ -121,7 +122,7 @@ return [
         ],
     ],
 
-    # Chat attributes	
+    # Chat attributes
     'chat' => [
         'statuses' => [
             'active'   => 'Активный',

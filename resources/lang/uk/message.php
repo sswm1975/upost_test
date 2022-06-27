@@ -49,6 +49,7 @@ return [
     'lock_add_message'        => 'Заборонено добавляти повідомлення.',
     'data_not_changed'        => 'Дані не змінились.',
     'update_denied'           => 'Оновлення відхилено.',
+    'file_not_exists'         => 'Файл не існує: ',
 
     'verification_code' => [
         'incorrect'         => 'Код підтвердження невірний',
@@ -105,7 +106,7 @@ return [
             'banned'     => 'Заборонений',
         ],
     ],
-    
+
     # Rate attributes
     'rate' => [
         'statuses' => [
@@ -121,7 +122,7 @@ return [
         ],
     ],
 
-    # Chat attributes	
+    # Chat attributes
     'chat' => [
         'statuses' => [
             'active'   => 'Активний',

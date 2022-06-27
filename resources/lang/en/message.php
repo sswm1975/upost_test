@@ -49,6 +49,7 @@ return [
     'lock_add_message'        => 'It is forbidden to add a message.',
     'data_not_changed'        => 'The data has not changed.',
     'update_denied'           => 'Update denied.',
+    'file_not_exists'         => 'The file does not exist: ',
 
     'verification_code' => [
         'incorrect'         => 'Verification code is incorrect',
@@ -121,7 +122,7 @@ return [
         ],
     ],
 
-    # Chat attributes	
+    # Chat attributes
     'chat' => [
         'statuses' => [
             'active'     => 'Active',
