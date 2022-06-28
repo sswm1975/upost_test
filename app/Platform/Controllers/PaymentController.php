@@ -93,15 +93,17 @@ class PaymentController extends AdminController
 
         # COLUMNS
         $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
-        $grid->column('user_id', 'Код К.')->setAttributes(['align' => 'center'])->sortable();
+        $grid->column('user_id', 'Код К.')->setAttributes(['align' => 'center'])->sortable()->help('Код клиента');
         $grid->column('user.full_name', 'Клиент');
         $grid->column('user.card_number', 'Карта клиента');
+        $grid->column('rate_id', 'Код С.')->setAttributes(['align' => 'center'])->sortable()->help('Код ставки');
+        $grid->column('order_id', 'Код З.')->setAttributes(['align' => 'center'])->sortable()->help('Код заказа');
         $grid->column('amount', 'Сумма')->setAttributes(['align' => 'right'])->sortable();
         $grid->column('description', 'Описание заявки');
         $grid->column('status', 'Статус')->replace(Payment::STATUSES)->sortable();
 
         if ($status != Payment::STATUS_NEW) {
-            $grid->column('admin_user_id', 'Код М.')->sortable();
+            $grid->column('admin_user_id', 'Код М.')->sortable()->help('Код менеджера');
             $grid->column('admin_user.username', 'Менеджер');
         }
         $grid->column('created_at', 'Создано')->sortable();

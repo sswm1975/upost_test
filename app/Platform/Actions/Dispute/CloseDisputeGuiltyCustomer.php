@@ -75,6 +75,8 @@ class CloseDisputeGuiltyCustomer extends RowAction
             $transaction = Transaction::firstWhere('rate_id', '=', $model->rate->id);
             Payment::create([
                 'user_id'     => $model->rate->user_id,
+                'rate_id'     => $model->rate->id,
+                'order_id'    => $model->rate->order_id,
                 'amount'      => $transaction->amount - $transaction->liqpay_fee - $transaction->service_fee,
                 'description' => 'Возмещение средств путешественнику по спору №' . $model->id,
             ]);
