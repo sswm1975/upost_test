@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\Order;
+use App\Models\OrderDeduction;
+use App\Models\Payment;
 use App\Models\Rate;
 use App\Models\Route;
 use App\Models\Transaction;
@@ -423,7 +425,9 @@ class RateController extends Controller
      */
     public function successfulRate(int $rate_id): JsonResponse
     {
-        $rate = Rate::byKeyForOrderOwner($rate_id, [Rate::STATUS_BUYED], [Order::STATUS_IN_WORK])->first();
+        $rate = Rate::byKeyForOrderOwner($rate_id, [Rate::STATUS_BUYED], [Order::STATUS_IN_WORK])
+            ->with('order')
+            ->first();
         if (! $rate) {
             throw new ErrorException(__('message.rate_not_found'));
         }
@@ -432,6 +436,18 @@ class RateController extends Controller
         $rate->status = Rate::STATUS_SUCCESSFUL;
         $rate->save();
         $rate->order()->update(['status' => Order::STATUS_SUCCESSFUL]);
+
+        # подсчитываем сумму налогов по заказу
+        $taxes_sum = OrderDeduction::sumTaxesByOrder($rate->order_id);
+
+        # создаем заявку на возмещение средств по покупке и доставке заказа
+        Payment::create([
+            'user_id'     => $rate->user_id,
+            'rate_id'     => $rate_id,
+            'order_id'    => $rate->order_id,
+            'amount'      => $rate->order->price_usd + $rate->order->user_price_usd + $taxes_sum,
+            'description' => 'За заказ №' . $rate->order_id,
+        ]);
 
         # информируем в чат, что Заказчик получил товар.
         Chat::addSystemMessage($rate->chat_id, 'customer_received_order');

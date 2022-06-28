@@ -29,6 +29,10 @@ class OrderDeduction extends Model
 {
     use TimestampSerializable;
 
+    const TYPE_TAX_EXPORT = 'tax_export';
+    const TYPE_TAX_IMPORT = 'tax_import';
+    const TYPE_FEE = 'fee';
+
     public $timestamps = false;
 
     public static function boot()
@@ -38,5 +42,28 @@ class OrderDeduction extends Model
         static::creating(function ($model) {
             $model->created_at = $model->freshTimestamp();
         });
+    }
+
+    public function scopeSumByOrder($query, int $order_id)
+    {
+        return $query
+            ->whereOrderId($order_id)
+            ->sum('amount');
+    }
+
+    public function scopeSumTaxesByOrder($query, int $order_id)
+    {
+        return $query
+            ->whereOrderId($order_id)
+            ->whereIn('type', [self::TYPE_TAX_EXPORT, self::TYPE_TAX_IMPORT])
+            ->sum('amount');
+    }
+
+    public function scopeSumFeesByOrder($query, int $order_id)
+    {
+        return $query
+            ->whereOrderId($order_id)
+            ->where('type', self::TYPE_FEE)
+            ->sum('amount');
     }
 }
