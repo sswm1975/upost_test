@@ -242,14 +242,11 @@ class ProfileController extends Controller
     public function updateCard(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'card_number' => 'nullable|required_without:card_name|bankcard',
-            'card_name'   => 'nullable|required_without:card_number|max:50',
+            'card_number' => 'required|bankcard',
+            'card_name'   => 'required|max:50',
             'sender'      => Rule::requiredIf(function () use ($request) {
-                                $is_first_card_number = empty($request->user()->card_number) && $request->get('card_number');
-                                $is_first_card_name = empty($request->user()->card_name) && $request->get('card_name');
-
                                 # если поля заполняются первый раз, то параметр sender не нужен
-                                if ($is_first_card_number || !$is_first_card_name) return false;
+                                if (empty($request->user()->card_number) && empty($request->user()->card_name)) return false;
 
                                 # в противном случае подтверждаем пока только через email
                                 return $request->get('sender') == 'email';
