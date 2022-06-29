@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\UserChange;
@@ -243,10 +244,37 @@ class ProfileController extends Controller
         $data = validateOrExit([
             'card_number' => 'nullable|required_without:card_name|bankcard',
             'card_name'   => 'nullable|required_without:card_number|max:50',
-            'sender'      => 'required|in:email',
+            'sender'      => Rule::requiredIf(function () use ($request) {
+                                $is_first_card_number = empty($request->user()->card_number) && $request->get('card_number');
+                                $is_first_card_name = empty($request->user()->card_name) && $request->get('card_name');
+
+                                # если поля заполняются первый раз, то параметр sender не нужен
+                                if ($is_first_card_number || !$is_first_card_name) return false;
+
+                                # в противном случае подтверждаем пока только через email
+                                return $request->get('sender') == 'email';
+                             }),
         ]);
 
-        return $this->sendVerificationCode($request->user(), $data);
+        # если в запросе есть "Тип подтверждения", то обрабатываем через верификационный код
+        if (isset($data['sender'])) {
+            return $this->sendVerificationCode($request->user(), $data);
+        }
+
+        if (isset($data['card_number'])) {
+            $request->user()->card_number = str_replace('-', '', $data['card_number']);
+        }
+
+        if (isset($data['card_name'])) {
+            $request->user()->card_name = $data['card_name'];
+        }
+
+        $request->user()->save();
+
+        return response()->json([
+            'status'  => true,
+            'message' => __('message.verification_code.change_successful'),
+        ]);
     }
 
     /**
