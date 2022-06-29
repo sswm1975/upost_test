@@ -17,7 +17,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
@@ -87,7 +86,7 @@ class OrderController extends Controller
         $exists_order = Order::where(Arr::only($data, ['user_id', 'name', 'price', 'from_country_id', 'to_country_id']))->count();
         if ($exists_order) throw new ErrorException(__('message.order_exists'));
 
-        static::checkExistsImages($data['images'], $data['user_id']);
+        static::checkExistsImages($data['images']);
 
         $order = Order::create($data);
 
@@ -116,7 +115,7 @@ class OrderController extends Controller
 
         $data = validateOrExit(self::rules4saveOrder());
 
-        static::checkExistsImages($data['images'], $data['user_id']);
+        static::checkExistsImages($data['images']);
 
         $affected = $order->update($data);
 
@@ -691,13 +690,12 @@ class OrderController extends Controller
      * Проверить существование изображений по заказу.
      *
      * @param array $images
-     * @param int $user_id
      * @throws ErrorException
      */
-    private static function checkExistsImages(array $images, int $user_id)
+    private static function checkExistsImages(array $images)
     {
         foreach ($images as $image) {
-            if (! Storage::disk('public')->exists($user_id . '/orders/' . $image)) {
+            if (! remote_file_exists($image)) {
                 throw new ErrorException(__('message.file_not_exists') . $image);
             };
         }

@@ -515,3 +515,20 @@ function highlightText(string $text): string
 
     return $text;
 }
+
+/**
+ * Проверка на существование удаленного файла по ссылке.
+ *
+ * @param string $url
+ * @return bool
+ */
+function remote_file_exists(string $url): bool
+{
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_exec($ch);
+    $http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return $http_code == 200;
+}
