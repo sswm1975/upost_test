@@ -4363,7 +4363,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 76);"
+											"pm.variables.set(\"order_id\", 10);"
 										],
 										"type": "text/javascript"
 									}
@@ -4401,7 +4401,7 @@
 										},
 										{
 											"key": "products_count",
-											"value": "1",
+											"value": "2",
 											"description": "Кількість товарів",
 											"type": "text"
 										},
@@ -4443,7 +4443,7 @@
 										},
 										{
 											"key": "user_price",
-											"value": "150.23",
+											"value": "100",
 											"description": "Сума винагороди",
 											"type": "text"
 										},
@@ -4558,7 +4558,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"route_id\", 107);"
+											"pm.variables.set(\"route_id\", 2);"
 										],
 										"type": "text/javascript"
 									}
@@ -8452,6 +8452,48 @@
 										"{{endpoint}}",
 										"mail",
 										"have_question"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Гаманець",
+					"item": [
+						{
+							"name": "Отримати транзакції по гаманцю",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/purses/show?lang=uk",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"purses",
+										"show"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"description": "Код мови (uk, ru, en) - опціонально"
+										}
 									]
 								}
 							},
