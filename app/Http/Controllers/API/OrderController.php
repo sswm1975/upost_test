@@ -373,11 +373,14 @@ class OrderController extends Controller
      * Вывод выбранного заказа.
      *
      * @param int $order_id
+     * @param Request $request
      * @return JsonResponse
      * @throws ErrorException
      */
-    public function showOrder(int $order_id): JsonResponse
+    public function showOrder(int $order_id, Request $request): JsonResponse
     {
+        $auth_user_id = $request->user()->id;
+
         $order = Order::whereKey($order_id)
             ->with([
                 'from_country',
@@ -393,7 +396,9 @@ class OrderController extends Controller
                 $q->whereIn('status', [Rate::STATUS_ACCEPTED, Rate::STATUS_BUYED, Rate::STATUS_SUCCESSFUL, Rate::STATUS_DONE]);
             }])
             ->withCount([
-                'rates as has_rate',
+                'rates as has_rate' => function ($query) use ($auth_user_id) {
+                    $query->where('user_id', $auth_user_id);
+                },
             ])
             ->withCount(['deductions AS deductions_sum' => function($query) {
                 $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
@@ -494,11 +499,11 @@ class OrderController extends Controller
     /**
      * Отбор заказов по фильтру.
      *
-     * @param User|null $user
+     * @param User|null $auth_user
      * @param array $filters
      * @return array
      */
-    public function getOrdersByFilter(?User $user, array $filters = []): array
+    public function getOrdersByFilter(?User $auth_user, array $filters = []): array
     {
         $rate = !empty($filters['currency']) ? getCurrencyRate($filters['currency']) : 1;
 
@@ -516,24 +521,24 @@ class OrderController extends Controller
             ->withCount(['deductions AS deductions_sum' => function($query) {
                 $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
             }])
-/*
             ->withCount([
-                'rates as has_rate' => function ($query) use ($user) {
-                    $query->where('user_id', $user->id ?? 0);
+                'rates as has_rate' => function ($query) use ($auth_user) {
+                    $query->where('user_id', $auth_user->id ?? 0);
                 },
-                'rates as rates_read_count' => function ($query) use ($user) {
+/*
+                'rates as rates_read_count' => function ($query) use ($auth_user) {
                     $query->where('viewed_by_customer', 0)
-                        ->when(!is_null($user), function ($q) use ($user) {
-                            $q->where('user_id', $user->id);
+                        ->when(!is_null($auth_user), function ($q) use ($auth_user) {
+                            $q->where('user_id', $auth_user->id ?? 0);
                         });
                 },
-                'rates as is_in_rate' => function ($query) use ($user) {
-                    $query->when(!is_null($user), function ($q) use ($user) {
-                            $q->where('user_id', $user->id);
+                'rates as is_in_rate' => function ($query) use ($auth_user) {
+                    $query->when(!is_null($auth_user), function ($q) use ($auth_user) {
+                            $q->where('user_id', $user->id ?? 0);
                         });
                 }
-            ])
 */
+            ])
             ->when(!empty($filters['order_id']), function ($query) use ($filters) {
                 return $query->where('orders.id', $filters['order_id']);
             })
