@@ -230,6 +230,7 @@ class OrderController extends Controller
                 'to_country',
                 'to_city',
                 'rates',
+                'rates.disputes',
                 'deductions',
             ])
             ->withCount([
@@ -390,6 +391,7 @@ class OrderController extends Controller
                 'wait_range',
                 'user',
                 'rates',
+                'rates.disputes',
                 'deductions',
             ])
             ->with(['rates' => function($q) {
@@ -516,6 +518,8 @@ class OrderController extends Controller
                 'from_city',
                 'to_country',
                 'to_city',
+                'rates',
+                'rates.disputes',
                 'deductions',
             ])
             ->withCount(['deductions AS deductions_sum' => function($query) {
