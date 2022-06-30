@@ -144,7 +144,7 @@ return [
     # Payment attributes
     'payment' => [
         'statuses' => [
-            'active'    => 'Active',
+            'new'       => 'New',
             'appointed' => 'Appointed',
             'rejected'  => 'Rejected',
             'done'      => 'Done',
@@ -152,6 +152,13 @@ return [
         'types' => [
             'reward' => 'Reward',
             'refund' => 'Refund',
+        ],
+    ],
+
+    # Transaction attributes
+    'transaction' => [
+        'types' => [
+            'payment' => 'Order payment',
         ],
     ],
 ];

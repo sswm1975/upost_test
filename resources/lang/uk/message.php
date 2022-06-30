@@ -144,7 +144,7 @@ return [
     # Payment attributes
     'payment' => [
         'statuses' => [
-            'active'    => 'Активна',
+            'new'       => 'Нова',
             'appointed' => 'Призначена',
             'rejected'  => 'Відхилена',
             'done'      => 'Виконана',
@@ -152,6 +152,13 @@ return [
         'types' => [
             'reward' => 'Винагорода',
             'refund' => 'Повернення коштів',
+        ],
+    ],
+
+    # Transaction attributes
+    'transaction' => [
+        'types' => [
+            'payment' => 'Оплата заказу',
         ],
     ],
 ];

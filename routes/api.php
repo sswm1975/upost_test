@@ -223,6 +223,11 @@ Route::namespace('API')->group(function ($route) {
         # Получить количество споров по фильтру (используется админкой)
         $route->get('counter', 'DisputeController@getDisputesCounter')->name('api.disputes.counter')->withoutMiddleware(MIDDLEWARE_AUTH_BASIC);
     });
+
+    # Кошелек
+    $route->prefix('purses')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
+        $route->get('show', 'PurseController@show');
+    });
 });
 
 // Відправка лістів

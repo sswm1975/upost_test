@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id Код
  * @property int $user_id Пользователь
  * @property int $rate_id Ставка
+ * @property string $type Тип транзакции
  * @property string $amount Сумма
  * @property string $order_amount Сумма заказа
  * @property string $delivery_amount Стоимость доставки
@@ -24,6 +25,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $created_at Дата добавления
  * @property \Illuminate\Support\Carbon|null $updated_at Дата обновления
  * @property \Illuminate\Support\Carbon|null $payed_at Дата оплаты
+ * @property-read string $status_name
+ * @property-read string $type_name
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction query()
@@ -40,6 +44,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereResponse($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereServiceFee($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereUserId($value)
  * @mixin \Eloquent
@@ -51,6 +56,19 @@ class Transaction extends Model
     protected $guarded = ['id'];
     protected $casts = ['response' => 'array'];
     protected $dates = ['payed_at'];
+    protected $appends = ['status_name', 'type_name'];
+
+    ### GETTERS ###
+
+    public function getStatusNameAttribute(): string
+    {
+        return $this->status;
+    }
+
+    public function getTypeNameAttribute(): string
+    {
+        return __("message.transaction.types.$this->type");
+    }
 
     ### LINKS ###
 
