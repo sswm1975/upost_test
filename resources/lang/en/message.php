@@ -149,5 +149,9 @@ return [
             'rejected'  => 'Rejected',
             'done'      => 'Done',
         ],
+        'types' => [
+            'reward' => 'Reward',
+            'refund' => 'Refund',
+        ],
     ],
 ];

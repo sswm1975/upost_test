@@ -441,20 +441,22 @@ class RateController extends Controller
         $taxes_sum = OrderDeduction::sumTaxesByOrder($rate->order_id);
 
         # создаем заявку на возмещение средств по покупке и доставке заказа
-        Payment::create([
+        $payment = Payment::create([
             'user_id'     => $rate->user_id,
             'rate_id'     => $rate_id,
             'order_id'    => $rate->order_id,
             'amount'      => $rate->order->price_usd + $rate->order->user_price_usd + $taxes_sum,
-            'description' => 'За заказ №' . $rate->order_id,
+            'type'        => Payment::TYPE_REWARD,
+            'description' => 'Вознаграждение по заказу "' . $rate->order->name . '"',
         ]);
 
         # информируем в чат, что Заказчик получил товар.
         Chat::addSystemMessage($rate->chat_id, 'customer_received_order');
 
         return response()->json([
-            'status' => true,
-            'rate'   => null_to_blank($rate),
+            'status'  => true,
+            'rate'    => null_to_blank($rate),
+            'payment' => null_to_blank($payment),
         ]);
     }
 

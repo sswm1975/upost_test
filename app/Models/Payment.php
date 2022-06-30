@@ -12,13 +12,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property int $id Код
  * @property int $user_id Пользователь
+ * @property int $rate_id Код ставки
+ * @property int $order_id Код заказа
  * @property string $amount Сумма
+ * @property string|null $type Тип платежа
  * @property string $description Описание
  * @property int|null $admin_user_id Менеджер, выполнивший платеж
- * @property int|null $transaction_id Транзакция по обработке платежа
  * @property string $status Статус
- * @property \Illuminate\Support\Carbon|null $created_at Добавлено
- * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property string|null $created_at Добавлено
+ * @property string|null $updated_at Изменено
+ * @property-read Administrator|null $admin_user
+ * @property-read string $status_name
+ * @property-read string $type_name
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment query()
@@ -27,8 +33,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereOrderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereRateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTransactionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUserId($value)
  * @mixin \Eloquent
@@ -56,9 +64,20 @@ class Payment extends Model
         self::STATUS_REJECTED  => 'default',
     ];
 
+    /**
+     * Типы платежей.
+     */
+    const TYPE_REWARD = 'reward';  # вознаграждение
+    const TYPE_REFUND = 'refund';  # возврат средств
+    const TYPES = [
+        self::TYPE_REWARD => 'Вознаграждение',
+        self::TYPE_REFUND => 'Возврат средств',
+    ];
+
     public $timestamps = false;
     protected $guarded = ['id'];
-    protected $attributes = ['status'  => self::STATUS_NEW];
+    protected $attributes = ['status' => self::STATUS_NEW];
+    protected $appends = ['status_name', 'type_name'];
 
     ### BOOT ###
 
@@ -78,6 +97,18 @@ class Payment extends Model
         static::updating(function ($model) {
             $model->updated_at = $model->freshTimestamp();
         });
+    }
+
+    ### GETTERS ###
+
+    public function getStatusNameAttribute(): string
+    {
+        return __("message.payment.statuses.$this->status");
+    }
+
+    public function getTypeNameAttribute(): string
+    {
+        return __("message.payment.types.$this->type");
     }
 
     ### LINKS ###
