@@ -53,7 +53,7 @@ class OrderController extends Controller
     {
         return [
             'name'           => 'required|string|censor|max:100',
-            'product_link'   => 'sometimes|nullable|string|url',
+            'product_link'   => 'sometimes|nullable|string|max:1000|url',
             'price'          => 'required|numeric',
             'currency'       => 'required|in:' . implode(',', config('app.currencies')),
             'products_count' => 'required|integer',
