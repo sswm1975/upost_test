@@ -69,6 +69,7 @@ class CloseDisputeGuiltyPerformer extends RowAction
                 'rate_id'     => $model->rate->id,
                 'order_id'    => $model->rate->order_id,
                 'amount'      => $transaction->amount - $transaction->service_fee,
+                'type'        => Payment::TYPE_REFUND,
                 'description' => 'Возмещение средств заказчику по спору №' . $model->id,
             ]);
 

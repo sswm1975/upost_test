@@ -98,6 +98,14 @@ class PaymentController extends AdminController
         $grid->column('user.card_number', 'Карта клиента');
         $grid->column('rate_id', 'Код С.')->setAttributes(['align' => 'center'])->sortable()->help('Код ставки');
         $grid->column('order_id', 'Код З.')->setAttributes(['align' => 'center'])->sortable()->help('Код заказа');
+        $grid->column('type', 'Тип')
+            ->replace(Payment::TYPES)
+            ->label([
+                Payment::TYPE_REWARD => 'success',
+                Payment::TYPE_REFUND => 'danger',
+            ])
+            ->filter(Payment::TYPES)
+            ->sortable();
         $grid->column('amount', 'Сумма')->setAttributes(['align' => 'right'])->sortable();
         $grid->column('description', 'Описание заявки');
         $grid->column('status', 'Статус')->replace(Payment::STATUSES)->sortable();
