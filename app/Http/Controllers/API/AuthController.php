@@ -81,7 +81,7 @@ class AuthController extends Controller
                     'client_name' => $data['displayName'],
                     'email'       => $data['email'],
                     'password'    => $password,
-                    'url'         => env('WORDPRESS_URL') . 'log-in/?change_password',
+                    'url'         => rtrim(config('app.wordpress_url'), '/') . '/log-in/?change_password',
                 ];
 
                 try {

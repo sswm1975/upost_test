@@ -103,7 +103,7 @@ class MailingController extends Controller
             'client_name' => $faker->name($gender),
             'email'       => $faker->unique()->email,
             'password'    => Str::random(10),
-            'url'         => env('WORDPRESS_URL') . 'log-in/?change_password',
+            'url'         => rtrim(config('app.wordpress_url'), '/') . '/log-in/?change_password',
         ]);
     }
 
