@@ -57,7 +57,7 @@ class PasswordController extends Controller
         ]);
 
         $status = Password::reset($credentials, function ($user, $password) {
-            $user->forceFill(['password' => getHashPassword($password)])->save();
+            $user->forceFill(['password' => $password])->save();
 
             event(new PasswordReset($user));
         });
