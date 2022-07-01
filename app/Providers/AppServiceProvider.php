@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
          */
         ResetPassword::createUrlUsing(function ($user, string $token) {
             $lang = request()->get('lang', config('app.default_language'));
-            return env('WORDPRESS_URL').'password-reset/?token='.$token.'&language='.$lang;
+            return config('WORDPRESS_URL').'password-reset/?token='.$token.'&language='.$lang;
         });
 
         /**
