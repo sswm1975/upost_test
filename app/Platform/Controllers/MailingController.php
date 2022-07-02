@@ -6,8 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Mail\OrderBanEmail;
 use App\Mail\SendTokenUserDataChange;
 use App\Mail\SocialChangePassword;
+use App\Models\User;
 use Encore\Admin\Layout\Content;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Encore\Admin\Facades\Admin;
@@ -30,15 +34,19 @@ class MailingController extends Controller
      */
     public function index(Content $content): Content
     {
-        # Контент письма: вместо 100% устанавливаем авто-размер, что приводит к выравниванию письма к левому краю.
+        # контент письма: вместо 100% устанавливаем авто-размер, что приводит к выравниванию письма к левому краю.
         Admin::style('.wrapper {width:auto !important;}');
 
+        # получаем список рассылок
         $mailings = static::getMailings();
+
+        # узнаем выбранную рассылку
         $mailing = Arr::last(request()->segments());
 
         if (!Arr::exists($mailings, $mailing)) {
             return $content->withError('Ошибка', 'Рассылка не найдена!');
         }
+
         $title = $mailings[$mailing]['title'];
         $icon = $mailings[$mailing]['icon'];
         $lang = request('lang', 'uk');
@@ -127,5 +135,20 @@ class MailingController extends Controller
     private static function send_token_user_data_change(string $lang): SendTokenUserDataChange
     {
         return new SendTokenUserDataChange(Str::random(8), $lang);
+    }
+
+    /**
+     * Письмо: Уведомление сброса пароля.
+     *
+     * @param string $lang
+     * @return MailMessage
+     */
+    private static function reset_password(string $lang): MailMessage
+    {
+        Lang::setLocale($lang);
+
+        $user = User::find(SYSTEM_USER_ID);
+
+        return (new ResetPassword(Str::random(64)))->toMail($user);
     }
 }
