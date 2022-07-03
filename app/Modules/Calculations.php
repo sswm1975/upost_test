@@ -14,13 +14,6 @@ use ParseError;
 class Calculations
 {
     /**
-     * Список комиссий.
-     *
-     * @var array
-     */
-    const FEES = ['liqpay_percent', 'service_fee_percent'];
-
-    /**
      * Выполнить расчет комиссий и налогов по заказу.
      *
      * @param Order $order
@@ -60,8 +53,11 @@ class Calculations
      */
     protected static function calcFees(float $amount, int $order_id): array
     {
+        # получаем список комиссий из константы fees
+        $fees = array_map(trim, explode(',', config('fees')));
+
         $calculations = [];
-        foreach (self::FEES as $fee) {
+        foreach ($fees as $fee) {
             $calculations[] = [
                 'order_id'   => $order_id,
                 'type'       => 'fee',
