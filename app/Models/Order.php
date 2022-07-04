@@ -50,9 +50,14 @@ use Illuminate\Support\Str;
  * @property-read array $images_medium
  * @property-read array $images_original
  * @property-read array $images_thumb
+ * @property-read string $price_selected_currency
+ * @property-read string $selected_currency
  * @property-read string $short_name
  * @property-read string $status_name
  * @property-read string $total_amount
+ * @property-read string $total_amount_selected_currency
+ * @property-read string $total_amount_usd
+ * @property-read string $user_price_selected_currency
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
  * @property-read \App\Models\Review|null $review
@@ -65,7 +70,6 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order owner()
  * @method static \Illuminate\Database\Eloquent\Builder|Order ownerWithStatuses(array $statuses = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Order isOwnerByKey($id, array $statuses = [self::STATUS_ACTIVE])
  * @method static \Illuminate\Database\Eloquent\Builder|Order query()
  * @method static \Illuminate\Database\Eloquent\Builder|Order searchByRoutes(bool $only_new = false, array $statuses = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Order successful()
@@ -118,6 +122,11 @@ class Order extends Model
     ];
     protected $appends = [
         'total_amount',
+        'total_amount_usd',
+        'selected_currency',
+        'price_selected_currency',
+        'total_amount_selected_currency',
+        'user_price_selected_currency',
         'short_name',
         'status_name',
         'images_thumb',
@@ -152,7 +161,53 @@ class Order extends Model
 
     public function getTotalAmountAttribute(): string
     {
-        return $this->price * $this->products_count;
+        return $this->products_count == 1 ? $this->price : $this->price * $this->products_count;
+    }
+
+    public function getTotalAmountUsdAttribute(): string
+    {
+        return $this->products_count == 1 ? $this->price_usd : $this->price_usd * $this->products_count;
+    }
+
+    public function getSelectedCurrencyAttribute(): string
+    {
+        if (request()->has('currency')) {
+            $currency = request()->get('currency');
+        } elseif (isset(request()->user()->currency)) {
+            $currency = request()->user()->currency;
+        } else {
+            $currency = config('app.default_currency');
+        }
+
+        if (! in_array($currency, config('app.currencies'))) {
+            $currency = config('app.default_currency');
+        }
+
+        return $currency;
+    }
+
+    public function getPriceSelectedCurrencyAttribute(): string
+    {
+
+        if ($this->selected_currency == '$') return $this->price_usd;
+
+        if ($this->selected_currency == $this->currency) return $this->price;
+
+        return round($this->price_usd * getCurrencyRate($this->selected_currency), 2);
+    }
+
+    public function getUserPriceSelectedCurrencyAttribute(): string
+    {
+        if ($this->selected_currency == '$') return $this->user_price_usd;
+
+        if ($this->selected_currency == $this->currency) return $this->user_price;
+
+        return round($this->user_price_usd * getCurrencyRate($this->selected_currency), 2);
+    }
+
+    public function getTotalAmountSelectedCurrencyAttribute(): string
+    {
+        return $this->products_count == 1 ? $this->price_selected_currency : $this->price_selected_currency * $this->products_count;
     }
 
     public function getShortNameAttribute(): string

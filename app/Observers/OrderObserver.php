@@ -12,7 +12,7 @@ class OrderObserver
     public function creating(Order $order)
     {
         $order->slug = Str::slug($order->name) . '-'. Str::random(8);
-        $order->price_usd = convertPriceToUsd($order->price * $order->products_count, $order->currency);
+        $order->price_usd = convertPriceToUsd($order->price, $order->currency);
         $order->user_price_usd = convertPriceToUsd($order->user_price, $order->user_currency);
         $order->created_at = Date::now()->toDateTimeString();
         $order->register_date = Date::now()->toDateString();
@@ -28,7 +28,7 @@ class OrderObserver
     {
         # если изменилась цена, количество или валюта товара, то пересчитываем цену в долларах
         if ($order->isDirty(['price', 'products_count', 'currency'])) {
-            $order->price_usd = convertPriceToUsd($order->price * $order->products_count, $order->currency);
+            $order->price_usd = convertPriceToUsd($order->price, $order->currency);
         }
 
         # если изменилась сумма или валюта вознаграждения, то пересчитываем вознаграждение в долларах
