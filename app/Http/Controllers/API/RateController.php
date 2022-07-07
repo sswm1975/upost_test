@@ -67,7 +67,7 @@ class RateController extends Controller
         }
 
         # создаем ставку
-        $rate = Rate::create($data);
+        $rate = Rate::create(array_merge($data, compact('amount_usd')));
 
         return response()->json([
             'status'  => true,
@@ -106,6 +106,7 @@ class RateController extends Controller
 
         # конвертируем число в вещественную строку (если суммы одинаковые в таблице и во входном параметре, то обновление данных в таблице не будет)
         $data['amount'] = number_format($data['amount'], 2);
+        $data['amount_usd'] = number_format($amount_usd, 2);
 
         # изменяем ставку
         $rate->update($data);

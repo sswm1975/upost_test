@@ -428,6 +428,27 @@ class OrderController extends Controller
 
         $orders = $this->getOrdersByFilter($user, $filters);
 
+        # по каждому заказу подсчитываем мин./макс. полную стоимость (общая сумма заказа + налоги и комиссии + цена ставки)
+        foreach ($orders['data'] as &$order) {
+            $order_amount_usd = $order['total_amount_usd'];
+            $deductions_amount_usd = $order['total_deductions_usd'];
+            $rates_amount_usd = array_column($order['rates'], 'amount_usd');
+            $min_rate_amount_usd = count($rates_amount_usd) ? min($rates_amount_usd) : 0;
+            $max_rate_amount_usd = count($rates_amount_usd) ? max($rates_amount_usd) : 0;
+            $min_total_order_amount_usd = $order_amount_usd + $deductions_amount_usd + $min_rate_amount_usd;
+            $max_total_order_amount_usd = $order_amount_usd + $deductions_amount_usd + $max_rate_amount_usd;
+            $order['min_full_order_amount'] = round($min_total_order_amount_usd * getCurrencyRate($order['selected_currency']));
+            $order['max_full_order_amount'] = round($max_total_order_amount_usd * getCurrencyRate($order['selected_currency']));
+
+            # по подтвержденной ставке подсчитываем полную стоимость (общая сумма заказа + налоги и комиссии + цена ставки)
+            if (! empty($order['rate_confirmed'])) {
+                $confirmed_full_order_amount = $order_amount_usd + $deductions_amount_usd + $order['rate_confirmed']['amount_usd'];
+                $order['confirmed_full_order_amount'] = round($confirmed_full_order_amount * getCurrencyRate($order['selected_currency']));
+            } else {
+                $order['confirmed_full_order_amount'] = 0;
+            }
+        }
+
         return response()->json([
             'status' => true,
             'count'  => $orders['total'],
@@ -518,30 +539,33 @@ class OrderController extends Controller
                 'from_city',
                 'to_country',
                 'to_city',
-                'rates',
+                'rates' => function ($query) {
+                    $query->latest('id');
+                },
+                'rates.user' => function ($query) {
+                    $query->select(User::FIELDS_FOR_SHOW);
+                },
                 'rates.disputes',
                 'deductions',
+                'rate_confirmed',
+                'rate_confirmed.user' => function ($query) {
+                    $query->select(User::FIELDS_FOR_SHOW);
+                },
             ])
-            ->withCount(['deductions AS deductions_sum' => function($query) {
+            ->withCount('rates')
+            ->withCount(['deductions AS total_deductions_usd' => function($query) {
                 $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
             }])
             ->withCount([
                 'rates as has_rate' => function ($query) use ($auth_user) {
                     $query->where('user_id', $auth_user->id ?? 0);
                 },
-/*
-                'rates as rates_read_count' => function ($query) use ($auth_user) {
-                    $query->where('viewed_by_customer', 0)
-                        ->when(!is_null($auth_user), function ($q) use ($auth_user) {
-                            $q->where('user_id', $auth_user->id ?? 0);
-                        });
+                'rates as read_rates_count' => function ($query){
+                    $query->where('viewed_by_customer', 1);
                 },
-                'rates as is_in_rate' => function ($query) use ($auth_user) {
-                    $query->when(!is_null($auth_user), function ($q) use ($auth_user) {
-                            $q->where('user_id', $user->id ?? 0);
-                        });
-                }
-*/
+                'rates as unread_rates_count' => function ($query) {
+                    $query->where('viewed_by_customer', 0);
+                },
             ])
             ->when(!empty($filters['order_id']), function ($query) use ($filters) {
                 return $query->where('orders.id', $filters['order_id']);

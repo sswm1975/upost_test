@@ -5,8 +5,8 @@ namespace App\Models;
 use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Carbon\Carbon;
 
 /**
  * App\Models\Rate
@@ -16,8 +16,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $route_id Код маршрута
  * @property int $order_id Код заказа
  * @property int|null $chat_id Код чата
- * @property string $amount Сумма дохода
+ * @property mixed $amount Сумма дохода
  * @property string $currency Валюта дохода
+ * @property mixed $amount_usd Сумма дохода в долларах
  * @property string $deadline Дата выполнения
  * @property string|null $comment Комментарий
  * @property bool $viewed_by_customer Новая ставка просмотрена заказчиком?
@@ -44,6 +45,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Rate owner()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate query()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereAmountUsd($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereComment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereCreatedAt($value)
@@ -69,6 +71,8 @@ class Rate extends Model
     protected $guarded = ['id'];
     public $timestamps = true;
     protected $casts = [
+        'amount'              => 'decimal:2',
+        'amount_usd'          => 'decimal:2',
         'viewed_by_customer'  => 'boolean',
         'viewed_by_performer' => 'boolean',
         'images'              => 'array',
