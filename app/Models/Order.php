@@ -157,8 +157,30 @@ class Order extends Model
         self::STATUS_BANNED,
     ];
 
+    /**
+     *
+     * Описание полей:
+     * price - цена товара;
+     * currency - валюта для цены товара;
+     * products_count - количество товара;
+     * total_amount (вирт.) - общая сумма заказа в валюте создания заказа (price * products_count);
+     * price_usd - цена товара в долларах, рассчитанная в момент создания заказа (price * курс доллара);
+     * total_amount_usd (вирт.) - общая сумма заказа в долларах (price_usd * products_count);
+     * user_price - сумма вознаграждения;
+     * user_currency - валюта вознаграждения;
+     * user_price_usd (вирт.) - сумма вознаграждения в долларах, рассчитанная в момент создания заказа (user_price * курс доллара);
+     * price_selected_currency (вирт.) - цена товара в выбранной валюте;
+     * selected_currency (вирт.) - выбранная валюта;
+     * total_amount_selected_currency (вирт.) - общая сумма заказа в выбранной валюте (price_selected_currency * products_count);
+     * user_price_selected_currency (вирт.) - сумма вознаграждения в выбранной валюте.
+     */
+
     ### GETTERS ###
 
+    /**
+     *
+     * @return string
+     */
     public function getTotalAmountAttribute(): string
     {
         return $this->products_count == 1 ? $this->price : $this->price * $this->products_count;
@@ -169,6 +191,17 @@ class Order extends Model
         return $this->products_count == 1 ? $this->price_usd : $this->price_usd * $this->products_count;
     }
 
+    /**
+     * Получить выбранную валюту.
+     * Приоритеты:
+     * 1) валюта указанная в параметре запроса;
+     * 2) валюта из профиля пользователя;
+     * 3) дефолтная валюта.
+     *
+     * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     public function getSelectedCurrencyAttribute(): string
     {
         if (request()->has('currency')) {
@@ -188,7 +221,6 @@ class Order extends Model
 
     public function getPriceSelectedCurrencyAttribute(): string
     {
-
         if ($this->selected_currency == '$') return $this->price_usd;
 
         if ($this->selected_currency == $this->currency) return $this->price;
