@@ -43,7 +43,7 @@ class FillCurrencyRates extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
@@ -62,7 +62,7 @@ class FillCurrencyRates extends Command
 
         # если за сегодня уже курсы есть, то выходим
         if ($max_date == $now) {
-            return "курсы за дату {$now} уже загружены";
+            return "курсы за дату $now уже загружены";
         }
 
         $response = $this->getRatesFromService();
@@ -100,7 +100,7 @@ class FillCurrencyRates extends Command
                 return "$key=$rate";
             })->implode(', ');
 
-        return "загружены курсы на дату {$data['date']}: {$info}";
+        return "загружены курсы на дату {$data['date']}: $info";
     }
 
     /**
@@ -126,10 +126,12 @@ class FillCurrencyRates extends Command
      */
     private function getRatesFromService(): array
     {
+        $symbols = Currency::where('id', '<>', '$')->pluck('symbol')->implode(',');
+
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => "https://api.apilayer.com/fixer/latest?symbols=UAH,EUR,RUB,GBP,JPY,VND,PLN,CNY&base=USD",
+            CURLOPT_URL => "https://api.apilayer.com/fixer/latest?symbols=$symbols&base=USD",
             CURLOPT_HTTPHEADER => [
                 "Content-Type: text/plain",
                 "apikey: " . static::API_KEY,
