@@ -129,7 +129,7 @@ class FillCurrencyRates extends Command
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => "https://api.apilayer.com/fixer/latest?symbols=UAH,EUR,RUB&base=USD",
+            CURLOPT_URL => "https://api.apilayer.com/fixer/latest?symbols=UAH,EUR,RUB,GBP,JPY,VND,PLN,CNY&base=USD",
             CURLOPT_HTTPHEADER => [
                 "Content-Type: text/plain",
                 "apikey: " . static::API_KEY,
