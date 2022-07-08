@@ -6517,6 +6517,50 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Отримання валют",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/handbooks/currencies",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"handbooks",
+										"currencies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Отримання курсів валют",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/handbooks/currency_rates",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"handbooks",
+										"currency_rates"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},

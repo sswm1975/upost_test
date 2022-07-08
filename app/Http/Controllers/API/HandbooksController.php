@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Currency;
 use App\Models\Shop;
 use App\Models\WaitRange;
 use App\Models\Complaint;
@@ -43,6 +44,34 @@ class HandbooksController extends Controller
             'wait_ranges'           => WaitRange::getWaitRanges(),
             'complaints'            => Complaint::getComplaints(),
             'shops'                 => Shop::pluck('name', 'slug')->toArray(),
+            'currencies'            => Currency::get(),
+            'currency_rates'        => config('rates'),
+        ]);
+    }
+
+    /**
+     * Получить список валют.
+     *
+     * @return JsonResponse
+     */
+    public function getCurrencies(): JsonResponse
+    {
+        return response()->json([
+            'status'     => true,
+            'currencies' => Currency::get(),
+        ]);
+    }
+
+    /**
+     * Получить курсы валют.
+     *
+     * @return JsonResponse
+     */
+    public function getCurrencyRates(): JsonResponse
+    {
+        return response()->json([
+           'status' => true,
+           'rates'  => config('rates'),
         ]);
     }
 }
