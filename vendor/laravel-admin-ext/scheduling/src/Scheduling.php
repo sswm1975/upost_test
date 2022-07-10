@@ -44,7 +44,7 @@ class Scheduling extends Extension
                 'nextRunDate'   => $event->nextRunDate()->format('Y-m-d H:i:s'),
                 'description'   => $event->description,
                 'readable'      => CronSchedule::fromCronString($event->expression)->asNaturalLanguage(),
-                'output'        => $event->output,
+                'output'        => $event->output != '/dev/null' ? $event->output : '',
             ];
         }
 
@@ -110,7 +110,7 @@ class Scheduling extends Extension
             $event->command = Str::of($event->command)->replace('""', config('admin.php'));
         }
 
-        $event->sendOutputTo($this->getOutputTo());
+        $event->sendOutputTo($this->getOutputTo($event->output));
 
         $event->run(app());
 
@@ -139,10 +139,10 @@ class Scheduling extends Extension
     /**
      * @return string
      */
-    protected function getOutputTo()
+    protected function getOutputTo($event_output = '')
     {
         if (!$this->sendOutputTo) {
-            $this->sendOutputTo = storage_path('app/task-schedule.output');
+            $this->sendOutputTo = !empty($event_output) ? $event_output : storage_path('app/task-schedule.output');
         }
 
         return $this->sendOutputTo;
