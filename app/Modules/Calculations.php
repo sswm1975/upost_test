@@ -54,7 +54,7 @@ class Calculations
     protected static function calcFees(float $amount, int $order_id): array
     {
         # получаем список комиссий из константы fees
-        $fees = array_map(trim, explode(',', config('fees')));
+        $fees = array_map('trim', explode(',', config('fees')));
 
         $calculations = [];
         foreach ($fees as $fee) {

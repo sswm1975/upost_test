@@ -60,6 +60,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereViewedByCustomer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereViewedByPerformer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate withoutAppends()
  * @mixin \Eloquent
  */
 class Rate extends Model
@@ -86,6 +87,13 @@ class Rate extends Model
         'viewed_by_customer'  => false,
         'viewed_by_performer' => false,
     ];
+
+    /**
+     * Флаг, что в модель не нужно добавлять $appends атрибуты (исп. при выгрузке в эксель из админки)
+     *
+     * @var bool
+     */
+    public static bool $withoutAppends = false;
 
     public const STATUS_ACTIVE     = 'active';     # владелец маршрута создал ставку
     public const STATUS_CANCELED   = 'canceled';   # владелец маршрута отменил ставку
@@ -286,5 +294,32 @@ class Rate extends Model
     function scopeDeadlineTermExpired($query, int $days = 0)
     {
         return $query->active()->where('deadline', '>=', Carbon::today()->addDays($days)->toDateString());
+    }
+
+    /**
+     * Скоуп: В модель не добавлять доп.атрибуты массива $appends.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWithoutAppends($query)
+    {
+        self::$withoutAppends = true;
+
+        return $query;
+    }
+
+    /**
+     * Get all of the appendable values that are arrayable.
+     *
+     * @return array
+     */
+    protected function getArrayableAppends(): array
+    {
+        if (self::$withoutAppends){
+            return [];
+        }
+
+        return parent::getArrayableAppends();
     }
 }

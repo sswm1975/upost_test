@@ -14,7 +14,6 @@ class OrderObserver
         $order->slug = Str::slug($order->name) . '-'. Str::random(8);
         $order->price_usd = convertPriceToUsd($order->price, $order->currency);
         $order->user_price_usd = convertPriceToUsd($order->user_price, $order->user_currency);
-        $order->created_at = Date::now()->toDateTimeString();
         $order->register_date = Date::now()->toDateString();
     }
 
@@ -35,17 +34,12 @@ class OrderObserver
         if ($order->isDirty(['user_price', 'user_currency'])) {
             $order->user_price_usd = convertPriceToUsd($order->user_price, $order->user_currency);
         }
-
-        # если были правки, то фиксируем дату изменения
-        if ($order->isDirty()) {
-            $order->updated_at = Date::now()->toDateTimeString();
-        }
     }
 
     public function updated(Order $order)
     {
         # если по заказу были изменения полей, которые влияют на общую стоимость заказа, то пересчитываем налоги и комиссии
-        if ($order->wasChanged(['price', 'currency', 'products_count'])) {
+        if ($order->wasChanged(['price', 'price_usd', 'currency', 'products_count'])) {
             OrderDeductionJob::dispatch($order, true);
         }
     }

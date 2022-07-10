@@ -42,8 +42,8 @@ use Illuminate\Support\Str;
  * @property int $looks Количество просмотров
  * @property string $status Статус заказа
  * @property array|null $strikes Жалобы
- * @property string|null $created_at Добавлено
- * @property string|null $updated_at Изменено
+ * @property \Illuminate\Support\Carbon|null $created_at Добавлено
+ * @property \Illuminate\Support\Carbon|null $updated_at Изменено
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderDeduction[] $deductions
  * @property-read int|null $deductions_count
  * @property-read \App\Models\City|null $from_city
@@ -113,7 +113,6 @@ class Order extends Model
 
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
-    public $timestamps = false;
     protected $casts = [
         'price'          => 'decimal:2',
         'price_usd'      => 'decimal:2',
@@ -546,7 +545,7 @@ class Order extends Model
      *
      * @return array
      */
-    protected function getArrayableAppends()
+    protected function getArrayableAppends(): array
     {
         if (self::$withoutAppends){
             return [];
