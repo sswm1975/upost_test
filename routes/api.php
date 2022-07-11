@@ -228,6 +228,18 @@ Route::namespace('API')->group(function ($route) {
     $route->prefix('purses')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
         $route->get('show', 'PurseController@show');
     });
+
+    # Справочники
+    $route->prefix('handbooks')->group(function ($route) {
+        # Список довідників для фільтру на сторінці Замовлення/Маршрути
+        $route->get('/', 'HandbooksController@getHandbooks');
+
+        # Валюты
+        $route->get('currencies', 'HandbooksController@getCurrencies');
+
+        # Курсы валют
+        $route->get('currency_rates', 'HandbooksController@getCurrencyRates');
+    });
 });
 
 // Відправка лістів
@@ -269,9 +281,6 @@ Route::group(
 
 // Загрузка фото і створення мініатюр
 Route::post('upload_image', 'API\ImageLoaderController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
-
-// Список довідників для фільтру на сторінці Замовлення/Маршрути
-Route::get('handbooks', 'API\HandbooksController@getHandbooks');
 
 // Парсинг даних
 Route::get('parser', 'API\ParserController')->middleware(MIDDLEWARE_AUTH_BASIC);
