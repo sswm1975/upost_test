@@ -45,8 +45,9 @@ class OrderExcelExporter extends AdminExcelExporter
 
     public function query()
     {
-        return parent::query()
-            ->withoutAppends()
+        return parent::getQuery()
+            ->withoutAppends()      # доп.поля не нужны
+            ->setEagerLoads([])     # связи не подгружаем
             ->select([
                 'id',
                 'user_id',

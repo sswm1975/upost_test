@@ -108,7 +108,7 @@ class OrderController extends AdminController
             })
             ->sortable();
         $grid->column('shop_slug', 'Магазин')
-            ->filter(Shop::pluck('name', 'slug')->toArray())
+            ->filter(request()->missing('_export_') ? Shop::pluck('name', 'slug')->toArray() : [])
             ->sortable();
         $grid->column('products_count', 'Кол-во')
             ->setAttributes(['align'=>'center'])

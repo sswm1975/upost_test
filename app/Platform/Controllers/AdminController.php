@@ -131,6 +131,11 @@ class AdminController extends Controller
      */
     public function index(Content $content): Content
     {
+        # если выполняется экспорт в Эксель, то ниже все операции не нужны
+        if (request()->has('_export_')) {
+            return $content->body($this->grid());
+        }
+
         if ($this->enableStyleIndex) {
             Admin::style(self::styleIndex());
         }

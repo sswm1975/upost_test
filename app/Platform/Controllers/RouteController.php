@@ -59,10 +59,13 @@ class RouteController extends AdminController
             $filter->disableIdFilter();
 
             $filter->column(1 / 2, function ($filter) {
-                $users = User::where('role', User::ROLE_USER)
-                    ->get(['id', 'name', 'surname'])
-                    ->pluck('full_name', 'id')
-                    ->toArray();
+                # при экспорте формировать список для фильтра нет необходимости
+                $users = request()->missing('_export_')
+                    ? User::where('role', User::ROLE_USER)
+                        ->get(['id', 'name', 'surname'])
+                        ->pluck('full_name', 'id')
+                        ->toArray()
+                    : [];
                 $filter->equal('user_id', 'Клиент')->select($users);
             });
         });

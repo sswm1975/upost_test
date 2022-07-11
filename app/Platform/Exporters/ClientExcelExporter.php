@@ -37,8 +37,9 @@ class ClientExcelExporter extends AdminExcelExporter
 
     public function query()
     {
-        return parent::query()
-            ->withoutAppends()
+        return parent::getQuery()
+            ->withoutAppends()      # доп.поля не нужны
+            ->setEagerLoads([])     # связи не подгружаем
             ->join('cities', 'cities.id', 'users.city_id')
             ->select([
                 'users.id',

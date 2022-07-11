@@ -64,7 +64,12 @@ class ClientController extends AdminController
 
             $filter->column(1 / 2, function ($filter) {
                 $filter->equal('id', 'Код');
-                $filter->in('city_id', 'Город')->multipleSelect(City::pluck('name_ru', 'id'));
+                $filter->in('city_id', 'Город')->multipleSelect(
+                    # при экспорте формировать список для фильтра нет необходимости
+                    request()->missing('_export_')
+                        ? City::pluck('name_ru', 'id')
+                        : []
+                );
             });
 
             $filter->column(1 / 2, function ($filter) {
