@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\TimestampSerializable;
+use App\Models\Traits\WithoutAppends;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -62,6 +63,7 @@ use Illuminate\Support\Facades\DB;
 class Route extends Model
 {
     use TimestampSerializable;
+    use WithoutAppends;
 
     const STATUS_ALL        = 'all';
     const STATUS_ACTIVE     = 'active';
@@ -84,13 +86,6 @@ class Route extends Model
     protected $guarded = ['id'];
     protected $dates = ['viewed_orders_at'];
     protected $appends = ['status_name'];
-
-    /**
-     * Флаг, что в модель не нужно добавлять $appends атрибуты (исп. при выгрузке в эксель из админки)
-     *
-     * @var bool
-     */
-    public static bool $withoutAppends = false;
 
     ### GETTERS ###
 
@@ -252,33 +247,6 @@ class Route extends Model
     public function scopeExistsCityInToCity($query, array $cities)
     {
         return $query->existsCountryOrCity('to_city_id', 'city_id', $cities);
-    }
-
-    /**
-     * Скоуп: В модель не добавлять доп.атрибуты массива $appends.
-     *
-     * @param $query
-     * @return mixed
-     */
-    public function scopeWithoutAppends($query)
-    {
-        self::$withoutAppends = true;
-
-        return $query;
-    }
-
-    /**
-     * Get all of the appendable values that are arrayable.
-     *
-     * @return array
-     */
-    protected function getArrayableAppends()
-    {
-        if (self::$withoutAppends){
-            return [];
-        }
-
-        return parent::getArrayableAppends();
     }
 
     ### QUERIES ###

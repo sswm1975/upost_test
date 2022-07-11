@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\TimestampSerializable;
+use App\Models\Traits\WithoutAppends;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -110,6 +111,7 @@ use Illuminate\Support\Str;
 class Order extends Model
 {
     use TimestampSerializable;
+    use WithoutAppends;
 
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
@@ -134,13 +136,6 @@ class Order extends Model
         'images_medium',
         'images_original',
     ];
-
-    /**
-     * Флаг, что в модель не нужно добавлять $appends атрибуты (исп. при выгрузке в эксель из админки)
-     *
-     * @var bool
-     */
-    public static bool $withoutAppends = false;
 
     const STATUS_ACTIVE = 'active';
     const STATUS_IN_WORK = 'in_work';
@@ -525,32 +520,5 @@ class Order extends Model
             ->when($only_new, function ($query) {
                 return $query->where('orders.created_at', '>', DB::Raw('IFNULL(routes.viewed_orders_at, "1900-01-01 00:00:00")'));
             });
-    }
-
-    /**
-     * Скоуп: В модель не добавлять доп.атрибуты массива $appends.
-     *
-     * @param $query
-     * @return mixed
-     */
-    public function scopeWithoutAppends($query)
-    {
-        self::$withoutAppends = true;
-
-        return $query;
-    }
-
-    /**
-     * Get all of the appendable values that are arrayable.
-     *
-     * @return array
-     */
-    protected function getArrayableAppends(): array
-    {
-        if (self::$withoutAppends){
-            return [];
-        }
-
-        return parent::getArrayableAppends();
     }
 }

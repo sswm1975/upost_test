@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\WithoutAppends;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -109,6 +110,7 @@ class User extends Authenticatable
 {
     use TimestampSerializable;
     use Notifiable;
+    use WithoutAppends;
 
     protected $guarded = ['id'];
     protected $appends = [
@@ -124,7 +126,6 @@ class User extends Authenticatable
         'age',
         'rating',
     ];
-    public static bool $withoutAppends = false;  # признак, что в модель не нужно добавлять $appends атрибуты (исп. при выгрузке в эксель из админки)
 
     const STATUS_ACTIVE = 'active';
     const STATUS_NOT_ACTIVE = 'not_active';
@@ -356,32 +357,5 @@ class User extends Authenticatable
         if (empty($token)) return false;
 
         return (bool) $query->where('api_token', $token)->count();
-    }
-
-    /**
-     * Скоуп: В модель не добавлять доп.атрибутиты массива $appends.
-     *
-     * @param $query
-     * @return mixed
-     */
-    public function scopeWithoutAppends($query)
-    {
-        self::$withoutAppends = true;
-
-        return $query;
-    }
-
-    /**
-     * Get all of the appendable values that are arrayable.
-     *
-     * @return array
-     */
-    protected function getArrayableAppends()
-    {
-        if (self::$withoutAppends){
-            return [];
-        }
-
-        return parent::getArrayableAppends();
     }
 }
