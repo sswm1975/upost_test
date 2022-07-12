@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Platform\Controllers\Admin;
+namespace App\Platform\Controllers\Settings;
 
 use App\Models\Tax;
 use App\Modules\Calculations;
@@ -177,7 +177,7 @@ class TaxController extends AdminController
      */
     private static function scriptTesting(): string
     {
-        $url = route('platform.taxes.run_script');
+        $url = route('platform.settings.taxes.run_script');
 
         return <<<EOD
 

@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Platform\Controllers;
+namespace App\Platform\Controllers\Settings;
 
 use App\Models\Setting;
+use App\Platform\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class SettingController extends AdminController
+class ConstantController extends AdminController
 {
     protected string $title = 'Константы';
     protected string $icon = 'fa-gear';

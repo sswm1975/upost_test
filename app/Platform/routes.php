@@ -52,13 +52,6 @@ Route::group([
     # Рассылки
     $router->get('mailings/{name}', 'MailingController@index')->name('mailings.index');
 
-    # Настройки
-    $router->resource('settings', 'SettingController')->names('settings')->middleware('admin.permission:check,settings');
-
-    # Налоги
-    $router->resource('admin/taxes', 'Admin\TaxController')->except(['delete'])->middleware('admin.permission:allow,administrator');
-    $router->post('admin/taxes/run_script', 'Admin\TaxController@runScript')->name('taxes.run_script')->middleware('admin.permission:allow,administrator');
-
     # Справочники
     $router->group([
         'prefix'     => 'handbooks',
@@ -83,6 +76,21 @@ Route::group([
 
         # Курсы валют
         $router->get('currencies', 'CurrenciesController@index');
+    });
+
+    # Пункты меню "Настройки"
+    $router->group([
+        'prefix'     => 'settings',
+        'namespace'  => 'Settings',
+        'middleware' => 'admin.permission:allow,administrator',
+        'as'         => 'settings.',
+    ], function (Router $router) {
+        # Константы
+        $router->resource('constants', 'ConstantController')->names('constants');
+
+        # Налоги
+        $router->resource('taxes', 'TaxController')->except(['delete'])->names('taxes');
+        $router->post('taxes/run_script', 'TaxController@runScript')->name('taxes.run_script');
     });
 
     # Пункты меню "Админка"
