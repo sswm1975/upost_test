@@ -6,6 +6,10 @@
         <title>TEST</title>
     </head>
     <body>
-        Hello world!
+        <h1>Test PayPal</h1>
+        <form action="{{ route('payment') }}" method="post">
+            @csrf
+            <button type="submit">Оплатить платеж</button>
+        </form>
     </body>
 </html>
