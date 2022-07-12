@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use App\Models\Currency;
 use App\Models\Order;
-use App\Models\Setting;
+use App\Models\Constant;
 use App\Observers\OrderObserver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -48,8 +48,8 @@ class AppServiceProvider extends ServiceProvider
 
         Schema::defaultStringLength(191);
 
-        # Кэширование таблицы settings и занесение их в App Config, т.е. потом можно вызывать, к примеру config('default_language')
-        Setting::initCache();
+        # Кэширование таблицы constants и занесение их в App Config, т.е. потом можно вызывать, к примеру config('default_language')
+        Constant::initCache();
 
         # Кэширование текущих курсов из таблицы currencies и занесение их в App Config, т.е. потом можно вызывать, к примеру config('rates.$')
         Currency::initCache();

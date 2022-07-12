@@ -16,9 +16,14 @@ class ApiRequestLoggingController extends AdminController
         ['text' => 'Админка', 'icon' => 'tasks'],
     ];
 
+    const API_REQUEST_LOGGING_ENABLED = 'api_request_logging_enabled';
+
     protected function description(): string
     {
-        return 'Регулируется константой api_request_logging_enabled';
+        $const = self::API_REQUEST_LOGGING_ENABLED;
+        $url = route('platform.settings.constants.index', ['__search__' => $const]);
+
+        return "Регулируется константой <a href='$url'>$const</a>";
     }
 
     protected function grid(): Grid

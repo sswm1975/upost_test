@@ -19,6 +19,9 @@ class TaxController extends AdminController
     protected string $icon = 'fa-code';
     protected bool $isCreateButtonRight = true;
     protected bool $enableDblClick = true;
+    protected array $breadcrumb = [
+        ['text' => 'Настройки', 'icon' => 'cogs'],
+    ];
 
     public function menu(): array
     {

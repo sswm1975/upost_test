@@ -2,7 +2,7 @@
 
 namespace App\Platform\Controllers\Settings;
 
-use App\Models\Setting;
+use App\Models\Constant;
 use App\Platform\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -14,6 +14,9 @@ class ConstantController extends AdminController
     protected string $icon = 'fa-gear';
     protected bool $isCreateButtonRight = true;
     protected bool $enableDropdownAction = true;
+    protected array $breadcrumb = [
+        ['text' => 'Настройки', 'icon' => 'cogs'],
+    ];
 
     /**
      * Make a grid builder.
@@ -22,7 +25,7 @@ class ConstantController extends AdminController
      */
     public function grid(): Grid
     {
-        $grid = new Grid(new Setting);
+        $grid = new Grid(new Constant);
 
         # SETTINGS GRID
         $grid->quickSearch(function ($model, $query) {
@@ -50,7 +53,7 @@ class ConstantController extends AdminController
      */
     public function form(): Form
     {
-        $form = new Form(new Setting);
+        $form = new Form(new Constant);
 
         $form->display('id', 'Код');
         $form->text('name', 'Наименование')->required();
@@ -70,6 +73,6 @@ class ConstantController extends AdminController
      */
     protected function detail($id): Show
     {
-        return $this->showFields(Setting::findOrFail($id));
+        return $this->showFields(Constant::findOrFail($id));
     }
 }
