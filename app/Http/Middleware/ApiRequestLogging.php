@@ -29,7 +29,7 @@ class ApiRequestLogging
      */
     public function terminate(Request $request, JsonResponse $response)
     {
-        if (!config('api_request_logging_enabled')) {
+        if (! config('api_request_logging_enabled', 0)) {
             return;
         }
 
