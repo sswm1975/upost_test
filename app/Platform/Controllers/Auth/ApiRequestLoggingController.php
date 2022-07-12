@@ -16,6 +16,11 @@ class ApiRequestLoggingController extends AdminController
         ['text' => 'Админка', 'icon' => 'tasks'],
     ];
 
+    protected function description(): string
+    {
+        return 'Регулируется константой api_request_logging_enabled';
+    }
+
     protected function grid(): Grid
     {
         Admin::style('
@@ -28,12 +33,12 @@ class ApiRequestLoggingController extends AdminController
         $grid->disableActions();
         $grid->disableBatchActions();
 
+        $grid->quickSearch('url')->placeholder('Поиск...');
+
         $grid->tools(function ($tools) {
             $url = route('platform.auth.api_request_logging.truncate');
-            $tools->append("<a href='$url' class='btn btn-danger'><i class='fa fa-close'></i>&nbsp;&nbsp;Очистить</a>");
+            $tools->append("<a href='$url' class='btn btn-sm btn-danger'><i class='fa fa-close'></i><span class='hidden-xs'>&nbsp;&nbsp;Очистить</span></a>");
         });
-
-        $grid->quickSearch('url')->placeholder('Поиск...');
 
         $grid->model()->latest('id');
 

@@ -29,6 +29,10 @@ class ApiRequestLogging
      */
     public function terminate(Request $request, JsonResponse $response)
     {
+        if (!config('api_request_logging_enabled')) {
+            return;
+        }
+
         $endTime = microtime(true);
         $log = new Log();
         $log->time = $log->freshTimestamp();
