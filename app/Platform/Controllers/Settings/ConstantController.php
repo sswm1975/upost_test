@@ -38,7 +38,7 @@ class ConstantController extends AdminController
         # COLUMNS
         $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
         $grid->column('name', 'Наименование')->copyable()->filter('like')->sortable();
-        $grid->column('value', 'Значение')->filter('like')->sortable();
+        $grid->column('value', 'Значение')->editable()->filter('like')->sortable();
         $grid->column('description' , 'Описание')->filter('like');
         $grid->column('created_at', 'Дата добавления')->sortable();
         $grid->column('updated_at', 'Дата изменения')->sortable();
