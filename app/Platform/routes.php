@@ -97,5 +97,9 @@ Route::group([
 
         # Пользователи (вместо дефолтного Encore\Admin\Controllers\UserController)
         $router->resource('users', 'UserController')->names('admin.auth.users');
+
+        # Журнал API-запросов
+        $router->get('api_request_logging', 'ApiRequestLoggingController@index')->name('api_request_logging.index');
+        $router->get('api_request_logging/truncate', 'ApiRequestLoggingController@truncateLog')->name('api_request_logging.truncate');
     });
 });
