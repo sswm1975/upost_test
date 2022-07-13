@@ -7,6 +7,7 @@ use App\Models\Chat;
 use App\Models\Dispute;
 use App\Models\Message;
 use App\Models\Order;
+use App\Models\Rate;
 use App\Models\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -127,6 +128,11 @@ class MessagesController extends Controller
 
         # ищем существующий чат или создаем новый
         $chat = Chat::searchOrCreate($route_id, $order_id, $route->user_id, $order->user_id);
+
+        # связываем чат со ставкой
+        if (empty($chat->rate)) {
+            Rate::whereRouteId($route_id)->whereOrderId($order_id)->update(['chat_id' => $chat->id]);
+        };
 
         return static::getMessages($chat, $data);
     }

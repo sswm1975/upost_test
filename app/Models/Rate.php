@@ -16,7 +16,7 @@ use Carbon\Carbon;
  * @property int $user_id Код пользователя
  * @property int $route_id Код маршрута
  * @property int $order_id Код заказа
- * @property int|null $chat_id Код чата
+ * @property int $chat_id Код чата
  * @property mixed $amount Сумма дохода
  * @property string $currency Валюта дохода
  * @property mixed $amount_usd Сумма дохода в долларах
@@ -28,6 +28,7 @@ use Carbon\Carbon;
  * @property string $status Статус
  * @property \Illuminate\Support\Carbon $created_at Добавлено
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property-read \App\Models\Chat|null $chat
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Dispute[] $disputes
  * @property-read int|null $disputes_count
  * @property-read array $images_thumb
@@ -133,6 +134,11 @@ class Rate extends Model
         return __("message.rate.statuses.$this->status");
     }
 
+    public function getChatIdAttribute($chat_id): int
+    {
+        return $chat_id ?? 0;
+    }
+
     public function getImagesAttribute($images): array
     {
         if (is_null($images)) return [];
@@ -199,6 +205,11 @@ class Rate extends Model
     function route(): BelongsTo
     {
         return $this->belongsTo(Route::class, 'route_id', 'id')->withDefault();
+    }
+
+    function chat(): BelongsTo
+    {
+        return $this->belongsTo(Chat::class, 'chat_id', 'id')->withDefault();
     }
 
     /**

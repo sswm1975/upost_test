@@ -137,6 +137,9 @@ class RateController extends Controller
                 'route.from_city',
                 'route.to_country',
                 'route.to_city',
+                'chat' => function($query) {
+                    $query->withoutAppends();
+                },
             ])
             ->where(function ($query) {
                 return $query->owner()->orWhereHas('order', function($query) {
@@ -238,7 +241,7 @@ class RateController extends Controller
         # ищем активную ставку, где владельцем активного заказа является авторизированный пользователь
         $rate = Rate::byKeyForOrderOwner($rate_id, [Rate::STATUS_ACTIVE], [Order::STATUS_ACTIVE])
             ->with([
-                'order:id,name,price,currency,price_usd,products_count,status,user_id,images',
+                'order',
                 'route.user:id,name,surname,photo,scores_count,reviews_count,status,gender,birthday,validation,last_active,register_date',
                 'route.to_country',
                 'route.to_city',

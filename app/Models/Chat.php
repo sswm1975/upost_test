@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\MessagesCounterUpdate;
 use App\Models\Traits\TimestampSerializable;
+use App\Models\Traits\WithoutAppends;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -58,11 +59,13 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereRouteId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat withoutAppends()
  * @mixin \Eloquent
  */
 class Chat extends Model
 {
     use TimestampSerializable;
+    use WithoutAppends;
 
     public const STATUS_ACTIVE = 'active';
     public const STATUS_CLOSED = 'closed';
