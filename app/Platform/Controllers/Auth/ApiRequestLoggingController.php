@@ -31,6 +31,8 @@ class ApiRequestLoggingController extends AdminController
         $grid->disableCreateButton();
         $grid->disableActions();
         $grid->disableBatchActions();
+        $grid->disablePagination(false);
+        $grid->paginate(20);
 
         $grid->tools(function ($tools) {
             # Включение/выключение логирования
