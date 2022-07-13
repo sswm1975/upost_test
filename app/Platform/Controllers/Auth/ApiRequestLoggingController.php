@@ -63,7 +63,7 @@ class ApiRequestLoggingController extends AdminController
         $grid->column('duration_request', 'Duration F')->help('The duration from a WordPress request to sending the response.<br><sub class=\'text-danger\'>ResponseTime - REQUEST_TIME_FLOAT</sub>');
         $grid->column('ip');
         $grid->column('method')->filter(['GET', 'POST']);
-        $grid->column('url');
+        $grid->column('url')->limit('90');
         $grid->column('input')
             ->display(function ($values) {
                 if (empty($values)) return '';
