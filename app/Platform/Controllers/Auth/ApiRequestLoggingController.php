@@ -12,7 +12,7 @@ use Encore\Admin\Widgets\Table;
 class ApiRequestLoggingController extends AdminController
 {
     protected string $title = 'Журнал API-запросов';
-    protected string $icon = 'fa-history';
+    protected string $icon = 'fa-wpforms';
     protected array $breadcrumb = [
         ['text' => 'Админка', 'icon' => 'tasks'],
     ];
@@ -59,8 +59,8 @@ class ApiRequestLoggingController extends AdminController
 
         $grid->column('id');
         $grid->column('time');
-        $grid->column('duration', 'Duration L');
-        $grid->column('duration_request', 'Duration F');
+        $grid->column('duration', 'Duration L')->help('Duration from starting Laravel to sending the response.<br><sub class=\'text-danger\'>ResponseTime - LARAVEL_START</sub>');
+        $grid->column('duration_request', 'Duration F')->help('The duration from a WordPress request to sending the response.<br><sub class=\'text-danger\'>ResponseTime - REQUEST_TIME_FLOAT</sub>');
         $grid->column('ip');
         $grid->column('method')->filter(['GET', 'POST']);
         $grid->column('url');
@@ -75,15 +75,28 @@ class ApiRequestLoggingController extends AdminController
 
                 return $info;
             });
-        $grid->column('server_info')
+        $grid->column('output_info', 'Output')
+            ->display(function ($title, $column) {
+                if (empty($this->output)) return '';
+
+                return $column->modal('JSON response', function($grid) {
+                    return '<pre style="text-align:left">' . json_encode($grid->output, JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE) . '</pre>';
+                });
+            })
+            ->display(function ($modal, $column) {
+                $status = ($this->output['status'] ?? false) ? 'fa-check text-green' : 'fa-times text-red';
+                return "<i class='fa $status'></i>$modal";
+            })
+            ->style('text-align:center');
+        $grid->column('server_info', 'Server')
             ->display(function ($title, $column) {
                 if (empty($this->server)) return '';
 
-                return $column->modal('SERVER', function($grid) {
-                    return new Table(['№ п/п', 'Файл'], $grid->server);
+                return $column->modal('Server information', function ($grid) {
+                    return new Table(['PARAMETER', 'VALUE'], $grid->server);
                 });
             })
-            ->setAttributes(['align'=>'center']);
+            ->style('text-align:center');
 
         return $grid;
     }

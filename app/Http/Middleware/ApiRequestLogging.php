@@ -42,6 +42,7 @@ class ApiRequestLogging
         $log->url = $request->fullUrl();
         $log->method = $request->method();
         $log->input = $request->toArray();
+        $log->output = json_decode($response->content());
         $log->server = $request->server();
         $log->save();
     }
