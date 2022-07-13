@@ -6,6 +6,26 @@ use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * App\Models\Constant
+ *
+ * @property int $id Код
+ * @property string $name Наименование
+ * @property string|null $value Значение
+ * @property string|null $description Описание
+ * @property \Illuminate\Support\Carbon|null $created_at Дата добавления
+ * @property \Illuminate\Support\Carbon|null $updated_at Дата обновления
+ * @method static \Illuminate\Database\Eloquent\Builder|Constant newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Constant newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Constant query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Constant whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Constant whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Constant whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Constant whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Constant whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Constant whereValue($value)
+ * @mixin \Eloquent
+ */
 class Constant extends Model
 {
     use TimestampSerializable;

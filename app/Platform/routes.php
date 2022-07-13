@@ -108,6 +108,7 @@ Route::group([
 
         # Журнал API-запросов
         $router->get('api_request_logging', 'ApiRequestLoggingController@index')->name('api_request_logging.index');
+        $router->get('api_request_logging/toggle', 'ApiRequestLoggingController@toggleLog')->name('api_request_logging.toggle');
         $router->get('api_request_logging/truncate', 'ApiRequestLoggingController@truncateLog')->name('api_request_logging.truncate');
     });
 });
