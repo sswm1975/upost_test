@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $duration Продолжительность от запуска Laravel до отдачи ответа (в секундах)
  * @property string $duration_request Продолжительность от формирования запроса до отдачи ответа (в секундах)
  * @property string|null $ip IP-адрес
+ * @property string|null $prefix Префикс маршрута
  * @property string|null $url Ссылка
  * @property string|null $method Метод
  * @property array|null $input Параметры запроса
- * @property mixed|null $output JSON-ответ от сервера
+ * @property array|null $output JSON-ответ от сервера
  * @property array|null $server Серверные переменные
  * @method static \Illuminate\Database\Eloquent\Builder|Log newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Log newQuery()
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereIp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereMethod($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereOutput($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Log wherePrefix($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereServer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereUrl($value)

@@ -39,6 +39,7 @@ class ApiRequestLogging
         $log->duration = $endTime - LARAVEL_START;
         $log->duration_request = $endTime - $request->server('REQUEST_TIME_FLOAT');
         $log->ip = $request->ip();
+        $log->prefix = $request->segment(2);
         $log->url = $request->fullUrl();
         $log->method = $request->method();
         $log->input = $request->toArray();

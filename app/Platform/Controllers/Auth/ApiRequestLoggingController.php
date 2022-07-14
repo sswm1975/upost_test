@@ -64,8 +64,9 @@ class ApiRequestLoggingController extends AdminController
         $grid->column('duration', 'Duration L')->help('Duration from starting Laravel to sending the response.<br><sub class=\'text-danger\'>ResponseTime - LARAVEL_START</sub>');
         $grid->column('duration_request', 'Duration F')->help('The duration from a WordPress request to sending the response.<br><sub class=\'text-danger\'>ResponseTime - REQUEST_TIME_FLOAT</sub>');
         $grid->column('ip');
-        $grid->column('method')->filter(['GET' => 'GET', 'POST' => 'POST']);
-        $grid->column('url')->limit('90');
+        $grid->column('prefix')->filter();
+        $grid->column('method')->filter(['GET' => 'GET', 'POST' => 'POST', 'DELETE' => 'DELETE']);
+        $grid->column('url')->limit('80');
         $grid->column('input')
             ->display(function ($values) {
                 if (empty($values)) return '';
