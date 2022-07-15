@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Log;
+use Illuminate\Support\Facades\DB;
 
 class ApiRequestLogging
 {
@@ -18,6 +19,10 @@ class ApiRequestLogging
      */
     public function handle(Request $request, Closure $next)
     {
+        if (! config('api_request_logging_enabled', 0)) {
+            DB::enableQueryLog();
+        }
+
         return $next($request);
     }
 
@@ -45,6 +50,7 @@ class ApiRequestLogging
         $log->input = $request->toArray();
         $log->output = json_decode($response->content());
         $log->server = $request->server();
+        $log->queries = getSQLForFixDatabase();
         $log->save();
     }
 }

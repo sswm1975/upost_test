@@ -64,7 +64,7 @@ class ApiRequestLoggingController extends AdminController
         $grid->column('duration', 'Duration L')->help('Duration from starting Laravel to sending the response.<br><sub class=\'text-danger\'>ResponseTime - LARAVEL_START</sub>');
         $grid->column('duration_request', 'Duration F')->help('The duration from a WordPress request to sending the response.<br><sub class=\'text-danger\'>ResponseTime - REQUEST_TIME_FLOAT</sub>');
         $grid->column('ip');
-        $grid->column('prefix')->filter();
+        $grid->column('prefix')->filter(Log::groupBy('prefix')->pluck('prefix', 'prefix')->toArray());
         $grid->column('method')->filter(['GET' => 'GET', 'POST' => 'POST', 'DELETE' => 'DELETE']);
         $grid->column('url')->limit('80');
         $grid->column('input')
@@ -97,6 +97,15 @@ class ApiRequestLoggingController extends AdminController
 
                 return $column->modal('Server information', function ($grid) {
                     return new Table(['PARAMETER', 'VALUE'], $grid->server);
+                });
+            })
+            ->setAttributes(['align' => 'center']);
+        $grid->column('queries_info', 'SQL')
+            ->display(function ($title, $column) {
+                if (empty($this->queries)) return '';
+
+                return $column->modal('MySQL queries', function ($grid) {
+                    return new Table(['QUERY', 'ROWS', 'TIME'], $grid->queries);
                 });
             })
             ->setAttributes(['align' => 'center']);

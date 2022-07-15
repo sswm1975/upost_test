@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property array|null $input Параметры запроса
  * @property array|null $output JSON-ответ от сервера
  * @property array|null $server Серверные переменные
+ * @property array|null $queries SQL-запросы
  * @method static \Illuminate\Database\Eloquent\Builder|Log newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Log newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Log query()
@@ -29,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereMethod($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereOutput($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log wherePrefix($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Log whereQueries($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereServer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereUrl($value)
@@ -38,8 +40,9 @@ class Log extends Model
 {
     public $timestamps = false;
     protected $casts = [
-        'input'  => 'array',
-        'output' => 'array',
-        'server' => 'array',
+        'input'   => 'array',
+        'output'  => 'array',
+        'server'  => 'array',
+        'queries' => 'array',
     ];
 }
