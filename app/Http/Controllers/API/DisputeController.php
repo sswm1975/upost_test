@@ -196,7 +196,10 @@ class DisputeController extends Controller
      */
     public function getProblems(int $id = 0): JsonResponse
     {
-        return response()->json(DisputeProblem::getList($id));
+        return response()->json([
+            'status'   => true,
+            'problems' => DisputeProblem::getList($id)
+        ]);
     }
 
     /**
@@ -217,6 +220,9 @@ class DisputeController extends Controller
             })
             ->count();
 
-        return response()->json(['value' => $counter]);
+        return response()->json([
+            'status'   => true,
+            'value' => $counter
+        ]);
     }
 }
