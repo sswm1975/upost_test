@@ -18,9 +18,17 @@ class SetLanguage
      */
     public function handle(Request $request, Closure $next)
     {
-        $lang = in_array($request->get('lang'), config('app.languages'))
-            ? $request->get('lang')
-            : config('app.default_language');
+        # Приоритеты определения языка:
+        # - параметр запроса "lang";
+        # - установленный язык в профиле пользователя;
+        # - дефолтный язык (en).
+        if ($request->filled('lang') && in_array($request->get('lang'), config('app.languages'))) {
+            $lang = $request->get('lang');
+        } elseif (isset($request->user()->lang)) {
+            $lang = $request->user()->lang;
+        } else {
+            $lang = config('app.default_language');
+        }
 
         App::setLocale($lang);
 
