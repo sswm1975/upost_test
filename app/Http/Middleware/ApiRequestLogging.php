@@ -19,7 +19,7 @@ class ApiRequestLogging
      */
     public function handle(Request $request, Closure $next)
     {
-        if (! config('api_request_logging_enabled', 0)) {
+        if (config('api_request_logging_enabled', 0)) {
             DB::enableQueryLog();
         }
 
