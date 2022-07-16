@@ -55,7 +55,7 @@ class ApiRequestLoggingController extends AdminController
             $tools->append('<a href="javascript:void(0);" class="btn btn-sm btn-info container-refresh"><i class="fa fa-refresh"></i><span class="hidden-xs">&nbsp;&nbsp;Обновить</span></a>');
         });
 
-        $grid->quickSearch('url')->placeholder('Поиск...');
+        $grid->quickSearch(['url', 'server_ip', 'client_ip'])->placeholder('Поиск...');
 
         $grid->model()->latest('id');
 
@@ -63,8 +63,8 @@ class ApiRequestLoggingController extends AdminController
         $grid->column('time');
         $grid->column('duration', 'Duration L')->help('Duration from starting Laravel to sending the response.<br><sub class=\'text-danger\'>ResponseTime - LARAVEL_START</sub>');
         $grid->column('duration_request', 'Duration F')->help('The duration from a WordPress request to sending the response.<br><sub class=\'text-danger\'>ResponseTime - REQUEST_TIME_FLOAT</sub>');
-        $grid->column('ip', 'IP');
-        $grid->column('client_ip', 'Client IP');
+        $grid->column('server_ip', 'Server IP')->filter();
+        $grid->column('client_ip', 'Client IP')->filter();
         $grid->column('prefix')->filter(Log::groupBy('prefix')->pluck('prefix', 'prefix')->toArray());
         $grid->column('method')->filter(['GET' => 'GET', 'POST' => 'POST', 'DELETE' => 'DELETE']);
         $grid->column('url')->limit('80');

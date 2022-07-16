@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $time Дата и время запроса
  * @property string $duration Продолжительность от запуска Laravel до отдачи ответа (в секундах)
  * @property string $duration_request Продолжительность от формирования запроса до отдачи ответа (в секундах)
- * @property string|null $ip IP-адрес
+ * @property string|null $server_ip Серверный (WordPress) IP-адрес
  * @property string|null $client_ip Клиентский (WordPress) IP-адрес
  * @property string|null $prefix Префикс маршрута
  * @property string|null $url Ссылка
@@ -28,12 +28,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereDurationRequest($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereInput($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Log whereIp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereMethod($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereOutput($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log wherePrefix($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereQueries($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereServer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Log whereServerIp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereUrl($value)
  * @mixin \Eloquent
