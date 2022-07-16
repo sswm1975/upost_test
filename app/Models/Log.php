@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $duration Продолжительность от запуска Laravel до отдачи ответа (в секундах)
  * @property string $duration_request Продолжительность от формирования запроса до отдачи ответа (в секундах)
  * @property string|null $ip IP-адрес
+ * @property string|null $client_ip Клиентский (WordPress) IP-адрес
  * @property string|null $prefix Префикс маршрута
  * @property string|null $url Ссылка
  * @property string|null $method Метод
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Log newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Log newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Log query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Log whereClientIp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereDuration($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereDurationRequest($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereId($value)

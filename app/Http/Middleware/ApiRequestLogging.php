@@ -44,6 +44,7 @@ class ApiRequestLogging
         $log->duration = $endTime - LARAVEL_START;
         $log->duration_request = $endTime - $request->server('REQUEST_TIME_FLOAT');
         $log->ip = $request->ip();
+        $log->client_ip = $request->server('HTTP_WP_CLIENT_IP');
         $log->prefix = $request->segment(2);
         $log->url = $request->fullUrl();
         $log->method = $request->method();
