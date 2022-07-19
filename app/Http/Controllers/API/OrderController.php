@@ -57,7 +57,7 @@ class OrderController extends Controller
             'price'          => 'required|numeric',
             'currency'       => 'required|in:' . implode(',', config('app.currencies')),
             'products_count' => 'required|integer',
-            'description'    => 'required|string|not_phone|censor|max:5000',
+            'description'    => 'sometimes|nullable|string|not_phone|censor|max:5000',
             'from_country_id'=> 'required|integer|exists:countries,id',
             'from_city_id'   => 'sometimes|nullable|integer|exists:cities,id,country_id,' . request('from_country_id',  0),
             'to_country_id'  => 'required|integer|exists:countries,id',
