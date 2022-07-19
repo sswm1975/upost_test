@@ -19,6 +19,7 @@ return [
             'name_selects' => [
                 "//h1[@id='itemTitle']/span[1]/following-sibling::text()[1]",
                 "//h1[@class='product-title']",
+                "//h1",
             ],
             'category_selects' => [
                 "//ol/li[5]",

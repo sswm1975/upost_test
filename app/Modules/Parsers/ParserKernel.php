@@ -18,9 +18,13 @@ class ParserKernel
         $doc->strictErrorChecking = false;
         $doc->recover = true;
 
-        libxml_use_internal_errors(true);
-        $doc->loadHTMLFile($link);
-        libxml_use_internal_errors(false);
+        try {
+            libxml_use_internal_errors(true);
+            $doc->loadHTMLFile($link);
+            libxml_use_internal_errors(false);
+        } catch (\Exception $e) {
+            $doc->createElement("root");
+        }
 
         $this->xpath = new DOMXPath($doc);
     }
