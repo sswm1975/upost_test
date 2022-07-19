@@ -23,8 +23,10 @@ class ApiRequestLoggingController extends AdminController
     {
         Admin::style('
             .modal-dialog {width:80%}
-            .modal-body table.table td + td {white-space: normal;}
+            .modal-body table.table td {white-space: normal;}
         ');
+
+        $this->addModalCopyableScript();
 
         $grid = new Grid(new Log);
 
@@ -63,8 +65,8 @@ class ApiRequestLoggingController extends AdminController
         $grid->column('time');
         $grid->column('duration', 'Duration L')->help('Duration from starting Laravel to sending the response.<br><sub class=\'text-danger\'>ResponseTime - LARAVEL_START</sub>');
         $grid->column('duration_request', 'Duration F')->help('The duration from a WordPress request to sending the response.<br><sub class=\'text-danger\'>ResponseTime - REQUEST_TIME_FLOAT</sub>');
-        $grid->column('server_ip', 'Server IP')->filter();
-        $grid->column('client_ip', 'Client IP')->filter();
+        $grid->column('server_ip', 'Server IP')->copyable()->filter();
+        $grid->column('client_ip', 'Client IP')->copyable()->filter();
         $grid->column('prefix')->filter(Log::groupBy('prefix')->pluck('prefix', 'prefix')->toArray());
         $grid->column('method')->filter(['GET' => 'GET', 'POST' => 'POST', 'DELETE' => 'DELETE']);
         $grid->column('url')->limit('80');
@@ -106,7 +108,13 @@ class ApiRequestLoggingController extends AdminController
                 if (empty($this->queries)) return '';
 
                 return $column->modal('MySQL queries', function ($grid) {
-                    return new Table(['QUERY', 'ROWS', 'TIME'], $grid->queries);
+                    $template = '<a href="#" class="grid-column-copyable text-muted" data-content="%s" title="Copied!"><i class="fa fa-copy"></i></a>';
+                    $queries = [];
+                    foreach ($grid->queries as $key => $query) {
+                        $queries[$key]['action'] = sprintf($template, $query['sql']);
+                        $queries[$key] = array_merge($queries[$key], $query);
+                    }
+                    return new Table(['', 'QUERY', 'ROWS', 'TIME'], $queries);
                 });
             })
             ->setAttributes(['align' => 'center']);
@@ -146,5 +154,27 @@ class ApiRequestLoggingController extends AdminController
         admin_toastr($this->title . ' очищен.', 'success', ['positionClass' => 'toast-top-center']);
 
         return redirect(route('platform.auth.api_request_logging.index'));
+    }
+
+    /**
+     * Скрипт для копирования контента в буфер обмена в модальных окнах.
+     */
+    protected function addModalCopyableScript()
+    {
+        $script = <<<SCRIPT
+$('.modal-body').on('click','.grid-column-copyable',(function (e) {
+    var content = $(this).data('content');
+    var temp = $('<input>');
+
+    $(".modal-body").append(temp);
+    temp.val(content).select();
+    document.execCommand("copy");
+    temp.remove();
+
+    $(this).tooltip('show');
+}));
+SCRIPT;
+
+        Admin::script($script);
     }
 }
