@@ -169,7 +169,7 @@ class ParserKernel
      * @param array $urls      Список ссылок с рисунками
      * @return array           Возвращается не больше 8 ссылок с рисунками
      */
-    private function handlerImages(array $handlers, array $urls):array
+    protected function handlerImages(array $handlers, array $urls):array
     {
         foreach ($handlers as $handler) {
             if (Str::startsWith($handler, 'replace:')) {

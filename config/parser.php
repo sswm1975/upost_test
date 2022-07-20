@@ -53,6 +53,9 @@ return [
         'rozetka' => [
             'mask' => 'rozetka.com.ua',
             'handler' => \App\Modules\Parsers\Rozetka::class,
+            'images_handlers' => [
+                'replace:base_action,original',
+            ],
             'product' => [
                 "//script[@data-seo='Product']",
             ],
