@@ -184,6 +184,9 @@ class AuthController extends Controller
 
         unset($user->password, $user->api_token);
 
+        # добавляем страну/город пользователя
+        $user->load(['city.country']);
+
         # добавляем кол-во заказов и маршрутов по пользователю
 //        $user->loadCount(['orders', 'routes']);
 
