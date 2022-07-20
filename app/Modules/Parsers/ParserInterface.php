@@ -9,6 +9,7 @@ interface ParserInterface
     public function getProductPrice():string;
     public function getProductCurrency():string;
     public function getProductImage():string;
+    public function getProductImages():array;
     public function getProductSize():string;
     public function getProductWeight():string;
 }

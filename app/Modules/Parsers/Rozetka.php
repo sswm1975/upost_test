@@ -52,6 +52,11 @@ class Rozetka extends ParserKernel implements ParserInterface
         return $this->getImageToBase64($this->product['image']);
     }
 
+    public function getProductImages():array
+    {
+        return [];
+    }
+
     public function getProductSize():string
     {
         return '';

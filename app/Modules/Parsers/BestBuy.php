@@ -38,4 +38,9 @@ class BestBuy extends DefaultParser
 
         $this->xpath = new DOMXPath($doc);
     }
+
+    public function getProductImages():array
+    {
+        return [];
+    }
 }

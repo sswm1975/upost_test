@@ -52,6 +52,11 @@ class Alibaba implements ParserInterface
         return $image ? $this->getImageToBase64($image) : '';
     }
 
+    public function getProductImages():array
+    {
+        return [];
+    }
+
     public function getProductSize():string
     {
         return $this->data['globalData']['trade']['logisticInfo']['unitSize'] ?? '';

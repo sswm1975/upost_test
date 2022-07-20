@@ -16,6 +16,9 @@ return [
         'ebay' => [
             'mask' => 'www.ebay.com',
             'handler' => \App\Modules\Parsers\DefaultParser::class,
+            'images_handlers' => [
+                'replace:s-l64.jpg,s-l500.jpg',
+            ],
             'name_selects' => [
                 "//h1[@id='itemTitle']/span[1]/following-sibling::text()[1]",
                 "//h1[@class='product-title']",
@@ -33,6 +36,11 @@ return [
             'image_selects' => [
                 "//img[@class='app-filmstrip__image cc-image']/@src",
                 "//img[@id='icImg']/@src",
+                "//img[@class='vi-image-gallery__image vi-image-gallery__image--absolute-center']/@src"
+            ],
+            'images_selects' => [
+                "//img[@data-index]/@src",
+                "//img[@width='64']/@data-originalimg",
             ],
             'size_selects' => [
 

@@ -49,6 +49,11 @@ class AliExpress implements ParserInterface
         return $this->getImageToBase64($this->data['pageModule']['imagePath']);
     }
 
+    public function getProductImages():array
+    {
+        return [];
+    }
+
     public function getProductSize():string
     {
         return '';

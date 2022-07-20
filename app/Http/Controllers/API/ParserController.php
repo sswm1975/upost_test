@@ -26,11 +26,21 @@ class ParserController extends Controller
 
         $parser = (new Parser($url))->handler();
 
+        # обработка главного рисунка
         $image_base64 = $parser->getProductImage();
         if ($image_base64) {
             $image = (new ImageLoaderController)->uploadImage4Order($image_base64, $request->user()->id);
         } else {
             $image = '';
+        }
+
+        # обработка нескольких рисунков
+        $images_base64 = $parser->getProductImages();
+        $images = [];
+        if (!empty($images_base64)) {
+            foreach ($images_base64 as $image_base64) {
+                $images[] = (new ImageLoaderController)->uploadImage4Order($image_base64, $request->user()->id);
+            }
         }
 
         return response()->json([
@@ -42,6 +52,7 @@ class ParserController extends Controller
             'size'     => $parser->getProductSize(),
             'weight'   => $parser->getProductWeight(),
             'image'    => $image,
+            'images'   => $images,
             'favicon'  => getFavicon($url),
         ]);
     }

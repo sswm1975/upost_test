@@ -47,6 +47,13 @@ class DefaultParser extends ParserKernel implements ParserInterface
             : '';
     }
 
+    public function getProductImages():array
+    {
+        return isset($this->config['images_selects'])
+            ? $this->getImages($this->config['images_selects'], $this->config['images_handlers'] ?? [])
+            : [];
+    }
+
     public function getProductSize():string
     {
         return isset($this->config['size_selects'])
