@@ -173,8 +173,7 @@ class ParserKernel
     {
         foreach ($handlers as $handler) {
             if (Str::startsWith($handler, 'replace:')) {
-                $params = Str::replaceFirst('replace:', '', $handler);
-                $params = explode(',', $params);
+                $params = explode(',', str_replace('replace:', '', $handler));
                 foreach ($urls as $key => $url) {
                     $urls[$key] = str_replace($params[0], $params[1], $url);
                 }
