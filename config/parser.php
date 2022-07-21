@@ -17,7 +17,7 @@ return [
             'mask' => 'www.ebay.com',
             'handler' => \App\Modules\Parsers\DefaultParser::class,
             'images_handlers' => [
-                'replace:s-l64.jpg,s-l500.jpg',
+                'replace:s-l64.,s-l500.',
             ],
             'name_selects' => [
                 "//h1[@id='itemTitle']/span[1]/following-sibling::text()[1]",
