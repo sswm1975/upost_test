@@ -163,7 +163,8 @@ class ParserKernel
     /**
      * Обработчик ссылок с рисунками.
      * Поддерживает функции:
-     *   replace:search,replace - заменить все вхождения search на replace.
+     *   replace:search,replace - заменить все вхождения search на replace;
+     *   reg_exp:pattern - получить ссылки по патерну регулярного выражения.
      *
      * @param array $handlers  Список обработчиков
      * @param array $urls      Список ссылок с рисунками
@@ -178,8 +179,13 @@ class ParserKernel
                     $urls[$key] = str_replace($params[0], $params[1], $url);
                 }
             }
+            if (Str::startsWith($handler, 'reg_exp:')) {
+                $pattern = str_replace('reg_exp:', '', $handler);
+                preg_match_all($pattern, $urls[0], $matches);
+                $urls = $matches[1] ?? [];
+            }
         }
 
-        return array_slice($urls, 0, 8);
+        return array_slice($urls, 0, 3);
     }
 }

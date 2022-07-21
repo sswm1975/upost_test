@@ -67,6 +67,9 @@ return [
         'amazon' => [
             'mask' => 'amazon.com',
             'handler' => \App\Modules\Parsers\DefaultParser::class,
+            'images_handlers' => [
+                'reg_exp:/"hiRes":"(\S+?)"/m',
+            ],
             'name_selects' => [
                 "//h1[@class='a-size-large a-spacing-none']",
             ],
@@ -80,6 +83,9 @@ return [
             ],
             'image_selects' => [
                 "//img[@id='landingImage']/@src",
+            ],
+            'images_selects' => [
+                "//script[contains(text(), 'ImageBlockATF')]/text()",
             ],
             'size_selects' => [
                 "//th[contains(text(),'Product Dimensions')]/following-sibling::td[1]",
