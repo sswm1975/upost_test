@@ -114,6 +114,11 @@ return [
                 "//img[@class='fits']/@src",
                 "//img[@class='lazy-interaction']/@src",
             ],
+            'images_selects' => [
+                "//img[@class='lazy-interaction']/@srcset", # средний размер
+                "//img[@class='lazy-interaction']/@src",    # большой размер
+                "//img[@class='fits']/@src",
+            ],
             'size_selects' => [
 
             ],
