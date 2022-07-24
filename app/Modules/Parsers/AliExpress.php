@@ -55,7 +55,7 @@ class AliExpress implements ParserInterface
             return [];
         }
 
-        $urls = array_slice($this->data['imageModule']['imagePathList'], 0,3);
+        $urls = array_slice($this->data['imageModule']['imagePathList'], 0,self::MAX_IMAGES_COUNT);
 
         $images = [];
         foreach ($urls as $url) {
