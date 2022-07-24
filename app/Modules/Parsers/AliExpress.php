@@ -51,7 +51,18 @@ class AliExpress implements ParserInterface
 
     public function getProductImages():array
     {
-        return [];
+        if (empty($this->data['imageModule']['imagePathList'])) {
+            return [];
+        }
+
+        $urls = array_slice($this->data['imageModule']['imagePathList'], 0,3);
+
+        $images = [];
+        foreach ($urls as $url) {
+            $images[] = $this->getImageToBase64($url);
+        }
+
+        return $images;
     }
 
     public function getProductSize():string
