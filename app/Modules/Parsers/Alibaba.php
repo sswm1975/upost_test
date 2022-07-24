@@ -54,7 +54,16 @@ class Alibaba implements ParserInterface
 
     public function getProductImages():array
     {
-        return [];
+        $urls = array_slice($this->data['globalData']['product']['mediaItems'], 0, self::MAX_IMAGES_COUNT);
+
+        $images = [];
+        foreach ($urls as $item) {
+            if ($item['type'] == 'image' && isset($item['imageUrl']['big'])) {
+                $images[] = $this->getImageToBase64($item['imageUrl']['big']);
+            }
+        }
+
+        return $images;
     }
 
     public function getProductSize():string
