@@ -4,6 +4,8 @@ namespace App\Modules\Parsers;
 
 interface ParserInterface
 {
+    const MAX_IMAGES_COUNT = 3;
+
     public function getProductName():string;
     public function getProductCategory():string;
     public function getProductPrice():string;
