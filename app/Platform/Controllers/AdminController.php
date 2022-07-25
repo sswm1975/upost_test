@@ -306,11 +306,11 @@ EOT
 
             /* Модальное окно: для заголовка меняем курсор */
             .modal-header {cursor: move;}
-
 EOT;
     }
+
     /**
-     * Get index style.
+     * Get menu style.
      *
      * @return string
      */
@@ -330,5 +330,4 @@ EOT;
     {
         Admin::script('$("table tbody tr").off("dblclick").on("dblclick", function(){$.pjax({url:"/' . implode('/', request()->segments()) . '/" + $(this).data("key"), container:"#pjax-container"})});');
     }
-
 }
