@@ -163,6 +163,9 @@ return [
         'flipkart' => [
             'mask' => 'flipkart.com',
             'handler' => \App\Modules\Parsers\DefaultParser::class,
+            'images_handlers' => [
+                'replace:128/128,832/832',
+            ],
             'name_selects' => [
                 '//h1/span',
             ],
@@ -174,6 +177,9 @@ return [
             ],
             'image_selects' => [
                 '//div[@class="_3kidJX"]/*/img/@src',
+            ],
+            'images_selects' => [
+                '//img[@class="q6DClP"]/@src',
             ],
             'size_selects' => [
 

@@ -12,7 +12,9 @@ class Parser
 
     public function __construct($link)
     {
-        $this->link = mb_strtolower($link);
+        # убираем из ссылки параметры и переводим в нижний регистр
+        $this->link = mb_strtolower(strtok($link, '?'));
+
         $parsers = config('parser.parsers');
 
         foreach ($parsers as $parser) {

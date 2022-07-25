@@ -10,8 +10,6 @@ class ParserKernel
 {
     const CLEAR_CHARS = " \t\n\r\0\x0B\xC2\xA0";
 
-    const MAX_IMAGES_COUNT = 3;
-
     protected DOMXPath $xpath;
 
     public function __construct($link)
@@ -188,6 +186,6 @@ class ParserKernel
             }
         }
 
-        return array_slice($urls, 0, self::MAX_IMAGES_COUNT);
+        return array_slice($urls, 0, 3);
     }
 }
