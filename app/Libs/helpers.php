@@ -376,6 +376,7 @@ function getHashPassword(string $password): string
 /**
  * Конвертирование строкового названия валюты в соответствующий символ (знак).
  * Пример: грн => ₴; uah => ₴; usd => $ и т.п.
+ * Если символ не определен, то возвращает дефолтный символ $.
  *
  * @param string $currency
  * @return string
@@ -390,7 +391,7 @@ function getCurrencySymbol(string $currency): string
         }
     }
 
-    return $currency;
+    return config('app.default_currency');
 }
 
 /**
