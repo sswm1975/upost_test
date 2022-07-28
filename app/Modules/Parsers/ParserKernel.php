@@ -108,18 +108,16 @@ class ParserKernel
     }
 
     /**
-     * Получить основное фото товара.
+     * Получить основное фото товара по списку XPath-селекторов.
      *
      * @param array $selects   Массив XPath-селекторов.
      * @return string          Рисунок в формате base64.
      */
     public function getImage(array $selects): string
     {
-        $href = $this->findFirst($selects);
+        $url = $this->findFirst($selects);
 
-        if (!$href) return '';
-
-        return $this->getImageToBase64($href);
+        return $url ? $this->getImageToBase64($url) : '';
     }
 
     /**
