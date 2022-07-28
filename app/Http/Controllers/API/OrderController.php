@@ -410,7 +410,6 @@ class OrderController extends Controller
         return response()->json([
             'status' => true,
             'order'  => null_to_blank($order->toArray()),
-            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
