@@ -488,22 +488,18 @@ class OrderController extends Controller
             'currency'       => 'sometimes|required|in:' . implode(',', config('app.currencies')),
         ]);
 
+        $prices = DB::table('orders')
+            ->selectRaw('MIN(price_usd) AS price_min, MAX(price_usd) AS price_max')
+            ->first();
+
         $orders = $this->getOrdersByFilter($request->user(), $filters);
 
-        $prices = [
-            'price_min' => 0,
-            'price_max' => 0,
-        ];
         $shops = [];
-
         if (!empty($orders['data'])) {
-            $data = collect($orders['data']);
-            $prices = [
-                'price_min' => $data->min('price_usd'),
-                'price_max' => $data->max('price_usd'),
-            ];
-            $shop_slugs = $data->pluck('shop_slug')->unique()->all();
-            $shops = Shop::getBySlugs($shop_slugs);
+            $shop_slugs = array_filter(collect($orders['data'])->pluck('shop_slug')->unique()->all());
+            if (! empty($shop_slugs)) {
+                $shops = Shop::getBySlugs($shop_slugs);
+            }
         }
 
         return response()->json([
