@@ -433,8 +433,7 @@ class Order extends Model
      */
     public function rate_confirmed(): HasOne
     {
-        return $this->hasOne(Rate::class, 'order_id', 'id')
-            ->whereIn('status', Rate::STATUSES_CONFIRMED);
+        return $this->hasOne(Rate::class, 'order_id', 'id')->confirmed();
     }
 
     public function review(): MorphOne

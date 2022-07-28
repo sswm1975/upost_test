@@ -383,20 +383,6 @@ class OrderController extends Controller
         $auth_user_id = $request->user()->id;
 
         $order = Order::whereKey($order_id)
-            ->with([
-                'from_country',
-                'from_city',
-                'to_country',
-                'to_city',
-                'wait_range',
-                'user',
-                'rates',
-                'rates.disputes',
-                'deductions',
-            ])
-            ->with(['rates' => function($q) {
-                $q->whereIn('status', [Rate::STATUS_ACCEPTED, Rate::STATUS_BUYED, Rate::STATUS_SUCCESSFUL, Rate::STATUS_DONE]);
-            }])
             ->withCount([
                 'rates as has_rate' => function ($query) use ($auth_user_id) {
                     $query->where('user_id', $auth_user_id);
@@ -405,6 +391,18 @@ class OrderController extends Controller
             ->withCount(['deductions AS deductions_sum' => function($query) {
                 $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
             }])
+            ->with([
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+                'wait_range',
+                'user',
+                'deductions',
+                'rates.user:' . implode(',', User::FIELDS_FOR_SHOW),
+                'rates.disputes',
+                'rate_confirmed.user:' . implode(',', User::FIELDS_FOR_SHOW),
+            ])
             ->first();
 
         if (! $order) throw new ErrorException(__('message.order_not_found'));
@@ -412,6 +410,7 @@ class OrderController extends Controller
         return response()->json([
             'status' => true,
             'order'  => null_to_blank($order->toArray()),
+            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
