@@ -561,6 +561,7 @@ class OrderController extends Controller
                     $query->where('viewed_by_customer', 0);
                 },
             ])
+            ->whereNotIn('status', [Order::STATUS_CLOSED, Order::STATUS_BANNED, Order::STATUS_SUCCESSFUL])
             ->when(!empty($filters['order_id']), function ($query) use ($filters) {
                 return $query->where('orders.id', $filters['order_id']);
             })
