@@ -77,6 +77,8 @@ return [
                 "//div[@id='wayfinding-breadcrumbs_feature_div']/ul/li[1]",
             ],
             'price_selects' => [
+                "//span[@class='a-offscreen']",
+                "//span[@class='a-size-mini olpWrapper']",
                 "//span[@id='priceblock_ourprice']",
                 "//span[@id='priceblock_saleprice']",
                 "//p[@class='a-spacing-none a-text-left a-size-mini twisterSwatchPrice']",

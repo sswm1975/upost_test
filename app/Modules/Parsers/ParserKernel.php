@@ -21,7 +21,7 @@ class ParserKernel
 
         try {
             libxml_use_internal_errors(true);
-            $doc->loadHTMLFile($link);
+            $doc->loadHTMLFile($link, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
             libxml_use_internal_errors(false);
         } catch (\Exception $e) {
             $doc->createElement("root");
@@ -92,6 +92,11 @@ class ParserKernel
         $found = $this->findFirst($selects);
 
         if (!$found) return '';
+
+        preg_match('/[\$\£\€](\d+(?:[\.,]\d{1,2})?)/', $found, $matches);
+        if (isset($matches[1])) {
+            return $matches[1];
+        }
 
         return trim(preg_replace('/[^0-9.,]/', '', $found), " \t\n\r\0\x0B\xC2\xA0");
     }
