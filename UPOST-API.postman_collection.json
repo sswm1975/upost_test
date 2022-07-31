@@ -6710,7 +6710,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"url_ebay\", \"https://www.ebay.com/itm/324444618400\");"
+											"pm.variables.set(\"url_ebay\", \"https://www.ebay.com/itm/304567255730?hash=item46e99f82b2:g:vMUAAOSw6Iti1QF2&amdata=enc%3AAQAHAAAA4LFo5ERdbEaa5lhliq24NgIz0QnQ5CZbwQdBxRTAdJUmhB26pnutEVddvIe4%2BP8p422NYsJD3NleD3QaHNeSO2W0OfKXaFqPCa30sxv284kK9zIv4d7XJy%2FljSWUJ%2F6Q3X%2B2qqD7gNTQMOg8UgbqjIqxGYaGJrv5EcaVGp5dGA1CbUCsWQGl8r5WC%2BQSEqVcxfsFwI97OZ7EbBVEODh33zxWag93GLuQcw0WZx%2FHmWHJ3V7Gnb3vORXUK90VUbC0iAfSzrQUDHn3SvDvuA%2B6Cw5TdlXF6LTOUBRPVAbatbWI%7Ctkp%3ABFBM9sjC6MJg&var=603583639263\");"
 										],
 										"type": "text/javascript"
 									}
@@ -6829,7 +6829,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"url_rozetka\", \"https://hard.rozetka.com.ua/dell_210_axrq/p274014238/\");"
+											"pm.variables.set(\"url_rozetka\", \"https://rozetka.com.ua/sven_ps_465_black/p39088776/\");"
 										],
 										"type": "text/javascript"
 									}
@@ -7186,7 +7186,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"url_aliexpress\", \"https://aliexpress.ru/item/4001359505142.html\");"
+											"pm.variables.set(\"url_aliexpress\", \"https://www.aliexpress.com/item/1005003109343355.html\");"
 										],
 										"type": "text/javascript"
 									}
@@ -7548,7 +7548,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"url_flipkart\", \"https://www.flipkart.com/nova-plus-1100-w-amaze-ni-10-dry-iron/p/itmb16d2671ca6bb\");"
+											"pm.variables.set(\"url_flipkart\", \"https://www.flipkart.com/vikrida-fast-sling-puck-board-game-kids-adults-tabletop-slingshot-games-toys-boys-girls-all-age-acrylic-strickers-string-hockey-table-game-party-fun/p/itm882830ee80685?pid=BDGG4ZRBEHBB9R6Q&lid=LSTBDGG4ZRBEHBB9R6QBHEXKL&marketplace=FLIPKART&store=tng%2Fgfv%2Fisv&srno=b_10_371&otracker=nmenu_sub_Baby%20%26%20Kids_0_Board%20Games&fm=organic&iid=4ba2d29b-1717-4df5-b388-a8cc8e00fee4.BDGG4ZRBEHBB9R6Q.SEARCH&ppt=browse&ppn=browse\");"
 										],
 										"type": "text/javascript"
 									}
@@ -8031,6 +8031,35 @@
 											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
 											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Удалить файл",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/image?url=http://upost.test/storage/1/orders/image_20220730220734_62e5831a888d4.jpg",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"image"
+									],
+									"query": [
+										{
+											"key": "url",
+											"value": "http://upost.test/storage/1/orders/image_20220730220734_62e5831a888d4.jpg",
+											"description": "Ссылка на удаляемый рисунок"
 										}
 									]
 								}
