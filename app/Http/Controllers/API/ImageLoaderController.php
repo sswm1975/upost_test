@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Exceptions\ValidatorException;
 use Illuminate\Validation\ValidationException;
@@ -216,5 +217,42 @@ class ImageLoaderController extends Controller
         imagedestroy($src);
 
         return asset('storage' . $path . $image_main_name);
+    }
+
+    /**
+     * Удалить изображение.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function deleteImage(Request $request): JsonResponse
+    {
+        # параметр url обязателен и должен быть валидной ссылкой
+        validateOrExit(['url' => 'required|url']);
+
+        # делим ссылку по строке "storage"
+        # к примеру ссылка http://upost.test/storage/1/orders/image_20220718150753_62d556014c833.jpg
+        # будет разделена на 2 части: http://upost.test/storage и /1/orders/image_20220718150753_62d556014c833.jpg
+        # нам нужна 2-ая часть
+        $path = explode('storage', $request->get('url'))[1] ?? '';
+
+        # 2-ой части нет - выходим
+        if (empty($path)) {
+            return response()->json(['status' => false]);
+        }
+
+        # определяем полный путь и маску для удаляемых файлов
+        # к примеру для пути /1/orders/image_20220718150753_62d556014c833.jpg
+        # на локальном сервере будет такая маска: C:\laragon\www\upost\storage\app/public\/1/orders/image_*20220730220734_62e5831a888d4.jpg"
+        $path_mask = Storage::disk('public')->path(str_replace('image_', 'image_*', $path));
+
+        # по маске формируем список файлов для удаления
+        $files = File::glob($path_mask);
+
+        # удаляем файлы и возвращаем ответ
+        return response()->json([
+            'status' => File::delete($files),
+        ]);
     }
 }

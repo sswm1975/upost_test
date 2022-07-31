@@ -282,6 +282,9 @@ Route::group(
 // Загрузка фото і створення мініатюр
 Route::post('upload_image', 'API\ImageLoaderController@upload')->middleware(MIDDLEWARE_AUTH_BASIC);
 
+# Удалить изображение
+Route::delete('image', 'API\ImageLoaderController@deleteImage')->middleware(MIDDLEWARE_AUTH_BASIC);
+
 // Парсинг даних
 Route::get('parser', 'API\ParserController')->middleware(MIDDLEWARE_AUTH_BASIC);
 
