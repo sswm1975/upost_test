@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Modules\Parsers\Parser;
 use App\Exceptions\ValidatorException;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class ParserController extends Controller
@@ -45,7 +46,7 @@ class ParserController extends Controller
 
         return response()->json([
             'status'   => true,
-            'name'     => $parser->getProductName(),
+            'name'     => Str::substr($parser->getProductName(), 1, 100),
             'category' => $parser->getProductCategory(),
             'price'    => $parser->getProductPrice(),
             'currency' => $parser->getProductCurrency(),
