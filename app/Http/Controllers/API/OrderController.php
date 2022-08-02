@@ -417,12 +417,19 @@ class OrderController extends Controller
      * Вывод моих заказов.
      *
      * @param Request $request
+     * @throws ValidationException|ValidatorException*
      * @return JsonResponse
      */
     public function showMyOrders(Request $request): JsonResponse
     {
+        $filters = validateOrExit([
+            'status'      => 'nullable|in:' .  implode(',', Order::STATUSES),
+            'show'        => 'nullable|integer|min:1',
+            'page-number' => 'nullable|integer|min:1',
+        ]);
+
         $user = $request->user();
-        $filters = array_merge(['owner_user_id' => $user->id], $request->all());
+        $filters = array_merge(['owner_user_id' => $user->id], $filters);
 
         $orders = $this->getOrdersByFilter($user, $filters);
 
@@ -561,7 +568,6 @@ class OrderController extends Controller
                     $query->where('viewed_by_customer', 0);
                 },
             ])
-            ->whereNotIn('status', [Order::STATUS_CLOSED, Order::STATUS_BANNED, Order::STATUS_SUCCESSFUL])
             ->when(!empty($filters['order_id']), function ($query) use ($filters) {
                 return $query->where('orders.id', $filters['order_id']);
             })
@@ -571,7 +577,9 @@ class OrderController extends Controller
             ->when(!empty($filters['owner_user_id']), function ($query) use ($filters) {
                 return $query->where('orders.user_id', $filters['owner_user_id']);
             })
-            ->when(!empty($filters['status']), function ($query) use ($filters) {
+            ->when(empty($filters['status']), function ($query) {
+                return $query->whereNotIn('status', [Order::STATUS_CLOSED, Order::STATUS_BANNED, Order::STATUS_SUCCESSFUL]);
+            }, function ($query) use ($filters) {
                 return $query->where('orders.status', $filters['status']);
             })
             ->when(!empty($filters['date_from']), function ($query) use ($filters) {
