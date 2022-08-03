@@ -164,15 +164,31 @@ class Route extends Model
         return $query->whereStatus(self::STATUS_SUCCESSFUL);
     }
 
+    /**
+     * Отфильтровать маршруты по статусу.
+     *
+     * @param $query
+     * @param $status
+     * @return mixed
+     */
     public function scopeFilterByStatus($query, $status)
     {
-        if ($status == self::STATUS_ALL) {
-            return $query->whereIn('status', [self::STATUS_ACTIVE, self::STATUS_IN_WORK]);
+        switch ($status) {
+            case self::STATUS_ALL:
+                $query->whereIn('status', [self::STATUS_ACTIVE, self::STATUS_IN_WORK]);
+                break;
+            case self::STATUS_ACTIVE:
+                $query->where('status', self::STATUS_ACTIVE);
+                break;
+            case self::STATUS_IN_WORK:
+                $query->where('status', self::STATUS_IN_WORK);
+                break;
+            case self::STATUS_CLOSED:
+                $query->whereIn('status', [self::STATUS_CLOSED, self::STATUS_SUCCESSFUL, self::STATUS_BANNED]);
+                break;
         }
-        if ($status == self::STATUS_CLOSED) {
-            return $query->whereIn('status', [self::STATUS_CLOSED, self::STATUS_SUCCESSFUL, self::STATUS_BANNED]);
-        }
-        return $query->where('status', $status);
+
+        return $query;
     }
 
     /**
