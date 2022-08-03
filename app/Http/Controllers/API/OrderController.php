@@ -460,6 +460,7 @@ class OrderController extends Controller
             'page'   => $orders['current_page'],
             'pages'  => $orders['last_page'],
             'orders' => null_to_blank($orders['data']),
+            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
@@ -578,7 +579,7 @@ class OrderController extends Controller
                 return $query->where('orders.user_id', $filters['owner_user_id']);
             })
             ->when(empty($filters['status']), function ($query) {
-                return $query->whereNotIn('status', [Order::STATUS_CLOSED, Order::STATUS_BANNED, Order::STATUS_SUCCESSFUL]);
+                return $query->whereNotIn('status', [Order::STATUS_CLOSED, Order::STATUS_BANNED, Order::STATUS_SUCCESSFUL, Order::STATUS_FAILED]);
             }, function ($query) use ($filters) {
                 return $query->where('orders.status', $filters['status']);
             })
