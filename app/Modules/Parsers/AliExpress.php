@@ -37,7 +37,7 @@ class AliExpress implements ParserInterface
             return '';
         }
 
-        return $this->getImageToBase64($this->data['pageModule']['imagePath']);
+        return convertImageToBase64($this->data['pageModule']['imagePath']);
     }
 
     public function getProductImages():array
@@ -46,21 +46,11 @@ class AliExpress implements ParserInterface
             return [];
         }
 
-        $urls = array_slice($this->data['imageModule']['imagePathList'], 0,self::MAX_IMAGES_COUNT);
-
         $images = [];
-        foreach ($urls as $url) {
-            $images[] = $this->getImageToBase64($url);
+        foreach ($this->data['imageModule']['imagePathList'] as $url) {
+            $images[] = convertImageToBase64($url);
         }
 
         return $images;
-    }
-
-    private function getImageToBase64($href):string
-    {
-        $type = pathinfo($href, PATHINFO_EXTENSION);
-        $data = file_get_contents($href);
-
-        return 'data:image/' . $type . ';base64,' . base64_encode($data);
     }
 }

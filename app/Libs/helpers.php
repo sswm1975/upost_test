@@ -110,6 +110,20 @@ function validate_base64(string $base64data, array $allowedMime, int $maxSize, i
 }
 
 /**
+ * Convert image to base64 content.
+ *
+ * @param string $url
+ * @return string
+ */
+function convertImageToBase64(string $url): string
+{
+    $type = pathinfo($url, PATHINFO_EXTENSION);
+    $data = file_get_contents($url);
+
+    return 'data:image/' . $type . ';base64,' . base64_encode($data);
+}
+
+/**
  * Get Favicon from URL.
  *
  * @param string $url

@@ -8,10 +8,16 @@ use Illuminate\Support\Str;
 
 class ParserKernel
 {
+    # Cпецсимволы: табуляция, перевод строки, возврат каретки, NULL-байты, вертикальная табуляция, неразрывный пробел
     const CLEAR_CHARS = " \t\n\r\0\x0B\xC2\xA0";
 
     protected DOMXPath $xpath;
 
+    /**
+     * Конструктор.
+     *
+     * @param $link
+     */
     public function __construct($link)
     {
         $doc = new DOMDocument('1.0', 'utf-8');
@@ -30,6 +36,15 @@ class ParserKernel
         $this->xpath = new DOMXPath($doc);
     }
 
+    /**
+     * Удаление тегов и различных спец.симолов.
+     *   \x{200e}|\x{200f} - trim unicode direction mark (LEFT-TO-RIGHT-MARK and RIGHT-TO-LEFT-MARK);
+     *   strip_tags - удаляет все NULL-байты, HTML- и PHP-теги
+     *   self::CLEAR_CHARS - спецсимвол: табуляция, перевод строки, возврат каретки, NULL-байты, вертикальная табуляция, неразрывный пробел
+     *
+     * @param $string
+     * @return string
+     */
     function cleanTags($string): string
     {
         return trim(preg_replace('/(\x{200e}|\x{200f})/u', '', strip_tags($string)), self::CLEAR_CHARS);
@@ -98,7 +113,7 @@ class ParserKernel
             return $matches[1];
         }
 
-        return trim(preg_replace('/[^0-9.,]/', '', $found), " \t\n\r\0\x0B\xC2\xA0");
+        return trim(preg_replace('/[^0-9.,]/', '', $found), self::CLEAR_CHARS);
     }
 
     public function getCurrency(array $selects): string
@@ -107,7 +122,7 @@ class ParserKernel
 
         if (!$found) return '';
 
-        $currency =  trim(preg_replace('/[0-9.,]/', '', $found), " \t\n\r\0\x0B\xC2\xA0");
+        $currency =  trim(preg_replace('/[0-9.,]/', '', $found), self::CLEAR_CHARS);
 
         return getCurrencySymbol($currency);
     }
@@ -122,7 +137,7 @@ class ParserKernel
     {
         $url = $this->findFirst($selects);
 
-        return $url ? $this->getImageToBase64($url) : '';
+        return $url ? convertImageToBase64($url) : '';
     }
 
     /**
@@ -142,25 +157,10 @@ class ParserKernel
 
         $images = [];
         foreach ($urls as $url) {
-            $images[] = $this->getImageToBase64($url);
+            $images[] = convertImageToBase64($url);
         }
 
         return $images;
-    }
-
-    public function getJsonDecode(array $selects):array
-    {
-        $json = $this->findFirst($selects);
-
-        return $json ? json_decode(utf8_decode($json), true) : [];
-    }
-
-    public function getImageToBase64($href):string
-    {
-        $type = pathinfo($href, PATHINFO_EXTENSION);
-        $data = file_get_contents($href);
-
-        return 'data:image/' . $type . ';base64,' . base64_encode($data);
     }
 
     /**
@@ -171,7 +171,7 @@ class ParserKernel
      *
      * @param array $handlers  Список обработчиков
      * @param array $urls      Список ссылок с рисунками
-     * @return array           Возвращается не больше 8 ссылок с рисунками
+     * @return array           Возвращается ссылки с рисунками
      */
     protected function handlerImages(array $handlers, array $urls):array
     {
@@ -189,6 +189,6 @@ class ParserKernel
             }
         }
 
-        return array_slice($urls, 0, 3);
+        return $urls;
     }
 }

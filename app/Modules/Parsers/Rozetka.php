@@ -18,7 +18,9 @@ class Rozetka extends ParserKernel implements ParserInterface
 
     protected function init():void
     {
-        $this->product = $this->getJsonDecode($this->config['product']);
+        $json = $this->findFirst($this->config['product']);
+
+        $this->product = $json ? json_decode(utf8_decode($json), true) : [];
     }
 
     public function getProductName():string
@@ -42,7 +44,7 @@ class Rozetka extends ParserKernel implements ParserInterface
             return '';
         }
 
-        return $this->getImageToBase64($this->product['image'][0]);
+        return convertImageToBase64($this->product['image'][0]);
     }
 
     public function getProductImages():array
@@ -55,7 +57,7 @@ class Rozetka extends ParserKernel implements ParserInterface
 
         $images = [];
         foreach ($urls as $url) {
-            $images[] = $this->getImageToBase64($url);
+            $images[] = convertImageToBase64($url);
         }
 
         return $images;

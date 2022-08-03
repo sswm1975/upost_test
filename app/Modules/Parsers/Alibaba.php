@@ -44,28 +44,22 @@ class Alibaba implements ParserInterface
             }
         }
 
-        return $image ? $this->getImageToBase64($image) : '';
+        return $image ? convertImageToBase64($image) : '';
     }
 
     public function getProductImages():array
     {
-        $urls = array_slice($this->data['globalData']['product']['mediaItems'], 0, self::MAX_IMAGES_COUNT);
+        if (empty($this->data['imageModule']['imagePathList'])) {
+            return [];
+        }
 
         $images = [];
-        foreach ($urls as $item) {
+        foreach ($this->data['globalData']['product']['mediaItems'] as $item) {
             if ($item['type'] == 'image' && isset($item['imageUrl']['big'])) {
-                $images[] = $this->getImageToBase64($item['imageUrl']['big']);
+                $images[] = convertImageToBase64($item['imageUrl']['big']);
             }
         }
 
         return $images;
-    }
-
-    private function getImageToBase64($href):string
-    {
-        $type = pathinfo($href, PATHINFO_EXTENSION);
-        $data = file_get_contents($href);
-
-        return 'data:image/' . $type . ';base64,' . base64_encode($data);
     }
 }
