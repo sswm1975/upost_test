@@ -19,13 +19,6 @@ class DefaultParser extends ParserKernel implements ParserInterface
             : '';
     }
 
-    public function getProductCategory():string
-    {
-        return isset($this->config['category_selects'])
-            ? $this->getText($this->config['category_selects'])
-            : '';
-    }
-
     public function getProductPrice():string
     {
         return isset($this->config['price_selects'])
@@ -52,19 +45,5 @@ class DefaultParser extends ParserKernel implements ParserInterface
         return isset($this->config['images_selects'])
             ? $this->getImages($this->config['images_selects'], $this->config['images_handlers'] ?? [])
             : [];
-    }
-
-    public function getProductSize():string
-    {
-        return isset($this->config['size_selects'])
-            ? $this->getText($this->config['size_selects'])
-            : '';
-    }
-
-    public function getProductWeight():string
-    {
-        return isset($this->config['weight_selects'])
-            ? $this->getText($this->config['weight_selects'])
-            : '';
     }
 }

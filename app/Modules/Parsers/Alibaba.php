@@ -20,11 +20,6 @@ class Alibaba implements ParserInterface
         return $this->data['globalData']['product']['subject'] ?? '';
     }
 
-    public function getProductCategory():string
-    {
-        return end($this->data['globalData']['seo']['breadCrumb']['pathList'])['hrefObject']['name'] ?? '';
-    }
-
     public function getProductPrice():string
     {
         $price_with_currency = $this->data['globalData']['product']['price']['productLadderPrices'][0]['formatPrice'] ?? '';
@@ -64,16 +59,6 @@ class Alibaba implements ParserInterface
         }
 
         return $images;
-    }
-
-    public function getProductSize():string
-    {
-        return $this->data['globalData']['trade']['logisticInfo']['unitSize'] ?? '';
-    }
-
-    public function getProductWeight():string
-    {
-        return $this->data['globalData']['trade']['logisticInfo']['unitWeight'] ?? '';
     }
 
     private function getImageToBase64($href):string

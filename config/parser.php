@@ -24,10 +24,6 @@ return [
                 "//h1[@class='product-title']",
                 "//h1",
             ],
-            'category_selects' => [
-                "//ol/li[5]",
-                "//ul[@role='list']/li[1]",
-            ],
             'price_selects' => [
                 "//div[@class='display-price']",
                 "//span[@id='prcIsum']",
@@ -42,12 +38,6 @@ return [
                 "//img[@data-index]/@src",
                 "//img[@width='64']/@data-originalimg",
             ],
-            'size_selects' => [
-
-            ],
-            'weight_selects' => [
-
-            ],
         ],
 
         'rozetka' => [
@@ -59,9 +49,6 @@ return [
             'product' => [
                 "//script[@data-seo='Product']",
             ],
-            'category' => [
-                "//script[@data-seo='BreadcrumbList']",
-            ],
         ],
 
         'amazon' => [
@@ -72,9 +59,6 @@ return [
             ],
             'name_selects' => [
                 "//h1[@class='a-size-large a-spacing-none']",
-            ],
-            'category_selects' => [
-                "//div[@id='wayfinding-breadcrumbs_feature_div']/ul/li[1]",
             ],
             'price_selects' => [
                 "//span[@class='a-offscreen']",
@@ -89,12 +73,6 @@ return [
             'images_selects' => [
                 "//script[contains(text(), 'ImageBlockATF')]/text()",
             ],
-            'size_selects' => [
-                "//th[contains(text(),'Product Dimensions')]/following-sibling::td[1]",
-            ],
-            'weight_selects' => [
-                "//th[contains(text(),'Item Weight')]/following-sibling::td[1]",
-            ],
         ],
 
         'moyo' => [
@@ -103,10 +81,6 @@ return [
             'name_selects' => [
                 "//h1[@class='tovar_title__name']",
                 "//h1[@class='product_name']",
-            ],
-            'category_selects' => [
-                "//div[@id='breadcrumbs']/ul/li[2]",
-                "//ol[@class='breadcrumbs']/li[2]",
             ],
             'price_selects' => [
                 "//div[@class='actual-price' or @id='priceblock_saleprice']",
@@ -120,12 +94,6 @@ return [
                 "//img[@class='lazy-interaction']/@srcset", # средний размер
                 "//img[@class='lazy-interaction']/@src",    # большой размер
                 "//img[@class='fits']/@src",
-            ],
-            'size_selects' => [
-
-            ],
-            'weight_selects' => [
-
             ],
         ],
 
@@ -145,20 +113,11 @@ return [
             'name_selects' => [
                 '//h1[@class]',
             ],
-            'category_selects' => [
-                '//nav/ol/li[2]',
-            ],
             'price_selects' => [
                 '//div[@class="priceView-hero-price priceView-customer-price"]/span',
             ],
             'image_selects' => [
                 '//img[@class="primary-image"]/@src',
-            ],
-            'size_selects' => [
-
-            ],
-            'weight_selects' => [
-
             ],
         ],
 
@@ -171,9 +130,6 @@ return [
             'name_selects' => [
                 '//h1/span',
             ],
-            'category_selects' => [
-                '//div[@class="_3GIHBu"][4]',
-            ],
             'price_selects' => [
                 '//div[@class="_30jeq3 _16Jk6d"]',
             ],
@@ -182,12 +138,6 @@ return [
             ],
             'images_selects' => [
                 '//img[@class="q6DClP"]/@src',
-            ],
-            'size_selects' => [
-
-            ],
-            'weight_selects' => [
-
             ],
         ],
     ],

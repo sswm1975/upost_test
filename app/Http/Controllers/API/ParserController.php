@@ -46,12 +46,9 @@ class ParserController extends Controller
 
         return response()->json([
             'status'   => true,
-            'name'     => Str::substr($parser->getProductName(), 1, 100),
-            'category' => $parser->getProductCategory(),
+            'name'     => Str::substr($parser->getProductName(), 0, 100),
             'price'    => $parser->getProductPrice(),
             'currency' => $parser->getProductCurrency(),
-            'size'     => $parser->getProductSize(),
-            'weight'   => $parser->getProductWeight(),
             'image'    => $image,
             'images'   => $images,
             'favicon'  => getFavicon($url),

@@ -6,7 +6,6 @@ class Rozetka extends ParserKernel implements ParserInterface
 {
     protected array $config;
     protected array $product;
-    protected array $category;
 
     public function __construct($link, $config = [])
     {
@@ -20,17 +19,11 @@ class Rozetka extends ParserKernel implements ParserInterface
     protected function init():void
     {
         $this->product = $this->getJsonDecode($this->config['product']);
-        $this->category = $this->getJsonDecode($this->config['category']);
     }
 
     public function getProductName():string
     {
         return $this->product['name'] ?? '';
-    }
-
-    public function getProductCategory():string
-    {
-        return $this->category['ItemListElement'][0]['item']['name'] ?? '';
     }
 
     public function getProductPrice():string
@@ -66,15 +59,5 @@ class Rozetka extends ParserKernel implements ParserInterface
         }
 
         return $images;
-    }
-
-    public function getProductSize():string
-    {
-        return '';
-    }
-
-    public function getProductWeight():string
-    {
-        return '';
     }
 }

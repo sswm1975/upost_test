@@ -21,15 +21,6 @@ class AliExpress implements ParserInterface
         return $this->data['pageModule']['title'] ?? '';
     }
 
-    public function getProductCategory():string
-    {
-        if (empty($this->data['crossLinkModule']['breadCrumbPathList'])) {
-            return '';
-        }
-
-        return end($this->data['crossLinkModule']['breadCrumbPathList'])['name'] ?? '';
-    }
-
     public function getProductPrice():string
     {
         return $this->data['priceModule']['minActivityAmount']['value'] ?? '';
@@ -63,16 +54,6 @@ class AliExpress implements ParserInterface
         }
 
         return $images;
-    }
-
-    public function getProductSize():string
-    {
-        return '';
-    }
-
-    public function getProductWeight():string
-    {
-        return '';
     }
 
     private function getImageToBase64($href):string
