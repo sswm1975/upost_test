@@ -2,6 +2,7 @@
 
 namespace App\Modules\Parsers;
 
+use App\Exceptions\ErrorException;
 use Illuminate\Support\Str;
 
 class Parser
@@ -10,6 +11,9 @@ class Parser
     protected array $config = [];
     protected string $link;
 
+    /**
+     * @throws ErrorException
+     */
     public function __construct($link)
     {
         # убираем из ссылки параметры и переводим в нижний регистр
@@ -26,7 +30,7 @@ class Parser
         }
 
         if (empty($this->handler) || !in_array('App\Modules\Parsers\ParserInterface', class_implements($this->handler))) {
-            return 'Parser class error';
+            throw new ErrorException('Parser class error');
         }
     }
 
