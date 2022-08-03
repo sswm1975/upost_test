@@ -187,6 +187,9 @@ class ParserKernel
                 preg_match_all($pattern, $urls[0], $matches);
                 $urls = $matches[1] ?? [];
             }
+            $urls = array_filter($urls, function($url) {
+                return !Str::endsWith($url, ['.gif']);
+            });
         }
 
         return $urls;

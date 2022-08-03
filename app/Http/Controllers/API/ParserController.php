@@ -21,17 +21,13 @@ class ParserController
      */
     public function __invoke(Request $request): JsonResponse
     {
+        $params = validateOrExit(['url' => 'required|url']);
         $max_images_count = config('parser.max_images_count', 3);
 
-        validateOrExit(['url' => 'required|url']);
+        $parser = (new Parser($params['url']))->handler();
 
-        $url = $request->get('url');
-
-        $parser = (new Parser($url))->handler();
-
-        $images_base64 = $parser->getProductImages();
-        if (empty($images_base64)) {
-            $image_base64[] = $parser->getProductImage();
+        if (empty($images_base64 = $parser->getProductImages())) {
+            $images_base64[] = $parser->getProductImage();
         }
         $images = [];
         foreach (array_slice($images_base64, 0, $max_images_count) as $image_base64) {
@@ -44,7 +40,7 @@ class ParserController
             'price'    => $parser->getProductPrice(),
             'currency' => $parser->getProductCurrency(),
             'images'   => $images,
-            'favicon'  => getFavicon($url),
+            'favicon'  => getFavicon($params['url']),
         ]);
     }
 }

@@ -87,7 +87,7 @@ return [
             ],
             'price_selects' => [
                 "//div[@class='actual-price' or @id='priceblock_saleprice']",
-                "//div[@class='product_price_current sale js-current-price']",
+                "//div[contains(@class,'product_price_current')]",
             ],
             'image_selects' => [
                 "//img[@class='fits']/@src",
