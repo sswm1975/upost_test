@@ -13,7 +13,7 @@ use Illuminate\Validation\ValidationException;
 class ParserController
 {
     /**
-     * Парсер интернет-магазинов.
+     * Контроллер парсера интернет-магазинов.
      *
      * @param Request $request
      * @return JsonResponse
