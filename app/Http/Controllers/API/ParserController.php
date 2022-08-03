@@ -13,11 +13,6 @@ use Illuminate\Validation\ValidationException;
 class ParserController
 {
     /**
-     * Максимальное количество возвращаемых изображений товара.
-     */
-    const MAX_IMAGES_COUNT = 3;
-
-    /**
      * Контроллер парсера интернет-магазинов.
      *
      * @param Request $request
@@ -26,6 +21,8 @@ class ParserController
      */
     public function __invoke(Request $request): JsonResponse
     {
+        $max_images_count = config('parser.max_images_count', 3);
+
         validateOrExit(['url' => 'required|url']);
 
         $url = $request->get('url');
@@ -37,7 +34,7 @@ class ParserController
             $image_base64[] = $parser->getProductImage();
         }
         $images = [];
-        foreach (array_slice($images_base64, 0, self::MAX_IMAGES_COUNT) as $image_base64) {
+        foreach (array_slice($images_base64, 0, $max_images_count) as $image_base64) {
             $images[] = (new ImageLoaderController)->uploadImage4Order($image_base64, $request->user()->id);
         }
 
