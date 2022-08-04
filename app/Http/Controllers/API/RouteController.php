@@ -18,6 +18,16 @@ class RouteController extends Controller
     const DEFAULT_PER_PAGE = 5;
 
     /**
+     * Типы фильтров на странице Мои маршруты: Все, Предстоящие, В работе, Закрытые
+     */
+    const FILTER_TYPES = [
+        Route::STATUS_ALL,
+        Route::STATUS_ACTIVE,
+        Route::STATUS_IN_WORK,
+        Route::STATUS_CLOSED,
+    ];
+
+    /**
      * Правила проверки входных данных запроса при сохранении маршрута.
      *
      * @return array
@@ -161,12 +171,19 @@ class RouteController extends Controller
 
         $routes = $this->getMyRoutes($filters);
 
+        # в разрезе всех типов фильтра (Все, Предстоящие, В работе, Закрытые) подсчитываем кол-во маршрутов
+        $counters = [];
+        foreach (self::FILTER_TYPES as $type) {
+            $counters[$type] = Route::owner()->filterByStatus($type)->count();
+        }
+
         return response()->json([
-            'status' => true,
-            'count'  => $routes['total'],
-            'page'   => $routes['current_page'],
-            'pages'  => $routes['last_page'],
-            'routes' => null_to_blank($routes['data']),
+            'status'   => true,
+            'count'    => $routes['total'],
+            'page'     => $routes['current_page'],
+            'pages'    => $routes['last_page'],
+            'routes'   => null_to_blank($routes['data']),
+            'counters' => $counters,
         ]);
     }
 
