@@ -199,7 +199,7 @@ class OrderController extends Controller
             $filter_type = self::FILTER_TYPE_ORDERS;
         }
 
-        # получаем данные конкретного маршрута со связами
+        # получаем данные конкретного маршрута со связями
         $route = Route::getByIdWithRelations($route_id);
 
         # ругаемся, если нет маршрута

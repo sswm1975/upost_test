@@ -33,6 +33,11 @@ class OrderDeduction extends Model
     const TYPE_TAX_IMPORT = 'tax_import';
     const TYPE_FEE = 'fee';
 
+    const TAXES_TYPE = [
+        self::TYPE_TAX_IMPORT,
+        self::TYPE_TAX_EXPORT,
+    ];
+
     public $timestamps = false;
 
     public static function boot()

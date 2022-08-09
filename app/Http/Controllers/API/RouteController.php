@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\OrderDeduction;
 use App\Models\Route;
 use App\Models\Order;
 use App\Models\User;
@@ -224,12 +225,17 @@ class RouteController extends Controller
      *         AND `viewed_by_performer` = 0
      *     ) AS rates_new_count,
      * 	   (
-     *       SELECT IFNULL(SUM(orders.price_usd), 0) FROM orders
+     *       SELECT IFNULL(SUM(orders.price_usd + order_deductions.amount), 0)
+     *       FROM orders
+     *       JOIN order_deductions ON order_deductions.order_id = orders.id
      *       JOIN rates ON rates.order_id = orders.id
      *       WHERE routes.id = rates.route_id
+     *        AND orders.status NOT IN ('active', 'banned', 'failed')
+     *        AND order_deductions.type IN ('tax_export', 'tax_import')
      *     ) AS budget_usd,
      *     (
-     *       SELECT IFNULL(SUM(orders.user_price_usd), 0) FROM orders
+     *       SELECT IFNULL(SUM(orders.user_price_usd), 0)
+     *       FROM orders
      *       JOIN rates ON rates.order_id = orders.id
      *       WHERE routes.id = rates.route_id
      *     ) AS profit_usd
@@ -274,10 +280,15 @@ class RouteController extends Controller
                 $query->confirmed()->notViewedByPerformer();
             }])
             ->withCount(['order as budget_usd' => function($query) {
-                $query->select(DB::raw('IFNULL(SUM(orders.price_usd), 0)'));
+                $query->join('order_deductions', 'order_deductions.order_id', 'orders.id')
+                    ->whereNotIn('orders.status', [Order::STATUS_ACTIVE, Order::STATUS_FAILED, Order::STATUS_BANNED])
+                    ->whereIn('order_deductions.type', OrderDeduction::TAXES_TYPE)
+                    ->select(DB::raw('IFNULL(SUM(orders.price_usd * orders.products_count + order_deductions.amount), 0)'));
             }])
             ->withCount(['order as profit_usd' => function($query) {
-                $query->select(DB::raw('IFNULL(SUM(orders.user_price_usd), 0)'));
+                $query
+                    ->whereNotIn('orders.status', [Order::STATUS_ACTIVE, Order::STATUS_FAILED, Order::STATUS_BANNED])
+                    ->select(DB::raw('IFNULL(SUM(orders.user_price_usd), 0)'));
             }])
             ->selectSub($orders_all_count, 'orders_all_count')
             ->selectSub($orders_new_count, 'orders_new_count')
