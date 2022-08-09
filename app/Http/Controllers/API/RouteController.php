@@ -225,7 +225,7 @@ class RouteController extends Controller
      *         AND `viewed_by_performer` = 0
      *     ) AS rates_new_count,
      * 	   (
-     *       SELECT IFNULL(SUM(orders.price_usd + order_deductions.amount), 0)
+     *       SELECT IFNULL(SUM(orders.price_usd * orders.products_count + order_deductions.amount), 0)
      *       FROM orders
      *       JOIN order_deductions ON order_deductions.order_id = orders.id
      *       JOIN rates ON rates.order_id = orders.id
