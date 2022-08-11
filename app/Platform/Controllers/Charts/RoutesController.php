@@ -59,13 +59,13 @@ class RoutesController extends Controller
 
         $sql = "
             SELECT
-              cf.name_uk AS 'Откуда',
+              cf.name_ru AS 'Откуда',
               {$counters}
               COUNT(r.id) AS 'Всего'
             FROM routes r
             JOIN countries cf ON cf.id = r.from_country_id
             WHERE r.created_at BETWEEN '$fromdate' AND '$tilldate'
-            GROUP BY cf.name_uk
+            GROUP BY cf.name_ru
             ORDER BY COUNT(r.id)
         ";
 
