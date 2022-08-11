@@ -52,6 +52,16 @@ Route::group([
     # Рассылки
     $router->get('mailings/{name}', 'MailingController@index')->name('mailings.index');
 
+    # Графики
+    $router->group([
+        'prefix'     => 'charts',
+        'namespace'  => 'Charts',
+        'as'         => 'charts.',
+//        'middleware' => 'admin.permission:check,handbooks',
+    ], function ($router) {
+        $router->get('routes', 'RoutesController@index');
+    });
+
     # Справочники
     $router->group([
         'prefix'     => 'handbooks',
