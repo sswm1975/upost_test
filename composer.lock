@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "62d146942e3c0835b505786d3ac01a73",
+    "content-hash": "1ec7627de196decd0ccfba136b40b6c5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2087,6 +2087,62 @@
                 "source": "https://github.com/laravel-admin-extensions/composer-viewer/tree/1.0.3"
             },
             "time": "2020-03-17T07:12:46+00:00"
+        },
+        {
+            "name": "jxlwqq/echarts",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jxlwqq/echarts.git",
+                "reference": "c7ef8a44bb339d1ba60b74aa437bdb512217dc79"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jxlwqq/echarts/zipball/c7ef8a44bb339d1ba60b74aa437bdb512217dc79",
+                "reference": "c7ef8a44bb339d1ba60b74aa437bdb512217dc79",
+                "shasum": ""
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jxlwqq\\Echarts\\EchartsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jxlwqq\\Echarts\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "jxlwqq",
+                    "email": "jxlwqq@gmail.com"
+                }
+            ],
+            "description": "echarts for laravel-admin",
+            "homepage": "https://github.com/jxlwqq/echarts",
+            "keywords": [
+                "extension",
+                "laravel-admin"
+            ],
+            "support": {
+                "issues": "https://github.com/jxlwqq/echarts/issues",
+                "source": "https://github.com/jxlwqq/echarts/tree/master"
+            },
+            "time": "2019-06-27T10:40:24+00:00"
         },
         {
             "name": "laminas/laminas-code",

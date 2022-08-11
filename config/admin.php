@@ -413,23 +413,25 @@ return [
     */
     'extensions' => [
         'composer-viewer' => [
-            // Set this to false if you want to disable this extension
             'enable' => true,
 
-            // Set the location of composer command
+            # Set the location of composer command
             'which-composer' => env('ADMIN_COMPOSER_VIEWER_WHICH_COMPOSER', 'php composer.phar'),
         ],
 
         'php-editor' => [
-
-            //Set to false if you want to disable this extension
             'enable' => true,
 
-            // Editor configuration
+            # Editor configuration
             'config' => [
                 'theme' => '3024-night',
             ]
-        ]
+        ],
+
+        # https://github.com/laravel-admin-extensions/echarts
+        'echarts' => [
+            'enable' => true,
+        ],
 
     ],
 
