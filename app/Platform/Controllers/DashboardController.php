@@ -50,6 +50,7 @@ new Chartisan({
     el: '#chart',
     url: '$url',
     hooks: new ChartisanHooks()
+        .beginAtZero()
         .datasets('line')
         .colors()
 });
