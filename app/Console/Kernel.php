@@ -28,11 +28,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-//        $schedule->command('sendmail:deadline-rate')
-//            ->description('Отправка писем пользователям, у которых сегодня дедлайн по ставке')
-//            ->dailyAt('09:00')
-//            ->timezone('Europe/Kiev')
-//            ->appendOutputTo(storage_path('logs/sendmail_deadline-rate.log'));
+        $schedule->command('sendmail:deadline-rate')
+            ->description('Отправка писем пользователям, у которых сегодня дедлайн по ставке')
+            ->dailyAt('09:00')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path('logs/sendmail_deadline-rate.log'));
 
         $schedule->job(new CloseExpiredOrders)
             ->description('Закрыть просроченные заказы')

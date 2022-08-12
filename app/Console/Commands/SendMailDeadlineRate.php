@@ -10,21 +10,21 @@ use App\Notifications\DeadlineRate;
 class SendMailDeadlineRate extends Command
 {
     /**
-     * The name and signature of the console command.
+     * Имя и подпись консольной команды.
      *
      * @var string
      */
     protected $signature = 'sendmail:deadline-rate';
 
     /**
-     * The console command description.
+     * Описание консольной программы.
      *
      * @var string
      */
     protected $description = 'Отправка писем пользователям, у которых сегодня дедлайн по ставке';
 
     /**
-     * Create a new command instance.
+     * Создание экземпляра команды.
      *
      * @return void
      */
@@ -34,26 +34,32 @@ class SendMailDeadlineRate extends Command
     }
 
     /**
-     * Execute the console command.
+     * Выполнить консольную команду.
      *
-     * @return int
+     * @return void
      */
     public function handle()
     {
         $this->info('Отправляем письма пользователям, у которых сегодня дедлайн по ставке...');
 
-        $users = $this->getUsersWithDeadlineRate();
+        $users = $this->getUsersWithTodayDeadlineRate();
 
-        Notification::send($users, new DeadlineRate());
+        Notification::send($users, new DeadlineRate);
 
         $this->info('Отправлено писем: ' . $users->count());
         $this->info('');
-
-        return 0;
     }
 
-    private function getUsersWithDeadlineRate()
+    /**
+     * Получить список пользователей, у которых сегодня дедлайн по ставке со статусом active.
+     *
+     * @return User[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    private function getUsersWithTodayDeadlineRate()
     {
-        return User::has('ratesDeadlineToday')->get(['user_id', 'user_email', 'user_name', 'user_surname']);
+        return User::query()
+            ->withoutAppends()
+            ->has('ratesDeadlineToday')
+            ->get(['id', 'email', 'name', 'surname']);
     }
 }
