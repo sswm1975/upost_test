@@ -12,7 +12,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Задание для закрытия просроченных заказов.
+ * Закрыть просроченные заказы.
+ *
  * Условия: отбираются все активные заказы (status=active), у которых дата дедлайна меньше текущей даты (deadline < DATE(NOW())).
  */
 class CloseExpiredOrders implements ShouldQueue
