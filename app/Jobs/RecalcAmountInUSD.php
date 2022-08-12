@@ -11,30 +11,50 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Пересчет долларового эквивалента по заказам и ставкам.
+ *
+ * Задание актуально после смены курсов валют.
+ * Действия:
+ * - обновляет суммы вознаграждения в долларовом эквиваленте (amount_usd) по активным ставкам;
+ * - обновляет долларовый эквивалент цены (price_usd) и вознаграждения (user_price_usd) по активным заказам
+ *   (если стоимость заказа в долларах изменится, то выполнится пересчет всех налогов и комиссий по заказу - подхватит
+ *   наблюдатель OrderObserver).
+ */
 class RecalcAmountInUSD implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * Наименование лог-файла.
+     *
+     * @var string
+     */
+    const LOG_FILE = 'logs/recalc_amount_in_usd.log';
+
+    /**
+     * Количество обрабатываемых заказов в блоке.
+     *
+     * @var int
+     */
     const ORDERS_CHUNK_COUNT = 50;
+
+    /**
+     * Количество обрабатываемых ставок в блоке.
+     *
+     * @var int
+     */
     const RATES_CHUNK_COUNT = 50;
 
     /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        config(['logging.channels.single.path' => storage_path('logs/recalc_amount_in_usd.log')]);
-    }
-
-    /**
-     * Execute the job.
+     * Выполнить задание.
      *
      * @return void
      */
     public function handle()
     {
+        config(['logging.channels.single.path' => storage_path(self::LOG_FILE)]);
+
         Log::channel('single')->info("Запуск...");
 
         static::updateAmountUSDInRates();
@@ -68,8 +88,8 @@ class RecalcAmountInUSD implements ShouldQueue
     }
 
     /**
-     * Обновить долларовый эквивалент цены и вознаграждения по активным товарам.
-     * (если стоимость товара в долларах изменится, то будет пересчет всех налогов и комиссий по товару - подхватит наблюдатель OrderObserver).
+     * Обновить долларовый эквивалент цены и вознаграждения по активным заказам.
+     * (если стоимость заказа в долларах изменится, то выполнится пересчет всех налогов и комиссий по заказу - подхватит наблюдатель OrderObserver).
      *
      * @return void
      */

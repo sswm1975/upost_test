@@ -55,7 +55,7 @@ class Kernel extends ConsoleKernel
             ->description('Пересчет долларового эквивалента по заказам и ставкам')
             ->dailyAt('08:10')
             ->timezone('Europe/Kiev')
-            ->appendOutputTo(storage_path('logs/recalc_amount_in_usd.log'));;
+            ->appendOutputTo(storage_path(RecalcAmountInUSD::LOG_FILE));
     }
 
     /**
