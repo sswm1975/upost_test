@@ -41,13 +41,13 @@ class DeadlineRate extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Закройте ставку')
-            ->greeting('Здравствуйте!')
+            ->subject(trans('Close the bet'))
+            ->greeting(trans('Greetings!'))
             ->line('<br>')
-            ->line('Мы беспокоимся, что Вы не закрыли ставку.')
-            ->line('Пожалуйста, закройте ставку.')
+            ->line(trans("We're worried that you didn't close the bet."))
+            ->line(trans("Please close your bid."))
             ->line('<br>')
-            ->salutation('<i>С уважением,<br>команда ' . config('app.name') . '</i>');
+            ->salutation('<i>' . trans("Regards") . ',<br>' . config('app.name') . '</i>');
     }
 
     /**

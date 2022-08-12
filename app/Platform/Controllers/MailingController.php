@@ -7,6 +7,7 @@ use App\Mail\OrderBanEmail;
 use App\Mail\SendTokenUserDataChange;
 use App\Mail\SocialChangePassword;
 use App\Models\User;
+use App\Notifications\DeadlineRate;
 use Encore\Admin\Layout\Content;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -150,5 +151,20 @@ class MailingController extends Controller
         $user = User::find(SYSTEM_USER_ID);
 
         return (new ResetPassword(Str::random(64)))->toMail($user);
+    }
+
+    /**
+     * Письмо: Закройте ставку, сегодня дата дедлайна.
+     *
+     * @param string $lang
+     * @return MailMessage
+     */
+    private static function deadline_rate(string $lang): MailMessage
+    {
+        Lang::setLocale($lang);
+
+        $user = User::find(SYSTEM_USER_ID);
+
+        return (new DeadlineRate(Str::random(64)))->toMail($user);
     }
 }
