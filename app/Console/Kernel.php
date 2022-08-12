@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\CloseExpiredOrders;
 use App\Jobs\CloseDeadlineRate;
 use App\Jobs\RecalcAmountInUSD;
 use Illuminate\Console\Scheduling\Schedule;
@@ -32,6 +33,12 @@ class Kernel extends ConsoleKernel
             ->dailyAt('09:00')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path('logs/sendmail_deadline-rate.log'));
+
+        $schedule->job(new CloseExpiredOrders)
+            ->description('Закрыть просроченные заказы')
+            ->dailyAt('1:00')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(CloseExpiredOrders::LOG_FILE));
 
         $schedule->job(new CloseDeadlineRate)
             ->description('Закрыть просроченные ставки')
