@@ -4,7 +4,7 @@
 
         let option = {
             title: {
-                text: 'Маршруты',
+                text: 'Заказы',
                 subtext: '{{ $data['subtext'] }}',
                 left: 'center'
             },
