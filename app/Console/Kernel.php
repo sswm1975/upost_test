@@ -36,7 +36,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(new CloseExpiredOrders)
             ->description('Закрыть просроченные заказы')
-            ->dailyAt('1:00')
+            ->dailyAt('0:05')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(CloseExpiredOrders::LOG_FILE));
 
