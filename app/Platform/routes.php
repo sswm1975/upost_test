@@ -60,6 +60,7 @@ Route::group([
 //        'middleware' => 'admin.permission:check,handbooks',
     ], function ($router) {
         $router->get('routes', 'RoutesController@index');
+        $router->get('orders', 'OrdersController@index');
     });
 
     # Справочники
