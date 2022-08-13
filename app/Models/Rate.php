@@ -127,6 +127,16 @@ class Rate extends Model
         self::STATUS_DONE,
     ];
 
+    # положительные статусы
+    public const STATUSES_OK = [
+        self::STATUS_ACTIVE,
+        self::STATUS_ACCEPTED,
+        self::STATUS_BUYED,
+        self::STATUS_SUCCESSFUL,
+        self::STATUS_DONE,
+        self::STATUS_FAILED,
+    ];
+
     ### GETTERS ###
 
     public function getStatusNameAttribute(): string

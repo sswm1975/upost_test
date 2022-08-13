@@ -236,14 +236,20 @@ class OrderController extends Controller
             ->withCount([
                 'rates as rates_count',
                 'rates as has_rate' => function ($query) use ($route) {
-                    $query->where('rates.route_id', DB::raw($route->id));
+                    $query->where('rates.route_id', DB::raw($route->id))
+                        ->whereIn('status', Rate::STATUSES_OK);
                 },
+                'rates as my_rate_id' => function($query) use ($route) {
+                    $query->where('rates.route_id', DB::raw($route->id))
+                        ->whereIn('status', Rate::STATUSES_OK)
+                        ->select(DB::raw('MAX(id)'));
+                }
             ])
             ->withCount(['deductions AS deductions_sum' => function($query) {
                 $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
             }])
             ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
-            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1);
+            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['orders.*'], 'page', $filters['page-number'] ?? 1);
 
         # если установлен фильтр "Принятые" и заказы просматривает владелец маршрута
         if ($filter_type == self::FILTER_TYPE_ACCEPTED && $route->user_id == $request->user()->id) {
@@ -560,7 +566,13 @@ class OrderController extends Controller
             }])
             ->withCount([
                 'rates as has_rate' => function ($query) use ($auth_user) {
-                    $query->where('user_id', $auth_user->id ?? 0);
+                    $query->where('user_id', $auth_user->id ?? 0)
+                        ->whereIn('status', Rate::STATUSES_OK);
+                },
+                'rates as my_rate_id' => function($query) use ($auth_user) {
+                    $query->where('user_id', $auth_user->id ?? 0)
+                        ->whereIn('status', Rate::STATUSES_OK)
+                        ->select(DB::raw('MAX(id)'));
                 },
                 'rates as read_rates_count' => function ($query){
                     $query->where('viewed_by_customer', 1);
