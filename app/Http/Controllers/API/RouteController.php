@@ -19,16 +19,6 @@ class RouteController extends Controller
     const DEFAULT_PER_PAGE = 5;
 
     /**
-     * Типы фильтров на странице Мои маршруты: Все, Предстоящие, В работе, Закрытые
-     */
-    const FILTER_TYPES = [
-        Route::STATUS_ALL,
-        Route::STATUS_ACTIVE,
-        Route::STATUS_IN_WORK,
-        Route::STATUS_CLOSED,
-    ];
-
-    /**
      * Правила проверки входных данных запроса при сохранении маршрута.
      *
      * @return array
@@ -165,17 +155,17 @@ class RouteController extends Controller
     public function showMyRoutes(Request $request): JsonResponse
     {
         $filters = validateOrExit([
-            'status'      => 'sometimes|required|in:' .  implode(',', Route::STATUSES),
+            'status'      => 'sometimes|required|in:' .  implode(',', Route::FILTER_TYPES),
             'show'        => 'sometimes|required|integer|min:1',
             'page-number' => 'sometimes|required|integer|min:1',
         ]);
 
         $routes = $this->getMyRoutes($filters);
 
-        # в разрезе всех типов фильтра (Все, Предстоящие, В работе, Закрытые) подсчитываем кол-во маршрутов
+        # в разрезе всех типов фильтра (Активные, Завершенные) подсчитываем кол-во маршрутов
         $counters = [];
-        foreach (self::FILTER_TYPES as $type) {
-            $counters[$type] = Route::owner()->filterByStatus($type)->count();
+        foreach (Route::FILTER_TYPES as $type) {
+            $counters[$type] = Route::owner()->filterByType($type)->count();
         }
 
         return response()->json([
@@ -251,10 +241,10 @@ class RouteController extends Controller
      */
     private function getMyRoutes(array $filters = []): array
     {
-        $status = $filters['status'] ?? Route::STATUS_ALL;
+        $status = $filters['status'] ?? Route::FILTER_TYPE_ACTIVE;
 
         # подзапросы для подсчета "Всего заказов" ($orders_all_count) и "Из них новых заказов" ($orders_new_count)
-        if ($status == Route::STATUS_CLOSED) {
+        if ($status == Route::FILTER_TYPE_COMPLETED) {
             # заглушка: для закрытых маршрутов всегда возвращаем 0
             $orders_all_count = $orders_new_count = DB::query()->selectRaw('0');
         } else {
@@ -266,7 +256,7 @@ class RouteController extends Controller
         }
 
         return Route::owner()
-            ->filterByStatus($status)
+            ->filterByType($status)
             ->with([
                 'from_country',
                 'from_city',

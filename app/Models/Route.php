@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryInFromCountry(array $countries)
  * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryInToCountry(array $countries)
  * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryOrCity(string $routes_field, array $rows)
- * @method static \Illuminate\Database\Eloquent\Builder|Route filterByStatus($status)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route filterByType($type)
  * @method static \Illuminate\Database\Eloquent\Builder|Route newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Route newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Route owner()
@@ -65,7 +65,6 @@ class Route extends Model
     use TimestampSerializable;
     use WithoutAppends;
 
-    const STATUS_ALL        = 'all';
     const STATUS_ACTIVE     = 'active';
     const STATUS_IN_WORK    = 'in_work';
     const STATUS_SUCCESSFUL = 'successful';
@@ -73,12 +72,21 @@ class Route extends Model
     const STATUS_BANNED     = 'banned';
 
     const STATUSES = [
-        self::STATUS_ALL,
         self::STATUS_ACTIVE,
         self::STATUS_IN_WORK,
         self::STATUS_SUCCESSFUL,
         self::STATUS_CLOSED,
         self::STATUS_BANNED,
+    ];
+
+    /**
+     * Типы фильтров на странице Мои маршруты: Активные, Завершенные
+     */
+    const FILTER_TYPE_ACTIVE = 'active';
+    const FILTER_TYPE_COMPLETED = 'completed';
+    const FILTER_TYPES = [
+        self::FILTER_TYPE_ACTIVE,
+        self::FILTER_TYPE_COMPLETED,
     ];
 
     protected $table = 'routes';
@@ -165,25 +173,19 @@ class Route extends Model
     }
 
     /**
-     * Отфильтровать маршруты по статусу.
+     * Отобрать маршруты по типу статусов.
      *
      * @param $query
-     * @param $status
+     * @param $type
      * @return mixed
      */
-    public function scopeFilterByStatus($query, $status)
+    public function scopeFilterByType($query, $type)
     {
-        switch ($status) {
-            case self::STATUS_ALL:
+        switch ($type) {
+            case self::FILTER_TYPE_ACTIVE:
                 $query->whereIn('status', [self::STATUS_ACTIVE, self::STATUS_IN_WORK]);
                 break;
-            case self::STATUS_ACTIVE:
-                $query->where('status', self::STATUS_ACTIVE);
-                break;
-            case self::STATUS_IN_WORK:
-                $query->where('status', self::STATUS_IN_WORK);
-                break;
-            case self::STATUS_CLOSED:
+            case self::FILTER_TYPE_COMPLETED:
                 $query->whereIn('status', [self::STATUS_CLOSED, self::STATUS_SUCCESSFUL, self::STATUS_BANNED]);
                 break;
         }
