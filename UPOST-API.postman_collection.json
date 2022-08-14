@@ -5113,7 +5113,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/routes/my/show?lang=ru&status=all",
+									"raw": "{{host}}/{{endpoint}}/routes/my/show?lang=ru&status=active",
 									"host": [
 										"{{host}}"
 									],
@@ -5131,8 +5131,8 @@
 										},
 										{
 											"key": "status",
-											"value": "all",
-											"description": "Фільтр по статусам (all, active, in_work, closed)"
+											"value": "active",
+											"description": "Фільтр по статусам (active, completed)"
 										}
 									]
 								}
@@ -7662,47 +7662,6 @@
 									"body": "{\n    \"status\": true,\n    \"name\": \"Nova Plus 1100 w Amaze NI 10 1100 W Dry Iron  (Grey & Turquoise)\",\n    \"category\": \"Irons\",\n    \"price\": \"427\",\n    \"currency\": \"₹\",\n    \"size\": \"\",\n    \"weight\": \"\",\n    \"image\": \"content/order/19/super_image_612a88cb0f023.jpg\",\n    \"favicon\": \"https://www.google.com/s2/favicons?domain=https://www.flipkart.com\"\n}"
 								}
 							]
-						},
-						{
-							"name": "Shop.com",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.variables.set(\"url_shopcom\", \"https://www.shop.com/custom-cocktail/specialty?templateId=500\");"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/{{endpoint}}/parser?url={{url_shopcom}}",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"{{endpoint}}",
-										"parser"
-									],
-									"query": [
-										{
-											"key": "lang",
-											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
-											"disabled": true
-										},
-										{
-											"key": "url",
-											"value": "{{url_shopcom}}"
-										}
-									]
-								}
-							},
-							"response": []
 						}
 					]
 				},
