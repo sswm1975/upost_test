@@ -26,7 +26,7 @@ class RouteController extends AdminController
             ->toArray();
 
         $statuses = [];
-        foreach (array_diff(Route::STATUSES, [Route::STATUS_ALL]) as $status) {
+        foreach (Route::STATUSES as $status) {
             $statuses[$status] = (object) [
                 'name'  => __("message.route.statuses.$status"),
                 'count' => $counts[$status] ?? 0,
