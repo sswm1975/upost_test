@@ -306,9 +306,4 @@ class Rate extends Model
     {
         return $query->active()->where('deadline', Carbon::today()->toDateString());
     }
-
-    function scopeDeadlineTermExpired($query, int $days = 0)
-    {
-        return $query->active()->where('deadline', '>=', Carbon::today()->addDays($days)->toDateString());
-    }
 }
