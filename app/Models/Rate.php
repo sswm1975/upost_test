@@ -38,7 +38,6 @@ use Carbon\Carbon;
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Rate active()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate confirmed()
- * @method static \Illuminate\Database\Eloquent\Builder|Rate deadlineTermExpired(int $days = 0)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate deadlineToday()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate delivered()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate newModelQuery()
