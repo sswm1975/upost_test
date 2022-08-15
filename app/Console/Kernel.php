@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Jobs\CloseExpiredOrders;
 use App\Jobs\CloseExpiredRate;
 use App\Jobs\RecalcAmountInUSD;
+use App\Jobs\SendMailDeadlineRate;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,7 +17,6 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\SendMailDeadlineRate::class,
         Commands\FillCurrencyRates::class,
     ];
 
@@ -28,24 +28,23 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('sendmail:deadline-rate')
+        $schedule->job(new SendMailDeadlineRate)
             ->description('Отправка писем пользователям, у которых сегодня дедлайн по ставке')
             ->dailyAt('00:01')
             ->timezone('Europe/Kiev')
-            ->appendOutputTo(storage_path('logs/sendmail_deadline-rate.log'));
+            ->appendOutputTo(storage_path(SendMailDeadlineRate::LOG_FILE));
 
         $schedule->job(new CloseExpiredRate)
             ->description('Закрыть просроченные ставки')
             ->dailyAt('00:03')
             ->timezone('Europe/Kiev')
-            ->appendOutputTo(storage_path(CloseExpiredRate::LOG_FILE));;
+            ->appendOutputTo(storage_path(CloseExpiredRate::LOG_FILE));
 
         $schedule->job(new CloseExpiredOrders)
             ->description('Закрыть просроченные заказы')
             ->dailyAt('0:05')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(CloseExpiredOrders::LOG_FILE));
-
 
         $schedule->command('fill:currency_rates')
             ->description('Обновить курсы валют (сервис fixer.io)')

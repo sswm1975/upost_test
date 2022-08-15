@@ -12,17 +12,7 @@ class DeadlineRate extends Notification
     use Queueable;
 
     /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * Get the notification's delivery channels.
+     * Получить каналы доставки уведомления.
      *
      * @param  mixed  $notifiable
      * @return array
@@ -33,7 +23,7 @@ class DeadlineRate extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
+     * Получить представление уведомления в виде письма.
      *
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
@@ -51,15 +41,13 @@ class DeadlineRate extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
+     * Получить представление уведомления в виде массива.
      *
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray($notifiable): array
     {
-        return [
-            $notifiable
-        ];
+        return $notifiable->toArray();
     }
 }
