@@ -65,8 +65,8 @@ class DashboardController extends Controller
               xAxis: {type: 'category', data: $x},
               yAxis: {type: 'value'},
               series: [{
-                data: $y, type: 'line', smooth2: true,
-                markPoint: {data: [{type: 'max', name: 'Max' }, {type: 'min', name: 'Min'}]},
+                data: $y, type: 'line', smooth: true,
+                markPoint: {data: [{type: 'max', name: 'Max'}]},
                 markLine: {data: [{type: 'average', name: 'Avg'}]}
               }]
             });
