@@ -5113,7 +5113,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/routes/my/show?lang=ru&status=active",
+									"raw": "{{host}}/{{endpoint}}/routes/my/show",
 									"host": [
 										"{{host}}"
 									],
@@ -5125,14 +5125,28 @@
 									],
 									"query": [
 										{
-											"key": "lang",
-											"value": "ru",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"key": "status",
+											"value": "completed",
+											"description": "Фільтр по типу статусов (active, completed), за замовчанням active (опціонально)",
+											"disabled": true
 										},
 										{
-											"key": "status",
-											"value": "active",
-											"description": "Фільтр по статусам (active, completed)"
+											"key": "lang",
+											"value": "ru",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
+										},
+										{
+											"key": "show",
+											"value": "5",
+											"description": "Кількість маршрутів на сторінці, за замовченням 5  (опціонально)",
+											"disabled": true
+										},
+										{
+											"key": "page-number",
+											"value": "1",
+											"description": "Номер сторінки для виводу, за замовченням 1  (опціонально)",
+											"disabled": true
 										}
 									]
 								}
