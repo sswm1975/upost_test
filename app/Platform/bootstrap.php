@@ -50,9 +50,6 @@ if (in_array(request()->getRequestUri(), ['/platform/auth/login', '/platform/aut
 Admin::js('vendor/laravel-admin/AdminLTE/plugins/jQuery/draggable.min.js');
 Admin::script("$('.modal-dialog').draggable({handle: '.modal-header'});");
 
-Admin::js('https://unpkg.com/chart.js@3.8.0/dist/chart.min.js');
-Admin::js('https://unpkg.com/@chartisan/chartjs@2.1.0/dist/chartisan_chartjs.umd.js');
-
 # Подгружаем fix-стили
 Admin::style(<<<CSS
     /* Меню в сайдбаре: увеличиваем ширину пунктов меню */

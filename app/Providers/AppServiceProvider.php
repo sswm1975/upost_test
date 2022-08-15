@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Pavelpage\Censorship\Censor;
-use ConsoleTVs\Charts\Registrar as Charts;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(Charts $charts)
+    public function boot()
     {
         # регистрируем наблюдатель за моделью Заказ
         Order::observe(OrderObserver::class);
@@ -148,9 +147,5 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('not_phone', function ($attribute, $value, $parameters) {
             return !preg_match('/(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?/m', $value);
         });
-
-        $charts->register([
-            \App\Charts\SampleChart::class,
-        ]);
     }
 }
