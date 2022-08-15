@@ -155,9 +155,9 @@ class RouteController extends Controller
     public function showMyRoutes(Request $request): JsonResponse
     {
         $filters = validateOrExit([
-            'status'      => 'sometimes|required|in:' .  implode(',', Route::FILTER_TYPES),
-            'show'        => 'sometimes|required|integer|min:1',
-            'page-number' => 'sometimes|required|integer|min:1',
+            'status'      => 'sometimes|nullable|in:' .  implode(',', Route::FILTER_TYPES),
+            'show'        => 'sometimes|nullable|integer|min:1',
+            'page-number' => 'sometimes|nullable|integer|min:1',
         ]);
 
         $routes = $this->getMyRoutes($filters);
