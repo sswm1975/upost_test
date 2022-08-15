@@ -27,36 +27,52 @@ class DashboardController extends Controller
             ->description('&nbsp;')
             ->row(function (Row $row) {
                 $row->column(12, function (Column $column) {
-                    $box = new Box('Заказы за последние 30 дней', $this->chart());
-                    $column->append($box);
+                    $column->append(new Box('', $this->chart()));
                 });
             })
             ->row(function ($row) {
-                if (Admin::user()->can('orders')) $row->column(6, static::ordersInfoBox());
-                if (Admin::user()->can('routes')) $row->column(6, static::routesInfoBox());
-            })
-            ->row(function ($row) {
-                if (Admin::user()->can('clients')) $row->column(6, static::clientsInfoBox());
-                if (Admin::user()->can('disputes')) $row->column(6, static::disputesInfoBox());
+                if (Admin::user()->can('orders')) $row->column(3, static::ordersInfoBox());
+                if (Admin::user()->can('routes')) $row->column(3, static::routesInfoBox());
+                if (Admin::user()->can('clients')) $row->column(3, static::clientsInfoBox());
+                if (Admin::user()->can('disputes')) $row->column(3, static::disputesInfoBox());
             });
     }
 
     protected function chart(): string
     {
-        $url = route('charts.sample_chart');
+        $rows = DB::select('
+            SELECT DATE_FORMAT(g.arcdate, "%d.%m") AS arcdate, COUNT(o.id) AS orders_cnt
+            FROM (
+              SELECT CURDATE() - INTERVAL (g1.idx + (10 * g2.idx)) DAY AS arcdate
+              FROM (SELECT 0 AS idx UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS g1
+              CROSS JOIN (SELECT 0 AS idx UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS g2
+            ) g
+            LEFT JOIN orders o ON o.register_date = g.arcdate
+            WHERE g.arcdate >= CURDATE() - INTERVAL 30 DAY
+            GROUP BY g.arcdate
+        ');
+        $x = json_encode(array_column($rows,'arcdate'));
+        $y = json_encode(array_column($rows,'orders_cnt'));
+        $max = max(array_column($rows,'orders_cnt'));
 
         Admin::script(<<<SCRIPT
-new Chartisan({
-    el: '#chart',
-    url: '$url',
-    hooks: new ChartisanHooks()
-        .beginAtZero()
-        .datasets('line')
-        .colors()
-});
+            let myChart = echarts.init(document.getElementById('chart_orders'));
+            myChart.setOption({
+              title: {text: 'Заказы за последние 30 дней'},
+              grid: {left: 0, right: '30px', top:'100px', bottom: 0, containLabel: true},
+              visualMap: [{show: false, type: 'continuous', seriesIndex: 0, min: 0, max: $max}],
+              tooltip: {trigger: 'axis'},
+              xAxis: {type: 'category', data: $x},
+              yAxis: {type: 'value'},
+              series: [{
+                data: $y, type: 'line', smooth2: true,
+                markPoint: {data: [{type: 'max', name: 'Max' }, {type: 'min', name: 'Min'}]},
+                markLine: {data: [{type: 'average', name: 'Avg'}]}
+              }]
+            });
 SCRIPT);
 
-        return '<div id="chart" style="height: 300px;"></div>';
+        return '<div id="chart_orders" style="width:100%;height:400px;"></div>';
     }
 
     /**
