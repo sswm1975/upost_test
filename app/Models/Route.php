@@ -280,10 +280,13 @@ class Route extends Model
         return static::whereKey($id)
             ->with(['from_country', 'from_city', 'to_country', 'to_city'])
             ->withCount(['order as budget_usd' => function($query) {
-                $query->join('order_deductions', 'order_deductions.order_id', 'orders.id')
+                $query
+                    ->leftJoin('order_deductions', function ($join) {
+                        $join->on('order_deductions.order_id', '=', 'orders.id')
+                            ->whereIn('order_deductions.type', OrderDeduction::TAXES_TYPE);
+                        })
                     ->whereNotIn('orders.status', [Order::STATUS_ACTIVE, Order::STATUS_FAILED, Order::STATUS_BANNED])
-                    ->whereIn('order_deductions.type', OrderDeduction::TAXES_TYPE)
-                    ->select(DB::raw('IFNULL(SUM(orders.price_usd * orders.products_count + order_deductions.amount), 0)'));
+                    ->select(DB::raw('IFNULL(SUM(orders.price_usd * orders.products_count + IFNULL(order_deductions.amount, 0)), 0)'));
             }])
             ->withCount(['order as profit_usd' => function($query) {
                 $query

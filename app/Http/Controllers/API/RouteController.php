@@ -179,6 +179,45 @@ class RouteController extends Controller
     }
 
     /**
+     * Вывод маршрутов.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException|ValidatorException
+     */
+    public function showRoutes(Request $request): JsonResponse
+    {
+        $filters = validateOrExit([
+            'id'                => 'sometimes|required|array',
+            'id.*'              => 'required|integer',
+            'owner_user_id'     => 'sometimes|required|integer',
+            'status'            => 'sometimes|required|in:' .  implode(',', Route::STATUSES),
+            'date_from'         => 'sometimes|required|date',
+            'date_to'           => 'sometimes|required|date|after_or_equal:date_from',
+            'country_from'      => 'sometimes|required|array',
+            'country_from.*'    => 'required|integer',
+            'city_from'         => 'sometimes|required|array',
+            'city_from.*'       => 'required|integer',
+            'country_to'        => 'sometimes|required|array',
+            'country_to.*'      => 'required|integer',
+            'city_to'           => 'sometimes|required|array',
+            'city_to.*'         => 'required|integer',
+            'show'              => 'sometimes|required|integer|min:1',
+            'page-number'       => 'sometimes|required|integer|min:1',
+        ]);
+
+        $routes = $this->getRoutesByFilter($request->user(), $filters);
+
+        return response()->json([
+            'status' => true,
+            'count'  => $routes['total'],
+            'page'   => $routes['current_page'],
+            'pages'  => $routes['last_page'],
+            'routes' => null_to_blank($routes['data']),
+        ]);
+    }
+
+    /**
      * Получить мои маршруты.
      *
      * Сырой запрос, который формирует метод:
@@ -215,13 +254,11 @@ class RouteController extends Controller
      *         AND `viewed_by_performer` = 0
      *     ) AS rates_new_count,
      * 	   (
-     *       SELECT IFNULL(SUM(orders.price_usd * orders.products_count + order_deductions.amount), 0)
+     *       SELECT IFNULL(SUM(orders.price_usd * orders.products_count + IFNULL(order_deductions.amount, 0)), 0)
      *       FROM orders
-     *       JOIN order_deductions ON order_deductions.order_id = orders.id
      *       JOIN rates ON rates.order_id = orders.id
-     *       WHERE routes.id = rates.route_id
-     *        AND orders.status NOT IN ('active', 'banned', 'failed')
-     *        AND order_deductions.type IN ('tax_export', 'tax_import')
+     *       LEFT JOIN order_deductions ON order_deductions.order_id = orders.id AND order_deductions.type IN ('tax_export', 'tax_import')
+     *       WHERE routes.id = rates.route_id AND orders.status NOT IN ('active', 'banned', 'failed')
      *     ) AS budget_usd,
      *     (
      *       SELECT IFNULL(SUM(orders.user_price_usd), 0)
@@ -270,10 +307,13 @@ class RouteController extends Controller
                 $query->confirmed()->notViewedByPerformer();
             }])
             ->withCount(['order as budget_usd' => function($query) {
-                $query->join('order_deductions', 'order_deductions.order_id', 'orders.id')
+                $query
+                    ->leftJoin('order_deductions', function ($join) {
+                        $join->on('order_deductions.order_id', '=', 'orders.id')
+                            ->whereIn('order_deductions.type', OrderDeduction::TAXES_TYPE);
+                        })
                     ->whereNotIn('orders.status', [Order::STATUS_ACTIVE, Order::STATUS_FAILED, Order::STATUS_BANNED])
-                    ->whereIn('order_deductions.type', OrderDeduction::TAXES_TYPE)
-                    ->select(DB::raw('IFNULL(SUM(orders.price_usd * orders.products_count + order_deductions.amount), 0)'));
+                    ->select(DB::raw('IFNULL(SUM(orders.price_usd * orders.products_count + IFNULL(order_deductions.amount, 0)), 0)'));
             }])
             ->withCount(['order as profit_usd' => function($query) {
                 $query
@@ -285,45 +325,6 @@ class RouteController extends Controller
             ->orderBy('id', 'desc')
             ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1)
             ->toArray();
-    }
-
-    /**
-     * Вывод маршрутов.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException|ValidatorException
-     */
-    public function showRoutes(Request $request): JsonResponse
-    {
-        $filters = validateOrExit([
-            'id'                => 'sometimes|required|array',
-            'id.*'              => 'required|integer',
-            'owner_user_id'     => 'sometimes|required|integer',
-            'status'            => 'sometimes|required|in:' .  implode(',', Route::STATUSES),
-            'date_from'         => 'sometimes|required|date',
-            'date_to'           => 'sometimes|required|date|after_or_equal:date_from',
-            'country_from'      => 'sometimes|required|array',
-            'country_from.*'    => 'required|integer',
-            'city_from'         => 'sometimes|required|array',
-            'city_from.*'       => 'required|integer',
-            'country_to'        => 'sometimes|required|array',
-            'country_to.*'      => 'required|integer',
-            'city_to'           => 'sometimes|required|array',
-            'city_to.*'         => 'required|integer',
-            'show'              => 'sometimes|required|integer|min:1',
-            'page-number'       => 'sometimes|required|integer|min:1',
-        ]);
-
-        $routes = $this->getRoutesByFilter($request->user(), $filters);
-
-        return response()->json([
-            'status' => true,
-            'count'  => $routes['total'],
-            'page'   => $routes['current_page'],
-            'pages'  => $routes['last_page'],
-            'routes' => null_to_blank($routes['data']),
-        ]);
     }
 
     /**
