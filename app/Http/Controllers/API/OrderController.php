@@ -292,6 +292,7 @@ class OrderController extends Controller
             'pages'    => $orders['last_page'],
             'prices'   => $prices,
             'shops'    => $shops,
+            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
@@ -307,10 +308,13 @@ class OrderController extends Controller
     {
         $orders = Order::query();
 
-        # пункт "Заказы": заказы, по которым есть подходящий маршрут и находятся в статусе active или in_work
+        # пункт "Заказы": заказы в статусе active, по которому подходит маршрут и нет ставки владельца маршрута
         if ($filter_type == self::FILTER_TYPE_ORDERS) {
             $orders->join('routes', 'routes.id', DB::raw($route_id))
-                ->searchByRoutes(false, [Order::STATUS_ACTIVE, Order::STATUS_IN_WORK]);
+                ->searchByRoutes(false, [Order::STATUS_ACTIVE])
+                ->whereDoesntHave('rates', function ($query) use ($route_id) {
+                    $query->whereRouteId($route_id);
+                });
 
         # пункт "Мои предложения": заказы в статусе active и по заказу есть ставка владельца маршрута
         } elseif ($filter_type == self::FILTER_TYPE_MY_OFFERS) {
