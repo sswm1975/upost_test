@@ -61,7 +61,7 @@ class DashboardController extends Controller
         $routes_cnt = json_encode(array_column($rows,'routes_cnt'));
 
         Admin::script(<<<SCRIPT
-            const colors = ['#5470C6', '#EE6666'];
+            const colors = ['#00A65A', '#0073B7'];
             let myChart = echarts.init(document.getElementById('chart_orders'));
             myChart.setOption({
               color: colors,
