@@ -4515,13 +4515,50 @@
 							"response": []
 						},
 						{
+							"name": "Замовлення для редагування",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"order_id\", 18);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/edit?lang=ru",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"orders",
+										"{{order_id}}",
+										"edit"
+									],
+									"query": [
+										{
+											"key": "lang",
+											"value": "ru"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Вивід замовлення",
 							"event": [
 								{
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 1);"
+											"pm.variables.set(\"order_id\", 17);"
 										],
 										"type": "text/javascript"
 									}
@@ -4558,7 +4595,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"route_id\", 2);"
+											"pm.variables.set(\"route_id\", 10);"
 										],
 										"type": "text/javascript"
 									}
@@ -4568,7 +4605,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/route/{{route_id}}/show?filter_type=orders&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/orders/route/{{route_id}}/show?filter_type=orders",
 									"host": [
 										"{{host}}"
 									],
@@ -4624,7 +4661,8 @@
 										},
 										{
 											"key": "lang",
-											"value": "ru"
+											"value": "ru",
+											"disabled": true
 										}
 									]
 								}
@@ -6639,7 +6677,7 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/reviews/show?author_id=30&recipient_type=customer",
+									"raw": "{{host}}/{{endpoint}}/reviews/show?author_id=30&recipient_type=customer&sorting=desc",
 									"host": [
 										"{{host}}"
 									],
@@ -6675,6 +6713,11 @@
 											"key": "recipient_type",
 											"value": "customer",
 											"description": "Отримувач відгука (customer - замовник, performer - виконавець)"
+										},
+										{
+											"key": "sorting",
+											"value": "desc",
+											"description": "Сортування (asc, desc)  - опціонально (asc за замовчуванням)"
 										}
 									]
 								}
