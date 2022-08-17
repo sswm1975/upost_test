@@ -93,7 +93,8 @@ class ReviewController extends Controller
             'order_id'       => 'integer',
             'author_id'      => 'integer',
             'recipient_id'   => 'integer',
-            'recipient_type' => 'nullable|in:customer,performer'
+            'recipient_type' => 'nullable|in:customer,performer',
+            'sorting'        => 'sometimes|nullable|in:asc,desc',
         ]);
 
         # не указан ни один параметр, то отдаем пустой массив
@@ -138,6 +139,7 @@ class ReviewController extends Controller
             ->when($not_params, function ($query) use ($data) {
                 return $query->where('user_id', $data['user_id'])->orWhere('recipient_id', $data['user_id']);
             })
+            ->orderBy('id', $request->filled('sorting') ? $request->get('sorting') : 'asc')
             ->get();
 
         # получаем диспуты
@@ -162,6 +164,7 @@ class ReviewController extends Controller
             'status'   => true,
             'reviews'  => null_to_blank($reviews),
             'disputes' => null_to_blank($disputes),
+            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
