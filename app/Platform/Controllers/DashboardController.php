@@ -42,9 +42,11 @@ class DashboardController extends Controller
     {
         $rows = DB::select('
             SELECT
-               DATE_FORMAT(g.arcdate, "%d.%m") AS arcdate,
-               COUNT(o.id) AS orders_cnt,
-               COUNT(r.id) AS routes_cnt
+              DATE_FORMAT(g.arcdate, "%d.%m") AS arcdate,
+                COUNT(o.id) AS orders_cnt,
+                COUNT(r.id) AS routes_cnt,
+                COUNT(u.id) AS clients_cnt,
+                COUNT(d.id) AS disputes_cnt
             FROM (
               SELECT CURDATE() - INTERVAL (g1.idx + (10 * g2.idx)) DAY AS arcdate
               FROM (SELECT 0 AS idx UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS g1
@@ -52,6 +54,8 @@ class DashboardController extends Controller
             ) g
             LEFT JOIN orders o ON o.register_date = g.arcdate
             LEFT JOIN routes r ON DATE(r.created_at) = g.arcdate
+            LEFT JOIN users u ON u.register_date = g.arcdate
+            LEFT JOIN disputes d ON DATE(d.created_at) = g.arcdate
             WHERE g.arcdate >= CURDATE() - INTERVAL 30 DAY
             GROUP BY g.arcdate
         ');
@@ -59,13 +63,15 @@ class DashboardController extends Controller
         $dates = json_encode(array_column($rows,'arcdate'));
         $orders_cnt = json_encode(array_column($rows,'orders_cnt'));
         $routes_cnt = json_encode(array_column($rows,'routes_cnt'));
+        $clients_cnt = json_encode(array_column($rows,'clients_cnt'));
+        $disputes_cnt = json_encode(array_column($rows,'disputes_cnt'));
 
         Admin::script(<<<SCRIPT
-            const colors = ['#00A65A', '#0073B7'];
+            const colors = ['#00A65A', '#0073B7', '#f39c12', '#dd4b39'];
             let myChart = echarts.init(document.getElementById('chart_orders'));
             myChart.setOption({
               color: colors,
-              title: {text: 'Количество заказов и маршрутов за последние 30 дней'},
+              title: {text: 'Количественные показатели за последние 30 дней'},
               legend: {},
               grid: {left: 0, right: '30px', top:'100px', bottom: 0, containLabel: true},
               tooltip: {trigger: 'axis'},
@@ -81,6 +87,18 @@ class DashboardController extends Controller
                   {
                     name: 'Маршруты',
                     data: $routes_cnt, type: 'line', smooth: true,
+                    markPoint: {data: [{type: 'max', name: 'Max'}]},
+                    markLine: {data: [{type: 'average', name: 'Avg'}]}
+                  },
+                  {
+                    name: 'Клиенты',
+                    data: $clients_cnt, type: 'line', smooth: true,
+                    markPoint: {data: [{type: 'max', name: 'Max'}]},
+                    markLine: {data: [{type: 'average', name: 'Avg'}]}
+                  },
+                  {
+                    name: 'Споры',
+                    data: $disputes_cnt, type: 'line', smooth: true,
                     markPoint: {data: [{type: 'max', name: 'Max'}]},
                     markLine: {data: [{type: 'average', name: 'Avg'}]}
                   },
