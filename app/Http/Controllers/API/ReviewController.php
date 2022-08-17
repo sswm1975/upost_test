@@ -164,7 +164,6 @@ class ReviewController extends Controller
             'status'   => true,
             'reviews'  => null_to_blank($reviews),
             'disputes' => null_to_blank($disputes),
-            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
