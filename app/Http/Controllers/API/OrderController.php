@@ -292,7 +292,6 @@ class OrderController extends Controller
             'pages'    => $orders['last_page'],
             'prices'   => $prices,
             'shops'    => $shops,
-            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
