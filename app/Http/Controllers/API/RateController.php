@@ -320,7 +320,8 @@ class RateController extends Controller
         $liqpay = $response['data'];
         $rate_id = $liqpay['info']['rate_id'];
 
-        Log::info($liqpay);
+        config(['logging.channels.daily.path' => storage_path('logs/payments/payment.log')]);
+        Log::channel('daily')->info($liqpay);
 
         if (! in_array($liqpay['status'], ['success', 'sandbox'])) {
             throw new ErrorException('Статус платежа не равен "success" или "sandbox", получен статус "'.$liqpay['status'].'"');
@@ -367,7 +368,7 @@ class RateController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            Log::debug($e->getMessage());
+            Log::channel('daily')->debug($e->getMessage());
 
             throw new ErrorException($e->getMessage());
         }
