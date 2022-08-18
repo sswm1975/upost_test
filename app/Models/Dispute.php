@@ -71,6 +71,7 @@ class Dispute extends Model
     const STATUS_CLOSED    = 'closed';
     const STATUS_CANCELED  = 'canceled';
 
+    # все статусы
     const STATUSES = [
         self::STATUS_ACTIVE    => 'Активный',
         self::STATUS_APPOINTED => 'Назначен',
@@ -79,6 +80,14 @@ class Dispute extends Model
         self::STATUS_CANCELED  => 'Отмененный',
     ];
 
+    # статусы для действующих споров
+        const STATUSES_ACTING = [
+        self::STATUS_ACTIVE,
+        self::STATUS_APPOINTED,
+        self::STATUS_IN_WORK,
+    ];
+
+    # цвета статусов для админки
     const STATUS_COLORS = [
         self::STATUS_ACTIVE    => 'danger',
         self::STATUS_APPOINTED => 'warning',

@@ -7,6 +7,7 @@ use App\Models\Traits\WithoutAppends;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Carbon\Carbon;
 
 /**
@@ -228,7 +229,18 @@ class Rate extends Model
      */
     public function disputes(): HasMany
     {
-        return $this->hasMany(Dispute::class);
+        return $this->hasMany(Dispute::class, 'rate_id', 'id');
+    }
+
+    /**
+     * Действующий спор по ставке (может быть только один).
+     *
+     * @return HasOne
+     */
+    public function dispute(): HasOne
+    {
+        return $this->hasOne(Dispute::class, 'rate_id', 'id')
+            ->whereIn('status', Dispute::STATUSES_ACTING);
     }
 
     ### SCOPES ###

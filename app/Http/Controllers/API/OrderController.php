@@ -409,8 +409,8 @@ class OrderController extends Controller
                 'user',
                 'deductions',
                 'rates.user:' . implode(',', User::FIELDS_FOR_SHOW),
-                'rates.disputes',
                 'rate_confirmed.user:' . implode(',', User::FIELDS_FOR_SHOW),
+                'rate_confirmed.dispute',
             ])
             ->first();
 
