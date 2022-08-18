@@ -30,6 +30,7 @@ use Carbon\Carbon;
  * @property \Illuminate\Support\Carbon $created_at Добавлено
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
  * @property-read \App\Models\Chat|null $chat
+ * @property-read \App\Models\Dispute|null $dispute
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Dispute[] $disputes
  * @property-read int|null $disputes_count
  * @property-read array $images_thumb
