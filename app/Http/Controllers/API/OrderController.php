@@ -21,27 +21,52 @@ use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
+    /** @var int Количество заказов на странице */
     const DEFAULT_PER_PAGE = 5;
+
+    /** @var array Поля для сортировки */
     const SORT_FIELDS = [
         'date'  => 'register_date',
         'price' => 'price_usd',
     ];
+
+    /** @var string Дефолтная сортировка по дате добавления заказа */
     const DEFAULT_SORT_BY = 'date';
+
+    /** @var string Дефолтная сортировка по убыванию */
     const DEFAULT_SORTING = 'desc';
 
-    /** @var int Количество страйков, за которое выдается бан (заказ переводится в статус ban) */
+    /** @var int Количество страйков, за которое выдается бан (заказ переводится в статус banned) */
     const COUNT_STRIKES_FOR_BAN = 50;
 
-    /** @var array Типы фильтров для отбора заказов (Заказы, Мои предложения, Принятые, Доставлено) */
+    # Cтраницы, на которых есть предустановленные фильтры: "Мои заказы" и "Заказы по маршруту"
+    const PAGE_MY_ORDERS = 'my_orders';
+    const PAGE_ORDERS_BY_ROUTE = 'orders_by_route';
+
+    # Типы фильтров для отбора заказов на странице "Мои заказы": Ожидающие, В пути, Завершенные
+    const FILTER_TYPE_WAITING = 'waiting';
+    const FILTER_TYPE_ON_WAY = 'on_way';
+    const FILTER_TYPE_COMPLETED = 'completed';
+
+    # Типы фильтров для отбора заказов на странице "Заказы по маршруту": Заказы, Мои предложения, Принятые, Доставлено
     const FILTER_TYPE_ORDERS = 'orders';
     const FILTER_TYPE_MY_OFFERS = 'my_offers';
     const FILTER_TYPE_ACCEPTED = 'accepted';
     const FILTER_TYPE_DELIVERED = 'delivered';
+
+    # Массив со всеми типами фильтров в разрезе страниц
     const FILTER_TYPES = [
-        self::FILTER_TYPE_ORDERS,
-        self::FILTER_TYPE_MY_OFFERS,
-        self::FILTER_TYPE_ACCEPTED,
-        self::FILTER_TYPE_DELIVERED,
+        self::PAGE_MY_ORDERS => [
+            self::FILTER_TYPE_WAITING,
+            self::FILTER_TYPE_ON_WAY,
+            self::FILTER_TYPE_COMPLETED,
+        ],
+        self::PAGE_ORDERS_BY_ROUTE => [
+            self::FILTER_TYPE_ORDERS,
+            self::FILTER_TYPE_MY_OFFERS,
+            self::FILTER_TYPE_ACCEPTED,
+            self::FILTER_TYPE_DELIVERED,
+        ]
     ];
 
     /**
@@ -195,7 +220,7 @@ class OrderController extends Controller
 
         # определяем тип фильтра
         $filter_type = $request->get('filter_type', self::FILTER_TYPE_ORDERS);
-        if (! in_array($filter_type, self::FILTER_TYPES)) {
+        if (! in_array($filter_type, self::FILTER_TYPES[self::PAGE_ORDERS_BY_ROUTE])) {
             $filter_type = self::FILTER_TYPE_ORDERS;
         }
 
@@ -215,7 +240,7 @@ class OrderController extends Controller
 
         # в разрезе всех типов фильтра подсчитываем кол-во заказов
         $counters = [];
-        foreach (self::FILTER_TYPES as $type) {
+        foreach (self::FILTER_TYPES[self::PAGE_ORDERS_BY_ROUTE] as $type) {
             $counters[$type] = self::prepareOrdersByRoute($route_id, $type, $filters)->count();
         }
 
@@ -433,34 +458,98 @@ class OrderController extends Controller
     public function showMyOrders(Request $request): JsonResponse
     {
         $filters = validateOrExit([
-            'status'      => 'nullable|in:' .  implode(',', Order::STATUSES),
+            'status'      => 'nullable|in:' .  implode(',', self::FILTER_TYPES[self::PAGE_MY_ORDERS]),
             'show'        => 'nullable|integer|min:1',
             'page-number' => 'nullable|integer|min:1',
         ]);
 
-        $user = $request->user();
-        $filters = array_merge(['owner_user_id' => $user->id], $filters);
+        $status = $filters['status'] ?? self::FILTER_TYPE_WAITING;
 
-        $orders = $this->getOrdersByFilter($user, $filters);
+        $orders = Order::owner()
+            ->withCount([
+                'deductions AS total_deductions_usd' => function($query) {
+                    $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
+                },
+            ])
+            ->when($status == self::FILTER_TYPE_WAITING, function ($query) {
+                $query->where('status', Order::STATUS_ACTIVE)
+                    ->withCount([
+                        'rates',
+                        'rates as unread_rates_count' => function ($query) {
+                            $query->where('viewed_by_customer', 0);
+                        },
+                    ])
+                    ->with([
+                        'rates' => function ($query) {
+                            $query->withoutAppends()
+                                ->select(['id', 'user_id', 'order_id', 'amount_usd'])
+                                ->where('viewed_by_customer', true)
+                                ->latest('id');
+                        },
+                        'rates.user' => function ($query) {
+                            $query->withoutAppends(['photo_thumb'])->select(['id', 'photo']);
+                        },
+                    ]);
+            })
+            ->when($status == self::FILTER_TYPE_ON_WAY, function ($query) {
+                $query->where('status', Order::STATUS_IN_WORK)
+                    ->with([
+                        'rate_confirmed',
+                        'rate_confirmed.user' => function ($query) {
+                            $query->select(User::FIELDS_FOR_SHOW);
+                        },
+                    ]);
+            })
+            ->when($status == self::FILTER_TYPE_COMPLETED, function ($query) {
+                $query->whereIN('status', [Order::STATUS_CLOSED, Order::STATUS_SUCCESSFUL, Order::STATUS_BANNED, Order::STATUS_FAILED])
+                    ->with([
+                        'rate_confirmed',
+                        'rate_confirmed.user' => function ($query) {
+                            $query->select(User::FIELDS_FOR_SHOW);
+                        },
+                    ]);
+            })
+            ->with([
+                'from_country',
+                'from_city',
+                'to_country',
+                'to_city',
+            ])
+            ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
+            ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $filters['page-number'] ?? 1)
+            ->toArray();
 
-        # по каждому заказу подсчитываем мин./макс. полную стоимость (общая сумма заказа + налоги и комиссии + цена ставки)
-        foreach ($orders['data'] as &$order) {
-            $order_amount_usd = $order['total_amount_usd'];
-            $deductions_amount_usd = $order['total_deductions_usd'];
-            $rates_amount_usd = array_column($order['rates'], 'amount_usd');
-            $min_rate_amount_usd = count($rates_amount_usd) ? min($rates_amount_usd) : 0;
-            $max_rate_amount_usd = count($rates_amount_usd) ? max($rates_amount_usd) : 0;
-            $min_total_order_amount_usd = $order_amount_usd + $deductions_amount_usd + $min_rate_amount_usd;
-            $max_total_order_amount_usd = $order_amount_usd + $deductions_amount_usd + $max_rate_amount_usd;
-            $order['min_full_order_amount'] = round($min_total_order_amount_usd * getCurrencyRate($order['selected_currency']));
-            $order['max_full_order_amount'] = round($max_total_order_amount_usd * getCurrencyRate($order['selected_currency']));
+        if ($status == self::FILTER_TYPE_WAITING) {
+            # по каждому заказу подсчитываем мин./макс. полную стоимость (общая сумма заказа + налоги и комиссии + цена ставки)
+            foreach ($orders['data'] as &$order) {
+                if ($order['rates_count']) {
+                    # по всем ставкам формируем список вознаграждений в долларах
+                    $rates_amount_usd = array_column($order['rates'], 'amount_usd');
 
-            # по подтвержденной ставке подсчитываем полную стоимость (общая сумма заказа + налоги и комиссии + цена ставки)
-            if (! empty($order['rate_confirmed'])) {
-                $confirmed_full_order_amount = $order_amount_usd + $deductions_amount_usd + $order['rate_confirmed']['amount_usd'];
-                $order['confirmed_full_order_amount'] = round($confirmed_full_order_amount * getCurrencyRate($order['selected_currency']));
-            } else {
-                $order['confirmed_full_order_amount'] = 0;
+                    # суммируем общую сумму заказа + налоги/комиссии + вознаграждение со ставки
+                    $order['min_full_amount_usd'] = $order['total_amount_usd'] + $order['total_deductions_usd'] + min($rates_amount_usd);
+                    $order['max_full_amount_usd'] = $order['total_amount_usd'] + $order['total_deductions_usd'] + max($rates_amount_usd);
+
+                    # в массив заносим мин./макс. сумму в выбранной валюте пользователя
+                    $order['min_full_amount_selected_currency'] = round($order['min_full_amount_usd'] * getCurrencyRate($order['selected_currency']));
+                    $order['max_full_amount_selected_currency'] = round($order['max_full_amount_usd'] * getCurrencyRate($order['selected_currency']));
+                } else {
+                    $order['min_full_amount_usd'] = 0;
+                    $order['max_full_amount_usd'] = 0;
+                    $order['min_full_amount_selected_currency'] = 0;
+                    $order['max_full_amount_selected_currency'] = 0;
+                }
+            }
+
+        } elseif (in_array($status, [self::FILTER_TYPE_ON_WAY, self::FILTER_TYPE_COMPLETED])) {
+            foreach ($orders['data'] as &$order) {
+                if (!empty($order['rate_confirmed'])) {
+                    $order['full_amount_usd'] = round($order['total_amount_usd'] + $order['total_deductions_usd'] + $order['rate_confirmed']['amount_usd'], 2);
+                    $order['full_amount_selected_currency'] = round($order['full_amount_usd'] * getCurrencyRate($order['selected_currency']));
+                } else {
+                    $order['full_amount_usd'] = 0;
+                    $order['full_amount_selected_currency'] = 0;
+                }
             }
         }
 
@@ -595,7 +684,7 @@ class OrderController extends Controller
                 return $query->where('orders.user_id', $filters['owner_user_id']);
             })
             ->when(empty($filters['status']), function ($query) {
-                return $query->whereNotIn('status', [Order::STATUS_CLOSED, Order::STATUS_BANNED, Order::STATUS_SUCCESSFUL, Order::STATUS_FAILED]);
+                return $query->whereNotIn('orders.status', [Order::STATUS_CLOSED, Order::STATUS_BANNED, Order::STATUS_SUCCESSFUL, Order::STATUS_FAILED]);
             }, function ($query) use ($filters) {
                 return $query->where('orders.status', $filters['status']);
             })
