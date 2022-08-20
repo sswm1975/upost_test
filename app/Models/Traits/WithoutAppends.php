@@ -12,14 +12,26 @@ trait WithoutAppends
     public static bool $withoutAppends = false;
 
     /**
+     * Список временных атрибутов, которые нужно добавить в запрос.
+     *
+     * @var array
+     */
+    protected static array $temp_appends = [];
+
+    /**
      * Скоуп: В модель не добавлять доп.атрибуты массива $appends.
      *
      * @param $query
+     * @param array $appends
      * @return mixed
      */
-    public function scopeWithoutAppends($query)
+    public function scopeWithoutAppends($query, array $appends = [])
     {
-        self::$withoutAppends = true;
+        if (empty($appends)) {
+            self::$withoutAppends = true;
+        } else {
+            self::$temp_appends = $appends;
+        }
 
         return $query;
     }
@@ -35,7 +47,10 @@ trait WithoutAppends
             return [];
         }
 
+        if (!empty(self::$temp_appends)) {
+            return self::$temp_appends;
+        }
+
         return parent::getArrayableAppends();
     }
-
 }
