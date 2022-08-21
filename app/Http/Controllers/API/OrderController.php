@@ -482,8 +482,7 @@ class OrderController extends Controller
                     ->with([
                         'rates' => function ($query) {
                             $query->withoutAppends()
-                                ->select(['id', 'user_id', 'order_id', 'amount_usd'])
-                                ->where('viewed_by_customer', true)
+                                ->select(['id', 'user_id', 'order_id', 'amount_usd', 'viewed_by_customer'])
                                 ->latest('id');
                         },
                         'rates.user' => function ($query) {
