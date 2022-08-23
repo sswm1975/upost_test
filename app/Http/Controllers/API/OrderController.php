@@ -276,11 +276,11 @@ class OrderController extends Controller
             ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
             ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['orders.*'], 'page', $filters['page-number'] ?? 1);
 
-        # если установлен фильтр "Принятые" и заказы просматривает владелец маршрута
-        if ($filter_type == self::FILTER_TYPE_ACCEPTED && $route->user_id == $request->user()->id) {
+        # если установлен фильтр "Принятые" или "Доставлено" и заказы просматривает владелец маршрута
+        if (in_array($filter_type, [self::FILTER_TYPE_ACCEPTED, self::FILTER_TYPE_DELIVERED]) && $route->user_id == $request->user()->id) {
             foreach ($orders as $order) {
                 foreach ($order->rates as $rate) {
-                    # если ставка по заказу создана владельцем маршрута, то устанавливаем TRUE для "Подтвержденная ставка просмотрена исполнителем?"
+                    # если ставка по заказу создана владельцем маршрута, то устанавливаем "Да" для "Подтвержденная ставка просмотрена исполнителем?"
                     if ($rate->user_id == $route->user_id) {
                         $rate->viewed_by_performer = true;
                         $rate->save();
