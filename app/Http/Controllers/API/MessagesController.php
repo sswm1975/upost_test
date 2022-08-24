@@ -167,6 +167,12 @@ class MessagesController extends Controller
             DB::table('chats')->where('id', $chat->id)->update([$field => 0]);
         }
 
+        # если чат просматривает владелец ставки, то устанавливаем "Да" для "Подтвержденная ставка просмотрена исполнителем?"
+        if (!empty($chat->rate) && $chat->rate->user_id == request()->user()->id) {
+            $chat->rate->viewed_by_performer = true;
+            $chat->rate->save();
+        }
+
         # получаем сообщения по чату сгруппированные по дате создания
         if ($data['is_group_by_date'] ?? true) {
             $messages = Message::whereChatId($chat->id)
