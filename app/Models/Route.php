@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\DB;
  * @property string $status Статус маршрута
  * @property \Illuminate\Support\Carbon $created_at Дата добавления
  * @property \Illuminate\Support\Carbon|null $updated_at Дата обновления
- * @property string|null $viewed_orders_at Дата просмотра заказов по маршруту
+ * @property \Illuminate\Support\Carbon|null $viewed_orders_at Дата просмотра заказов по маршруту
  * @property-read \App\Models\City|null $from_city
  * @property-read \App\Models\Country|null $from_country
  * @property-read string $status_name
@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\DB;
  * @property-read \App\Models\City|null $to_city
  * @property-read \App\Models\Country|null $to_country
  * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Route active()
  * @method static \Illuminate\Database\Eloquent\Builder|Route existsCityInFromCity(array $cities)
  * @method static \Illuminate\Database\Eloquent\Builder|Route existsCityInToCity(array $cities)
  * @method static \Illuminate\Database\Eloquent\Builder|Route existsCountryInFromCountry(array $countries)
@@ -57,7 +58,7 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereViewedOrdersAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Route withoutAppends()
+ * @method static \Illuminate\Database\Eloquent\Builder|Route withoutAppends(array $appends = [])
  * @mixin \Eloquent
  */
 class Route extends Model
@@ -165,6 +166,11 @@ class Route extends Model
     public function scopeOwner($query)
     {
         return $query->where('user_id', request()->user()->id);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->whereStatus(self::STATUS_ACTIVE);
     }
 
     public function scopeSuccessful($query)

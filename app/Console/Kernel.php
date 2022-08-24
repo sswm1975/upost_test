@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Jobs\CloseExpiredOrders;
 use App\Jobs\CloseExpiredRate;
+use App\Jobs\CloseExpiredRoutes;
 use App\Jobs\RecalcAmountInUSD;
 use App\Jobs\SendMailDeadlineRate;
 use Illuminate\Console\Scheduling\Schedule;
@@ -45,6 +46,12 @@ class Kernel extends ConsoleKernel
             ->dailyAt('0:05')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(CloseExpiredOrders::LOG_FILE));
+
+        $schedule->job(new CloseExpiredRoutes)
+            ->description('Закрыть просроченные маршруты')
+            ->dailyAt('0:07')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(CloseExpiredRoutes::LOG_FILE));
 
         $schedule->command('fill:currency_rates')
             ->description('Обновить курсы валют (сервис fixer.io)')
