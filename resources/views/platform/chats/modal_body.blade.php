@@ -305,7 +305,11 @@
         <div class="row" style="padding: 15px 0;">
             <div class="col-sm-8">
                 <div class="input-group">
-                    <span class="input-group-addon">Заказ № {{ $chat->order_id }}</span>
+                    <span class="input-group-addon">Статус заказа № {{ $chat->order_id }}</span>
+                    <input type="text" class="form-control form-control" value="{{ $chat->order_status }}" readonly>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Наименование</span>
                     <input type="text" class="form-control form-control" value="{{ $chat->order_name }}" readonly>
                 </div>
                 <div class="input-group">
@@ -342,9 +346,10 @@
                     <input class="form-control form-control-sm" value="{{ formatDateTime($chat->order_deadline, false) }}" readonly>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">Статус</span>
-                    <input type="text" class="form-control form-control" value="{{ $chat->order_status }}" readonly>
+                    <span class="input-group-addon">Статус маршрута № {{ $chat->route_id }}</span>
+                    <input type="text" class="form-control form-control" value="{{ $chat->route_status }}" readonly>
                 </div>
+
             </div>
             <div class="col-sm-4" style="padding-left: 0">
                 @php($images = json_decode($chat->order_images))
