@@ -6,6 +6,7 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\OrderDeduction;
+use App\Models\Rate;
 use App\Models\Route;
 use App\Models\Order;
 use App\Models\User;
@@ -281,15 +282,13 @@ class RouteController extends Controller
         $status = $filters['status'] ?? Route::FILTER_TYPE_ACTIVE;
 
         # подзапросы для подсчета "Всего заказов" ($orders_all_count) и "Из них новых заказов" ($orders_new_count)
-        if ($status == Route::FILTER_TYPE_COMPLETED) {
-            # заглушка: для закрытых маршрутов всегда возвращаем 0
-            $orders_all_count = $orders_new_count = DB::query()->selectRaw('0');
-        } else {
-            # количество всех заказов
+        if ($status == Route::FILTER_TYPE_ACTIVE) {
             $orders_all_count = Order::selectRaw('count(1)')->searchByRoutes(false)->getQuery();
-
-            # количество новых заказов
             $orders_new_count = Order::selectRaw('count(1)')->searchByRoutes(true)->getQuery();
+        } else {
+            $orders_all_count = Rate::selectRaw('COUNT(DISTINCT order_id)')->where('route_id', '=', 'routes.id')->getQuery();
+            # заглушка: для завершенных "Кол-во новых" всегда возвращаем 0, получается такой подзапрос (select 0) as orders_new_count
+            $orders_new_count = DB::query()->selectRaw('0');
         }
 
         return Route::owner()
