@@ -341,6 +341,10 @@
                     <span class="input-group-addon">Дедлайн</span>
                     <input class="form-control form-control-sm" value="{{ formatDateTime($chat->order_deadline, false) }}" readonly>
                 </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Статус</span>
+                    <input type="text" class="form-control form-control" value="{{ $chat->order_status }}" readonly>
+                </div>
             </div>
             <div class="col-sm-4" style="padding-left: 0">
                 @php($images = json_decode($chat->order_images))

@@ -65,6 +65,7 @@ class ChatController extends AdminController
                 o.products_count AS order_products_count,
                 o.user_price AS order_profit_price,
                 o.user_currency AS order_profit_currency,
+                o.status AS order_status,
                 o.deadline AS order_deadline,
                 o.images AS order_images,
 
