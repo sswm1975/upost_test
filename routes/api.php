@@ -168,6 +168,9 @@ Route::namespace('API')->group(function ($route) {
 
         # Получить ставки по выбранному заказу
         $route->get('order/{id}/show', 'RateController@showRatesByOrder');
+
+        # Ставки, которые не смотрел владелец заказа
+        $route->get('not_viewed_by_customer', 'RateController@getRatesNotViewedByCustomer');
     });
 
     # Отзывы

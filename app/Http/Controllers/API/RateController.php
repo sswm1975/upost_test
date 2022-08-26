@@ -491,4 +491,25 @@ class RateController extends Controller
             'rates'  => null_to_blank($rates),
         ]);
     }
+
+    /**
+     * Ставки, которые не смотрел авторизированный пользователь, являющий владельцем заказа.
+     *
+     * @return JsonResponse
+     */
+    public function getRatesNotViewedByCustomer():JsonResponse
+    {
+        $rates = Rate::with('user:' . implode(',', User::FIELDS_FOR_SHOW))
+            ->whereHas('order', function($query) {
+                $query->owner();
+            })
+            ->notViewedByCustomer()
+            ->get();
+
+        return response()->json([
+            'status'      => true,
+            'rates'       => null_to_blank($rates),
+            'rates_count' => count($rates),
+        ]);
+    }
 }

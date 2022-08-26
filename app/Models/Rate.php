@@ -44,6 +44,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Rate delivered()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate notViewedByCustomer()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate notViewedByPerformer()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate owner()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate query()
@@ -63,7 +64,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereViewedByCustomer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereViewedByPerformer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate withoutAppends()
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate withoutAppends(array $appends = [])
  * @mixin \Eloquent
  */
 class Rate extends Model
@@ -307,6 +308,17 @@ class Rate extends Model
             ->whereHas('order', function($query) use ($order_statuses) {
                 $query->ownerWithStatuses($order_statuses);
             });
+    }
+
+    /**
+     * Ставки, которые не просмотрел заказчик.
+     *
+     * @param $query
+     * @return mixed
+     */
+    function scopeNotViewedByCustomer($query)
+    {
+        return $query->where('viewed_by_customer', 0);
     }
 
     function scopeNotViewedByPerformer($query)
