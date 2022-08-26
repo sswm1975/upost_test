@@ -7,7 +7,9 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Models\Message;
+use App\Models\Rate;
 use App\Observers\MessageObserver;
+use App\Observers\RateObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,8 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
 
         Message::observe(MessageObserver::class);
+
+        Rate::observe(RateObserver::class);
     }
 
     /**
