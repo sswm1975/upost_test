@@ -4494,7 +4494,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/my/show?status=completed&show=5&page-number=1&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/orders/my/show?status=waiting&show=5&page-number=1&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -4507,7 +4507,7 @@
 									"query": [
 										{
 											"key": "status",
-											"value": "completed",
+											"value": "waiting",
 											"description": "Статус замовлення (waiting, on_way, completed) - опціонально, за замовчування waiting"
 										},
 										{
@@ -6545,6 +6545,36 @@
 											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Отримати ставки, які не переглянув замовник",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/not_viewed_by_customer",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"not_viewed_by_customer"
 									]
 								}
 							},
