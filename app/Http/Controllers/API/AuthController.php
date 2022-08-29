@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -33,7 +34,7 @@ class AuthController extends Controller
 
         $user = $this->attemptLogin($credentials);
 
-        if (! $user) throw new ErrorException(__('message.auth_failed'), 403);
+        if (! $user) throw new ErrorException(__('message.auth_failed'), Response::HTTP_FORBIDDEN);
 
         $token = $this->generateToken($user);
 
