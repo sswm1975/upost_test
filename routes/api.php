@@ -10,8 +10,8 @@ Route::namespace('API')->group(function ($route) {
         # Реєстрація
         $route->post('register', 'AuthController@register');
 
-        # Авторизація
-        $route->post('login', 'AuthController@login');
+        # Аутентифікація
+        $route->post('login', 'AuthController@login')->middleware('throttle:5,10'); # 5 спроб, 10 хвилин простою
 
         # Припинення сеансу авторизованого користувача
         $route->post('logout', 'AuthController@logout')->middleware(MIDDLEWARE_AUTH_BASIC);
