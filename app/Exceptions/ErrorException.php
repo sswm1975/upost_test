@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ErrorException extends Exception
 {
@@ -16,7 +17,7 @@ class ErrorException extends Exception
      * @param string $error
      * @param int $code
      */
-    public function __construct(string $error, int $code = 404)
+    public function __construct(string $error, int $code = Response::HTTP_BAD_REQUEST)
     {
         parent::__construct();
         $this->error = $error;
@@ -45,7 +46,7 @@ class ErrorException extends Exception
             'errors' => [$this->error]
         ];
 
-        if (app()->environment('local') || config('app.debug')) {
+        if (env('APP_ENV') == 'local' || env('APP_DEBUG')) {
             $data['sql'] = getSQLForFixDatabase();
         }
 

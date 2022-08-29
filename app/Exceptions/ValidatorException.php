@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ValidatorException extends Exception
 {
@@ -43,10 +44,10 @@ class ValidatorException extends Exception
             'errors' => $this->errors
         ];
 
-        if (app()->environment('local') || config('app.debug')) {
+        if (env('APP_ENV') == 'local' || env('APP_DEBUG')) {
             $data['sql'] = getSQLForFixDatabase();
         }
 
-        return response()->json($data, 404);
+        return response()->json($data, Response::HTTP_BAD_REQUEST);
     }
 }
