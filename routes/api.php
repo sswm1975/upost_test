@@ -13,6 +13,9 @@ Route::namespace('API')->group(function ($route) {
         # Аутентифікація
         $route->post('login', 'AuthController@login')->middleware('api_throttle:5,10'); # 5 спроб, 10 хвилин простою
 
+        # Аутентифікація за допомогою соц.мережі (Google, Facebook)
+        $route->post('social', 'AuthController@social')->middleware('api_throttle:5,10'); # 5 спроб, 10 хвилин простою;
+
         # Припинення сеансу авторизованого користувача
         $route->post('logout', 'AuthController@logout')->middleware(MIDDLEWARE_AUTH_BASIC);
 
@@ -21,9 +24,6 @@ Route::namespace('API')->group(function ($route) {
 
         # Дані авторизованого користувача
         $route->get('user', 'AuthController@getAuthUser');
-
-        # Авторизація за допомогою соц.мережі (Google, Facebook)
-        $route->post('social', 'AuthController@social');
     });
 
     # Операції по відновленню пароля

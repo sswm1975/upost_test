@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
@@ -50,14 +51,34 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
+     * @throws ErrorException|ValidationException|ValidatorException
      */
     public function social(Request $request): JsonResponse
     {
-        $data = $request->all();
-        if (empty($data['provider']) || empty($data['identifier']) || empty($data['email'])) {
-            throw new ErrorException(__('message.auth_failed'), 403);
+        # правила валидации
+        $rules = [
+            'provider'    => 'required|in:google,facebook',
+            'identifier'  => 'required|numeric',
+            'email'       => 'required|email',
+            'displayName' => 'nullable|censor',
+            'firstName'   => 'nullable|censor',
+            'lastName'    => 'nullable|censor',
+            'phone'       => 'nullable|censor',
+            'language'    => 'nullable',
+            'gender'      => 'nullable',
+            'photoURL'    => 'nullable|url',
+        ];
+
+        # валидация
+        $validator = Validator::make($request->all(), $rules);
+
+        # если ошибка, то по всем правилам одинаковое сообщение: "These credentials do not match our records."
+        if ($validator->fails()) {
+            throw new ValidatorException([__('message.auth_failed')]);
         }
+
+        # получаем проверенные входные данные
+        $data = $validator->validated();
 
         # поле с идентификатором соц.сети (google_id или facebook_id)
         $field_id = $data['provider'] . '_id';
@@ -89,7 +110,7 @@ class AuthController extends Controller
                     Mail::to($user->email)->send(new SocialChangePassword($info));
                 } catch (\Exception $e) {
                     $msg = printf('При отправке почтового уведомления на почтовый ящик %s возникла ошибка %s', $user->email, $e->getMessage());
-                    throw new ErrorException($msg, 403);
+                    throw new ErrorException($msg, Response::HTTP_CONFLICT);
                 }
             }
         }
