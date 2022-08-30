@@ -47,7 +47,6 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Chat newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat query()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat searchMessage(string $search)
- * @method static \Illuminate\Database\Eloquent\Builder|Chat waiting()
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCustomerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereCustomerUnreadCount($value)
@@ -59,7 +58,7 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereRouteId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chat whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Chat withoutAppends()
+ * @method static \Illuminate\Database\Eloquent\Builder|Chat withoutAppends(array $appends = [])
  * @mixin \Eloquent
  */
 class Chat extends Model
@@ -256,21 +255,6 @@ class Chat extends Model
     {
         return $query->where(function ($q) {
             $q->where('performer_id', request()->user()->id)->orWhere('customer_id', request()->user()->id);
-        });
-    }
-
-    /**
-     * Чаты с непрочитанными сообщениями для авторизированного пользователя, так называемые "Чаты в ожидании".
-     *
-     * @param $query
-     * @return mixed
-     */
-    public function scopeWaiting($query)
-    {
-        return $query->where(function ($q) {
-            $q->where('performer_id', request()->user()->id)->where('customer_unread_count', '>', 0);
-        })->orWhere(function ($q) {
-            $q->where('customer_id', request()->user()->id)->where('performer_unread_count', '>', 0);
         });
     }
 

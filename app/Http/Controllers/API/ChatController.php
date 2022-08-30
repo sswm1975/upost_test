@@ -27,7 +27,7 @@ class ChatController extends Controller
     public function showChats(): JsonResponse
     {
         $data = validateOrExit([
-            'filter'  => 'nullable|in:all,waiting,delivered,closed',
+            'filter'  => 'nullable|in:all,customer,performer',
             'search'  => 'nullable|string|censor',
             'count'   => 'integer',
             'page'    => 'integer',
@@ -55,14 +55,11 @@ class ChatController extends Controller
             ->withCount(['rate as is_delivered' => function ($query) {
                 $query->delivered();
             }])
-            ->when($filter == 'waiting', function ($query) {
-                return $query->waiting();
+            ->when($filter == 'customer', function ($query) {
+                return $query->where('customer_id', request()->user()->id);
             })
-            ->when($filter == 'delivered', function ($query) {
-                return $query->delivered();
-            })
-            ->when($filter == 'closed', function ($query) {
-                return $query->closed();
+            ->when($filter == 'performer', function ($query) {
+                return $query->where('performer_id', request()->user()->id);
             })
             ->when(!empty($search), function ($query) use ($search) {
                 return $query->searchMessage($search);
