@@ -3145,14 +3145,14 @@
 											"key": "login",
 											"value": "{{email}}",
 											"description": "Логін: емейл або телефон (user 21)",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
 											"key": "login",
 											"value": "{{phone}}",
 											"description": "Логін: емейл або телефон (user 22)",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "password",
@@ -7777,7 +7777,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/chats/show?count=5&page=1&sorting=asc&filter=all&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/chats/show?count=5&page=1&filter=customer&lang=ru",
 									"host": [
 										"{{host}}"
 									],
@@ -7800,7 +7800,8 @@
 										{
 											"key": "sorting",
 											"value": "asc",
-											"description": "Порядок сортировки (asc, desc)  (опционально)"
+											"description": "Порядок сортировки (asc, desc)  (опционально)",
+											"disabled": true
 										},
 										{
 											"key": "search",
@@ -7810,8 +7811,8 @@
 										},
 										{
 											"key": "filter",
-											"value": "all",
-											"description": "Фильтр (all, waiting, delivered, closed)  (опционально)"
+											"value": "customer",
+											"description": "Фильтр (all, customer, performer)  (опционально)"
 										},
 										{
 											"key": "lang",
