@@ -43,7 +43,7 @@ use App\Models\Traits\TimestampSerializable;
  * @property string|null $google_id ID пользователя Google
  * @property string|null $facebook_id ID пользователя Facebook
  * @property string|null $register_date Дата регистрации
- * @property string|null $last_active Дата и время последней активности
+ * @property \Illuminate\Support\Carbon|null $last_active Дата и время последней активности
  * @property \Illuminate\Support\Carbon $created_at Добавлено
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
  * @property-read \App\Models\City|null $city
@@ -103,7 +103,7 @@ use App\Models\Traits\TimestampSerializable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereValidation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereWallet($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User withoutAppends()
+ * @method static \Illuminate\Database\Eloquent\Builder|User withoutAppends(array $appends = [])
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -113,6 +113,7 @@ class User extends Authenticatable
     use WithoutAppends;
 
     protected $guarded = ['id'];
+    protected $dates = ['last_active'];
     protected $appends = [
         'short_name',
         'full_name',

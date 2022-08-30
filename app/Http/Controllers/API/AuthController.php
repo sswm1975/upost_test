@@ -115,7 +115,9 @@ class AuthController extends Controller
 
         $is_email = Str::contains($login, '@');
 
-        return User::wherePassword($credentials['password'])
+        return User::query()
+            ->withoutAppends()
+            ->wherePassword($credentials['password'])
             ->when($is_email, function ($query) use ($login) {
                 return $query->whereEmail($login);
             })
@@ -187,9 +189,6 @@ class AuthController extends Controller
 
         # добавляем страну/город пользователя
         $user->load(['city.country']);
-
-        # добавляем кол-во заказов и маршрутов по пользователю
-//        $user->loadCount(['orders', 'routes']);
 
         return response()->json([
             'status' => true,
