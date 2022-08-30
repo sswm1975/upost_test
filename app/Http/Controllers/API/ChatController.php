@@ -9,7 +9,6 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Exceptions\ValidatorException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -68,6 +67,8 @@ class ChatController extends Controller
             ->when(!empty($search), function ($query) use ($search) {
                 return $query->searchMessage($search);
             })
+            ->orderBy('chats.performer_unread_count', $sorting ?? self::DEFAULT_SORTING)
+            ->orderBy('chats.customer_unread_count', $sorting ?? self::DEFAULT_SORTING)
             ->orderBy('chats.id', $sorting ?? self::DEFAULT_SORTING)
             ->paginate($count ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $page ?? 1);
 
