@@ -232,8 +232,11 @@ class OrderController extends Controller
             throw new ErrorException(__('message.route_not_found'));
         }
 
+        # идентификатор аутентифицированного пользователя
+        $auth_user_id = $request->user()->id;
+
         # если заказы просматривает владелец маршрута, то обновляем дату "Просмотра заказов"
-        if ($filter_type == self::FILTER_TYPE_ORDERS && $route->user_id == $request->user()->id) {
+        if ($filter_type == self::FILTER_TYPE_ORDERS && $route->user_id == $auth_user_id) {
             $route->viewed_orders_at = $route->freshTimestamp();
             $route->save();
         }
@@ -260,19 +263,19 @@ class OrderController extends Controller
             ])
             ->withCount([
                 'rates as rates_count',
-                'rates as has_rate' => function ($query) use ($route) {
-                    $query->where('rates.route_id', DB::raw($route->id))
-                        ->whereIn('status', Rate::STATUSES_OK);
+                'rates as has_rate' => function ($query) use ($auth_user_id) {
+                    $query->where('rates.user_id', $auth_user_id)
+                        ->whereIn('rates.status', Rate::STATUSES_OK);
                 },
-                'rates as my_rate_id' => function($query) use ($route) {
-                    $query->where('rates.route_id', DB::raw($route->id))
-                        ->whereIn('status', Rate::STATUSES_OK)
+                'rates as my_rate_id' => function($query) use ($auth_user_id) {
+                    $query->where('rates.user_id', $auth_user_id)
+                        ->whereIn('rates.status', Rate::STATUSES_OK)
                         ->select(DB::raw('MAX(id)'));
+                },
+                'deductions as deductions_sum' => function($query) {
+                    $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
                 }
             ])
-            ->withCount(['deductions AS deductions_sum' => function($query) {
-                $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
-            }])
             ->orderBy(self::SORT_FIELDS[$filters['sort_by'] ?? self::DEFAULT_SORT_BY], $filters['sorting'] ?? self::DEFAULT_SORTING)
             ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['orders.*'], 'page', $filters['page-number'] ?? 1);
 
@@ -418,13 +421,20 @@ class OrderController extends Controller
 
         $order = Order::whereKey($order_id)
             ->withCount([
+                'rates as rates_count',
                 'rates as has_rate' => function ($query) use ($auth_user_id) {
-                    $query->where('user_id', $auth_user_id);
+                    $query->where('rates.user_id', $auth_user_id)
+                        ->whereIn('rates.status', Rate::STATUSES_OK);
                 },
+                'rates as my_rate_id' => function($query) use ($auth_user_id) {
+                    $query->where('rates.user_id', $auth_user_id)
+                        ->whereIn('rates.status', Rate::STATUSES_OK)
+                        ->select(DB::raw('MAX(id)'));
+                },
+                'deductions as deductions_sum' => function($query) {
+                    $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
+                }
             ])
-            ->withCount(['deductions AS deductions_sum' => function($query) {
-                $query->select(DB::raw('IFNULL(SUM(amount), 0)'));
-            }])
             ->with([
                 'from_country',
                 'from_city',
@@ -558,7 +568,6 @@ class OrderController extends Controller
             'page'   => $orders['current_page'],
             'pages'  => $orders['last_page'],
             'orders' => null_to_blank($orders['data']),
-            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
@@ -658,12 +667,12 @@ class OrderController extends Controller
             }])
             ->withCount([
                 'rates as has_rate' => function ($query) use ($auth_user) {
-                    $query->where('user_id', $auth_user->id ?? 0)
-                        ->whereIn('status', Rate::STATUSES_OK);
+                    $query->where('rates.user_id', $auth_user->id ?? -1)
+                        ->whereIn('rates.status', Rate::STATUSES_OK);
                 },
                 'rates as my_rate_id' => function($query) use ($auth_user) {
-                    $query->where('user_id', $auth_user->id ?? 0)
-                        ->whereIn('status', Rate::STATUSES_OK)
+                    $query->where('rates.user_id', $auth_user->id ?? -1)
+                        ->whereIn('rates.status', Rate::STATUSES_OK)
                         ->select(DB::raw('MAX(id)'));
                 },
                 'rates as read_rates_count' => function ($query){
