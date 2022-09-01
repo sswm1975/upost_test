@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
+use App\Models\Rate;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -133,6 +134,16 @@ class ChatController extends Controller
         if (! in_array($request->user()->id, [$chat->performer_id, $chat->customer_id])) {
             throw new ErrorException(__('message.not_have_permission'));
         }
+
+        # связываем чат со ставкой
+        if (empty($chat->rate)) {
+            Rate::query()
+                ->where([
+                    'route_id' => $chat->route_id,
+                    'order_id' => $chat->order_id
+                ])
+                ->update(['chat_id' => $chat->id]);
+        };
 
         return MessagesController::getMessages($chat, $data);
     }
