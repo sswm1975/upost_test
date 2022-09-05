@@ -2,11 +2,9 @@
 
 namespace Tests\Feature\Http\Controllers\API;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Libs\TestHelpers;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Tests\TestCase;
-use Faker\Factory as Faker;
 
 /* Действительные логины и пароль */
 DEFINE('LOGIN_EMAIL_OK', 'sswm@i.ua');
@@ -26,29 +24,13 @@ DEFINE('LOGIN_SOCIAL_URI', '/api/auth/social');
 class AuthControllerLogin extends TestCase
 {
     /**
-     * Сбрасывание счетчика неудачных попыток для middleware('throttle:5,10') и локального IP 127.0.0.1
-     *
-     * @return void
-     */
-    protected static function clearLoginAttempts()
-    {
-        # см. как определяется ключ в методе resolveRequestSignature класса Illuminate\Routing\Middleware\ThrottleRequests
-        $ip = request()->ip();
-        $domain = optional(request()->route())->getDomain();
-        $key = sha1("{$domain}|{$ip}");
-
-        # подключаемся к классу RateLimiter, который может сбрасывать счетчик
-        app(\Illuminate\Cache\RateLimiter::class)->clear($key);
-    }
-
-    /**
      * Аутентификация не поддерживаемым методом (в запросе указан метод GET, а нужно POST).
      *
      * @return void
      */
-    public function testLogin_BadAuthMethod()
+    public function testBadAuthMethod()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         $this->getJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK, 'password' => PASSWORD_OK])
             ->assertStatus(SymfonyResponse::HTTP_METHOD_NOT_ALLOWED)
@@ -60,9 +42,9 @@ class AuthControllerLogin extends TestCase
      *
      * @return void
      */
-    public function testLogin_NotAuthParams()
+    public function testNotAuthParams()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         $this->postJson(LOGIN_URI)
             ->assertStatus(SymfonyResponse::HTTP_BAD_REQUEST)
@@ -80,9 +62,9 @@ class AuthControllerLogin extends TestCase
      *
      * @return void
      */
-    public function testLogin_NotAuthPassword()
+    public function testNotAuthPassword()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         $this->postJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK])
             ->assertStatus(SymfonyResponse::HTTP_BAD_REQUEST)
@@ -99,9 +81,9 @@ class AuthControllerLogin extends TestCase
      *
      * @return void
      */
-    public function testLogin_NotAuthLogin()
+    public function testNotAuthLogin()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         $this->postJson(LOGIN_URI, ['password' => PASSWORD_OK])
             ->assertStatus(SymfonyResponse::HTTP_BAD_REQUEST)
@@ -118,9 +100,9 @@ class AuthControllerLogin extends TestCase
      *
      * @return void
      */
-    public function testLogin_WrongCredentials()
+    public function testWrongCredentials()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         $this->postJson(LOGIN_URI, ['login' => LOGIN_FAIL, 'password' => PASSWORD_FAIL])
             ->assertForbidden()
@@ -137,9 +119,9 @@ class AuthControllerLogin extends TestCase
      *
      * @return void
      */
-    public function testLogin_WrongLogin()
+    public function testWrongLogin()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         $this->postJson(LOGIN_URI, ['login' => LOGIN_FAIL, 'password' => PASSWORD_OK])
             ->assertForbidden()
@@ -156,9 +138,9 @@ class AuthControllerLogin extends TestCase
      *
      * @return void
      */
-    public function testLogin_WrongPassword()
+    public function testWrongPassword()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         $this->postJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK, 'password' => PASSWORD_FAIL])
             ->assertForbidden()
@@ -176,9 +158,9 @@ class AuthControllerLogin extends TestCase
      *
      * @return void
      */
-    public function testLogin_BruteForcePassword()
+    public function testBruteForcePassword()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         # первые 4 запроса будут отдавать ошибку 403
         foreach (range(0, 4) as $attempt) {
@@ -201,7 +183,7 @@ class AuthControllerLogin extends TestCase
                 ]
             ]);
 
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
     }
 
     /**
@@ -209,9 +191,9 @@ class AuthControllerLogin extends TestCase
      *
      * @return void
      */
-    public function testLogin_AuthEmailSuccessful()
+    public function testAuthEmailSuccessful()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         $this->postJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK, 'password' => PASSWORD_OK])
             ->assertStatus(SymfonyResponse::HTTP_OK)
@@ -225,9 +207,9 @@ class AuthControllerLogin extends TestCase
      *
      * @return void
      */
-    public function testLogin_AuthPhoneSuccessful()
+    public function testAuthPhoneSuccessful()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         $this->postJson(LOGIN_URI, ['login' => LOGIN_PHONE_OK, 'password' => PASSWORD_OK])
             ->assertStatus(SymfonyResponse::HTTP_OK)
@@ -241,9 +223,9 @@ class AuthControllerLogin extends TestCase
      *
      * @return void
      */
-    public function testLogin_AuthBDSuccessful()
+    public function testAuthBDSuccessful()
     {
-        static::clearLoginAttempts();
+        TestHelpers::clearLoginAttempts();
 
         $response = $this->postJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK, 'password' => PASSWORD_OK])
             ->assertStatus(SymfonyResponse::HTTP_OK)
