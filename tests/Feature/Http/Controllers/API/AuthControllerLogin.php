@@ -18,9 +18,6 @@ DEFINE('PASSWORD_FAIL', '123456');
 /* Ендпоинт для Аутентификации по емейлу или телефону */
 DEFINE('LOGIN_URI', '/api/auth/login');
 
-/* Ендпоинт для Аутентификации через соц.сеть: Google или Facebook */
-DEFINE('LOGIN_SOCIAL_URI', '/api/auth/social');
-
 class AuthControllerLogin extends TestCase
 {
     /**
