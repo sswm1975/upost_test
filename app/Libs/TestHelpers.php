@@ -5,8 +5,25 @@ namespace App\Libs;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
+DEFINE('GEN_PASSWORD_OK', md5(md5('testtest')));
+
 class TestHelpers
 {
+
+    /* Действительные логины и пароль */
+    const LOGIN_EMAIL_OK = 'sswm@i.ua';
+    const LOGIN_PHONE_OK = '+380978820043';
+    const PASSWORD_OK =  GEN_PASSWORD_OK;
+
+    /* Фиктивный логин и пароль */
+    const LOGIN_FAIL =  'test';
+    const PASSWORD_FAIL = 123456;
+
+    /* Тестируемые конечные точки */
+    const LOGIN_URI          = '/api/auth/login';  # аутентификации по емейлу или телефону
+    const LOGIN_SOCIAL_URI   = '/api/auth/social'; # аутентификации через социальную сеть: Google или Facebook
+    const LOGOUT_URI         = '/api/auth/logout'; # завершения сеанса авторизованного пользователя
+
     /**
      * Сбрасывание счетчика неудачных попыток для middleware('throttle:5,10') и локального IP 127.0.0.1
      *

@@ -1,22 +1,14 @@
 <?php
 
+/**
+ * AuthController: Тестирование стандартной аутентификации (электронный почтовый ящик или номер телефона + пароль).
+ */
+
 namespace Tests\Feature\Http\Controllers\API;
 
 use App\Libs\TestHelpers;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Tests\TestCase;
-
-/* Действительные логины и пароль */
-DEFINE('LOGIN_EMAIL_OK', 'sswm@i.ua');
-DEFINE('LOGIN_PHONE_OK', '+380978820043');
-DEFINE('PASSWORD_OK', md5(md5('testtest')));
-
-/* Фиктивный логин и пароль */
-DEFINE('LOGIN_FAIL', 'test');
-DEFINE('PASSWORD_FAIL', '123456');
-
-/* Ендпоинт для Аутентификации по емейлу или телефону */
-DEFINE('LOGIN_URI', '/api/auth/login');
 
 class AuthControllerLogin extends TestCase
 {
@@ -29,7 +21,7 @@ class AuthControllerLogin extends TestCase
     {
         TestHelpers::clearLoginAttempts();
 
-        $this->getJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK, 'password' => PASSWORD_OK])
+        $this->getJson(TestHelpers::LOGIN_URI, ['login' => TestHelpers::LOGIN_EMAIL_OK, 'password' => TestHelpers::PASSWORD_OK])
             ->assertStatus(SymfonyResponse::HTTP_METHOD_NOT_ALLOWED)
             ->assertJson(['message' => "The GET method is not supported for this route. Supported methods: POST."]);
     }
@@ -43,7 +35,7 @@ class AuthControllerLogin extends TestCase
     {
         TestHelpers::clearLoginAttempts();
 
-        $this->postJson(LOGIN_URI)
+        $this->postJson(TestHelpers::LOGIN_URI)
             ->assertStatus(SymfonyResponse::HTTP_BAD_REQUEST)
             ->assertExactJson([
                 'status' => false,
@@ -63,7 +55,7 @@ class AuthControllerLogin extends TestCase
     {
         TestHelpers::clearLoginAttempts();
 
-        $this->postJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK])
+        $this->postJson(TestHelpers::LOGIN_URI, ['login' => TestHelpers::LOGIN_EMAIL_OK])
             ->assertStatus(SymfonyResponse::HTTP_BAD_REQUEST)
             ->assertExactJson([
                 'status' => false,
@@ -82,7 +74,7 @@ class AuthControllerLogin extends TestCase
     {
         TestHelpers::clearLoginAttempts();
 
-        $this->postJson(LOGIN_URI, ['password' => PASSWORD_OK])
+        $this->postJson(TestHelpers::LOGIN_URI, ['password' => TestHelpers::PASSWORD_OK])
             ->assertStatus(SymfonyResponse::HTTP_BAD_REQUEST)
             ->assertExactJson([
                 'status' => false,
@@ -101,7 +93,7 @@ class AuthControllerLogin extends TestCase
     {
         TestHelpers::clearLoginAttempts();
 
-        $this->postJson(LOGIN_URI, ['login' => LOGIN_FAIL, 'password' => PASSWORD_FAIL])
+        $this->postJson(TestHelpers::LOGIN_URI, ['login' => TestHelpers::LOGIN_FAIL, 'password' => TestHelpers::PASSWORD_FAIL])
             ->assertForbidden()
             ->assertExactJson([
                 'status' => false,
@@ -120,7 +112,7 @@ class AuthControllerLogin extends TestCase
     {
         TestHelpers::clearLoginAttempts();
 
-        $this->postJson(LOGIN_URI, ['login' => LOGIN_FAIL, 'password' => PASSWORD_OK])
+        $this->postJson(TestHelpers::LOGIN_URI, ['login' => TestHelpers::LOGIN_FAIL, 'password' => TestHelpers::PASSWORD_OK])
             ->assertForbidden()
             ->assertExactJson([
                 'status' => false,
@@ -139,7 +131,7 @@ class AuthControllerLogin extends TestCase
     {
         TestHelpers::clearLoginAttempts();
 
-        $this->postJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK, 'password' => PASSWORD_FAIL])
+        $this->postJson(TestHelpers::LOGIN_URI, ['login' => TestHelpers::LOGIN_EMAIL_OK, 'password' => TestHelpers::PASSWORD_FAIL])
             ->assertForbidden()
             ->assertExactJson([
                 'status' => false,
@@ -161,14 +153,14 @@ class AuthControllerLogin extends TestCase
 
         # первые 4 запроса будут отдавать ошибку 403
         foreach (range(0, 4) as $attempt) {
-            $this->postJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK, 'password' => PASSWORD_FAIL . '_' . $attempt])
+            $this->postJson(TestHelpers::LOGIN_URI, ['login' => TestHelpers::LOGIN_EMAIL_OK, 'password' => TestHelpers::PASSWORD_FAIL . '_' . $attempt])
                 ->assertStatus(SymfonyResponse::HTTP_FORBIDDEN)
                 ->assertHeader('X-RATELIMIT-LIMIT', 5)                  # максимальное число запросов для приложения, разрешённое в данном интервале времени (5 попыток)
                 ->assertHeader('X-RATELIMIT-REMAINING', 4 - $attempt);  # сколько запросов осталось в данном интервале времени
         }
 
         # последний запрос отдаст ошибку 429-Too Many Attempts
-        $this->postJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK, 'password' => PASSWORD_FAIL])
+        $this->postJson(TestHelpers::LOGIN_URI, ['login' => TestHelpers::LOGIN_EMAIL_OK, 'password' => TestHelpers::PASSWORD_FAIL])
             ->assertStatus(SymfonyResponse::HTTP_TOO_MANY_REQUESTS)
             ->assertHeader('X-RATELIMIT-LIMIT', 5)      # максимальное число запросов для приложения, разрешённое в данном интервале времени (5 попыток)
             ->assertHeader('X-RATELIMIT-REMAINING', 0)  # сколько запросов у вас осталось в данном интервале времени
@@ -192,7 +184,7 @@ class AuthControllerLogin extends TestCase
     {
         TestHelpers::clearLoginAttempts();
 
-        $this->postJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK, 'password' => PASSWORD_OK])
+        $this->postJson(TestHelpers::LOGIN_URI, ['login' => TestHelpers::LOGIN_EMAIL_OK, 'password' => TestHelpers::PASSWORD_OK])
             ->assertStatus(SymfonyResponse::HTTP_OK)
             ->assertJsonStructure(['status', 'message', 'token'])
             ->assertJsonFragment(['status' => true])
@@ -208,7 +200,7 @@ class AuthControllerLogin extends TestCase
     {
         TestHelpers::clearLoginAttempts();
 
-        $this->postJson(LOGIN_URI, ['login' => LOGIN_PHONE_OK, 'password' => PASSWORD_OK])
+        $this->postJson(TestHelpers::LOGIN_URI, ['login' => TestHelpers::LOGIN_PHONE_OK, 'password' => TestHelpers::PASSWORD_OK])
             ->assertStatus(SymfonyResponse::HTTP_OK)
             ->assertJsonStructure(['status', 'message', 'token'])
             ->assertJsonFragment(['status' => true])
@@ -219,25 +211,22 @@ class AuthControllerLogin extends TestCase
      * Успешная аутентификация: В таблицу пользователя записан шифрованный api_token и время последнего доступа.
      *
      * @return void
+     * @throws \Throwable
      */
     public function testAuthBDSuccessful()
     {
         TestHelpers::clearLoginAttempts();
 
-        $response = $this->postJson(LOGIN_URI, ['login' => LOGIN_EMAIL_OK, 'password' => PASSWORD_OK])
+        # успешно логинимся и получаем токен
+        $token = $this->postJson(TestHelpers::LOGIN_URI, ['login' => TestHelpers::LOGIN_EMAIL_OK, 'password' => TestHelpers::PASSWORD_OK])
             ->assertStatus(SymfonyResponse::HTTP_OK)
-            ->assertJsonStructure(['status', 'message', 'token']);
-
-        # полученный JSON-контент декодируем в ассоциативный массив
-        $json = json_decode($response->getContent(), true);
-
-        # токен клиенту отдается "чистый", а в таблице сохраняется хешированным
-        $api_token = hash('sha256', $json['token']);
+            ->assertJsonStructure(['status', 'message', 'token'])
+            ->decodeResponseJson('token');
 
         # проверяем факт сохранения токена и последнего доступа в таблице users
         $this->assertDatabaseHas('users', [
-            'email'       => LOGIN_EMAIL_OK,
-            'api_token'   => $api_token,
+            'email'       => TestHelpers::LOGIN_EMAIL_OK,
+            'api_token'   => hash('sha256', $token),  # токен в таблице сохраняется хешированным
             'last_active' => date('Y-m-d H:i:s'),
         ]);
     }

@@ -1,24 +1,33 @@
 <?php
 
+/**
+ * AuthController: Аутентификация через социальную сеть (Google, Facebook).
+ */
+
 namespace Tests\Feature\Http\Controllers\API;
 
 use App\Libs\TestHelpers;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Tests\TestCase;
 use Faker\Factory as Faker;
 
-/* Ендпоинт для Аутентификации через соц.сеть: Google или Facebook */
-DEFINE('LOGIN_SOCIAL_URI', '/api/auth/social');
-
-/**
- * Аутентификация через соц.сеть
- */
 class AuthControllerSocial extends TestCase
 {
+    /**
+     * Аутентификация не поддерживаемым методом (в запросе указан метод GET, а нужно POST).
+     *
+     * @return void
+     */
+    public function testBadAuthMethod()
+    {
+        TestHelpers::clearLoginAttempts();
+
+        $this->getJson(TestHelpers::LOGIN_SOCIAL_URI)
+            ->assertStatus(SymfonyResponse::HTTP_METHOD_NOT_ALLOWED)
+            ->assertJson(['message' => "The GET method is not supported for this route. Supported methods: POST."]);
+    }
+
     /**
      * Не указаны обязательные параметры (провайдер, идентификатор, email) или они пустые.
      *
@@ -38,7 +47,7 @@ class AuthControllerSocial extends TestCase
         TestHelpers::clearLoginAttempts();
 
         # проверяем без параметров
-        $this->postJson(LOGIN_SOCIAL_URI)
+        $this->postJson(TestHelpers::LOGIN_SOCIAL_URI)
             ->assertStatus(SymfonyResponse::HTTP_BAD_REQUEST)
             ->assertExactJson([
                 'status' => false,
@@ -53,7 +62,7 @@ class AuthControllerSocial extends TestCase
         foreach ($combinations as $params) {
             TestHelpers::clearLoginAttempts();
 
-            $this->postJson(LOGIN_SOCIAL_URI, $params)
+            $this->postJson(TestHelpers::LOGIN_SOCIAL_URI, $params)
                 ->assertStatus(SymfonyResponse::HTTP_BAD_REQUEST)
                 ->assertExactJson([
                     'status' => false,
@@ -79,7 +88,7 @@ class AuthControllerSocial extends TestCase
             'email'      => $faker->unique()->email,
         ];
 
-        $this->postJson(LOGIN_SOCIAL_URI, $params)
+        $this->postJson(TestHelpers::LOGIN_SOCIAL_URI, $params)
             ->assertStatus(SymfonyResponse::HTTP_BAD_REQUEST)
             ->assertExactJson([
                 'status' => false,
@@ -99,14 +108,14 @@ class AuthControllerSocial extends TestCase
 
         # первые 4 запроса будут отдавать ошибку 400
         foreach (range(0, 4) as $attempt) {
-            $this->postJson(LOGIN_SOCIAL_URI)
+            $this->postJson(TestHelpers::LOGIN_SOCIAL_URI)
                 ->assertStatus(SymfonyResponse::HTTP_BAD_REQUEST)
                 ->assertHeader('X-RATELIMIT-LIMIT', 5)                  # максимальное число запросов для приложения, разрешённое в данном интервале времени (5 попыток)
                 ->assertHeader('X-RATELIMIT-REMAINING', 4 - $attempt);  # сколько запросов осталось в данном интервале времени
         }
 
         # последний запрос отдаст ошибку 429-Too Many Attempts
-        $this->postJson(LOGIN_SOCIAL_URI)
+        $this->postJson(TestHelpers::LOGIN_SOCIAL_URI)
             ->assertStatus(SymfonyResponse::HTTP_TOO_MANY_REQUESTS)
             ->assertHeader('X-RATELIMIT-LIMIT', 5)      # максимальное число запросов для приложения, разрешённое в данном интервале времени (5 попыток)
             ->assertHeader('X-RATELIMIT-REMAINING', 0)  # сколько запросов у вас осталось в данном интервале времени
@@ -145,21 +154,16 @@ class AuthControllerSocial extends TestCase
         ];
 
         # получаем ответ
-        $response = $this->postJson(LOGIN_SOCIAL_URI, $params)
+        $token = $this->postJson(TestHelpers::LOGIN_SOCIAL_URI, $params)
             ->assertOk()
             ->assertJsonStructure(['status', 'message', 'token'])
             ->assertJsonFragment(['status' => true])
-            ->assertJsonFragment(['message' => 'Login successful.']);
-
-        # полученный JSON-контент декодируем в ассоциативный массив
-        $json = json_decode($response->getContent(), true);
-
-        # токен клиенту отдается "чистый", а в таблице сохраняется хешированным
-        $api_token = hash('sha256', $json['token']);
+            ->assertJsonFragment(['message' => 'Login successful.'])
+            ->decodeResponseJson('token');
 
         # проверяем факт регистрации нового google пользователя
         $this->assertDatabaseHas('users', [
-            'api_token'     => $api_token,
+            'api_token'     => hash('sha256', $token), # токен в таблице сохраняется хешированным
             'google_id'     => $params['identifier'],
             'email'         => $params['email'],
             'phone'         => $params['phone'],
@@ -208,26 +212,24 @@ class AuthControllerSocial extends TestCase
             "photoURL"    => "https://graph.facebook.com/v2.12/104923752051320/picture?width=150&height=150",
         ];
 
-        # получаем ответ
-        $response = $this->postJson(LOGIN_SOCIAL_URI, $params)
+        # успешно логинимся и получаем токен
+        $token = $this->postJson(TestHelpers::LOGIN_SOCIAL_URI, $params)
             ->assertOk()
             ->assertJsonStructure(['status', 'message', 'token'])
             ->assertJsonFragment(['status' => true])
-            ->assertJsonFragment(['message' => 'Login successful.']);
-
-        # полученный JSON-контент декодируем в ассоциативный массив
-        $json = json_decode($response->getContent(), true);
-
-        # токен клиенту отдается "чистый", а в таблице сохраняется хешированным
-        $api_token = hash('sha256', $json['token']);
+            ->assertJsonFragment(['message' => 'Login successful.'])
+            ->decodeResponseJson('token');
 
         # проверяем факт регистрации facebook пользователя
         $this->assertDatabaseHas('users', [
-            'api_token'     => $api_token,
+            'api_token'     => hash('sha256', $token), # токен в таблице сохраняется хешированным
             'facebook_id'   => $params['identifier'],
             'email'         => $params['email'],
+            'phone'         => null,
             'name'          => $params['firstName'],
             'surname'       => $params['lastName'],
+            'lang'          => 'en',
+            'gender'        => 'unknown',
             'status'        => 'active',
             'currency'      => '$',
             'validation'    => 'no_valid',

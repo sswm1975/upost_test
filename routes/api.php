@@ -7,9 +7,6 @@ defined('MIDDLEWARE_AUTH_BASIC') or define('MIDDLEWARE_AUTH_BASIC', 'auth:api');
 Route::namespace('API')->group(function ($route) {
     # Аутентифікація
     $route->prefix('auth')->group(function ($route) {
-        # Реєстрація
-        $route->post('register', 'AuthController@register');
-
         # Аутентифікація
         $route->post('login', 'AuthController@login')->middleware('api_throttle:5,10'); # 5 спроб, 10 хвилин простою
 
@@ -18,6 +15,9 @@ Route::namespace('API')->group(function ($route) {
 
         # Припинення сеансу авторизованого користувача
         $route->post('logout', 'AuthController@logout')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Реєстрація
+        $route->post('register', 'AuthController@register');
 
         # Перевірка токена
         $route->get('check_token', 'AuthController@checkToken');
