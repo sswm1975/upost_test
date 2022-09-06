@@ -175,12 +175,74 @@ class AuthControllerSocial extends TestCase
             'last_active'   => date('Y-m-d H:i:s'),
         ]);
 
+        # получаем из таблицы данные об аватаре пользователя
         $user = User::withoutAppends()->where('google_id', '=', $params['identifier'])->first(['id', 'photo']);
 
         # проверяем, что сохранилось фото пользователя
         $this->fileExists(asset("storage/{$user->id}/user/{$user->photo}"));
 
         # удаляем в таблице users тестового google пользователя
+        $user->delete();
+    }
+
+    /**
+     * Успешная регистрация Facebook-пользователя.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testAuthFacebookSuccessful()
+    {
+        TestHelpers::clearLoginAttempts();
+
+        $params = [
+            "provider"    => "facebook",
+            "identifier"  => "104923752051320",
+            "email"       => "upost.api@gmail.com",
+            "displayName" => "Upost Api",
+            "firstName"   => "Upost",
+            "lastName"    => "Api",
+            "phone"       => null,
+            "language"    => null,
+            "gender"      => null,
+            "photoURL"    => "https://graph.facebook.com/v2.12/104923752051320/picture?width=150&height=150",
+        ];
+
+        # получаем ответ
+        $response = $this->postJson(LOGIN_SOCIAL_URI, $params)
+            ->assertOk()
+            ->assertJsonStructure(['status', 'message', 'token'])
+            ->assertJsonFragment(['status' => true])
+            ->assertJsonFragment(['message' => 'Login successful.']);
+
+        # полученный JSON-контент декодируем в ассоциативный массив
+        $json = json_decode($response->getContent(), true);
+
+        # токен клиенту отдается "чистый", а в таблице сохраняется хешированным
+        $api_token = hash('sha256', $json['token']);
+
+        # проверяем факт регистрации facebook пользователя
+        $this->assertDatabaseHas('users', [
+            'api_token'     => $api_token,
+            'facebook_id'   => $params['identifier'],
+            'email'         => $params['email'],
+            'name'          => $params['firstName'],
+            'surname'       => $params['lastName'],
+            'status'        => 'active',
+            'currency'      => '$',
+            'validation'    => 'no_valid',
+            'role'          => 'user',
+            'register_date' => date('Y-m-d'),
+            'last_active'   => date('Y-m-d H:i:s'),
+        ]);
+
+        # получаем из таблицы данные об аватаре пользователя
+        $user = User::withoutAppends()->where('facebook_id', '=', $params['identifier'])->first(['id', 'photo']);
+
+        # проверяем, что сохранилось фото пользователя
+        $this->fileExists(asset("storage/{$user->id}/user/{$user->photo}"));
+
+        # удаляем в таблице users тестового facebook пользователя
         $user->delete();
     }
 }
