@@ -3,8 +3,10 @@
 namespace Tests\Feature\Http\Controllers\API;
 
 use App\Libs\TestHelpers;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Tests\TestCase;
 use Faker\Factory as Faker;
@@ -12,10 +14,13 @@ use Faker\Factory as Faker;
 /* Ендпоинт для Аутентификации через соц.сеть: Google или Facebook */
 DEFINE('LOGIN_SOCIAL_URI', '/api/auth/social');
 
+/**
+ * Аутентификация через соц.сеть
+ */
 class AuthControllerSocial extends TestCase
 {
     /**
-     * Аутентификация через соц.сеть: Не указаны обязательные параметры (провайдер, идентификатор, email) или они пустые.
+     * Не указаны обязательные параметры (провайдер, идентификатор, email) или они пустые.
      *
      * @return void
      */
@@ -58,7 +63,7 @@ class AuthControllerSocial extends TestCase
     }
 
     /**
-     * Аутентификация через соц.сеть: Не верный провайдер.
+     * Не верный провайдер.
      *
      * @return void
      */
@@ -83,7 +88,7 @@ class AuthControllerSocial extends TestCase
     }
 
     /**
-     * Аутентификация через соц.сеть: Проверка на троттлинг.
+     * Проверка на троттлинг.
      * (Разрешается 5 попыток, при неудаче блокируется на 10 минут).
      *
      * @return void
@@ -114,5 +119,68 @@ class AuthControllerSocial extends TestCase
             ]);
 
         TestHelpers::clearLoginAttempts();
+    }
+
+    /**
+     * Успешная регистрация Google-пользователя.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testAuthGoogleSuccessful()
+    {
+        TestHelpers::clearLoginAttempts();
+
+        $params = [
+            "provider"    => "google",
+            "identifier"  => "105307229145456687654",
+            "email"       => "artemogirock@gmail.com",
+            "displayName" => "Артем Ткачик",
+            "firstName"   => "Артем",
+            "lastName"    => "Ткачик",
+            "phone"       => "+380680091000",
+            "language"    => "uk",
+            "gender"      => "male",
+            "photoURL"    => "https://lh3.googleusercontent.com/a-/AOh14GgGHa4agngLi6uMtCuNT4bJZaEMGHxCCTZQ2SzpMA=s96-c",
+        ];
+
+        # получаем ответ
+        $response = $this->postJson(LOGIN_SOCIAL_URI, $params)
+            ->assertOk()
+            ->assertJsonStructure(['status', 'message', 'token'])
+            ->assertJsonFragment(['status' => true])
+            ->assertJsonFragment(['message' => 'Login successful.']);
+
+        # полученный JSON-контент декодируем в ассоциативный массив
+        $json = json_decode($response->getContent(), true);
+
+        # токен клиенту отдается "чистый", а в таблице сохраняется хешированным
+        $api_token = hash('sha256', $json['token']);
+
+        # проверяем факт регистрации нового google пользователя
+        $this->assertDatabaseHas('users', [
+            'api_token'     => $api_token,
+            'google_id'     => $params['identifier'],
+            'email'         => $params['email'],
+            'phone'         => $params['phone'],
+            'name'          => $params['firstName'],
+            'surname'       => $params['lastName'],
+            'lang'          => $params['language'],
+            'gender'        => $params['gender'],
+            'status'        => 'active',
+            'currency'      => '$',
+            'validation'    => 'no_valid',
+            'role'          => 'user',
+            'register_date' => date('Y-m-d'),
+            'last_active'   => date('Y-m-d H:i:s'),
+        ]);
+
+        $user = User::withoutAppends()->where('google_id', '=', $params['identifier'])->first(['id', 'photo']);
+
+        # проверяем, что сохранилось фото пользователя
+        $this->fileExists(asset("storage/{$user->id}/user/{$user->photo}"));
+
+        # удаляем в таблице users тестового google пользователя
+        $user->delete();
     }
 }
