@@ -20,9 +20,10 @@ class TestHelpers
     const PASSWORD_FAIL = 123456;
 
     /* Тестируемые конечные точки */
-    const LOGIN_URI          = '/api/auth/login';  # аутентификации по емейлу или телефону
-    const LOGIN_SOCIAL_URI   = '/api/auth/social'; # аутентификации через социальную сеть: Google или Facebook
-    const LOGOUT_URI         = '/api/auth/logout'; # завершения сеанса авторизованного пользователя
+    const LOGIN_URI          = '/api/auth/login';    # аутентификации по емейлу или телефону
+    const LOGIN_SOCIAL_URI   = '/api/auth/social';   # аутентификации через социальную сеть: Google или Facebook
+    const LOGOUT_URI         = '/api/auth/logout';   # завершения сеанса авторизованного пользователя
+    const REGISTER_URI       = '/api/auth/register'; # регистрация пользователя
 
     /**
      * Сбрасывание счетчика неудачных попыток для middleware('throttle:5,10') и локального IP 127.0.0.1
@@ -72,6 +73,24 @@ class TestHelpers
             if ($copy_data) {
                 $test_db->statement("INSERT INTO {$table} SELECT * FROM upost.{$table};");
             }
+        }
+    }
+
+    /**
+     * Функция формирования возможных комбинаций массива.
+     * (взято с https://ru.stackoverflow.com/questions/955897/возможные-комбинации-массива-php)
+     *
+     * @param array $arr
+     * @param array $res
+     * @param array $prefix
+     * @param int $offset
+     */
+    public static function tuples(array $arr, array &$res, array $prefix = [], int $offset = 0)
+    {
+        for ($i = $offset; $i < count($arr); $i++) {
+            $nextPrfx = array_merge($prefix, [$arr[$i]]);
+            array_push($res, $nextPrfx);
+            static::tuples($arr, $res, $nextPrfx, ++$offset);
         }
     }
 }

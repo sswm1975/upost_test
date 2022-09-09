@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AuthController: Аутентификация через социальную сеть (Google, Facebook).
+ * AuthController: Тестирование метода "social" - аутентификация через социальную сеть (Google, Facebook).
  */
 
 namespace Tests\Feature\Http\Controllers\API;
@@ -56,7 +56,7 @@ class AuthControllerSocial extends TestCase
 
         # с тремя параметрами 'provider', 'identifier', 'email' формируем возможные комбинации массива - всего 7 вариантов
         $combinations = [];
-        tuples(['provider', 'identifier', 'email'], $combinations);
+        TestHelpers::tuples(['provider', 'identifier', 'email'], $combinations);
 
         # перебираем все варианты и проверяем ответ
         foreach ($combinations as $params) {

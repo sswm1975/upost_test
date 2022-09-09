@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AuthController: Тестирование метода "Logout" - прекращение сеанса авторизованного пользователя.
+ * AuthController: Тестирование метода "logout" - прекращение сеанса авторизованного пользователя.
  */
 
 namespace Tests\Feature\Http\Controllers\API;
