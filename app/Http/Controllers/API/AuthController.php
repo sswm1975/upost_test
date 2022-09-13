@@ -95,7 +95,7 @@ class AuthController extends Controller
                 $password = Str::random(10);
 
                 # создаём нового пользователя
-                $user = static::createSocialUser($field_id, $data, $password);
+                $user = $this->createSocialUser($field_id, $data, $password);
 
                 $info = [
                     'language'    => $user->lang,
@@ -122,30 +122,6 @@ class AuthController extends Controller
             'message' => __('message.login_successful'),
             'token'   => $token,
         ]);
-    }
-
-    /**
-     * Проверить указанные учетные данные.
-     *
-     * @param array $credentials
-     * @return User|null
-     */
-    protected function attemptLogin(array $credentials = []): ?User
-    {
-        $login = $credentials['login'];
-
-        $is_email = Str::contains($login, '@');
-
-        return User::query()
-            ->withoutAppends()
-            ->wherePassword($credentials['password'])
-            ->when($is_email, function ($query) use ($login) {
-                return $query->whereEmail($login);
-            })
-            ->when(!$is_email, function ($query) use ($login) {
-                return $query->wherePhone($login);
-            })
-            ->first(['id']);
     }
 
     /**
@@ -176,9 +152,9 @@ class AuthController extends Controller
     public function register(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'phone'    => 'required|phone|unique:users',
-            'email'    => 'required|email|max:30|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'phone'    => 'required|phone|min:9|max:15|unique:users',
+            'email'    => 'required|email|min:6|max:254|unique:users',
+            'password' => 'required|min:6|max:30|confirmed',
             'check'    => 'required|accepted',
         ]);
 
@@ -233,12 +209,36 @@ class AuthController extends Controller
     }
 
     /**
+     * Проверить указанные учетные данные.
+     *
+     * @param array $credentials
+     * @return User|null
+     */
+    protected function attemptLogin(array $credentials = []): ?User
+    {
+        $login = $credentials['login'];
+
+        $is_email = Str::contains($login, '@');
+
+        return User::query()
+            ->withoutAppends()
+            ->wherePassword($credentials['password'])
+            ->when($is_email, function ($query) use ($login) {
+                return $query->whereEmail($login);
+            })
+            ->when(!$is_email, function ($query) use ($login) {
+                return $query->wherePhone($login);
+            })
+            ->first(['id']);
+    }
+
+    /**
      * Генерация токена.
      *
      * @param User $user
      * @return string
      */
-    private function generateToken(User $user): string
+    protected function generateToken(User $user): string
     {
         $token = Str::random(64);
 
@@ -258,7 +258,7 @@ class AuthController extends Controller
      * @param string $password
      * @return User
      */
-    private static function createSocialUser(string $field_id, array $data, string $password): User
+    protected function createSocialUser(string $field_id, array $data, string $password): User
     {
         $user = User::create([
             $field_id  => $data['identifier'],
