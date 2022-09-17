@@ -127,6 +127,7 @@ class Rate extends Model
         self::STATUS_BUYED,
         self::STATUS_SUCCESSFUL,
         self::STATUS_DONE,
+        self::STATUS_FAILED,
     ];
 
     # положительные статусы
