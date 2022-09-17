@@ -236,14 +236,13 @@ class Rate extends Model
     }
 
     /**
-     * Действующий спор по ставке (может быть только один).
+     * Последний спор по ставке.
      *
      * @return HasOne
      */
     public function dispute(): HasOne
     {
-        return $this->hasOne(Dispute::class, 'rate_id', 'id')
-            ->whereIn('status', Dispute::STATUSES_ACTING);
+        return $this->hasOne(Dispute::class, 'rate_id', 'id')->latest('id');
     }
 
     ### SCOPES ###
