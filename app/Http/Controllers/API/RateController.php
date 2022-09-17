@@ -344,7 +344,6 @@ class RateController extends Controller
             $rate->chat_id = $chat->id;
             $rate->save();
             $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
-            $rate->route()->update(['status' => Route::STATUS_IN_WORK]);
 
             Transaction::create([
                 'user_id'         => $liqpay['info']['user_id'],
