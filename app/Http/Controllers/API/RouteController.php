@@ -85,13 +85,20 @@ class RouteController extends Controller
 
     /**
      * Закрыть маршрут(ы) (внутренний).
+     * (закрыть маршрут может только владелец действующего маршрута, если все связанные ставки находятся в завершенном статусе)
      *
      * @param mixed $id
      * @return JsonResponse
      */
     private static function closeRoute_int($id): JsonResponse
     {
-        $affected_rows = Route::isOwnerByKey($id)->update(['status' => Order::STATUS_CLOSED]);
+        $affected_rows = Route::whereKey($id)
+            ->active()
+            ->owner()
+            ->whereDoesntHave('rates', function($query) {
+                return $query->whereNotIn('status', ['successful', 'done', 'failed', 'banned']);
+            })
+            ->update(['status' => Order::STATUS_CLOSED]);
 
         return response()->json([
             'status'        => $affected_rows > 0,

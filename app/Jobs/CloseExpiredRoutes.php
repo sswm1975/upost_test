@@ -30,6 +30,28 @@ class CloseExpiredRoutes implements ShouldQueue
     const LOG_FILE = 'logs/close_expired_routes.log';
 
     /**
+     * Получить коды просроченных маршрутов.
+     * Условия:
+     * - статус маршрута активный
+     * - дата дедлайна меньше текущей даты
+     * - все связанные ставки находятся в завершенном статусе
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    private function getExpiredRoutesIds(): \Illuminate\Support\Collection
+    {
+        $today = Carbon::today()->toDateString();
+
+        return Route::withoutAppends()
+            ->active()
+            ->where('deadline', '<', $today)
+            ->whereDoesntHave('rates', function($query) {
+                return $query->whereNotIn('status', ['successful', 'done', 'failed', 'banned']);
+            })
+            ->pluck('id');
+    }
+
+    /**
      * Выполнить задание.
      *
      * @return void
@@ -58,23 +80,5 @@ class CloseExpiredRoutes implements ShouldQueue
                 $ids->implode(',')
             )
         );
-    }
-
-    /**
-     * Получить коды просроченных маршрутов.
-     * Условия:
-     * - статус маршрутd активный
-     * - дата дедлайна меньше текущей даты
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    private function getExpiredRoutesIds(): \Illuminate\Support\Collection
-    {
-        $today = Carbon::today()->toDateString();
-
-        return Route::withoutAppends()
-            ->active()
-            ->where('deadline', '<', $today)
-            ->pluck('id');
     }
 }
