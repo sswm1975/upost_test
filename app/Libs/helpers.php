@@ -547,3 +547,14 @@ function remote_file_exists(string $url): bool
 
     return $http_code == 200;
 }
+
+/**
+ * Возвращает состояние активности уведомления для выбранного типа.
+ *
+ * @param string $notice_type
+ * @return bool
+ */
+function active_notice_type(string $notice_type): bool
+{
+    return config("notice_types.{$notice_type}.active", false);
+}

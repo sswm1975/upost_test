@@ -102,10 +102,10 @@ class AdminController extends Controller
     /**
      * Get breadcrumb.
      *
-     * @param int $id
+     * @param mixed $id
      * @return array
      */
-    protected function breadcrumb(int $id = 0): array
+    protected function breadcrumb($id = 0): array
     {
         $breadcrumb = array_merge($this->breadcrumb, [[
             'text' => $this->title, 'icon' => str_replace('fa-', '', $this->icon)

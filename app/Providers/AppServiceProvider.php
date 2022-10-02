@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Currency;
+use App\Models\NoticeType;
 use App\Models\Order;
 use App\Models\Constant;
 use App\Observers\OrderObserver;
@@ -52,6 +53,9 @@ class AppServiceProvider extends ServiceProvider
 
         # Кэширование текущих курсов из таблицы currencies и занесение их в App Config, т.е. потом можно вызывать, к примеру config('rates.$')
         Currency::initCache();
+
+        # Кэширование типов уведомлений из таблицы notice_types и занесение их в App Config, т.е. потом можно вызывать, к примеру config('rates.$')
+        NoticeType::initCache();
 
         /**
          * Для операции "Сброс пароля" избавляемся от маршрута ниже (для API он не нужен):
