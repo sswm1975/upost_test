@@ -2,7 +2,8 @@
 
 namespace App\Observers;
 
-use App\Events\MessageNewRate;
+use App\Models\Notice;
+use App\Models\NoticeType;
 use App\Models\Rate;
 use App\Models\User;
 
@@ -16,6 +17,10 @@ class RateObserver
      */
     public function created(Rate $rate)
     {
+        # если неактивно уведомление "Появилась новая ставка", то выходим
+        if (!active_notice_type($notice_type = NoticeType::NEW_RATE)) return;
+
+        #  к ставке добавляем доп.данные
         $rate->load([
             'user' => function ($query) {
                 $query->select(User::FIELDS_FOR_SHOW);
@@ -25,10 +30,12 @@ class RateObserver
             },
         ]);
 
-        try {
-            broadcast(new MessageNewRate($rate))->toOthers();
-        } catch (\Exception $e) {
-
-        }
+        # создаем уведомление
+        Notice::create([
+            'user_id'     => $rate->order->user_id,
+            'notice_type' => $notice_type,
+            'object_id'   => $rate->id,
+            'data'        => $rate,
+        ]);
     }
 }
