@@ -48,10 +48,6 @@ class NoticeType extends Model
         static::saved(function () {
             static::updateCache();
         });
-
-        static::deleted(function () {
-            static::updateCache();
-        });
     }
 
     public static function initCache()

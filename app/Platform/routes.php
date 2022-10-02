@@ -89,7 +89,7 @@ Route::group([
         $router->get('currencies', 'CurrenciesController@index');
 
         # Типы уведомлений
-        $router->resource('notice_types', 'NoticeTypeController')->names('notice_types');
+        $router->resource('notice_types', 'NoticeTypeController')->except(['delete'])->names('notice_types');
     });
 
     # Пункты меню "Настройки"

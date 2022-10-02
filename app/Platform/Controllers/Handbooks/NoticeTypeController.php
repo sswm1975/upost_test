@@ -27,6 +27,10 @@ class NoticeTypeController extends AdminController
     {
         $grid = new Grid(new NoticeType);
 
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableDelete();
+        });
+
         $grid->column('id', 'Код')->sortable();
         $grid->column('name_uk', 'Название 🇺🇦');
         $grid->column('name_ru', 'Название 🇷🇺');
