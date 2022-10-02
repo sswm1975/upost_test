@@ -7,6 +7,7 @@ use App\Jobs\CloseExpiredRate;
 use App\Jobs\CloseExpiredRoutes;
 use App\Jobs\RecalcAmountInUSD;
 use App\Jobs\SendMailDeadlineRate;
+use App\Jobs\SoonExpiredOrders;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -46,6 +47,12 @@ class Kernel extends ConsoleKernel
             ->dailyAt('0:05')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(CloseExpiredOrders::LOG_FILE));
+
+        $schedule->job(new SoonExpiredOrders)
+            ->description('Отправить уведомление "Скоро крайний срок заказа"')
+            ->dailyAt('0:06')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(SoonExpiredOrders::LOG_FILE));
 
         $schedule->job(new CloseExpiredRoutes)
             ->description('Закрыть просроченные маршруты')
