@@ -87,6 +87,9 @@ Route::group([
 
         # Курсы валют
         $router->get('currencies', 'CurrenciesController@index');
+
+        # Типы уведомлений
+        $router->resource('notice_types', 'NoticeTypeController')->names('notice_types');
     });
 
     # Пункты меню "Настройки"
