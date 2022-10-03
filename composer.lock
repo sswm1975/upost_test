@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d1d5c3f05cea7c7937a6ba3c7092127b",
+    "content-hash": "ddeeb5fabf108c2624b3a28f07c36865",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2104,6 +2104,64 @@
                 }
             ],
             "time": "2022-07-28T22:46:52+00:00"
+        },
+        {
+            "name": "laravel-admin-ext/ckeditor",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/ckeditor.git",
+                "reference": "33b0be1f489f923617417f8135a198d984a6b12f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/ckeditor/zipball/33b0be1f489f923617417f8135a198d984a6b12f",
+                "reference": "33b0be1f489f923617417f8135a198d984a6b12f",
+                "shasum": ""
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Encore\\CKEditor\\CKEditorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Encore\\CKEditor\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "song",
+                    "email": "zosong@126.com"
+                }
+            ],
+            "description": "Integrate CKEDITOR into laravel-admin",
+            "homepage": "https://github.com/laravel-admin-ext/ckeditor",
+            "keywords": [
+                "CKEditor",
+                "editor",
+                "extension",
+                "laravel-admin"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel-admin-extensions/ckeditor/issues",
+                "source": "https://github.com/laravel-admin-extensions/ckeditor/tree/master"
+            },
+            "time": "2018-11-03T06:08:00+00:00"
         },
         {
             "name": "laravel-admin-ext/helpers",

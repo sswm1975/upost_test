@@ -428,6 +428,16 @@ return [
             ]
         ],
 
+        'ckeditor' => [
+            //Set to false if you want to disable this extension
+            'enable' => true,
+
+            // Editor configuration
+            'config' => [
+                'lang'   => 'ru',
+            ]
+        ],
+
         # https://github.com/laravel-admin-extensions/echarts
         'echarts' => [
             'enable' => true,

@@ -28,6 +28,7 @@
         "laravel-admin-ext/log-viewer": "^1.0",
         "laravel-admin-ext/php-editor": "^1.0",
         "laravel-admin-ext/scheduling": "^1.2",
+        "laravel-admin-ext/ckeditor": "^1.0",
         "laravel/framework": "^7.30",
         "laravel/tinker": "^2.6",
         "liqpay/liqpay": "^1.2",
