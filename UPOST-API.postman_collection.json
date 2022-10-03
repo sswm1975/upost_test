@@ -6508,6 +6508,61 @@
 							"response": []
 						},
 						{
+							"name": "Встановити ставці/ставкам флаг перегляду замовником",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rate_id[]",
+											"value": "24",
+											"description": "Кот ставки (обязательный, если не указан параметр order_id)",
+											"type": "text"
+										},
+										{
+											"key": "rate_id[]",
+											"value": "35",
+											"description": "Кот ставки",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "order_id",
+											"value": "18",
+											"description": "Код заказа (не обязательный)",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/set_viewed_by_customer",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"set_viewed_by_customer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Отримати ставки по замовленню",
 							"event": [
 								{
