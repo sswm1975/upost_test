@@ -511,4 +511,38 @@ class RateController extends Controller
             'rates_count' => count($rates),
         ]);
     }
+
+    /**
+     * Установка признака "Ставка просмотрена заказчиком".
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidatorException|ValidationException
+     */
+    public function setViewedByCustomer(Request $request):JsonResponse
+    {
+        $data = validateOrExit([
+            'rate_id'   => 'required_without:order_id|array|min:1',
+            'rate_id.*' => 'required|integer',
+            'order_id'  => 'nullable|integer',
+        ]);
+
+        $affected_rows = Rate::query()
+            ->where('viewed_by_customer', '=', 0)
+            ->whereHas('order', function ($query) use ($data) {
+                $query->where('user_id', $data['user_id']);
+            })
+            ->when($request->filled('rate_id'), function ($query) use ($data) {
+                return $query->whereKey($data['rate_id']);
+            })
+            ->when($request->filled('order_id'), function ($query) use ($data) {
+                return $query->where('order_id', $data['order_id']);
+            })
+            ->update(['viewed_by_customer' => 1]);
+
+        return response()->json([
+            'status'        => true,
+            'affected_rows' => $affected_rows,
+        ]);
+    }
 }

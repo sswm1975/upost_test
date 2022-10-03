@@ -171,6 +171,9 @@ Route::namespace('API')->group(function ($route) {
 
         # Ставки, которые не смотрел владелец заказа
         $route->get('not_viewed_by_customer', 'RateController@getRatesNotViewedByCustomer');
+
+        # Установка признака "Ставка просмотрена заказчиком".
+        $route->post('set_viewed_by_customer', 'RateController@setViewedByCustomer');
     });
 
     # Отзывы
