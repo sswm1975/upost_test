@@ -7,6 +7,8 @@ use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
+use App\Models\Notice;
+use App\Models\NoticeType;
 use App\Models\Order;
 use App\Models\OrderDeduction;
 use App\Models\Payment;
@@ -389,7 +391,12 @@ class RateController extends Controller
      */
     public function buyedRate(int $rate_id): JsonResponse
     {
-        $rate = Rate::byKeyForRateOwner($rate_id, [Rate::STATUS_ACCEPTED])->first();
+        $rate = Rate::query()
+            ->byKeyForRateOwner($rate_id, [Rate::STATUS_ACCEPTED])
+            ->with(['order' => function ($query) {
+                $query->withoutAppends()->select(['id', 'user_id']);
+            }])
+            ->first();
         if (! $rate) {
             throw new ErrorException(__('message.rate_not_found'));
         }
@@ -411,9 +418,20 @@ class RateController extends Controller
             'images' => $data['images'],
         ]);
 
+        # создаем уведомление "Товар куплен Путешественником"
+        if (active_notice_type($notice_type = NoticeType::PRODUCT_BUYED)) {
+            Notice::create([
+                'user_id'     => $rate->order->user_id,
+                'notice_type' => $notice_type,
+                'object_id'   => $rate->id,
+                'data'        => $rate,
+            ]);
+        }
+
         return response()->json([
             'status' => true,
             'rate'   => null_to_blank($rate),
+            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
