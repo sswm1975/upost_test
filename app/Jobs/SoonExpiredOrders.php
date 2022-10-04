@@ -39,7 +39,7 @@ class SoonExpiredOrders implements ShouldQueue
     public function handle()
     {
         # если неактивно уведомление "Скоро крайний срок заказа", то выходим
-        if (!active_notice_type($notice_type = NoticeType::SOON_DEADLINE_ORDER)) return;
+        if (!active_notice_type($notice_type = NoticeType::SOON_EXPIRED_ORDER)) return;
 
         config(['logging.channels.single.path' => storage_path(self::LOG_FILE)]);
 

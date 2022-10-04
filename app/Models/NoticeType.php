@@ -39,7 +39,8 @@ class NoticeType extends Model
     public $incrementing = false;
 
     const NEW_RATE = 'new_rate';                             # Появилась новая ставка
-    const SOON_DEADLINE_ORDER = 'soon_deadline_order';       # Скоро крайний срок заказа
+    const SOON_EXPIRED_ORDER = 'soon_expired_order';         # Скоро крайний срок заказа
+    const SELECT_TRAVELER = 'select_traveler';               # Выберите путешественника
 
     public static function boot()
     {

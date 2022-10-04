@@ -6,6 +6,7 @@ use App\Jobs\CloseExpiredOrders;
 use App\Jobs\CloseExpiredRate;
 use App\Jobs\CloseExpiredRoutes;
 use App\Jobs\RecalcAmountInUSD;
+use App\Jobs\SelectTraveler;
 use App\Jobs\SendMailDeadlineRate;
 use App\Jobs\SoonExpiredOrders;
 use Illuminate\Console\Scheduling\Schedule;
@@ -53,6 +54,12 @@ class Kernel extends ConsoleKernel
             ->dailyAt('0:06')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(SoonExpiredOrders::LOG_FILE));
+
+        $schedule->job(new SelectTraveler)
+            ->description('Отправить Заказчику уведомление "Выберите путешественника"')
+            ->dailyAt('0:06')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(SelectTraveler::LOG_FILE));
 
         $schedule->job(new CloseExpiredRoutes)
             ->description('Закрыть просроченные маршруты')
