@@ -15,9 +15,10 @@ class CreateNoticeTypesTable extends Migration
     {
         Schema::create('notice_types', function (Blueprint $table) {
             $table->string('id', 50)->comment('Код')->primary();
-            $table->string('name_uk', 50)->comment('Наименование на украинском');
-            $table->string('name_ru', 50)->comment('Наименование на русском');
-            $table->string('name_en', 50)->comment('Наименование на английском');
+            $table->string('title', 50)->comment('Наименование');
+            $table->string('name_uk', 50)->comment('Текст уведомления на украинском');
+            $table->string('name_ru', 50)->comment('Текст уведомления на русском');
+            $table->string('name_en', 50)->comment('Текст уведомления на английском');
             $table->boolean('active')->default(1)->comment('Действует (да/нет)');
             $table->text('description')->nullable()->comment('Описание');
             $table->timestamp('created_at')->nullable()->comment('Добавлено');

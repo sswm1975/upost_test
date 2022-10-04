@@ -19,6 +19,24 @@ class NoticeTypeController extends AdminController
         ['text' => 'Справочники', 'icon' => 'book'],
     ];
 
+    public function menu(): array
+    {
+        $counts = NoticeType::selectRaw('active, count(1) as total')
+            ->groupBy('active')
+            ->pluck('total', 'active')
+            ->toArray();
+
+        foreach (VALUES_ACTING as $status => $name) {
+            $statuses[$status] = (object) [
+                'name'  => $name,
+                'count' => $counts[$status] ?? 0,
+                'color' => $status ? 'success' : 'danger',
+            ];
+        }
+
+        return compact('statuses');
+    }
+
     /**
      * Make a grid builder.
      *
@@ -30,20 +48,24 @@ class NoticeTypeController extends AdminController
 
         $grid = new Grid(new NoticeType);
 
+        $grid->model()->where('active', request('status', VALUE_ACTIVE));
+
+        $grid->quickSearch(['id', 'title'])->placeholder('Поиск...');
+
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
         });
 
         $grid->column('id', 'Код')->sortable();
+        $grid->column('title', 'Наименование')
+            ->modal('Описание', function($model) {
+                return !empty($model->description) ? $model->description : 'Нет описания';
+            })
+            ->sortable();
         $grid->column('name_uk', 'Уведомление 🇺🇦');
         $grid->column('name_ru', 'Уведомление 🇷🇺');
         $grid->column('name_en', 'Уведомление 🇬🇧');
         $grid->column('active', 'Действует')->switch(SWITCH_YES_NO)->sortable();
-        $grid->column('description_modal', 'Описание')
-            ->setAttributes(['align'=>'center'])
-            ->modal('Описание', function($model) {
-                return !empty($model->description) ? $model->description : 'Нет описания';
-            });
         $grid->column('created_at', 'Создано');
         $grid->column('updated_at', 'Изменено');
 
@@ -62,9 +84,10 @@ class NoticeTypeController extends AdminController
         $form->text('id', 'Код')
             ->creationRules(['required', "unique:notice_types"])
             ->updateRules(['required', "unique:notice_types,id,{{id}}"]);
-        $form->text('name_uk', 'Название 🇺🇦')->required();
-        $form->text('name_ru', 'Название 🇷🇺')->required();
-        $form->text('name_en', 'Название 🇬🇧')->required();
+        $form->text('title', 'Наименование')->required();
+        $form->text('name_uk', 'Уведомление 🇺🇦')->required();
+        $form->text('name_ru', 'Уведомление 🇷🇺')->required();
+        $form->text('name_en', 'Уведомление 🇬🇧')->required();
         $form->ckeditor('description', 'Описание');
         $form->switch('active', 'Действует')->default(1)->states(SWITCH_YES_NO);
 
