@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Jobs\CloseExpiredOrders;
 use App\Jobs\CloseExpiredRate;
 use App\Jobs\CloseExpiredRoutes;
+use App\Jobs\NeedBuyProduct;
 use App\Jobs\RecalcAmountInUSD;
 use App\Jobs\ReviewForCustomer;
 use App\Jobs\ReviewForTraveler;
@@ -106,9 +107,15 @@ class Kernel extends ConsoleKernel
             ->appendOutputTo(storage_path(ReviewForTraveler::LOG_FILE));
 
         $schedule->job(new ReviewForCustomer)
-            ->description('Отправить путешественнику уведомление "Оставьте отзыв для Заказчику"')
+            ->description('Отправить Путешественнику уведомление "Оставьте отзыв для Заказчику"')
             ->dailyAt('0:06')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ReviewForCustomer::LOG_FILE));
+
+        $schedule->job(new NeedBuyProduct)
+            ->description('Отправить Путешественнику уведомление "Купите товар по заказу, который вы доставляете"')
+            ->dailyAt('0:06')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(NeedBuyProduct::LOG_FILE));
     }
 }

@@ -257,6 +257,16 @@ class Rate extends Model
         return $this->hasOne(Dispute::class, 'rate_id', 'id')->latest('id');
     }
 
+    /**
+     * Транзакция по ставке.
+     *
+     * @return HasOne
+     */
+    public function transaction(): HasOne
+    {
+        return $this->hasOne(Transaction::class, 'rate_id', 'id')->latest('id');
+    }
+
     ### SCOPES ###
 
     public function scopeOwner($query)
