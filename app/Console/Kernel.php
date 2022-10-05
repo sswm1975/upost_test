@@ -6,6 +6,7 @@ use App\Jobs\CloseExpiredOrders;
 use App\Jobs\CloseExpiredRate;
 use App\Jobs\CloseExpiredRoutes;
 use App\Jobs\RecalcAmountInUSD;
+use App\Jobs\ReviewForCustomer;
 use App\Jobs\ReviewForTraveler;
 use App\Jobs\SelectTraveler;
 use App\Jobs\SendMailDeadlineRate;
@@ -50,24 +51,6 @@ class Kernel extends ConsoleKernel
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(CloseExpiredOrders::LOG_FILE));
 
-        $schedule->job(new SoonExpiredOrders)
-            ->description('Отправить уведомление "Скоро крайний срок заказа"')
-            ->dailyAt('0:06')
-            ->timezone('Europe/Kiev')
-            ->appendOutputTo(storage_path(SoonExpiredOrders::LOG_FILE));
-
-        $schedule->job(new SelectTraveler)
-            ->description('Отправить Заказчику уведомление "Выберите путешественника"')
-            ->dailyAt('0:06')
-            ->timezone('Europe/Kiev')
-            ->appendOutputTo(storage_path(SelectTraveler::LOG_FILE));
-
-        $schedule->job(new ReviewForTraveler)
-            ->description('Отправить Заказчику уведомление "Оставьте отзыв для путешественника"')
-            ->dailyAt('0:06')
-            ->timezone('Europe/Kiev')
-            ->appendOutputTo(storage_path(ReviewForTraveler::LOG_FILE));
-
         $schedule->job(new CloseExpiredRoutes)
             ->description('Закрыть просроченные маршруты')
             ->dailyAt('0:07')
@@ -85,6 +68,9 @@ class Kernel extends ConsoleKernel
             ->dailyAt('08:10')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(RecalcAmountInUSD::LOG_FILE));
+
+        # расписания для уведомлений
+        $this->scheduleNotices($schedule);
     }
 
     /**
@@ -97,5 +83,32 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
+    }
+
+    private function scheduleNotices(Schedule $schedule)
+    {
+        $schedule->job(new SoonExpiredOrders)
+            ->description('Отправить уведомление "Скоро крайний срок заказа"')
+            ->dailyAt('0:06')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(SoonExpiredOrders::LOG_FILE));
+
+        $schedule->job(new SelectTraveler)
+            ->description('Отправить Заказчику уведомление "Выберите Путешественника"')
+            ->dailyAt('0:06')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(SelectTraveler::LOG_FILE));
+
+        $schedule->job(new ReviewForTraveler)
+            ->description('Отправить Заказчику уведомление "Оставьте отзыв для Путешественника"')
+            ->dailyAt('0:06')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(ReviewForTraveler::LOG_FILE));
+
+        $schedule->job(new ReviewForCustomer)
+            ->description('Отправить путешественнику уведомление "Оставьте отзыв для Заказчику"')
+            ->dailyAt('0:06')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(ReviewForCustomer::LOG_FILE));
     }
 }

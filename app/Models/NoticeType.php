@@ -40,9 +40,10 @@ class NoticeType extends Model
 
     const NEW_RATE = 'new_rate';                             # Появилась новая ставка
     const SOON_EXPIRED_ORDER = 'soon_expired_order';         # Скоро крайний срок заказа
-    const SELECT_TRAVELER = 'select_traveler';               # Выберите путешественника
+    const SELECT_TRAVELER = 'select_traveler';               # Выберите Путешественника
     const PRODUCT_BUYED = 'product_buyed';                   # Товар куплен Путешественником
-    const REVIEW_FOR_TRAVELER = 'review_for_traveler';       # Оставьте отзыв для путешественника
+    const REVIEW_FOR_TRAVELER = 'review_for_traveler';       # Оставьте отзыв для Путешественника
+    const REVIEW_FOR_CUSTOMER = 'review_for_customer';       # Оставьте отзыв для Заказчика
 
     public static function boot()
     {
