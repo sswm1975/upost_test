@@ -36,6 +36,8 @@ use Carbon\Carbon;
  * @property-read array $images_thumb
  * @property-read string $status_name
  * @property-read \App\Models\Order $order
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Review[] $reviews
+ * @property-read int|null $reviews_count
  * @property-read \App\Models\Route $route
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Rate active()
@@ -233,6 +235,16 @@ class Rate extends Model
     public function disputes(): HasMany
     {
         return $this->hasMany(Dispute::class, 'rate_id', 'id');
+    }
+
+    /**
+     * Отзывы по ставке.
+     *
+     * @return HasMany
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'rate_id', 'id');
     }
 
     /**

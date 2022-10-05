@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -63,7 +62,6 @@ use Illuminate\Support\Str;
  * @property-read \App\Models\Rate|null $rate_confirmed
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
- * @property-read \App\Models\Review|null $review
  * @property-read \App\Models\City|null $to_city
  * @property-read \App\Models\Country|null $to_country
  * @property-read \App\Models\User $user
@@ -105,7 +103,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserPriceUsd($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereWaitRangeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order withoutAppends()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order withoutAppends(array $appends = [])
  * @mixin \Eloquent
  */
 class Order extends Model
@@ -434,11 +432,6 @@ class Order extends Model
     public function rate_confirmed(): HasOne
     {
         return $this->hasOne(Rate::class, 'order_id', 'id')->confirmed();
-    }
-
-    public function review(): MorphOne
-    {
-        return $this->morphOne(Review::class, 'reviewable');
     }
 
     public function deductions(): HasMany
