@@ -365,6 +365,15 @@ class RateController extends Controller
             # информируем в чат, что заказчик оплатил заказ.
             Chat::addSystemMessage($chat->id, 'customer_paid_order');
 
+            # создаем уведомление "Ставка принята" для Путешественника
+            if (active_notice_type($notice_type = NoticeType::RATE_ACCEPTED)) {
+                Notice::create([
+                    'user_id'     => $rate->user_id,
+                    'notice_type' => $notice_type,
+                    'object_id'   => $rate->id,
+                ]);
+            }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();

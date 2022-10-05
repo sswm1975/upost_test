@@ -44,6 +44,7 @@ class NoticeType extends Model
     const PRODUCT_BUYED = 'product_buyed';                   # Товар куплен Путешественником
     const REVIEW_FOR_TRAVELER = 'review_for_traveler';       # Оставьте отзыв для Путешественника
     const REVIEW_FOR_CUSTOMER = 'review_for_customer';       # Оставьте отзыв для Заказчика
+    const RATE_ACCEPTED = 'rate_accepted';                   # Ставка принята
 
     public static function boot()
     {
