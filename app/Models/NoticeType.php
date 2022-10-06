@@ -46,7 +46,7 @@ class NoticeType extends Model
     const REVIEW_FOR_CUSTOMER = 'review_for_customer';       # Оставьте отзыв для Заказчика
     const RATE_ACCEPTED = 'rate_accepted';                   # Ставка принята
     const NEED_BUY_PRODUCT = 'need_buy_product';             # Необходимо купить товар
-    const OPENED_DISPUTE = 'opened_dispute';                 # Открыт спор
+    const DISPUTE_OPENED = 'dispute_opened';                 # Открыт спор
 
     public static function boot()
     {
@@ -66,7 +66,7 @@ class NoticeType extends Model
         config(compact('notice_types'));
     }
 
-    public static function updateCache()
+    public static function updateCache( )
     {
         Cache::forget('notice_types');
 

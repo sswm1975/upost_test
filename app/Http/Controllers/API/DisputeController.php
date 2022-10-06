@@ -78,7 +78,7 @@ class DisputeController extends Controller
         Chat::broadcastCountUnreadMessages($recipient_id);
 
         # создаем уведомление "Открыт спор"
-        if (active_notice_type($notice_type = NoticeType::OPENED_DISPUTE)) {
+        if (active_notice_type($notice_type = NoticeType::DISPUTE_OPENED)) {
             Notice::create([
                 'user_id'     => $recipient_id,
                 'notice_type' => $notice_type,
