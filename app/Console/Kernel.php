@@ -6,6 +6,7 @@ use App\Jobs\CloseExpiredOrders;
 use App\Jobs\CloseExpiredRate;
 use App\Jobs\CloseExpiredRoutes;
 use App\Jobs\NeedBuyProduct;
+use App\Jobs\ProfileNotFilled;
 use App\Jobs\RecalcAmountInUSD;
 use App\Jobs\ReviewForCustomer;
 use App\Jobs\ReviewForTraveler;
@@ -117,5 +118,11 @@ class Kernel extends ConsoleKernel
             ->dailyAt('0:06')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(NeedBuyProduct::LOG_FILE));
+
+        $schedule->job(new ProfileNotFilled)
+            ->description('Отправить Пользователям уведомление "Профиль не заполнен"')
+            ->dailyAt('0:06')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(ProfileNotFilled::LOG_FILE));
     }
 }

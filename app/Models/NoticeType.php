@@ -48,6 +48,7 @@ class NoticeType extends Model
     const NEED_BUY_PRODUCT = 'need_buy_product';             # Необходимо купить товар
     const DISPUTE_OPENED = 'dispute_opened';                 # Открыт спор
     const DISPUTE_CLOSED = 'dispute_closed';                 # Закрыт спор
+    const PROFILE_NOT_FILLED = 'profile_not_filled';         # Профиль не заполнен
 
     public static function boot()
     {
