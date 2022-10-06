@@ -46,6 +46,7 @@ class NoticeType extends Model
     const REVIEW_FOR_CUSTOMER = 'review_for_customer';       # Оставьте отзыв для Заказчика
     const RATE_ACCEPTED = 'rate_accepted';                   # Ставка принята
     const NEED_BUY_PRODUCT = 'need_buy_product';             # Необходимо купить товар
+    const OPENED_DISPUTE = 'opened_dispute';                 # Открыт спор
 
     public static function boot()
     {

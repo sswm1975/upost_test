@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\DisputeProblem;
+use App\Models\Notice;
+use App\Models\NoticeType;
 use App\Models\Rate;
 use App\Models\User;
 use Carbon\Carbon;
@@ -74,6 +76,15 @@ class DisputeController extends Controller
         # броадкастим кол-во непрочитанных сообщений собеседнику чата
         $recipient_id = $auth_user_id == $rate->user_id ? $rate->order->user_id : $rate->user_id;
         Chat::broadcastCountUnreadMessages($recipient_id);
+
+        # создаем уведомление "Открыт спор"
+        if (active_notice_type($notice_type = NoticeType::OPENED_DISPUTE)) {
+            Notice::create([
+                'user_id'     => $recipient_id,
+                'notice_type' => $notice_type,
+                'object_id'   => $dispute->id,
+            ]);
+        }
 
         return response()->json([
             'status' => true,
