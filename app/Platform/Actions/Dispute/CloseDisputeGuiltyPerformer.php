@@ -5,6 +5,8 @@ namespace App\Platform\Actions\Dispute;
 use App\Models\Chat;
 use App\Models\Dispute;
 use App\Models\DisputeClosedReason;
+use App\Models\Notice;
+use App\Models\NoticeType;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Rate;
@@ -79,6 +81,15 @@ class CloseDisputeGuiltyPerformer extends RowAction
                 'status'      => Chat::STATUS_CLOSED,
                 'lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL,
             ]);
+
+            # создаем уведомление "Закрыт спор"
+            if (active_notice_type($notice_type = NoticeType::DISPUTE_CLOSED)) {
+                Notice::create([
+                    'user_id'     => $model->rate->order->user_id,
+                    'notice_type' => $notice_type,
+                    'object_id'   => $model->rate->id,
+                ]);
+            }
 
             DB::commit();
         } catch (\Exception $e) {
