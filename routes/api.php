@@ -235,6 +235,15 @@ Route::namespace('API')->group(function ($route) {
         $route->get('show', 'PurseController@show');
     });
 
+    # Уведомления
+    $route->prefix('notices')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
+        # Получить уведомления
+        $route->get('show', 'NoticeController@show');
+
+        # Установить признак прочтения уведомления
+        $route->post('set_read', 'NoticeController@setReadNotice');
+    });
+
     # Справочники
     $route->prefix('handbooks')->group(function ($route) {
         # Список довідників для фільтру на сторінці Замовлення/Маршрути

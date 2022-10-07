@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Notice newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Notice newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Notice owner()
  * @method static \Illuminate\Database\Eloquent\Builder|Notice query()
  * @method static \Illuminate\Database\Eloquent\Builder|Notice whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Notice whereData($value)
@@ -66,6 +67,13 @@ class Notice extends Model
 
     public function notice_type(): HasOne
     {
-        return $this->hasOne(NoticeType::class, 'notice_type', 'id');
+        return $this->hasOne(NoticeType::class, 'id','notice_type');
+    }
+
+    ### SCOPES ###
+
+    public function scopeOwner($query)
+    {
+        return $query->where('user_id', request()->user()->id);
     }
 }
