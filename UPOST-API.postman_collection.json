@@ -6529,22 +6529,20 @@
 										{
 											"key": "rate_id[]",
 											"value": "24",
-											"description": "Кот ставки (обязательный, если не указан параметр order_id)",
+											"description": "Код ставки (обязательный, если не указан параметр order_id)",
 											"type": "text"
 										},
 										{
 											"key": "rate_id[]",
 											"value": "35",
-											"description": "Кот ставки",
-											"type": "text",
-											"disabled": true
+											"description": "Код ставки",
+											"type": "text"
 										},
 										{
 											"key": "order_id",
 											"value": "18",
 											"description": "Код заказа (не обязательный)",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										}
 									]
 								},
@@ -8685,6 +8683,95 @@
 											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально"
 										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Нотифікація",
+					"item": [
+						{
+							"name": "Отримати нотифікації",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/notices/show?status=all",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"notices",
+										"show"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "all",
+											"description": "Отримати нотификації по статусу (all - всі, not_read - не процитані, read - прочитані)"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Встановити прочитаним нотифікацію",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id[]",
+											"value": "1",
+											"description": "Код уведомления",
+											"type": "text"
+										},
+										{
+											"key": "id[]",
+											"value": "2",
+											"description": "Код уведомления",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/notices/set_read",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"notices",
+										"set_read"
 									]
 								}
 							},
