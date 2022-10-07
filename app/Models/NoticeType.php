@@ -50,6 +50,7 @@ class NoticeType extends Model
     const DISPUTE_OPENED = 'dispute_opened';                 # Открыт спор
     const DISPUTE_CLOSED = 'dispute_closed';                 # Закрыт спор
     const PROFILE_NOT_FILLED = 'profile_not_filled';         # Профиль не заполнен
+    const EXISTS_NEW_ORDERS = 'exists_new_orders';           # Существуют новые заказы по маршруту
 
     public static function boot()
     {

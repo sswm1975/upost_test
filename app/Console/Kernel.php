@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Jobs\CloseExpiredOrders;
 use App\Jobs\CloseExpiredRate;
 use App\Jobs\CloseExpiredRoutes;
+use App\Jobs\ExistsNewOrders;
 use App\Jobs\NeedBuyProduct;
 use App\Jobs\ProfileNotFilled;
 use App\Jobs\RecalcAmountInUSD;
@@ -124,5 +125,11 @@ class Kernel extends ConsoleKernel
             ->dailyAt('0:06')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ProfileNotFilled::LOG_FILE));
+
+        $schedule->job(new ExistsNewOrders)
+            ->description('Отправить Путешественнику уведомление "Существуют новые заказы по маршруту"')
+            ->dailyAt('0:06')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(ExistsNewOrders::LOG_FILE));
     }
 }
