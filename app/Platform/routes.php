@@ -114,6 +114,10 @@ Route::group([
         'middleware' => 'admin.permission:allow,administrator',
         'as'         => 'admin.',
     ], function (Router $router) {
+        # Уведомления
+        $router->get('notices', 'NoticeController@index');
+
+        # Сервисные уведомления
         $router->resource('service_notices', 'ServiceNoticeController')->except(['delete'])->names('service_notices');
     });
 

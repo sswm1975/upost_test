@@ -65,9 +65,9 @@ class Notice extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function notice_type(): HasOne
+    public function type(): HasOne
     {
-        return $this->hasOne(NoticeType::class, 'id','notice_type');
+        return $this->hasOne(NoticeType::class, 'id', 'notice_type');
     }
 
     ### SCOPES ###
