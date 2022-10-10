@@ -30,9 +30,11 @@ class NoticeController extends AdminController
 
         $grid->disableActions();
         $grid->disableCreateButton();
+        $grid->disablePagination(false);
+        $grid->paginate(20);
 
         $grid->column('id', 'Код')->sortable();
-        $grid->column('user_id', 'Код П.')->filter()->sortable();
+        $grid->column('user_id', 'Код П.')->setAttributes(['align'=>'right'])->filter()->sortable();
         $grid->column('user.name', 'Пользователь');
         $grid->column('notice_type', 'Тип')->filter(NoticeType::pluck('name', 'id')->toArray())->sortable();
         $grid->column('type.text_ru', 'Текст уведомления');
