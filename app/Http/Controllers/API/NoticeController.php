@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Notice;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class NoticeController extends Controller
@@ -21,8 +22,23 @@ class NoticeController extends Controller
     {
         $lang = $request->user()->lang;
 
-        $notices = Notice::owner()
+        $notices = Notice::query()
+            ->select(
+                'notices.id',
+                'notices.notice_type AS type',
+                DB::Raw("
+                    CASE
+                      WHEN notices.notice_type = 'service_notice'
+                      THEN CONCAT(notice_types.text_{$lang}, ': ', JSON_UNQUOTE(JSON_EXTRACT(notices.data, '$.text')))
+	                  ELSE notice_types.text_{$lang}
+                    END AS message
+                "),
+                'notices.is_read',
+                'notices.object_id',
+                'notices.data',
+                'notices.created_at')
             ->join('notice_types', 'notice_types.id', 'notices.notice_type')
+            ->owner()
             ->when($request->get('status', 'all') == 'not_read', function ($query) {
                 $query->where('notices.is_read', 0);
             })
@@ -30,15 +46,7 @@ class NoticeController extends Controller
                 $query->where('notices.is_read', 1);
             })
             ->latest('id')
-            ->get([
-                'notices.id',
-                'notices.notice_type AS type',
-                "notice_types.name_{$lang} as message",
-                'notices.is_read',
-                'notices.object_id',
-                'notices.data',
-                'notices.created_at',
-            ]);
+            ->get();
 
         return response()->json([
             'status'  => true,
