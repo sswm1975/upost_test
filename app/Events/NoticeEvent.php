@@ -39,7 +39,7 @@ class NoticeEvent implements ShouldBroadcastNow
         $this->id        = $notice->id;
         $this->type      = $notice->notice_type;
         $this->object_id = $notice->object_id;
-        $this->text      = config("notice_types.{$notice->notice_type}.name_{$lang}");
+        $this->text      = config("notice_types.{$notice->notice_type}.text_{$lang}");
         $this->data      = $notice->data ?? [];
     }
 

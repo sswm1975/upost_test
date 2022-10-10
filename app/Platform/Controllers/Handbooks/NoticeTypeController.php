@@ -8,7 +8,6 @@ use Encore\Admin\Admin;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Encore\Admin\Show;
-use Encore\Admin\Widgets\Box;
 
 class NoticeTypeController extends AdminController
 {
@@ -44,27 +43,34 @@ class NoticeTypeController extends AdminController
      */
     protected function grid(): Grid
     {
-        Admin::style('.modal-body > p {word-wrap: break-word;white-space: normal;text-align:left;}');
+        # добавляем в модалке перенос строк
+        Admin::style('.modal-body > p {white-space:normal;}');
 
         $grid = new Grid(new NoticeType);
 
         $grid->model()->where('active', request('status', VALUE_ACTIVE));
 
-        $grid->quickSearch(['id', 'title'])->placeholder('Поиск...');
+        $grid->quickSearch(['id', 'name'])->placeholder('Поиск...');
 
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
         });
 
         $grid->column('id', 'Код')->sortable();
-        $grid->column('title', 'Наименование')
+        $grid->column('name', 'Наименование')
             ->modal('Описание', function($model) {
                 return !empty($model->description) ? $model->description : 'Нет описания';
             })
             ->sortable();
-        $grid->column('name_uk', 'Уведомление 🇺🇦');
-        $grid->column('name_ru', 'Уведомление 🇷🇺');
-        $grid->column('name_en', 'Уведомление 🇬🇧');
+        $grid->column('mode', 'Режим')->filter(['scheduler' => 'Планировщик', 'event' => 'Событие', 'manually' => 'Вручную']);
+        $grid->column('text', 'Уведомление')
+            ->display(function () {
+                return sprintf('<span class="label label-warning">🇺🇦</span> %s<br><span class="label label-danger">🇷🇺</span> %s<br><span class="label label-primary">🇬🇧</span> %s',
+                    $this->text_uk,
+                    $this->text_ru,
+                    $this->text_en
+                );
+            });
         $grid->column('active', 'Действует')->switch(SWITCH_YES_NO)->sortable();
         $grid->column('created_at', 'Создано');
         $grid->column('updated_at', 'Изменено');
@@ -84,10 +90,10 @@ class NoticeTypeController extends AdminController
         $form->text('id', 'Код')
             ->creationRules(['required', "unique:notice_types"])
             ->updateRules(['required', "unique:notice_types,id,{{id}}"]);
-        $form->text('title', 'Наименование')->required();
-        $form->text('name_uk', 'Уведомление 🇺🇦')->required();
-        $form->text('name_ru', 'Уведомление 🇷🇺')->required();
-        $form->text('name_en', 'Уведомление 🇬🇧')->required();
+        $form->text('name', 'Наименование')->required();
+        $form->text('text_uk', 'Уведомление 🇺🇦')->required();
+        $form->text('text_ru', 'Уведомление 🇷🇺')->required();
+        $form->text('text_en', 'Уведомление 🇬🇧')->required();
         $form->ckeditor('description', 'Описание');
         $form->switch('active', 'Действует')->default(1)->states(SWITCH_YES_NO);
 
