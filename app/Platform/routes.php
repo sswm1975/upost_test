@@ -109,6 +109,16 @@ Route::group([
 
     # Пункты меню "Админка"
     $router->group([
+        'prefix'     => 'admin',
+        'namespace'  => 'Admin',
+        'middleware' => 'admin.permission:allow,administrator',
+        'as'         => 'admin.',
+    ], function (Router $router) {
+        $router->resource('service_notices', 'ServiceNoticeController')->except(['delete'])->names('service_notices');
+    });
+
+    # Пункты меню "Админка"
+    $router->group([
         'prefix'     => 'auth',
         'namespace'  => 'Auth',
         'middleware' => 'admin.permission:allow,administrator',

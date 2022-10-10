@@ -11,10 +11,11 @@ use Illuminate\Support\Facades\Cache;
  * App\Models\NoticeType
  *
  * @property string $id Код
- * @property string $title Наименование
- * @property string $name_uk Текст уведомления на украинском
- * @property string $name_ru Текст уведомления на русском
- * @property string $name_en Текст уведомления на английском
+ * @property string $name Наименование
+ * @property string|null $mode Режим работы
+ * @property string $text_uk Текст уведомления на украинском
+ * @property string $text_ru Текст уведомления на русском
+ * @property string $text_en Текст уведомления на английском
  * @property int $active Действует (да/нет)
  * @property string|null $description Описание
  * @property \Illuminate\Support\Carbon|null $created_at Добавлено
@@ -26,10 +27,11 @@ use Illuminate\Support\Facades\Cache;
  * @method static Builder|NoticeType whereCreatedAt($value)
  * @method static Builder|NoticeType whereDescription($value)
  * @method static Builder|NoticeType whereId($value)
- * @method static Builder|NoticeType whereNameEn($value)
- * @method static Builder|NoticeType whereNameRu($value)
- * @method static Builder|NoticeType whereNameUk($value)
- * @method static Builder|NoticeType whereTitle($value)
+ * @method static Builder|NoticeType whereMode($value)
+ * @method static Builder|NoticeType whereName($value)
+ * @method static Builder|NoticeType whereTextEn($value)
+ * @method static Builder|NoticeType whereTextRu($value)
+ * @method static Builder|NoticeType whereTextUk($value)
  * @method static Builder|NoticeType whereUpdatedAt($value)
  * @mixin \Eloquent
  */
@@ -51,6 +53,7 @@ class NoticeType extends Model
     const DISPUTE_CLOSED = 'dispute_closed';                 # Закрыт спор
     const PROFILE_NOT_FILLED = 'profile_not_filled';         # Профиль не заполнен
     const EXISTS_NEW_ORDERS = 'exists_new_orders';           # Существуют новые заказы по маршруту
+    const SERVICE_NOTICE = 'service_notice';                 # Сервисное уведомление
 
     public static function boot()
     {

@@ -25,7 +25,7 @@ class CreateServiceNoticesTable extends Migration
             $table->timestamp('sent_at')->nullable()->comment('Отправлено');
         });
 
-        DB::statement("ALTER TABLE service_notices COMMENT = 'Системные уведомления'");
+        DB::statement("ALTER TABLE service_notices COMMENT = 'Сервисные уведомления'");
     }
 
     /**
