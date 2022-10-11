@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Задание: Отправить Заказчику уведомление "Выберите путешественника".
  *
- * Условие: Отбираются активные заказы (статус 'active'), по которым есть хотя бы одна активная ставка (статус 'active'), созданная больше 24 часов назад.
+ * Условие: Отбираются активные заказы (статус 'active'), по которым есть три или более активных ставок (статус 'active'), созданных больше 24 часа назад.
  *
  * Результат: В таблицу notice добавляются записи.
  */
@@ -70,11 +70,12 @@ class SelectTraveler implements ShouldQueue
     }
 
     /**
-     * Получить активные заказы, по которым есть хотя бы одна активная ставка, созданная больше 24 часов назад.
+     * Получить активные заказы, по которым есть три и более активных ставок, созданная больше 24 часов назад.
      * Условия:
      * - статус заказа 'active'
      * - статус связанной с заказом ставки 'active'
      * - разница между текущем временем и датой создания ставки больше 24 часов
+     * - количество связанных ставок по заказу равно три или более
      *
      * @return \Illuminate\Support\Collection
      */
@@ -83,8 +84,9 @@ class SelectTraveler implements ShouldQueue
         return Order::withoutAppends()
             ->whereHas('rates', function ($query) {
                 $now = Carbon::now()->toDateTimeString();
-                $query->where('status', 'active')->whereRaw("HOUR(TIMEDIFF('{$now}', created_at)) >= 24");
-            })
+                $query->where('status', 'active')->whereRaw("HOUR(TIMEDIFF('{$now}', created_at)) >= 24")
+                    ->havingRaw('COUNT(*) >= 3');
+            }, '>=', 3)
             ->where('orders.status','active')
             ->pluck('user_id', 'id');
     }
