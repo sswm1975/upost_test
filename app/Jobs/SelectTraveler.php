@@ -82,12 +82,11 @@ class SelectTraveler implements ShouldQueue
     private function getData(): \Illuminate\Support\Collection
     {
         return Order::withoutAppends()
+            ->active()
             ->whereHas('rates', function ($query) {
                 $now = Carbon::now()->toDateTimeString();
-                $query->where('status', 'active')->whereRaw("HOUR(TIMEDIFF('{$now}', created_at)) >= 24")
-                    ->havingRaw('COUNT(*) >= 3');
+                $query->active()->whereRaw("HOUR(TIMEDIFF('{$now}', created_at)) >= 24");
             }, '>=', 3)
-            ->where('orders.status','active')
             ->pluck('user_id', 'id');
     }
 }
