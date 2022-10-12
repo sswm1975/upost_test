@@ -78,7 +78,7 @@ class NeedBuyProduct implements ShouldQueue
     {
         return Rate::withoutAppends()
             ->where('status', Rate::STATUS_ACCEPTED)
-            ->whereHas('transactions', function($query) {
+            ->whereHas('transaction', function($query) {
                 $now = Carbon::now()->toDateTimeString();
                 $query->whereRaw("HOUR(TIMEDIFF('{$now}', created_at)) >= 10");
             })
