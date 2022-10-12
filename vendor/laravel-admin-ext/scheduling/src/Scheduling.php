@@ -61,9 +61,10 @@ class Scheduling extends Extension
     protected function formatTask($event)
     {
         if ($event instanceof CallbackEvent) {
+            $name = $event->output != '/dev/null' ? current(explode('.', basename($event->output))) : 'Closure';
             return [
                 'type' => 'closure',
-                'name' => 'Closure',
+                'name' => 'LOG: ' . $name,
             ];
         }
 
