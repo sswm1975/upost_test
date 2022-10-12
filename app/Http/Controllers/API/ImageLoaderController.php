@@ -64,7 +64,12 @@ class ImageLoaderController extends Controller
         Storage::disk('public')->put($path . $image_original_name, $image_file);
         $storage_path = Storage::disk('public')->path($path);
 
-        $src = imagecreatefromstring($image_file);
+        try {
+            $src = imagecreatefromstring($image_file);
+        } catch (\Exception $ex) {
+            return '';
+        }
+
         if ($src === false) {
             return '';
         }
@@ -100,7 +105,12 @@ class ImageLoaderController extends Controller
         Storage::disk('public')->put($path . $image_original_name, $image_file);
         $storage_path = Storage::disk('public')->path($path);
 
-        $src = imagecreatefromstring($image_file);
+        try {
+            $src = imagecreatefromstring($image_file);
+        } catch (\Exception $ex) {
+            return '';
+        }
+
         if ($src === false) {
             return '';
         }
@@ -136,7 +146,12 @@ class ImageLoaderController extends Controller
         Storage::disk('public')->put($path . $image_original_name, $image_file);
         $storage_path = Storage::disk('public')->path($path);
 
-        $src = imagecreatefromstring($image_file);
+        try {
+            $src = imagecreatefromstring($image_file);
+        } catch (\Exception $ex) {
+            return '';
+        }
+
         if ($src === false) {
             return '';
         }
@@ -171,7 +186,12 @@ class ImageLoaderController extends Controller
         Storage::disk('public')->put($path . $image_original_name, $image_file);
         $storage_path = Storage::disk('public')->path($path);
 
-        $src = imagecreatefromstring($image_file);
+        try {
+            $src = imagecreatefromstring($image_file);
+        } catch (\Exception $ex) {
+            return '';
+        }
+
         if ($src === false) {
             return '';
         }
@@ -206,7 +226,12 @@ class ImageLoaderController extends Controller
         Storage::disk('public')->put($path . $image_original_name, $image_file);
         $storage_path = Storage::disk('public')->path($path);
 
-        $src = imagecreatefromstring($image_file);
+        try {
+            $src = imagecreatefromstring($image_file);
+        } catch (\Exception $ex) {
+            return '';
+        }
+
         if ($src === false) {
             return '';
         }
