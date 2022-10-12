@@ -28,7 +28,7 @@ class ReviewForCustomer implements ShouldQueue
      *
      * @var string
      */
-    const LOG_FILE = 'logs/review_for_customer.log';
+    const LOG_FILE = 'logs/notices/review_for_customer.log';
 
     /**
      * Выполнить задание.
@@ -44,7 +44,7 @@ class ReviewForCustomer implements ShouldQueue
         $rows = $this->getData();
 
         if (empty($count = $rows->count())) {
-            Log::channel('single')->info('Нет данных.');
+            Log::channel('single')->info('Нет данных');
             return;
         }
 
@@ -58,7 +58,7 @@ class ReviewForCustomer implements ShouldQueue
 
         Log::channel('single')->info(
             sprintf(
-                'Отправлены уведомления по ставкам: %d (ids = %s)',
+                'Всего отправлено уведомлений: %d (rate ids = %s)',
                 $count,
                 $rows->keys()->implode(',')
             )

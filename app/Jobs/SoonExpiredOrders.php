@@ -29,7 +29,7 @@ class SoonExpiredOrders implements ShouldQueue
      *
      * @var string
      */
-    const LOG_FILE = 'logs/soon_expired_orders.log';
+    const LOG_FILE = 'logs/notices/soon_expired_orders.log';
 
     /**
      * Выполнить задание.
@@ -43,10 +43,10 @@ class SoonExpiredOrders implements ShouldQueue
 
         config(['logging.channels.single.path' => storage_path(self::LOG_FILE)]);
 
-        $rows = $this->getSoonExpiredOrders();
+        $rows = $this->getData();
 
         if (empty($count = $rows->count())) {
-            Log::channel('single')->info('Нет заказов, которые скоро закончатся.');
+            Log::channel('single')->info('Нет данных');
             return;
         }
 
@@ -71,7 +71,7 @@ class SoonExpiredOrders implements ShouldQueue
         # логируем
         Log::channel('single')->info(
             sprintf(
-                'Отправлены уведомления по заказам: %d (ids = %s)',
+                'Всего отправлено уведомлений: %d (order ids = %s)',
                 $count,
                 $rows->pluck('order_id')->implode(',')
             )
@@ -87,7 +87,7 @@ class SoonExpiredOrders implements ShouldQueue
      *
      * @return \Illuminate\Support\Collection
      */
-    private function getSoonExpiredOrders(): \Illuminate\Support\Collection
+    private function getData(): \Illuminate\Support\Collection
     {
         $today = Carbon::today()->toDateString();
 

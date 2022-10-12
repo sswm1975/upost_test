@@ -28,7 +28,7 @@ class ProfileNotFilled implements ShouldQueue
      *
      * @var string
      */
-    const LOG_FILE = 'logs/profile_not_filled.log';
+    const LOG_FILE = 'logs/notices/profile_not_filled.log';
 
     /**
      * Выполнить задание.
@@ -44,7 +44,7 @@ class ProfileNotFilled implements ShouldQueue
         $rows = $this->getData();
 
         if (empty($count = $rows->count())) {
-            Log::channel('single')->info('Нет данных.');
+            Log::channel('single')->info('Нет данных');
             return;
         }
 
@@ -58,7 +58,7 @@ class ProfileNotFilled implements ShouldQueue
 
         Log::channel('single')->info(
             sprintf(
-                'Всего отправлено уведомлений: %d (коды пользователей: %s)',
+                'Всего отправлено уведомлений: %d (user ids = %s)',
                 $count,
                 $rows->implode(',')
             )

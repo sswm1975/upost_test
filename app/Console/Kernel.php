@@ -92,43 +92,43 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new SoonExpiredOrders)
             ->description('Отправить уведомление "Скоро крайний срок заказа"')
-            ->dailyAt('0:06')
+            ->dailyAt('0:01')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(SoonExpiredOrders::LOG_FILE));
 
         $schedule->job(new SelectTraveler)
             ->description('Отправить Заказчику уведомление "Выберите Путешественника"')
-            ->dailyAt('0:06')
+            ->dailyAt('0:01')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(SelectTraveler::LOG_FILE));
 
         $schedule->job(new ReviewForTraveler)
             ->description('Отправить Заказчику уведомление "Оставьте отзыв для Путешественника"')
-            ->dailyAt('0:06')
+            ->dailyAt('0:01')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ReviewForTraveler::LOG_FILE));
 
         $schedule->job(new ReviewForCustomer)
             ->description('Отправить Путешественнику уведомление "Оставьте отзыв для Заказчику"')
-            ->dailyAt('0:06')
+            ->dailyAt('0:01')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ReviewForCustomer::LOG_FILE));
 
         $schedule->job(new NeedBuyProduct)
             ->description('Отправить Путешественнику уведомление "Купите товар по заказу, который вы доставляете"')
-            ->dailyAt('0:06')
+            ->dailyAt('0:01')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(NeedBuyProduct::LOG_FILE));
 
         $schedule->job(new ProfileNotFilled)
             ->description('Отправить Пользователям уведомление "Профиль не заполнен"')
-            ->dailyAt('0:06')
+            ->dailyAt('0:01')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ProfileNotFilled::LOG_FILE));
 
         $schedule->job(new ExistsNewOrders)
             ->description('Отправить Путешественнику уведомление "Существуют новые заказы по маршруту"')
-            ->dailyAt('0:06')
+            ->dailyAt('0:01')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ExistsNewOrders::LOG_FILE));
     }

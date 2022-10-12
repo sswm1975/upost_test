@@ -29,7 +29,7 @@ class ExistsNewOrders implements ShouldQueue
      *
      * @var string
      */
-    const LOG_FILE = 'logs/exists_new_orders.log';
+    const LOG_FILE = 'logs/notices/exists_new_orders.log';
 
     /**
      * Выполнить задание.
@@ -45,7 +45,7 @@ class ExistsNewOrders implements ShouldQueue
         $rows = $this->getData();
 
         if (empty($count = $rows->count())) {
-            Log::channel('single')->info('Нет данных.');
+            Log::channel('single')->info('Нет данных');
             return;
         }
 
@@ -60,7 +60,7 @@ class ExistsNewOrders implements ShouldQueue
 
         Log::channel('single')->info(
             sprintf(
-                'Всего отправлено уведомлений: %d (коды пользователей: %s)',
+                'Всего отправлено уведомлений: %d (users ids: %s)',
                 $count,
                 $rows->keyBy('user_id')->keys()->implode(',')
             )

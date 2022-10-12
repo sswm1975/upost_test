@@ -29,7 +29,7 @@ class SelectTraveler implements ShouldQueue
      *
      * @var string
      */
-    const LOG_FILE = 'logs/select_traveler.log';
+    const LOG_FILE = 'logs/notices/select_traveler.log';
 
     /**
      * Выполнить задание.
@@ -46,7 +46,7 @@ class SelectTraveler implements ShouldQueue
         $rows = $this->getData();
 
         if (empty($count = $rows->count())) {
-            Log::channel('single')->info('Нет заказов, по которым нужно выбрать доставщика.');
+            Log::channel('single')->info('Нет данных');
             return;
         }
 
@@ -62,7 +62,7 @@ class SelectTraveler implements ShouldQueue
         # логируем
         Log::channel('single')->info(
             sprintf(
-                'Отправлены уведомления по заказам: %d (ids = %s)',
+                'Всего отправлено уведомлений: %d (order ids = %s)',
                 $count,
                 $rows->keys()->implode(',')
             )

@@ -29,7 +29,7 @@ class NeedBuyProduct implements ShouldQueue
      *
      * @var string
      */
-    const LOG_FILE = 'logs/need_buy_product.log';
+    const LOG_FILE = 'logs/notices/need_buy_product.log';
 
     /**
      * Выполнить задание.
@@ -45,7 +45,7 @@ class NeedBuyProduct implements ShouldQueue
         $rows = $this->getData();
 
         if (empty($count = $rows->count())) {
-            Log::channel('single')->info('Нет данных.');
+            Log::channel('single')->info('Нет данных');
             return;
         }
 
@@ -59,7 +59,7 @@ class NeedBuyProduct implements ShouldQueue
 
         Log::channel('single')->info(
             sprintf(
-                'Всего отправлено уведомлений: %d (коды ставок: %s)',
+                'Всего отправлено уведомлений: %d (rate ids = %s)',
                 $count,
                 $rows->keys()->implode(',')
             )
