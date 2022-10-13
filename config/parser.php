@@ -40,6 +40,7 @@ return [
             'images_selects' => [
                 "//img[@data-index]/@src",
                 "//img[@width='64']/@data-originalimg",
+                "//button[@class='ux-image-filmstrip-carousel-item image']/img/@src",
             ],
         ],
 
