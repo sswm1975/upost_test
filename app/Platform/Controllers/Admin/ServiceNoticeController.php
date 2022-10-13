@@ -2,6 +2,7 @@
 
 namespace App\Platform\Controllers\Admin;
 
+use App\Models\NoticeType;
 use App\Platform\Actions\ServiceNotice\SendNotice;
 use App\Platform\Extensions\Grid\Actions\Replicate;
 use App\Models\ServiceNotice;
@@ -29,6 +30,8 @@ class ServiceNoticeController extends AdminController
     {
         $grid = new Grid(new ServiceNotice);
 
+        $grid->model()->withCount('notices');
+
         if (!request()->has('_sort')) {
             $grid->model()->latest('id');
         }
@@ -36,17 +39,17 @@ class ServiceNoticeController extends AdminController
         $grid->quickSearch('name')->placeholder('Поиск...');
 
         $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableDelete();
             if (empty($actions->row->sent_at)) {
                 $actions->add(new SendNotice);
             } else {
                 $actions->disableEdit();
+                $actions->disableDelete();
                 $actions->add(new Replicate);
             }
         });
 
         $grid->column('id', 'Код')->sortable();
-        $grid->column('name', 'Наименование');
+        $grid->column('name', 'Наименование')->sortable();
         $grid->column('text', 'Текст уведомления')
             ->display(function () {
                 return sprintf('<span class="label label-warning">🇺🇦</span> %s<br><span class="label label-danger">🇷🇺</span> %s<br><span class="label label-primary">🇬🇧</span> %s',
@@ -55,10 +58,29 @@ class ServiceNoticeController extends AdminController
                     $this->text_en
                 );
             });
-        $grid->column('user.name', 'Администратор');
         $grid->column('created_at', 'Создано');
         $grid->column('updated_at', 'Изменено');
+        $grid->column('admin_user_id', 'Код А.')
+            ->setAttributes(['align' => 'center'])
+            ->filter()
+            ->sortable();
+        $grid->user('Администратор')
+            ->display(function ($user) {
+                return !empty($user) ? sprintf('%s (%s)', $user['name'], $user['username']) : '';
+            })
+            ->help('Администратор, который отправил системное уведомление');
         $grid->column('sent_at', 'Отправлено');
+        $grid->column('notices_count', 'К-во')
+            ->display(function ($value) {
+                if (empty($value)) return '';
+                $url = route('platform.admin.notices', [
+                    'notice_type' => [NoticeType::SERVICE_NOTICE],
+                    'object_id' => $this->id,
+                ]);
+                return sprintf('<a href="%s">%d</a>', $url, $value);
+            })
+            ->setAttributes(['align' => 'center'])
+            ->help('Количество отправленных уведомлений');
 
         return $grid;
     }

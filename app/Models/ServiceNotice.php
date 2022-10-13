@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $created_at Добавлено
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
  * @property \Illuminate\Support\Carbon|null $sent_at Отправлено
+ * @property-read \App\Models\Notice $notices
  * @property-read Administrator|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|ServiceNotice newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ServiceNotice newQuery()
@@ -39,9 +40,24 @@ class ServiceNotice extends Model
 
     protected $dates = ['sent_at'];
 
-    function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    /**
+     * Администратор (менеджер), который отправил системное уведомление.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    function user(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->belongsTo(Administrator::class, 'admin_user_id');
+        return $this->hasOne(Administrator::class, 'id', 'admin_user_id');
     }
 
+    /**
+     * Список отправленных сервисных уведомлений.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    function notices(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Notice::class, 'id', 'object_id')
+            ->where('notice_type', '=', NoticeType::SERVICE_NOTICE);
+    }
 }

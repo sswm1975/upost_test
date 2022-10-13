@@ -38,7 +38,7 @@ class NoticeController extends AdminController
         $grid->column('user.name', 'Пользователь');
         $grid->column('notice_type', 'Тип')->filter(NoticeType::pluck('name', 'id')->toArray())->sortable();
         $grid->column('type.text_ru', 'Текст уведомления');
-        $grid->column('object_id', 'Объект')->setAttributes(['align'=>'right']);
+        $grid->column('object_id', 'Объект')->setAttributes(['align'=>'right'])->filter();
         $grid->column('data_modal', 'Данные')
             ->modal('Данные', function($model) {
                 if (empty($model->data)) return 'Нет данных';

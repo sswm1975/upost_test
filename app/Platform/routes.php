@@ -115,7 +115,7 @@ Route::group([
         'as'         => 'admin.',
     ], function (Router $router) {
         # Уведомления
-        $router->get('notices', 'NoticeController@index');
+        $router->get('notices', 'NoticeController@index')->name('notices');
 
         # Сервисные уведомления
         $router->resource('service_notices', 'ServiceNoticeController')->except(['delete'])->names('service_notices');
