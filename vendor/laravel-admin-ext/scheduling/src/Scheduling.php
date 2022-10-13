@@ -64,7 +64,7 @@ class Scheduling extends Extension
             $name = $event->output != '/dev/null' ? current(explode('.', basename($event->output))) : 'Closure';
             return [
                 'type' => 'closure',
-                'name' => 'LOG: ' . $name,
+                'name' => $name,
             ];
         }
 
