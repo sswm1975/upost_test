@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Models\Notice;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -21,6 +22,7 @@ class NoticeEvent implements ShouldBroadcastNow
     public int $object_id;
     public string $text;
     public array $data;
+    public string $created_at;
 
     /**
      * Create a new event instance.
@@ -36,11 +38,12 @@ class NoticeEvent implements ShouldBroadcastNow
         $lang = User::whereKey($notice->user_id)->value('lang');
 
         # формируем уведомление
-        $this->id        = $notice->id;
-        $this->type      = $notice->notice_type;
-        $this->object_id = $notice->object_id;
-        $this->text      = config("notice_types.{$notice->notice_type}.text_{$lang}");
-        $this->data      = $notice->data ?? [];
+        $this->id         = $notice->id;
+        $this->type       = $notice->notice_type;
+        $this->object_id  = $notice->object_id;
+        $this->text       = config("notice_types.{$notice->notice_type}.text_{$lang}");
+        $this->data       = $notice->data ?? [];
+        $this->created_at = Carbon::parse($notice->created_at)->isoFormat('D MMM YYYY H:mm');
     }
 
     /**
