@@ -213,7 +213,7 @@ class Order extends Model
         return $currency;
     }
 
-    public function getPriceSelectedCurrencyAttribute(): string
+    public function getPriceSelectedCurrencyAttribute()
     {
         if ($this->selected_currency == '$') return $this->price_usd;
 
@@ -222,7 +222,7 @@ class Order extends Model
         return round($this->price_usd * getCurrencyRate($this->selected_currency), 2);
     }
 
-    public function getUserPriceSelectedCurrencyAttribute(): string
+    public function getUserPriceSelectedCurrencyAttribute()
     {
         if ($this->selected_currency == '$') return $this->user_price_usd;
 

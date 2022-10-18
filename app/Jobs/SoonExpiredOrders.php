@@ -56,6 +56,7 @@ class SoonExpiredOrders implements ShouldQueue
                 'user_id'     => $row->order_user_id,
                 'notice_type' => $notice_type,
                 'object_id'   => $row->order_id,
+                'data'        => ['order_name' => $row->order_name],
             ]);
 
             # отправляем уведомление Путешественнику, который доставляет заказ
@@ -64,6 +65,7 @@ class SoonExpiredOrders implements ShouldQueue
                     'user_id'     => $row->route_user_id,
                     'notice_type' => $notice_type,
                     'object_id'   => $row->order_id,
+                    'data'        => ['order_name' => $row->order_name],
                 ]);
             }
         }
@@ -95,6 +97,6 @@ class SoonExpiredOrders implements ShouldQueue
             ->leftJoin('rates', 'rates.order_id', 'orders.id')
             ->whereIn('orders.status', ['active', 'in_work'])
             ->whereRaw("HOUR(TIMEDIFF(orders.deadline, '$today')) BETWEEN 0 AND 72")
-            ->get(['orders.id as order_id', 'orders.user_id as order_user_id', 'rates.user_id as route_user_id']);
+            ->get(['orders.id as order_id', 'orders.user_id as order_user_id', 'rates.user_id as route_user_id', 'orders.name as order_name']);
     }
 }

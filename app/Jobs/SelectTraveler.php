@@ -51,11 +51,12 @@ class SelectTraveler implements ShouldQueue
         }
 
         # отправляем уведомление Заказчику
-        foreach ($rows as $order_id => $user_id) {
+        foreach ($rows as $row) {
             Notice::create([
                 'notice_type' => $notice_type,
-                'user_id'     => $user_id,
-                'object_id'   => $order_id,
+                'user_id'     => $row->user_id,
+                'object_id'   => $row->id,
+                'data'        => ['order_name' => $row->name],
             ]);
         }
 
@@ -64,7 +65,7 @@ class SelectTraveler implements ShouldQueue
             sprintf(
                 'Всего отправлено уведомлений: %d (order ids = %s)',
                 $count,
-                $rows->keys()->implode(',')
+                $rows->pluck('id')->implode(',')
             )
         );
     }
@@ -87,6 +88,6 @@ class SelectTraveler implements ShouldQueue
                 $now = Carbon::now()->toDateTimeString();
                 $query->active()->whereRaw("HOUR(TIMEDIFF('{$now}', created_at)) >= 24");
             }, '>=', 3)
-            ->pluck('user_id', 'id');
+            ->get(['id', 'user_id', 'name']);
     }
 }

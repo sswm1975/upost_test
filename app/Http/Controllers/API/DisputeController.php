@@ -42,7 +42,7 @@ class DisputeController extends Controller
             throw new ErrorException(__('message.dispute_exists'));
         }
 
-        $rate = Rate::with('order:id,user_id')
+        $rate = Rate::with('order:id,user_id,name')
             ->whereKey($data['rate_id'])
             ->whereIn('status', [Rate::STATUS_ACCEPTED, Rate::STATUS_BUYED])
             ->first(['id', 'user_id', 'chat_id', 'order_id']);
@@ -82,7 +82,8 @@ class DisputeController extends Controller
             Notice::create([
                 'user_id'     => $recipient_id,
                 'notice_type' => $notice_type,
-                'object_id'   => $dispute->id,
+                'object_id'   => $rate->order->id,
+                'data'        => ['order_name' => $rate->order->name, 'rate_id' => $rate->id, 'dispute_id' => $dispute->id]
             ]);
         }
 

@@ -96,7 +96,8 @@ class CloseDisputeGuiltyCustomer extends RowAction
                 Notice::create([
                     'user_id'     => $model->rate->user_id,
                     'notice_type' => $notice_type,
-                    'object_id'   => $model->rate->id,
+                    'object_id'   => $model->rate->order_id,
+                    'date'        => ['order_name' => $model->rate->order->name, 'rate_id' => $model->rate->id],
                 ]);
             }
 

@@ -49,11 +49,12 @@ class NeedBuyProduct implements ShouldQueue
             return;
         }
 
-        foreach ($rows as $rate_id => $user_id) {
+        foreach ($rows as $row) {
             Notice::create([
                 'notice_type' => $notice_type,
-                'user_id'     => $user_id,
-                'object_id'   => $rate_id,
+                'user_id'     => $row->user_id,
+                'object_id'   => $row->order_id,
+                'data'        => ['order_name' => $row->order_name, 'rate_id' => $row->rate_id],
             ]);
         }
 
@@ -61,7 +62,7 @@ class NeedBuyProduct implements ShouldQueue
             sprintf(
                 'Всего отправлено уведомлений: %d (rate ids = %s)',
                 $count,
-                $rows->keys()->implode(',')
+                $rows->pluck('rate_id')->implode(',')
             )
         );
     }
@@ -77,11 +78,12 @@ class NeedBuyProduct implements ShouldQueue
     private function getData(): \Illuminate\Support\Collection
     {
         return Rate::withoutAppends()
-            ->where('status', Rate::STATUS_ACCEPTED)
+            ->join('orders', 'orders.id', 'rates.order_id')
+            ->where('rates.status', Rate::STATUS_ACCEPTED)
             ->whereHas('transaction', function($query) {
                 $now = Carbon::now()->toDateTimeString();
                 $query->whereRaw("HOUR(TIMEDIFF('{$now}', created_at)) >= 10");
             })
-            ->pluck('rates.user_id', 'rates.id');
+            ->get(['rates.id AS rate_id', 'rates.user_id', 'orders.id AS order_id', 'orders.name AS order_name']);
     }
 }

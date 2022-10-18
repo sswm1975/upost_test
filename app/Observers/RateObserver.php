@@ -31,7 +31,7 @@ class RateObserver
             'user_id'     => $rate->order->user_id,
             'notice_type' => $notice_type,
             'object_id'   => $rate->order->id,
-            'data'        => ['order_name' => $rate->order->name],
+            'data'        => ['order_name' => $rate->order->name, 'rate_id' => $rate->id],
         ]);
     }
 }

@@ -48,11 +48,12 @@ class ProfileNotFilled implements ShouldQueue
             return;
         }
 
-        foreach ($rows as $user_id) {
+        foreach ($rows as $row) {
             Notice::create([
                 'notice_type' => $notice_type,
-                'user_id'     => $user_id,
-                'object_id'   => $user_id,
+                'user_id'     => $row->user_id,
+                'object_id'   => $row->user_id,
+                'data'        => $row,
             ]);
         }
 
@@ -60,7 +61,7 @@ class ProfileNotFilled implements ShouldQueue
             sprintf(
                 'Всего отправлено уведомлений: %d (user ids = %s)',
                 $count,
-                $rows->implode(',')
+                $rows->pluck('id')->implode(',')
             )
         );
     }
@@ -84,6 +85,6 @@ class ProfileNotFilled implements ShouldQueue
             ->where(function($query) {
                 $query->whereNull(['name', 'surname', 'birthday', 'card_number', 'card_name'], 'or');
             })
-            ->pluck('id');
+            ->get(['id AS user_id', 'name', 'surname', 'birthday', 'card_number', 'card_name']);
     }
 }

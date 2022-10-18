@@ -48,11 +48,12 @@ class ReviewForCustomer implements ShouldQueue
             return;
         }
 
-        foreach ($rows as $rate_id => $user_id) {
+        foreach ($rows as $row) {
             Notice::create([
                 'notice_type' => $notice_type,
-                'user_id'     => $user_id,
-                'object_id'   => $rate_id,
+                'user_id'     => $row->user_id,
+                'object_id'   => $row->order_id,
+                'data'        => ['order_name' => $row->order_name, 'rate_id' => $row->rate_id],
             ]);
         }
 
@@ -60,7 +61,7 @@ class ReviewForCustomer implements ShouldQueue
             sprintf(
                 'Всего отправлено уведомлений: %d (rate ids = %s)',
                 $count,
-                $rows->keys()->implode(',')
+                $rows->pluck('rate_id')->implode(',')
             )
         );
     }
@@ -81,6 +82,6 @@ class ReviewForCustomer implements ShouldQueue
             ->whereDoesntHave('reviews', function($query) {
                 $query->where('recipient_id', 'orders.user_id');
             })
-            ->pluck('rates.user_id', 'rates.id');
+            ->get(['rates.id AS rate_id', 'rates.user_id', 'orders.id AS order_id', 'orders.name AS order_name']);
     }
 }

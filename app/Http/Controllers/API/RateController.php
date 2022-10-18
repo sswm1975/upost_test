@@ -370,7 +370,8 @@ class RateController extends Controller
                 Notice::create([
                     'user_id'     => $rate->user_id,
                     'notice_type' => $notice_type,
-                    'object_id'   => $rate->id,
+                    'object_id'   => $rate->order_id,
+                    'data'        => ['order_name' => $rate->order()->name, 'rate_id' => $rate->id],
                 ]);
             }
 
@@ -403,7 +404,7 @@ class RateController extends Controller
         $rate = Rate::query()
             ->byKeyForRateOwner($rate_id, [Rate::STATUS_ACCEPTED])
             ->with(['order' => function ($query) {
-                $query->withoutAppends()->select(['id', 'user_id']);
+                $query->withoutAppends()->select(['id', 'user_id', 'name']);
             }])
             ->first();
         if (! $rate) {
@@ -432,15 +433,14 @@ class RateController extends Controller
             Notice::create([
                 'user_id'     => $rate->order->user_id,
                 'notice_type' => $notice_type,
-                'object_id'   => $rate->id,
-                'data'        => $rate,
+                'object_id'   => $rate->order->id,
+                'data'        => ['order_name' => $rate->order->name, 'rate_id' => $rate->id],
             ]);
         }
 
         return response()->json([
             'status' => true,
             'rate'   => null_to_blank($rate),
-            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
