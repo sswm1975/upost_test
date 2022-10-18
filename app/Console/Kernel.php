@@ -38,37 +38,37 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new SendMailDeadlineRate)
             ->description('Отправка писем пользователям, у которых сегодня дедлайн по ставке')
-            ->dailyAt('00:01')
+            ->dailyAt('01:00')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(SendMailDeadlineRate::LOG_FILE));
 
         $schedule->job(new CloseExpiredRate)
             ->description('Закрыть просроченные ставки')
-            ->dailyAt('00:03')
+            ->dailyAt('01:05')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(CloseExpiredRate::LOG_FILE));
 
         $schedule->job(new CloseExpiredOrders)
             ->description('Закрыть просроченные заказы')
-            ->dailyAt('0:05')
+            ->dailyAt('1:10')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(CloseExpiredOrders::LOG_FILE));
 
         $schedule->job(new CloseExpiredRoutes)
             ->description('Закрыть просроченные маршруты')
-            ->dailyAt('0:07')
+            ->dailyAt('1:15')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(CloseExpiredRoutes::LOG_FILE));
 
         $schedule->command('fill:currency_rates')
             ->description('Обновить курсы валют (сервис fixer.io)')
-            ->dailyAt('08:00')
+            ->dailyAt('01:20')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path('logs/fill_currency_rates.log'));
 
         $schedule->job(new RecalcAmountInUSD)
             ->description('Пересчет долларового эквивалента по заказам и ставкам')
-            ->dailyAt('08:10')
+            ->dailyAt('08:00')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(RecalcAmountInUSD::LOG_FILE));
 
@@ -98,37 +98,37 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(new SelectTraveler)
             ->description('Отправить Заказчику уведомление "Выберите Путешественника"')
-            ->dailyAt('0:01')
+            ->dailyAt('0:03')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(SelectTraveler::LOG_FILE));
 
         $schedule->job(new ReviewForTraveler)
             ->description('Отправить Заказчику уведомление "Оставьте отзыв для Путешественника"')
-            ->dailyAt('0:01')
+            ->dailyAt('0:05')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ReviewForTraveler::LOG_FILE));
 
         $schedule->job(new ReviewForCustomer)
             ->description('Отправить Путешественнику уведомление "Оставьте отзыв для Заказчику"')
-            ->dailyAt('0:01')
+            ->dailyAt('0:07')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ReviewForCustomer::LOG_FILE));
 
         $schedule->job(new NeedBuyProduct)
             ->description('Отправить Путешественнику уведомление "Купите товар по заказу, который вы доставляете"')
-            ->dailyAt('0:01')
+            ->dailyAt('0:09')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(NeedBuyProduct::LOG_FILE));
 
         $schedule->job(new ProfileNotFilled)
             ->description('Отправить Пользователям уведомление "Профиль не заполнен"')
-            ->dailyAt('0:01')
+            ->dailyAt('0:11')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ProfileNotFilled::LOG_FILE));
 
         $schedule->job(new ExistsNewOrders)
             ->description('Отправить Путешественнику уведомление "Существуют новые заказы по маршруту"')
-            ->dailyAt('0:01')
+            ->dailyAt('0:13')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ExistsNewOrders::LOG_FILE));
     }
