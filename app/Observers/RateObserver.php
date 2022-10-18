@@ -5,7 +5,6 @@ namespace App\Observers;
 use App\Models\Notice;
 use App\Models\NoticeType;
 use App\Models\Rate;
-use App\Models\User;
 
 class RateObserver
 {
@@ -22,11 +21,8 @@ class RateObserver
 
         #  к ставке добавляем доп.данные
         $rate->load([
-            'user' => function ($query) {
-                $query->select(User::FIELDS_FOR_SHOW);
-            },
             'order' => function ($query) {
-                $query->withoutAppends()->select(['id', 'user_id']);
+                $query->withoutAppends()->select(['id', 'user_id', 'name']);
             },
         ]);
 
@@ -34,8 +30,8 @@ class RateObserver
         Notice::create([
             'user_id'     => $rate->order->user_id,
             'notice_type' => $notice_type,
-            'object_id'   => $rate->id,
-            'data'        => $rate,
+            'object_id'   => $rate->order->id,
+            'data'        => ['order_name' => $rate->order->name],
         ]);
     }
 }
