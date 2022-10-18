@@ -31,6 +31,9 @@ class NoticeEvent implements ShouldBroadcastNow
      */
     public function __construct(Notice $notice)
     {
+        # для полей с датой формат определяем как "4 жов 2022 13:09"
+        $notice->setIsoFormatDate('D MMM YYYY H:mm');
+
         # этому пользователю отправляем сообщение
         $this->user_id = $notice->user_id;
 
@@ -43,7 +46,7 @@ class NoticeEvent implements ShouldBroadcastNow
         $this->object_id  = $notice->object_id;
         $this->text       = config("notice_types.{$notice->notice_type}.text_{$lang}");
         $this->data       = $notice->data ?? [];
-        $this->created_at = Carbon::parse($notice->created_at)->isoFormat('D MMM YYYY H:mm');
+        $this->created_at = $notice->created_at;
     }
 
     /**
