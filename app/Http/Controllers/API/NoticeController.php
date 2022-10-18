@@ -23,6 +23,7 @@ class NoticeController extends Controller
         $lang = $request->user()->lang;
 
         $notices = Notice::query()
+            ->setIsoFormatDate('D MMM YYYY H:mm')
             ->select(
                 'notices.id',
                 'notices.notice_type AS type',
