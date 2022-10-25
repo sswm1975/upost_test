@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Omnipay\Common\GatewayInterface;
 use Omnipay\Omnipay;
 
 class PaymentController extends Controller
 {
-    public \Omnipay\Common\GatewayInterface $gateway;
+    public GatewayInterface $gateway;
 
     public function __construct()
     {
         $this->gateway = Omnipay::create('PayPal_Rest');
         $this->gateway->setClientId(config('paypal.client_id'));
         $this->gateway->setSecret(config('paypal.secret'));
-        $this->gateway->setTestMode(true); //set it to 'false' when go live
+        $this->gateway->setTestMode(true);
     }
 
     public function index()
@@ -42,15 +43,15 @@ class PaymentController extends Controller
                 ])->send();
 
                 if ($response->isRedirect()) {
-                    $response->redirect(); // this will automatically forward the customer
+                    // перенаправление на сторонний платежный шлюз
+                    $response->redirect();
                 } else {
-                    // not successful
-                    \Log::error('not successful');
-                    \Log::error($response->getMessage());
+                    // Платеж не прошел
+                    \Log::error('Not successful: ' . $response->getMessage());
                     return $response->getMessage();
                 }
             } catch(\Exception $e) {
-                \Log::error('Exception');
+                \Log::error('Exception: ' . $e->getMessage());
                 return $e->getMessage();
             }
         }
