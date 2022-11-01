@@ -31,12 +31,22 @@ class ApiRequestLogging
      * Logging request.
      *
      * @param Request $request
-     * @param JsonResponse $response
+     * @param $response
      */
-    public function terminate(Request $request, JsonResponse $response)
+    public function terminate(Request $request, $response)
     {
         if (! config('api_request_logging_enabled', 0)) {
             return;
+        }
+        $output = null;
+
+        if ($response instanceof JsonResponse) {
+            $output = json_decode($response->content());
+        }
+
+        if ($response instanceof \Illuminate\Http\RedirectResponse) {
+            \Log::notice(json_decode($response->getRequest()->getContent()));
+            $output = json_decode($response->getRequest()->getContent());
         }
 
         $endTime = microtime(true);
@@ -50,7 +60,7 @@ class ApiRequestLogging
         $log->url = Str::substr($request->fullUrl(), 1,1000);
         $log->method = $request->method();
         $log->input = $request->toArray();
-        $log->output = json_decode($response->content());
+        $log->output = $output;
         $log->server = $request->server();
         $log->queries = getSQLForFixDatabase();
         $log->save();
