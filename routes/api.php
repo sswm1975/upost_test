@@ -157,6 +157,11 @@ Route::namespace('API')->group(function ($route) {
         # Подготовить данные для оплаты по выбранной ставке (формирование параметров для Liqpay-платежа).
         $route->post('{rate_id}/prepare_payment', 'RateController@preparePayment');
 
+        # PayPal оплата и результаты обработки
+        $route->post('{rate_id}/purchase', 'RateController@purchase');
+        $route->get('purchase_success', 'RateController@purchaseSuccess')->name('purchase_success')->withoutMiddleware(MIDDLEWARE_AUTH_BASIC);
+        $route->get('purchase_error', 'RateController@purchaseError')->name('purchase_error')->withoutMiddleware(MIDDLEWARE_AUTH_BASIC);
+
         # Подтверждение ставки - Оплата заказа (от Liqpay пришёл результат оплаты)
         $route->post('callback_payment', 'RateController@callbackPayment')->withoutMiddleware(MIDDLEWARE_AUTH_BASIC);
 
