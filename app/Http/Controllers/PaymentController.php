@@ -38,8 +38,8 @@ class PaymentController extends Controller
                             'quantity' => 1
                         ],
                     ],
-                    'returnUrl' => url('payment_success'),
-                    'cancelUrl' => url('payment_error'),
+                    'returnUrl' => route('payment_success', ['rate_id' => 987]),
+                    'cancelUrl' => route('payment_error', ['rate_id' => 777]),
                 ])->send();
 
                 if ($response->isRedirect()) {
