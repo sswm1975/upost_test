@@ -19,7 +19,7 @@ use Illuminate\Validation\ValidationException;
 class MessagesController extends Controller
 {
     const DEFAULT_PER_PAGE = 5;
-    const DEFAULT_SORTING = 'desc';
+    const DEFAULT_SORTING = 'asc';
 
     /**
      * Добавить сообщение.
