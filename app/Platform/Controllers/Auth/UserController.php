@@ -32,6 +32,7 @@ class UserController extends AdminController
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
         });
+        $grid->model()->selectRaw('*, IFNULL((SELECT CONCAT(surname, " ", name, " (", email, ")") FROM users WHERE id = admin_users.user_id), 0) AS user_name');
 
         $grid->column('id', 'ID')->sortable();
         $grid->avatar('Аватар')->image(url('/platform'), 200, 45);
@@ -41,6 +42,7 @@ class UserController extends AdminController
         $grid->column('created_at', trans('admin.created_at'));
         $grid->column('updated_at', trans('admin.updated_at'));
         $grid->column('user_id', 'API user ID')->setAttributes(['align'=>'center'])->filter()->sortable();
+        $grid->column('user_name', 'API user name');
 
         return $grid;
     }
@@ -116,7 +118,8 @@ class UserController extends AdminController
             ->default(0)
             ->config('allowClear', true)
             ->creationRules(['nullable', "unique:admin_users,user_id"])
-            ->updateRules(['nullable', "unique:admin_users,user_id,{{id}}"]);
+            ->updateRules(['nullable', "unique:admin_users,user_id,{{id}}"])
+            ->help('Привязать API-пользователя c таблицы users можно только с ролью admin');
 
         $form->saving(function (Form $form) {
             if ($form->password && $form->model()->password != $form->password) {
