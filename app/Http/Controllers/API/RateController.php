@@ -18,6 +18,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Modules\Liqpay;
 use App\Modules\PayPal;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -378,6 +379,7 @@ class RateController extends Controller
 
         $transaction->complete_response = $payment;
         $transaction->status = $payment['state'];
+        $transaction->payed_at = Carbon::now()->toDateTimeString();
         $transaction->save();
 
         # ищем активную ставку
