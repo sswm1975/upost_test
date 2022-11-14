@@ -532,6 +532,22 @@ function highlightText(string $text): string
 }
 
 /**
+ * Удобочитаемое форматирование для дальнейшего вывода массивы или объекта.
+ *
+ * @param $data
+ * @param string $empty_data_info
+ * @return string
+ */
+function pretty_print($data, string $empty_data_info = 'Нет данных'): string
+{
+    if (empty($data)) {
+        return "<pre>{$empty_data_info}</pre>";
+    }
+    $text = str_replace('\\', '', json_encode(json_decode($data), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    return "<pre style='text-align:left'>{$text}</pre>";
+}
+
+/**
  * Проверка на существование удаленного файла по ссылке.
  *
  * @param string $url

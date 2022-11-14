@@ -32,10 +32,39 @@ class TransactionController extends AdminController
         $grid->column('amount', 'Сумма (всего)')->setAttributes(['align' => 'right'])->sortable();
         $grid->column('order_amount', 'Сумма заказа')->setAttributes(['align' => 'right'])->sortable();
         $grid->column('delivery_amount', 'Доставка')->setAttributes(['align' => 'right'])->sortable();
-        $grid->column('liqpay_fee', 'Ликпей')->setAttributes(['align' => 'right'])->sortable();
-        $grid->column('service_fee', 'Сервис')->setAttributes(['align' => 'right'])->sortable();
-        $grid->column('export_tax', 'Налог')->setAttributes(['align' => 'right'])->sortable();
+        $grid->column('payment_service_fee', 'Комиссия ПС')->setAttributes(['align' => 'right'])->sortable();
+        $grid->column('company_fee', 'Комиссия компании')->setAttributes(['align' => 'right'])->sortable();
+        $grid->column('export_tax', 'Экспортный налог')->setAttributes(['align' => 'right'])->sortable();
         $grid->column('description', 'Описание');
+
+        $grid->column('purchase_params_modal', 'Purchase Параметры')
+            ->modal('Параметры для PayPal purchase', function () {
+                return pretty_print($this->purchase_params);
+            })
+            ->setAttributes(['align'=>'center']);
+
+        $grid->column('purchase_response_modal', 'Purchase Ответ')
+            ->modal('Ответ от PayPal purchase', function () {
+                return pretty_print($this->purchase_response);
+            })
+            ->setAttributes(['align'=>'center']);
+
+        $grid->column('purchase_redirect_url', 'Ссылка для оплаты в PayPal')->url();
+        $grid->column('purchase_error')->help('Ошибка при purchase (статус failed)');
+        $grid->column('purchase_exception')->help('Исключение при purchase (статус exception)');
+
+        $grid->column('complete_response_modal', 'Ответ complete PayPal')
+            ->modal('Ответ от сервиса PayPal (complete)', function () {
+                return pretty_print($this->complete_response);
+            })
+            ->setAttributes(['align'=>'center']);
+
+        $grid->column('complete_error_modal', 'Ошибка complete PayPal')
+            ->modal('Ответ от сервиса PayPal (complete)', function () {
+                return pretty_print($this->complete_error);
+            })
+            ->setAttributes(['align'=>'center']);
+
         $grid->column('status', 'Статус')->sortable();
         $grid->column('created_at', 'Создано')->sortable();
         $grid->column('updated_at', 'Изменено')->sortable();
