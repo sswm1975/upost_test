@@ -258,10 +258,10 @@ class RateController extends Controller
         /* TODO Расчет суммы для оплаты: Нужно реализовать конвертацию цены и дохода; добавить пошлину за ввоз; суммировать все расчеты */
         $order_amount = $rate->order->price_usd * $rate->order->products_count;
         $delivery_amount = $rate->amount_usd;
-        $payment_service_fee = 0;
+        $paypal_fee = round($order_amount * config('paypal_fee_percent') / 100, 2);
+        $company_fee = round($order_amount * config('company_fee_percent') / 100, 2);
         $export_tax = 0;
-        $company_fee = round($order_amount * config('service_fee_percent') / 100, 2);
-        $total_amount = $order_amount + $delivery_amount + $payment_service_fee + $export_tax + $company_fee;
+        $total_amount = $order_amount + $delivery_amount + $paypal_fee + $export_tax + $company_fee;
 
         $user = $request->user();
 
@@ -271,7 +271,7 @@ class RateController extends Controller
             'amount'              => $total_amount,
             'order_amount'        => $order_amount,
             'delivery_amount'     => $delivery_amount,
-            'payment_service_fee' => $payment_service_fee,
+            'payment_service_fee' => $paypal_fee,
             'export_tax'          => $export_tax,
             'company_fee'         => $company_fee,
             'description'         => $rate->order->name,
@@ -493,9 +493,9 @@ class RateController extends Controller
         $order_amount = $rate->order->products_count * $rate->order->price;
         $delivery_amount = 1 * $rate->amount;
         $export_tax = 0;
-        $liqpay_fee = round($order_amount * config('liqpay_percent') / 100, 2);
-        $service_fee = round($rate->order->price * config('service_fee_percent') / 100, 2);
-        $total_amount = $rate->order->price + $rate->amount + $export_tax + $liqpay_fee + $service_fee;
+        $liqpay_fee = round($order_amount * config('liqpay_fee_percent') / 100, 2);
+        $company_fee = round($rate->order->price * config('company_fee_percent') / 100, 2);
+        $total_amount = $rate->order->price + $rate->amount + $export_tax + $liqpay_fee + $company_fee;
         $currency = 'UAH';
 
         $user = $request->user();
@@ -507,8 +507,8 @@ class RateController extends Controller
             'order_amount'    => $rate->order->products_count * $rate->order->price,
             'delivery_amount' => $delivery_amount,
             'export_tax'      => $export_tax,
-            'liqpay_fee'      => $liqpay_fee,
-            'service_fee'     => $service_fee,
+            'payment_service_fee'  => $liqpay_fee,
+            'company_fee'     => $company_fee,
             'total_amount'    => $total_amount,
             'currency'        => $currency,
         ];
@@ -587,9 +587,9 @@ class RateController extends Controller
                 'rate_id'         => $rate_id,
                 'amount'          => $liqpay['amount'],
                 'order_amount'    => $liqpay['info']['order_amount'],
-                'payment_service_fee' => $liqpay['info']['liqpay_fee'],
+                'payment_service_fee' => $liqpay['info']['payment_service_fee'],
                 'delivery_amount' => $liqpay['info']['delivery_amount'],
-                'company_fee'     => $liqpay['info']['service_fee'],
+                'company_fee'     => $liqpay['info']['company_fee'],
                 'export_tax'      => $liqpay['info']['export_tax'],
                 'description'     => $liqpay['description'],
                 'status'          => $liqpay['status'],
