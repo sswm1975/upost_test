@@ -443,7 +443,7 @@
                         </ol>
                         <div class="carousel-inner">
                             @foreach($images as $key => $image)
-                                @php($image = asset("storage/{$chat->performer_id}/orders/{$image}"))
+                                @php($image = asset("storage/{$chat->performer_id}/chats/{$image}"))
                                 <div class="item {{ $key == 0 ? 'active' : '' }}">
                                     <img src="{{ $image }}" style='max-width:215px;max-height:300px;display: block;margin-left: auto;margin-right: auto;'>
                                 </div>
@@ -456,6 +456,7 @@
                             <span class="fa fa-angle-right"></span>
                         </a>
                     </div>
+                    <div>Фото доставленного заказа</div>
                 @endisset
             </div>
         </div>
