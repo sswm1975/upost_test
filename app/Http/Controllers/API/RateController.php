@@ -369,6 +369,7 @@ class RateController extends Controller
             return redirect($callback_url . '?' . http_build_query([
                 'status' => false,
                 'error'  => $response->getMessage(),
+                'return-url-from-rate' => $transaction->rate_id,
             ]));
         }
 
@@ -385,6 +386,7 @@ class RateController extends Controller
             return redirect($callback_url . '?' . http_build_query([
                 'status' => false,
                 'error'  => __('message.rate_not_found'),
+                'return-url-from-rate' => $transaction->rate_id,
             ]));
         }
 
@@ -459,6 +461,7 @@ class RateController extends Controller
         return redirect($callback_url . '?' . http_build_query([
             'status'  => true,
             'message' => 'Пользователь отменил платеж.',
+            'return-url-from-rate' => $transaction->rate_id,
         ]));
     }
 
