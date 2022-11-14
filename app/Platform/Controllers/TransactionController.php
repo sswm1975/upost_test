@@ -25,6 +25,11 @@ class TransactionController extends AdminController
             ->disableCreateButton()
             ->disableActions();
 
+        # MODEL FILTERS & SORT
+        if (! request()->has('_sort')) {
+            $grid->model()->latest('id');
+        }
+
         # COLUMNS
         $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
         $grid->column('user_id', 'Код К.')->setAttributes(['align' => 'center'])->sortable();
