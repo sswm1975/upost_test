@@ -280,6 +280,12 @@ class RateController extends Controller
         ]);
 
         $paypal = new PayPal;
+
+        $return_params = [
+            'transaction_id' => $transaction->id,
+            'callback_url'   => $request->get('callback_url', config('app.wordpress_url')),
+        ];
+
         $params = [
             'amount'          => $total_amount,
             'currency'        => 'USD',
@@ -290,8 +296,8 @@ class RateController extends Controller
                     'quantity' => 1
                 ],
             ],
-            'returnUrl' => route('purchase_success', ['transaction_id' => $transaction->id]),
-            'cancelUrl' => route('purchase_error', ['transaction_id' => $transaction->id]),
+            'returnUrl' => route('purchase_success', $return_params),
+            'cancelUrl' => route('purchase_error', $return_params),
         ];
         $transaction->purchase_params = $params;
         $transaction->save();
@@ -335,14 +341,14 @@ class RateController extends Controller
      */
     public function purchaseSuccess(Request $request)
     {
-        $callback_url = config('app.wordpress_url');
+        $callback_url = $request->get('callback_url', config('app.wordpress_url'));
 
         if ($request->missing(['paymentId', 'PayerID', 'transaction_id'])) {
             Log::channel('paypal')->error('[purchaseSuccess] Отсутствуют обязательные параметры: paymentId or PayerID or transaction_id (Транзакция отклонена)!');
             Log::channel('paypal')->debug('[purchaseSuccess] Параметры запроса:');
             Log::channel('paypal')->debug($request->all());
 
-            return redirect($callback_url . '?' . http_build_query([
+            return redirect($callback_url . '&' . http_build_query([
                 'status' => false,
                 'error'  => '[purchaseSuccess] Транзакция отклонена (отсутствуют обязательные параметры)!',
             ]));
@@ -353,7 +359,7 @@ class RateController extends Controller
         if (! $transaction) {
             Log::channel('paypal')->error("[purchaseSuccess] Транзакция с кодом {$transaction_id} не найдена!");
 
-            return redirect($callback_url . '?' . http_build_query([
+            return redirect($callback_url . '&' . http_build_query([
                 'status' => false,
                 'error'  => "[purchaseSuccess] Транзакция с кодом {$transaction_id} не найдена!",
             ]));
@@ -367,14 +373,13 @@ class RateController extends Controller
             $transaction->status = 'not_successful';
             $transaction->save();
 
-            return redirect($callback_url . '?' . http_build_query([
+            return redirect($callback_url . '&' . http_build_query([
                 'status' => false,
                 'error'  => $response->getMessage(),
-                'return-url-from-rate' => $transaction->rate_id,
             ]));
         }
 
-        # КЛИЕНТ УСПЕШНО ОПЛАТИЛ #
+        # КЛИЕНТ УСПЕШНО ОПЛАТИЛ
         $payment = $response->getData();
 
         $transaction->complete_response = $payment;
@@ -385,10 +390,9 @@ class RateController extends Controller
         # ищем активную ставку
         $rate = Rate::whereKey($transaction->rate_id)->active()->first();
         if (! $rate) {
-            return redirect($callback_url . '?' . http_build_query([
+            return redirect($callback_url . '&' . http_build_query([
                 'status' => false,
                 'error'  => __('message.rate_not_found'),
-                'return-url-from-rate' => $transaction->rate_id,
             ]));
         }
 
@@ -415,8 +419,7 @@ class RateController extends Controller
             ]);
         }
 
-        return redirect($callback_url . '?' . http_build_query([
-            'return-url-from-rate' => $transaction->rate_id,
+        return redirect($callback_url . '&' . http_build_query([
             'status'     => true,
             'payment_id' => $payment['id'],
         ]));
@@ -430,7 +433,7 @@ class RateController extends Controller
      */
     public function purchaseError(Request $request)
     {
-        $callback_url = config('app.wordpress_url');
+        $callback_url = $request->get('callback_url', config('app.wordpress_url'));
 
         if ($request->missing('transaction_id')) {
             $error = '[purchaseError] Отсутствует обязательный параметр transaction_id (Платёж отклонён)!';
@@ -438,7 +441,7 @@ class RateController extends Controller
             Log::channel('paypal')->debug('[purchaseError] Параметры запроса:');
             Log::channel('paypal')->debug($request->all());
 
-            return redirect($callback_url . '?' . http_build_query([
+            return redirect($callback_url . '&' . http_build_query([
                 'status' => false,
                 'error'  => $error,
             ]));
@@ -450,7 +453,7 @@ class RateController extends Controller
             $error = "[purchaseError] Транзакция с кодом {$transaction_id} не найдена (Платёж отклонён)!";
             Log::channel('paypal')->error($error);
 
-            return redirect($callback_url . '?' . http_build_query([
+            return redirect($callback_url . '&' . http_build_query([
                 'status' => false,
                 'error'  => $error,
             ]));
@@ -460,10 +463,9 @@ class RateController extends Controller
         $transaction->status = 'canceled';
         $transaction->save();
 
-        return redirect($callback_url . '?' . http_build_query([
-            'status'  => true,
-            'message' => 'Пользователь отменил платеж.',
-            'return-url-from-rate' => $transaction->rate_id,
+        return redirect($callback_url . '&' . http_build_query([
+            'status'  => false,
+            'error' => 'Пользователь отменил платеж.',
         ]));
     }
 
