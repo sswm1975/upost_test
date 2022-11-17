@@ -543,7 +543,7 @@ function pretty_print($data, string $empty_data_info = 'Нет данных'): s
     if (empty($data)) {
         return "<pre>{$empty_data_info}</pre>";
     }
-    $text = str_replace('\\', '', json_encode(json_decode($data), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    $text = str_replace('\\', '', json_encode(json_decode(urldecode($data)), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     return "<pre style='text-align:left'>{$text}</pre>";
 }
 
