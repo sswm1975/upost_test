@@ -181,7 +181,7 @@ class DisputeController extends Controller
         $dispute = Dispute::query()
             ->whereKey($id)
             ->where('user_id', $request->user()->id)
-            ->whereNotIn('status', [Dispute::STATUS_CLOSED, Dispute::STATUS_CANCELED])
+            ->whereIn('status', Dispute::STATUSES_ACTING)
             ->first();
 
         if (! $dispute) {
@@ -192,7 +192,7 @@ class DisputeController extends Controller
         $dispute->status = Dispute::STATUS_CANCELED;
         $dispute->save();
 
-        # информируем в чат об отклонении спора
+        # информируем в чат об отмене спора
         Chat::addSystemMessage($dispute->chat_id, 'dispute_canceled');
 
         return response()->json([

@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|null $admin_user_id Менеджер закрепленный за спором
  * @property int $unread_messages_count Кол-во непрочитанных сообщений менеджером
  * @property int|null $dispute_closed_reason_id Причина закрытия спора
- * @property string|null $reason_closing_description Детальное описание закрытия спора менеджером чата
+ * @property string|null $reason_closing_description Детальное описание закрытия спора менеджером
  * @property-read Administrator|null $admin_user
  * @property-read \App\Models\Chat $chat
  * @property-read \App\Models\User|null $closed_user
@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read \App\Models\Rate $rate
  * @property-read \App\Models\Track|null $track
  * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute acting()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute active()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute appointed()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute closed()
@@ -81,7 +82,7 @@ class Dispute extends Model
     ];
 
     # статусы для действующих споров
-        const STATUSES_ACTING = [
+    const STATUSES_ACTING = [
         self::STATUS_ACTIVE,
         self::STATUS_APPOINTED,
         self::STATUS_IN_WORK,
@@ -218,6 +219,17 @@ class Dispute extends Model
     public function scopeInWork($query)
     {
         return $query->where('disputes.status', self::STATUS_IN_WORK);
+    }
+
+    /**
+     * Действующие споры.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeActing($query)
+    {
+        return $query->whereIn('disputes.status', self::STATUSES_ACTING);
     }
 
     /**

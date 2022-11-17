@@ -6,6 +6,7 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
+use App\Models\Dispute;
 use App\Models\Message;
 use App\Models\Notice;
 use App\Models\NoticeType;
@@ -688,6 +689,7 @@ class RateController extends Controller
      * - операция только для владельца заказа
      * - ставка должна быть в статусе buyed
      * - заказ должен быть в статусе in_work
+     * - если был открыт спор, то он переводится в статус closed
      *
      * @param int $rate_id
      * @return JsonResponse
@@ -719,6 +721,14 @@ class RateController extends Controller
             'type'        => Payment::TYPE_REWARD,
             'description' => 'Вознаграждение по заказу "' . $rate->order->name . '"',
         ]);
+
+        # закрываем действующий спор
+        if ($dispute = Dispute::whereRateId($rate_id)->acting()->first()) {
+            $dispute->update(['status' => Dispute::STATUS_CANCELED]);
+
+            # информируем в чат об отмене спора
+            Chat::addSystemMessage($dispute->chat_id, 'dispute_canceled');
+        }
 
         # информируем в чат, что Заказчик получил товар.
         Chat::addSystemMessage($rate->chat_id, 'customer_received_order');
