@@ -14,7 +14,6 @@ use App\Models\Order;
 use App\Models\OrderDeduction;
 use App\Models\Payment;
 use App\Models\Rate;
-use App\Models\Route;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Modules\Liqpay;
@@ -23,7 +22,6 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -282,9 +280,12 @@ class RateController extends Controller
 
         $paypal = new PayPal;
 
+        $uri = $request->get('callback_url', config('app.wordpress_url'));
+        $callback_url = preg_replace('/&status=.*/', '', $uri);
+
         $return_params = [
             'transaction_id' => $transaction->id,
-            'callback_url'   => $request->get('callback_url', config('app.wordpress_url')),
+            'callback_url'   => $callback_url,
         ];
 
         $params = [
