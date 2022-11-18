@@ -56,9 +56,6 @@ class DisputeController extends AdminController
      */
     protected function grid(): Grid
     {
-        # фиксим отображение пунктов меню для записей
-        Admin::style('ul.dropdown-menu {position: relative;}');
-
         $status = request('status', Admin::user()->isAdministrator() ? Dispute::STATUS_ACTIVE : Dispute::STATUS_APPOINTED);
 
         $grid = new Grid(new Dispute);

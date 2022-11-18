@@ -158,6 +158,8 @@ class AdminController extends Controller
 
             if ($this->enableDropdownAction) {
                 $grid->setActionClass('Encore\Admin\Grid\Displayers\DropdownActions');
+                # фиксим отображение меню
+                Admin::style('.box-body.table-responsive{overflow-x:auto!important;min-height:300px}.table-responsive .dropdown-menu{right:0!important;left:unset!important;}');
             }
 
             if ($this->isCreateButtonRight) {
