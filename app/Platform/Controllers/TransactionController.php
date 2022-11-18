@@ -32,8 +32,9 @@ class TransactionController extends AdminController
 
         # COLUMNS
         $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
-        $grid->column('user_id', 'Код К.')->setAttributes(['align' => 'center'])->sortable();
+        $grid->column('user_id', 'Код К.')->setAttributes(['align' => 'center'])->sortable()->filter();
         $grid->column('user.full_name', 'Клиент');
+        $grid->column('status', 'Статус')->sortable();
         $grid->column('amount', 'Сумма (всего)')->setAttributes(['align' => 'right'])->sortable();
         $grid->column('order_amount', 'Сумма заказа')->setAttributes(['align' => 'right'])->sortable();
         $grid->column('delivery_amount', 'Доставка')->setAttributes(['align' => 'right'])->sortable();
@@ -70,7 +71,6 @@ class TransactionController extends AdminController
             })
             ->setAttributes(['align'=>'center']);
 
-        $grid->column('status', 'Статус')->sortable();
         $grid->column('created_at', 'Создано')->sortable();
         $grid->column('updated_at', 'Изменено')->sortable();
         $grid->column('payed_at', 'Дата оплаты')->sortable();
