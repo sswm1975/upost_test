@@ -8710,7 +8710,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/notices/show?status=all",
+									"raw": "{{host}}/{{endpoint}}/notices/show?status=not_read&sorting=asc",
 									"host": [
 										"{{host}}"
 									],
@@ -8722,8 +8722,13 @@
 									"query": [
 										{
 											"key": "status",
-											"value": "all",
+											"value": "not_read",
 											"description": "Отримати нотификації по статусу (all - всі, not_read - не процитані, read - прочитані)"
+										},
+										{
+											"key": "sorting",
+											"value": "asc",
+											"description": "Порядок сортировки (asc, desc)  (опционально)"
 										}
 									]
 								}
