@@ -12,14 +12,23 @@ use Illuminate\Validation\ValidationException;
 
 class NoticeController extends Controller
 {
+    const DEFAULT_SORTING = 'desc';
+
     /**
      * Получить уведомления.
      *
      * @param Request $request
+     * @throws ValidatorException|ValidationException
      * @return JsonResponse
      */
     public function show(Request $request): JsonResponse
     {
+        $data = validateOrExit([
+            'status'  => 'nullable|in:all,not_read,read',
+            'sorting' => 'in:asc,desc',
+        ]);
+        $data['status'] = $data['status'] ?? 'all';
+
         $lang = $request->user()->lang;
 
         $notices = Notice::query()
@@ -40,13 +49,13 @@ class NoticeController extends Controller
                 'notices.created_at')
             ->join('notice_types', 'notice_types.id', 'notices.notice_type')
             ->owner()
-            ->when($request->get('status', 'all') == 'not_read', function ($query) {
+            ->when($data['status'] == 'not_read', function ($query) {
                 $query->where('notices.is_read', 0);
             })
-            ->when($request->get('status', 'all') == 'read', function ($query) {
+            ->when($data['status'] == 'read', function ($query) {
                 $query->where('notices.is_read', 1);
             })
-            ->latest('id')
+            ->orderBy('id', $data['sorting'] ?? self::DEFAULT_SORTING)
             ->get();
 
         return response()->json([
