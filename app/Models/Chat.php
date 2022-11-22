@@ -285,12 +285,11 @@ class Chat extends Model
     public function scopeSearchMessage($query, string $search)
     {
         return $query->whereHas('messages', function ($q) use ($search) {
-            $q->where('text', 'like', '%' . $search . '%');
+            $q->whereRaw("MATCH(text) AGAINST (? IN BOOLEAN MODE)", [$search]);
         })->orWhereHas('customer', function ($q) use ($search) {
-            $q->where('surname', 'like', '%' . $search . '%')
-            ->orWhere('name', 'like', '%' . $search . '%');
+            $q->whereRaw("MATCH(name,surname) AGAINST (? IN BOOLEAN MODE)", [$search]);
         })->orWhereHas('order', function ($q) use ($search) {
-            $q->where('name', 'like', '%' . $search . '%');
+            $q->whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$search]);
         });
     }
 
