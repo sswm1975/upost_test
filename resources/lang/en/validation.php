@@ -158,6 +158,10 @@ return [
             'censor' => 'There are obscene words in the text.',
             'not_phone' => 'It is forbidden to leave contact details in order.',
         ],
+        'description' => [
+            'not_phone' => 'The description does not include contact information.',
+            'censor' => 'The description contains obscene words.',
+        ],
     ],
 
     /*
