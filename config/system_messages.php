@@ -61,6 +61,11 @@ return [
         'ru' => 'Что делать дальше ознакомьтесь в инструкции по ссылке https://post.tantal-web.top/faq/info2.html',
         'uk' => 'Що робити далі ознайомтесь в інструкції з посилання на https://post.tantal-web.top/faq/info2.html',
     ],
+    'dispute_in_work' => [
+        'en' => 'Hello, my name is manager_name, and I will be your moderator in this debate! Wait for further instructions from me!',
+        'ru' => 'Здравствуйте, меня зовут manager_name, и я буду вашим модератором в данном диспуте! Дождитесь дальнейших указаний с моей стороны!',
+        'uk' => 'Вітаю, мене звуть manager_name, і я буду вашим модератором у цьому диспуті! Дочекайтеся подальших вказівок з мого боку!',
+    ],
 
     /* Причины закрытия спора */
     'traveler_not_deliver_product' => [

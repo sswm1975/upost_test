@@ -39,7 +39,7 @@ function null_to_blank($data = []): array
 /**
  * Получить системное сообщение в зависимости от локали пользователя.
  *
- * @param null $text
+ * @param null $text алиас системного сообщения, пример dispute_in_work:manager_name,Вася
  * @return string
  */
 function system_message($text = null): string
@@ -47,7 +47,14 @@ function system_message($text = null): string
     if (empty($text)) return '';
     $locale = app()->getLocale();
 
-    return config("system_messages.$text.$locale", $text);
+    list($alias, $params) = array_merge(explode(':', $text), ['']);
+    $message = config("system_messages.$alias.$locale", $text);
+    if (!empty($params)) {
+        list($param, $value) = explode(',', $params);
+        $message = str_replace($param, $value, $message);
+    }
+
+    return $message;
 }
 
 /**
