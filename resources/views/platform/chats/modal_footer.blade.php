@@ -24,7 +24,7 @@
 <form class="send_form">
     {{ csrf_field() }}
     <input type="hidden" name="chat_id" value="{{ $chat->id }}">
-    <input type="hidden" name="user_id" value="{{ Admin::user()->user_id }}">
+    <input type="hidden" name="user_id" value="0">
     <textarea name="text" placeholder="Сообщение"></textarea>
     <button class="btn btn-success submit">Отправить</button>
 </form>
