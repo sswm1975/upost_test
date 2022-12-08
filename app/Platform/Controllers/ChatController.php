@@ -180,7 +180,10 @@ class ChatController extends AdminController
         $this->broadcastCountUnreadMessages($chat->customer_id, $chat->customer_unread_count);
         $this->broadcastCountUnreadMessages($chat->performer_id, $chat->performer_unread_count);
 
-        return response()->json(['status' => true]);
+        return response()->json([
+            'status' => true,
+            'lock_status' => $chat->lock_status,
+        ]);
     }
 
     /**

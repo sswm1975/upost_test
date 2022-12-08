@@ -91,7 +91,10 @@ class MessagesController extends Controller
             $chat->dispute->increment('unread_messages_count');
         }
 
-        return response()->json(['status' => true]);
+        return response()->json([
+            'status' => true,
+            'lock_status' => $chat->lock_status,
+        ]);
     }
 
     /**
