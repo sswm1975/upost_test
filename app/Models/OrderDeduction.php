@@ -13,10 +13,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $type Тип вычета: tax_export - экспортный налог, tax_import - налог на импорт, fee - комиссии
  * @property string $name Наименование вычета
  * @property string $amount Сумма (в долларах)
- * @property \Illuminate\Support\Carbon $created_at Добавлено
+ * @property string $created_at Добавлено
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction query()
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction sumAllByOrder(int $order_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction sumFeesByOrder(int $order_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction sumTaxesByOrder(int $order_id)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDeduction whereId($value)
@@ -49,7 +52,7 @@ class OrderDeduction extends Model
         });
     }
 
-    public function scopeSumByOrder($query, int $order_id)
+    public function scopeSumAllByOrder($query, int $order_id)
     {
         return $query
             ->whereOrderId($order_id)

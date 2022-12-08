@@ -51,14 +51,14 @@ use Illuminate\Support\Str;
  * @property-read array $images_medium
  * @property-read array $images_original
  * @property-read array $images_thumb
- * @property-read string $price_selected_currency
+ * @property-read mixed $price_selected_currency
  * @property-read string $selected_currency
  * @property-read string $short_name
  * @property-read string $status_name
  * @property-read string $total_amount
  * @property-read string $total_amount_selected_currency
  * @property-read string $total_amount_usd
- * @property-read string $user_price_selected_currency
+ * @property-read mixed $user_price_selected_currency
  * @property-read \App\Models\Rate|null $rate_confirmed
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
@@ -226,7 +226,7 @@ class Order extends Model
     {
         if ($this->selected_currency == '$') return $this->user_price_usd;
 
-        if ($this->selected_currency == $this->currency) return $this->user_price;
+        if ($this->selected_currency == $this->user_currency) return $this->user_price;
 
         return round($this->user_price_usd * getCurrencyRate($this->selected_currency), 2);
     }

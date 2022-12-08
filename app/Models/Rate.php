@@ -33,12 +33,15 @@ use Carbon\Carbon;
  * @property-read \App\Models\Dispute|null $dispute
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Dispute[] $disputes
  * @property-read int|null $disputes_count
+ * @property-read float|mixed $amount_selected_currency
  * @property-read array $images_thumb
+ * @property-read string $selected_currency
  * @property-read string $status_name
  * @property-read \App\Models\Order $order
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Review[] $reviews
  * @property-read int|null $reviews_count
  * @property-read \App\Models\Route $route
+ * @property-read \App\Models\Transaction|null $transaction
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Rate active()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate confirmed()
@@ -86,6 +89,8 @@ class Rate extends Model
         'images'              => 'array',
     ];
     protected $appends = [
+        'selected_currency',
+        'amount_selected_currency',
         'status_name',
         'images_thumb',
     ];
@@ -143,6 +148,48 @@ class Rate extends Model
     ];
 
     ### GETTERS ###
+
+    /**
+     * Получить выбранную валюту.
+     * Приоритеты:
+     * 1) валюта указанная в параметре запроса;
+     * 2) валюта из профиля пользователя;
+     * 3) дефолтная валюта.
+     *
+     * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function getSelectedCurrencyAttribute(): string
+    {
+        if (request()->has('currency')) {
+            $currency = request()->get('currency');
+        } elseif (isset(request()->user()->currency)) {
+            $currency = request()->user()->currency;
+        } else {
+            $currency = config('app.default_currency');
+        }
+
+        if (! in_array($currency, config('app.currencies'))) {
+            $currency = config('app.default_currency');
+        }
+
+        return $currency;
+    }
+
+    /**
+     * Получить сумму вознаграждения по ставке в выбранной валюте.
+     *
+     * @return float|mixed
+     */
+    public function getAmountSelectedCurrencyAttribute()
+    {
+        if ($this->selected_currency == '$') return $this->amount_usd;
+
+        if ($this->selected_currency == $this->currency) return $this->amount;
+
+        return round($this->amount_usd * getCurrencyRate($this->selected_currency), 2);
+    }
 
     public function getStatusNameAttribute(): string
     {
