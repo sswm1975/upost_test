@@ -88,11 +88,11 @@ class ChatMessage implements Renderable
         ->join('users as up','up.id', 'chats.performer_id')
         ->join('orders AS o','o.id', 'chats.order_id')
         ->join('routes AS r','r.id', 'chats.route_id')
-        ->join('rates','rates.chat_id', 'chats.id')
         ->join('countries AS cntfr','cntfr.id', 'r.from_country_id')
         ->join('countries AS cnttr','cnttr.id', 'r.to_country_id')
         ->leftJoin('cities AS cfr','cfr.id', 'r.from_city_id')
         ->leftJoin('cities AS ctr','ctr.id', 'r.to_city_id')
+        ->leftJoin('rates','rates.chat_id', 'chats.id')
         ->find($id);
 
         if (empty($chat)) {

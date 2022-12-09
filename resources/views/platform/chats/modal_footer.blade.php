@@ -34,7 +34,7 @@
     let $modal_body = $('#grid-ajax-modal .modal-body');
 
     function reload_chat() {
-        if (! $('.nav-tabs li:eq(0)').hasClass('active')) return;
+        if (! $('h4 .nav-tabs li:eq(0)').hasClass('active')) return;
 
         $.get('/platform/_handle_renderable_?renderable=App_Platform_Controllers_ChatMessage&key={{ $chat->id }}', function (data) {
             if (localStorage.getItem("messages_cnt") == data.messages_cnt || 0) return;
@@ -44,11 +44,13 @@
             $modal_body.scrollTop($modal_body[0].scrollHeight);
         });
     }
-    let timer_reload_char = setInterval(reload_chat, 10000);
+    let timer_reload_chat = setInterval(reload_chat, 10000);
 
     $('#grid-ajax-modal').on('hidden.bs.modal', function (e) {
-        clearTimeout(timer_reload_char);
-    })
+        clearTimeout(timer_reload_chat);
+        $.get('/platform/disputes/{{ $chat->id }}/clear_unread_messages_count');
+        $.admin.reload();
+    });
 
     let $chat_send_form = $(".send_form");
     $chat_send_form.find("button.submit").click(function () {

@@ -13,6 +13,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\DB;
 
 class DisputeController extends AdminController
 {
@@ -92,7 +93,22 @@ class DisputeController extends AdminController
             }
         });
 
-        $grid->model()->selectRaw('*, IFNULL((SELECT COUNT(1) FROM messages WHERE chat_id = disputes.chat_id), 0) AS messages_cnt');
+        $grid->model()
+            ->selectRaw('
+                disputes.*,
+                IFNULL((SELECT COUNT(1) FROM messages WHERE chat_id = disputes.chat_id), 0) AS messages_cnt,
+                last_mess.user_id AS last_message_user_id
+            ')
+            ->leftJoin(
+                DB::raw(
+                    '(
+                        SELECT m1.chat_id, m1.user_id
+                        FROM messages m1
+                        LEFT JOIN messages m2 ON (m1.chat_id = m2.chat_id AND m1.id < m2.id)
+                        WHERE m2.id IS NULL
+                    ) AS last_mess'
+                ), 'last_mess.chat_id', '=', 'disputes.chat_id'
+            );
 
         # FILTERS
         if (Admin::user()->isRole('dispute_manager')) {
@@ -130,9 +146,10 @@ class DisputeController extends AdminController
                 ->setAttributes(['align' => 'center'])
                 ->sortable();
 
-            $grid->column('unread_messages_count', 'Сообщений')
+            $grid->column('unread_messages_count', 'Unread')
                 ->display(function ($count) {
-                    return $count ? "<span class='label label-danger'>$count</span>" : 'Новых нет';
+                    $empty = $this->last_message_user_id > 0 ? "<span class='label label-default'>Прочитано, без ответа</span>" : '';
+                    return $count ? "<span class='label label-danger'>$count</span>" : $empty;
                 })
                 ->setAttributes(['align' => 'center'])
                 ->help('Количество непрочитанных сообщений');
@@ -174,5 +191,16 @@ class DisputeController extends AdminController
     protected function detail($id): Show
     {
         return $this->showFields(Dispute::findOrFail($id));
+    }
+
+    /**
+     * Очистить счетчик непрочитанных сообщений менеджером спора.
+     *
+     * @param int $chat_id
+     * @return void
+     */
+    public function clearUnreadMessagesCount(int $chat_id)
+    {
+        Dispute::where('chat_id', $chat_id)->update(['unread_messages_count' => 0]);
     }
 }

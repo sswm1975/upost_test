@@ -35,6 +35,7 @@ Route::group([
 
     # Споры
     $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes')->middleware('admin.permission:check,disputes');
+    $router->get('disputes/{chat_id}/clear_unread_messages_count', 'DisputeController@clearUnreadMessagesCount')->name('disputes.clear_unread_messages_count')->middleware('admin.permission:check,disputes');
 
     # Треки доставки
     $router->resource('tracks', 'TrackController')->names('tracks')->middleware('admin.permission:allow,administrator');

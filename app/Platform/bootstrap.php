@@ -62,9 +62,9 @@ CSS);
 
 
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
-//    if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {
-//        $navbar->right(new Nav\DisputesCounter);
-//    }
+    if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {
+        $navbar->right(new Nav\DisputesCounter);
+    }
     $navbar->right(new Nav\FullScreen());
 });
 

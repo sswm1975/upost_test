@@ -9,6 +9,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ChatController extends AdminController
 {
@@ -83,7 +84,8 @@ class ChatController extends AdminController
                 r.deadline AS route_deadline,
 
                 IFNULL(d.id, 0) AS exists_dispute,
-                IFNULL(d.unread_messages_count, 0) AS unread_messages_count
+                IFNULL(d.unread_messages_count, 0) AS unread_messages_count,
+                last_mess.user_id AS last_message_user_id
             ")
             ->join('users as uc','uc.id', 'chats.customer_id')
             ->join('users as up','up.id', 'chats.performer_id')
@@ -93,7 +95,17 @@ class ChatController extends AdminController
             ->join('countries AS cnttr','cnttr.id', 'r.to_country_id')
             ->leftJoin('cities AS cfr','cfr.id', 'r.from_city_id')
             ->leftJoin('cities AS ctr','ctr.id', 'r.to_city_id')
-            ->leftJoin('disputes AS d', 'd.chat_id', 'chats.id');
+            ->leftJoin('disputes AS d', 'd.chat_id', 'chats.id')
+            ->leftJoin(
+                DB::raw(
+               '(
+                        SELECT m1.chat_id, m1.user_id
+                        FROM messages m1
+                        LEFT JOIN messages m2 ON (m1.chat_id = m2.chat_id AND m1.id < m2.id)
+                        WHERE m2.id IS NULL
+                    ) AS last_mess'
+                ), 'last_mess.chat_id', '=', 'chats.id'
+            );
 
         # COLORS ROW GRID
         $grid->rows(function (Grid\Row $row) {
@@ -113,14 +125,16 @@ class ChatController extends AdminController
         $grid->column('updated_at')->sortable();
         $grid->column('messages_cnt')
             ->ajaxModal(ChatMessage::class, 700)
+            ->setAttributes(['align' => 'center'])
             ->sortable();
 
         $grid->column('unread_messages_count', 'Unread')
             ->display(function ($count) {
-                return $count ? "<span class='label label-danger'>$count</span>" : '';
+                $empty = $this->exists_dispute && $this->last_message_user_id > 0 ? "<span class='label label-default'>Прочитано, без ответа</span>" : '';
+                return $count ? "<span class='label label-danger'>$count</span>" :  $empty;
             })
             ->setAttributes(['align'=>'center'])
-            ->help('Количество непрочитанных сообщений менеджером');
+            ->help('Количество непрочитанных сообщений менеджером при наличии спора');
 
         $grid->column('customer_id', 'CId')->sortable();
         $grid->column('customer_name', 'Customer');
