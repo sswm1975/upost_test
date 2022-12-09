@@ -230,7 +230,9 @@ class Chat extends Model
      */
     public function dispute(): HasOne
     {
-        return $this->hasOne(Dispute::class);
+        return $this->hasOne(Dispute::class)
+            ->latest('id')
+            ->limit(1);
     }
 
     /**
@@ -240,7 +242,9 @@ class Chat extends Model
      */
     public function last_message(): HasOne
     {
-        return $this->hasOne(Message::class)->latest();
+        return $this->hasOne(Message::class)
+            ->latest('id')
+            ->limit(1);
     }
 
     ### SCOPES ###
