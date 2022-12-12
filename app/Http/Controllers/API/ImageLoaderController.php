@@ -215,7 +215,7 @@ class ImageLoaderController extends Controller
     {
         $date = date('YmdHms');
         $uniqid = uniqid();
-        $path = "/{$user_id}/dispute/";
+        $path = "/{$user_id}/disputes/";
         $image_original_name = "image_original_{$date}_{$uniqid}.jpg";
         $image_main_name     = "image_{$date}_{$uniqid}.jpg";
         $image_thumb_name    = "image_thumb_{$date}_{$uniqid}.jpg";

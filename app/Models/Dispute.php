@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\WithoutAppends;
 use Encore\Admin\Auth\Database\Administrator;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\TimestampSerializable;
@@ -12,11 +13,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * App\Models\Dispute
  *
  * @property int $id Код
- * @property int $problem_id Код проблема
  * @property int $user_id Код пользователя
+ * @property int $problem_id Код проблема
  * @property int $rate_id Код ставки
  * @property int $chat_id Код чата
- * @property int $message_id Код сообщения
+ * @property string $text Текст спора
+ * @property array $images Фотографии купленного заказа
  * @property string $status Статус спора
  * @property \Illuminate\Support\Carbon|null $created_at Добавлено
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
@@ -30,8 +32,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read \App\Models\Chat $chat
  * @property-read \App\Models\User|null $closed_user
  * @property-read \App\Models\DisputeClosedReason|null $dispute_closed_reason
+ * @property-read array $images_original
+ * @property-read array $images_thumb
  * @property-read string $status_name
- * @property-read \App\Models\Message $message
  * @property-read \App\Models\DisputeProblem $problem
  * @property-read \App\Models\Rate $rate
  * @property-read \App\Models\Track|null $track
@@ -52,19 +55,22 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereDeadline($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereDisputeClosedReasonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereMessageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereImages($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereProblemId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereRateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereReasonClosingDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUnreadMessagesCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute withoutAppends(array $appends = [])
  * @mixin \Eloquent
  */
 class Dispute extends Model
 {
     use TimestampSerializable;
+    use WithoutAppends;
 
     const STATUS_ACTIVE    = 'active';
     const STATUS_APPOINTED = 'appointed';
@@ -100,7 +106,8 @@ class Dispute extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at', 'deadline'];
-    protected $appends = ['status_name'];
+    protected $casts = ['images' => 'array'];
+    protected $appends = ['status_name', 'images_thumb', 'images_original'];
     protected $attributes = ['status'  => self::STATUS_ACTIVE];
 
     ### BOOT ###
@@ -133,6 +140,63 @@ class Dispute extends Model
     public function getStatusNameAttribute(): string
     {
         return __("message.dispute.statuses.$this->status");
+    }
+
+    public function getImagesAttribute($images): array
+    {
+        if (empty($images)) return [];
+
+        $link_images = [];
+        foreach (json_decode($images) as $image) {
+            $link_images[] = asset("storage/{$this->user_id}/disputes/{$image}");
+        }
+
+        return $link_images;
+    }
+
+    public function getImagesThumbAttribute(): array
+    {
+        if (is_null($this->images)) return [];
+
+        $images = [];
+        foreach ($this->images as $image) {
+            $images[] = str_replace('image_', 'image_thumb_', $image);
+        }
+
+        return $images;
+    }
+
+    public function getImagesOriginalAttribute(): array
+    {
+        if (is_null($this->images)) return [];
+
+        $images = [];
+        foreach ($this->images as $image) {
+            $images[] = str_replace('image_', 'image_original_', $image);
+        }
+
+        return $images;
+    }
+
+    ### SETTERS ###
+
+    public function setTextAttribute($value)
+    {
+        $this->attributes['text'] = strip_tags(strip_unsafe($value), ['p', 'span', 'b', 'i', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br']);
+    }
+
+    public function setImagesAttribute($images)
+    {
+        if (empty($images)) {
+            $this->attributes['images'] = null;
+        }
+
+        foreach ($images as $key => $file) {
+            $uri_parts = explode('/', $file);
+            $images[$key] = end($uri_parts);
+        }
+
+        $this->attributes['images'] = json_encode($images);
     }
 
     ### LINKS ###
@@ -169,11 +233,6 @@ class Dispute extends Model
     public function chat(): BelongsTo
     {
         return $this->belongsTo(Chat::class, 'chat_id');
-    }
-
-    public function message(): BelongsTo
-    {
-        return $this->belongsTo(Message::class, 'message_id');
     }
 
     public function admin_user(): BelongsTo

@@ -12,19 +12,23 @@ use App\Models\Traits\TimestampSerializable;
  * @property int $id Код
  * @property int $chat_id Код чата
  * @property int $user_id Автор сообщения
- * @property string $text Текст сообщения
- * @property array|null $images Прикрепленные картинки
- * @property string|null $created_at Добавлено
- * @property string|null $updated_at Изменено
+ * @property int|null $dispute_id Код спора
+ * @property string $text
+ * @property array $images Фотографии
+ * @property \Illuminate\Support\Carbon|null $created_at Добавлено
+ * @property \Illuminate\Support\Carbon|null $updated_at Изменено
  * @property-read \App\Models\Chat $chat
- * @property-read \App\Models\User $user
+ * @property-read array $images_original
+ * @property-read array $images_thumb
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message query()
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereImages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereDisputeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereImages($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUserId($value)
@@ -87,16 +91,19 @@ class Message extends Model
      */
     public function getTextAttribute($text): string
     {
-        return $this->user_id == SYSTEM_USER_ID ? system_message($text) : $text;
+        $dispute_id = $this->dispute_id ?: 0;
+        return $this->user_id == SYSTEM_USER_ID || $dispute_id ? system_message($text, $dispute_id) : $text;
     }
 
     public function getImagesAttribute($images): array
     {
         if (empty($images)) return [];
 
+        $type = empty($this->dispute_id) ? 'chats' : 'disputes';
+
         $link_images = [];
         foreach (json_decode($images) as $image) {
-            $link_images[] = asset("storage/{$this->user_id}/chats/{$image}");
+            $link_images[] = asset("storage/{$this->user_id}/{$type}/{$image}");
         }
 
         return $link_images;

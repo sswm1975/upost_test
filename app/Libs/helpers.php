@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\ValidatorException;
+use App\Models\Dispute;
 use App\Models\Tax;
 use App\Modules\Calculations;
 use Illuminate\Support\Facades\DB;
@@ -39,19 +40,32 @@ function null_to_blank($data = []): array
 /**
  * Получить системное сообщение в зависимости от локали пользователя.
  *
- * @param null $text алиас системного сообщения, пример dispute_in_work:manager_name,Вася
+ * @param string $text алиас системного сообщения, пример dispute_in_work:Вася
+ * @param int $dispute_id код спора
  * @return string
  */
-function system_message($text = null): string
+function system_message(string $text = '', int $dispute_id = 0): string
 {
     if (empty($text)) return '';
     $locale = app()->getLocale();
 
-    list($alias, $params) = array_merge(explode(':', $text), ['']);
+    list($alias, $param) = array_merge(explode(':', $text), ['']);
     $message = config("system_messages.$alias.$locale", $text);
-    if (!empty($params)) {
-        list($param, $value) = explode(',', $params);
-        $message = str_replace($param, $value, $message);
+
+    if ($alias == 'dispute_opened' && $dispute_id) {
+        $dispute = Dispute::with(['user:id,name,surname', 'problem'])
+            ->withoutAppends()
+            ->find($dispute_id, ['user_id', 'problem_id', 'text']);
+
+        $message = str_replace(
+            ['dispute_initiator', 'dispute_problem', 'dispute_text'],
+            [$dispute->user->short_name, $dispute->problem->name, $dispute->text],
+            $message
+        );
+    }
+
+    if ($alias == 'dispute_in_work') {
+        $message = str_replace('manager_name', $param, $message);
     }
 
     return $message;

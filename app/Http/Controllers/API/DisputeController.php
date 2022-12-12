@@ -14,7 +14,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use App\Exceptions\ValidatorException;
 use App\Models\Dispute;
@@ -38,37 +37,43 @@ class DisputeController extends Controller
             'images.*'   => 'nullable|string',
         ]);
 
+        # это не дубль?
         if (Dispute::whereRateId($data['rate_id'])->whereNotIn('status', [Dispute::STATUS_CLOSED, Dispute::STATUS_CANCELED])->exists()) {
             throw new ErrorException(__('message.dispute_exists'));
         }
 
+        # ищем проблему и узнаем кол-во дней на её решение
+        if (! $problem = DisputeProblem::whereKey($data['problem_id'])->active()->first(['days'])) {
+            throw new ErrorException(__('message.problem_not_found'));
+        }
+
+        # ищем ставку
         $rate = Rate::with('order:id,user_id,name')
             ->whereKey($data['rate_id'])
             ->whereIn('status', [Rate::STATUS_ACCEPTED, Rate::STATUS_BUYED])
             ->first(['id', 'user_id', 'chat_id', 'order_id']);
 
+        # проверяем, что ставка существует и инициатор спора является её участником
         $auth_user_id = $request->user()->id;
         if (!$rate || !in_array($auth_user_id, [$rate->user_id, $rate->order->user_id])) {
             throw new ErrorException(__('message.not_have_permission'));
         }
 
-        if (! $problem = DisputeProblem::whereKey($data['problem_id'])->active()->first(['days'])) {
-            throw new ErrorException(__('message.problem_not_found'));
-        }
-
-        # информируем в чат об открытии спора
-        Chat::addSystemMessage($rate->chat_id, 'dispute_opened');
-
         # добавляем доп.данные
         $data['chat_id'] = $rate->chat_id;
         $data['deadline'] = Carbon::now()->addDays($problem->days)->toDateString();
 
-        # отправляем в чат сообщение с текстом спора
-        $message = Message::create(Arr::only($data, ['chat_id', 'text', 'images', 'user_id']));
-        $data['message_id'] = $message->id;
-
         # создаем спор
         $dispute = Dispute::create($data);
+
+        # информируем в чат об открытии спора
+        Message::create([
+            'chat_id'    => $rate->chat_id,
+            'user_id'    => $auth_user_id,
+            'dispute_id' => $dispute->id,
+            'text'       => 'dispute_opened',
+            'images'     => $data['images'],
+        ]);
 
         # увеличиваем счетчик непрочитанных сообщений
         $dispute->chat()->increment($auth_user_id == $rate->user_id ? 'customer_unread_count' : 'performer_unread_count');
@@ -88,7 +93,8 @@ class DisputeController extends Controller
         }
 
         return response()->json([
-            'status' => true,
+            'status'  => true,
+            'dispute' => null_to_blank($dispute),
         ]);
     }
 
@@ -157,7 +163,6 @@ class DisputeController extends Controller
                 'rate.order',
                 'rate.route',
                 'chat',
-                'message',
                 'dispute_closed_reason',
             ])
             ->get();
