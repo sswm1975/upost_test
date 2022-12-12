@@ -122,7 +122,26 @@ class DisputeController extends AdminController
         $grid->column('problem.name', 'Проблема');
         $grid->column('user_id', 'Код К.')->sortable();
         $grid->column('user.full_name', 'Клиент');
-        $grid->column('message.text', 'Описание претензии')->limit(40);
+        $grid->column('text_modal', 'Описание претензии')
+            ->modal('Описание претензии', function () {
+                $images = '';
+                foreach ($this->images as $image) {
+                    $images .= "<img src='$image' class='img img-thumbnail'>";
+                }
+
+                return "
+                    <div>
+                        <div style='width: 20%; float: left; padding-right: 10px;'>
+                            $images
+                        </div>
+                        <div style='width: 80%; float: left;'>
+                            {$this->text}
+                        </div>
+                        <div style='clear:both; line-height: 0;'></div>
+                    </div>
+                ";
+            })
+            ->setAttributes(['align'=>'center']);
         $grid->column('problem.days', 'Дней')->help('Кол-во дней на рассмотрение проблемы');
         $grid->column('deadline', 'Дата дедлайна')
             ->display(function () {

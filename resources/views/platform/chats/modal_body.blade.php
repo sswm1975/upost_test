@@ -145,7 +145,7 @@
                         <img src="{{ $user_photo }}">
                     </figure>
                     <div class="message__text {{ $message->is_dispute_message ? 'is_dispute_message' : ''}}">
-                        <p>{{ $message->text }}</p>
+                        <p>{!! $message->text !!}</p>
                         @forelse($message->images_thumb as $image)
                             <div class="attachfiles">
                                 <a href="{{ $message->images_original[$loop->index] }}" class="attach-image" target="_blank">
@@ -193,10 +193,10 @@
             <div class="col-md-12" style="padding: 0">
                 <label class="control-label">Описание</label>
                 <div class="form-control" style="height:auto;" readonly>
-                    <p><?= $dispute->message->text ?></p>
-                    @forelse($dispute->message->images_thumb as $image)
+                    <p>{!! $dispute->text !!}</p>
+                    @forelse($dispute->images_thumb as $image)
                         <div class="attachfiles">
-                            <a href="{{ $dispute->message->images_original[$loop->index] }}" class="attach-image" target="_blank">
+                            <a href="{{ $dispute->images_original[$loop->index] }}" class="attach-image" target="_blank">
                                 <img src="{{ $image }}">
                             </a>
                         </div>

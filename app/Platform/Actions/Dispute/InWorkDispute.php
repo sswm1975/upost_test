@@ -35,7 +35,7 @@ class InWorkDispute extends RowAction
         $model->save();
 
         # информируем в чат, что менеджер взял в работу спор
-        Chat::addSystemMessage($model->chat->id, 'dispute_in_work:,' . $this->manager_name);
+        Chat::addSystemMessage($model->chat->id, 'dispute_in_work:' . $this->manager_name);
 
         return $this->response()
             ->success('Спор взят в работу!')
