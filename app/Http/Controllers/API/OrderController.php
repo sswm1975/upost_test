@@ -108,7 +108,7 @@ class OrderController extends Controller
 
         $data = validateOrExit(self::rules4saveOrder());
 
-        $exists_order = Order::where(Arr::only($data, ['user_id', 'name', 'price', 'from_country_id', 'to_country_id']))->count();
+        $exists_order = Order::active()->where(Arr::only($data, ['user_id', 'name', 'price', 'from_country_id', 'to_country_id']))->count();
         if ($exists_order) throw new ErrorException(__('message.order_exists'));
 
         static::checkExistsImages($data['images']);
