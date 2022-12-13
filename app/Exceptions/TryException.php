@@ -3,12 +3,19 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class TryException extends Exception
 {
-    //
-    //
-    private $error;
+    /** @var string  */
+    private string $error;
+
+    /**
+     * TryException constructor.
+     *
+     * @param string $error
+     */
     public function __construct(string $error)
     {
         parent::__construct();
@@ -18,14 +25,21 @@ class TryException extends Exception
     /**
      * Render the exception into an HTTP response.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function render()
+    public function render(): JsonResponse
     {
-
-        return response()->json([
+        $data = [
             'status' => false,
             'errors' => [$this->error]
-        ], 404);
+        ];
+
+        if (env('APP_ENV') == 'local' || env('APP_DEBUG')) {
+            $data['sql'] = getSQLForFixDatabase();
+            $data['request'] = request()->all();
+            $data['auth_user'] = request()->user() ?? [];
+        }
+
+        return response()->json($data, Response::HTTP_NOT_FOUND);
     }
 }

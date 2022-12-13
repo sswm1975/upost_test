@@ -48,6 +48,8 @@ class ErrorException extends Exception
 
         if (env('APP_ENV') == 'local' || env('APP_DEBUG')) {
             $data['sql'] = getSQLForFixDatabase();
+            $data['request'] = request()->all();
+            $data['auth_user'] = request()->user() ?? [];
         }
 
         return response()->json($data, $this->code);

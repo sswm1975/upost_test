@@ -46,6 +46,8 @@ class ValidatorException extends Exception
 
         if (env('APP_ENV') == 'local' || env('APP_DEBUG')) {
             $data['sql'] = getSQLForFixDatabase();
+            $data['request'] = request()->all();
+            $data['auth_user'] = request()->user() ?? [];
         }
 
         return response()->json($data, Response::HTTP_BAD_REQUEST);
