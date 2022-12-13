@@ -117,7 +117,7 @@ class ChatController extends AdminController
         # COLUMNS
         $grid->column('id', )->sortable();
         $grid->column('status')->showOtherField('status_name')->sortable();
-        $grid->column('lock_status')
+        $grid->column('lock_status', 'Chat`s lock status')
             ->editable('select', Chat::LOCK_STATUSES)
             ->sortable();
 

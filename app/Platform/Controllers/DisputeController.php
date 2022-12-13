@@ -156,7 +156,7 @@ class DisputeController extends AdminController
         }
 
         if (in_array($status, [Dispute::STATUS_IN_WORK, Dispute::STATUS_CLOSED])) {
-            $grid->column('chat.lock_status', 'Статус блокировки')
+            $grid->column('chat.lock_status', 'Статус блокировки Чата')
                 ->editable('select', Chat::LOCK_STATUSES)
                 ->sortable();
 
