@@ -114,7 +114,7 @@ class Chat extends Model
             $model->updated_at = $model->freshTimestamp();
 
             if ($model->isDirty('lock_status')) {
-                static::addSystemMessage($model->id, 'chat_lock_status-' . $model->lock_status);
+                static::addSystemMessage($model->id, 'chat_lock_status.' . $model->lock_status);
             }
         });
     }

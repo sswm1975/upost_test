@@ -96,40 +96,42 @@ return [
     /* END Причины закрытия спора */
 
     /* Виды блокировок чата */
-    'chat_lock_status-without_lock' => [
-        'en' => 'Без блокировки',
-        'ru' => 'Без блокировки',
-        'uk' => 'Без блокировки',
-    ],
-    'chat_lock_status-lock_add_message_only_customer' => [
-        'en' => 'Блокировано только заказчику',
-        'ru' => 'Блокировано только заказчику',
-        'uk' => 'Блокировано только заказчику',
-    ],
-    'chat_lock_status-lock_add_message_only_performer' => [
-        'en' => 'Блокировано только исполнителю',
-        'ru' => 'Блокировано только исполнителю',
-        'uk' => 'Блокировано только исполнителю',
-    ],
-    'chat_lock_status-lock_add_message_all' => [
-        'en' => 'Блокировано всем',
-        'ru' => 'Блокировано всем',
-        'uk' => 'Блокировано всем',
-    ],
-    'chat_lock_status-permit_one_message_only_customer' => [
-        'en' => 'Разрешено одно сообщение заказчику',
-        'ru' => 'Разрешено одно сообщение заказчику',
-        'uk' => 'Разрешено одно сообщение заказчику',
-    ],
-    'chat_lock_status-permit_one_message_only_performer' => [
-        'en' => 'Разрешено одно сообщение исполнителю',
-        'ru' => 'Разрешено одно сообщение исполнителю',
-        'uk' => 'Разрешено одно сообщение исполнителю',
-    ],
-    'chat_lock_status-permit_one_message_all' => [
-        'en' => 'Разрешено всем по одному сообщению',
-        'ru' => 'Разрешено всем по одному сообщению',
-        'uk' => 'Разрешено всем по одному сообщению',
+    'chat_lock_status' => [
+        'without_lock' => [
+            'en' => 'Chat is unlocked for all users',
+            'ru' => 'Чат разблокирован для всех пользователей',
+            'uk' => 'Чат розблокований для всіх користувачів',
+        ],
+        'lock_add_message_only_customer' => [
+            'en' => 'Chat is temporarily blocked for the Customer',
+            'ru' => 'Чат временно заблокирован для Заказчика',
+            'uk' => 'Чат тимчасово заблокований для Замовника',
+        ],
+        'lock_add_message_only_performer' => [
+            'en' => 'Chat is temporarily blocked for the Traveler',
+            'ru' => 'Чат временно заблокирован для Путешественника',
+            'uk' => 'Чат тимчасово заблокований для Мандрівника',
+        ],
+        'lock_add_message_all' => [
+            'en' => 'Chat is temporarily blocked',
+            'ru' => 'Чат временно заблокирован',
+            'uk' => 'Чат тимчасово заблоковано',
+        ],
+        'permit_one_message_only_customer' => [
+            'en' => 'Customer, please reply in one message. Please note that you can only have one message after the chat will be temporarily blocked until further instructions from the moderator.',
+            'ru' => 'Заказчик, дайте ответ в одном сообщении. Обращаем ваше внимание, что у вас есть только одно сообщение, после чат будет временно заблокирован до дальнейших инструкций от модератора.',
+            'uk' => 'Замовник, дайте відповідь в одному повідомленні. Звертаємо вашу увагу, що у вас є лише одне повідомлення, після чату буде тимчасово заблоковано до подальших інструкцій від модератора.',
+        ],
+        'permit_one_message_only_performer' => [
+            'en' => 'Traveler, give the answer in one message. Please note that you can only have one message after the chat will be temporarily blocked until further instructions from the moderator.',
+            'ru' => 'Путешественник, дайте ответ в одном сообщении. Обращаем ваше внимание, что у вас есть только одно сообщение, после чат будет временно заблокирован до дальнейших инструкций от модератора.',
+            'uk' => 'Мандрівник, дайте відповідь в одному повідомленні. Звертаємо вашу увагу, що у вас є лише одне повідомлення, після чату буде тимчасово заблоковано до подальших інструкцій від модератора.',
+        ],
+        'permit_one_message_all' => [
+            'en' => 'Give the answer in one message. Please note that you can only have one message after the chat will be temporarily blocked until further instructions from the moderator.',
+            'ru' => 'Дайте ответ в одном сообщении. Обращаем ваше внимание, что у вас есть только одно сообщение, после чат будет временно заблокирован, до дальнейших инструкций от модератора.',
+            'uk' => 'Дайте відповідь в одному повідомленні. Звертаємо вашу увагу, що у вас є тільки одне повідомлення, після чату буде тимчасово заблоковано, до подальших інструкцій від модератора.',
+        ],
     ],
     /* END Виды блокировок чата */
 
