@@ -108,8 +108,11 @@ class OrderController extends Controller
 
         $data = validateOrExit(self::rules4saveOrder());
 
+        /*
+        // в комменте https://app.asana.com/0/0/1203522478775625/1203546293769110/f решено вообще убрать проверку на дубль
         $exists_order = Order::active()->where(Arr::only($data, ['user_id', 'name', 'price', 'from_country_id', 'to_country_id']))->count();
         if ($exists_order) throw new ErrorException(__('message.order_exists'));
+        */
 
         static::checkExistsImages($data['images']);
 
