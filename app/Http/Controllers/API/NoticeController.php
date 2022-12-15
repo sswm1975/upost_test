@@ -46,7 +46,8 @@ class NoticeController extends Controller
                 'notices.is_read',
                 'notices.object_id',
                 'notices.data',
-                'notices.created_at')
+                'notices.created_at',
+                DB::raw('DATE(notices.created_at) AS arcdate'))
             ->join('notice_types', 'notice_types.id', 'notices.notice_type')
             ->owner()
             ->when($data['status'] == 'not_read', function ($query) {
@@ -56,7 +57,10 @@ class NoticeController extends Controller
                 $query->where('notices.is_read', 1);
             })
             ->orderBy('id', $data['sorting'] ?? self::DEFAULT_SORTING)
-            ->get();
+            ->get()
+            ->groupBy('arcdate')
+            ->makeHidden('arcdate')
+            ->all();
 
         return response()->json([
             'status'  => true,
