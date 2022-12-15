@@ -144,13 +144,14 @@ class ClientController extends AdminController
         $grid->column('card_name', 'Имя на карте')->sortable();
         $grid->column('resume_modal', 'Резюме')
             ->modal('Резюме', function () {
+                $resume = $this->resume ?: '<h3>Резюме не заполнено</h3>';
                 return "
                     <div>
                         <div style='width: 20%; float: left; padding-right: 10px;'>
                             <img src='$this->photo' class='img img-thumbnail'>
                         </div>
-                        <div style='width: 80%; float: left;'>
-                            {$this->resume}
+                        <div style='width: 80%; float: left; text-align: left;'>
+                            {$resume}
                         </div>
                         <div style='clear:both; line-height: 0;'></div>
                     </div>
@@ -186,6 +187,7 @@ class ClientController extends AdminController
      */
     protected function detail($id): Show
     {
+        dd(User::findOrFail($id));
         return $this->showFields(User::findOrFail($id));
     }
 }
