@@ -72,7 +72,7 @@ class DisputeController extends Controller
             'user_id'    => $auth_user_id,
             'dispute_id' => $dispute->id,
             'text'       => 'dispute_opened',
-            'images'     => $data['images'],
+            'images'     => $data['images'] ?? [],
         ]);
 
         # увеличиваем счетчик непрочитанных сообщений
