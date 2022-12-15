@@ -114,9 +114,11 @@
         height: 100%;
         object-fit: cover;
     }
-
     .input-group {
         padding-bottom: 5px;
+    }
+    .disput_theme_title {
+        color: hotpink;
     }
 </style>
 
@@ -130,7 +132,7 @@
                         <img src="/img/bullhorn.png">
                     </figure>
                     <div class="message__text">
-                        <p>{{ $message->text }}</p>
+                        <p>{!! $message->text !!}</p>
                     </div>
                 </div>
             @else
