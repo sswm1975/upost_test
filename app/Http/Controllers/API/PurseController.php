@@ -27,7 +27,7 @@ class PurseController extends Controller
         }
 
         $transactions = Transaction::query()
-            ->selectRaw('"payment" AS `type`, transactions.payed_at, -1 * transactions.amount AS amount, orders.`name` AS order_name, transactions.`status`')
+            ->selectRaw('"payment" AS `type`, transactions.payed_at, -1 * transactions.amount AS amount, orders.id AS order_id, orders.`name` AS order_name, transactions.`status`')
             ->join('rates', 'rates.id', 'transactions.rate_id')
             ->join('orders', 'orders.id', 'rates.order_id')
             ->where('transactions.user_id', $user_id)
@@ -35,7 +35,7 @@ class PurseController extends Controller
             ->toArray();
 
         $payments = Payment::query()
-            ->selectRaw('payments.`type`, IFNULL(payments.updated_at, payments.created_at) AS payed_at, payments.amount, orders.`name` AS order_name, payments.`status`')
+            ->selectRaw('payments.`type`, IFNULL(payments.updated_at, payments.created_at) AS payed_at, payments.amount, orders.id AS order_id, orders.`name` AS order_name, payments.`status`')
             ->join('orders', 'orders.id', 'payments.order_id')
             ->where('payments.user_id', 2)
             ->get()
