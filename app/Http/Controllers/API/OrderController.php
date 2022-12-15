@@ -219,6 +219,7 @@ class OrderController extends Controller
             'sort_by'     => 'sometimes|required|in:date,price',
             'show'        => 'sometimes|required|integer|min:1',
             'page-number' => 'sometimes|required|integer|min:1',
+            'show_my_orders' => 'sometimes|boolean',              # включить в отбор свои заказы (по умолчанию - не отбирать)
         ]);
 
         # определяем тип фильтра
@@ -283,7 +284,7 @@ class OrderController extends Controller
             ->paginate($filters['show'] ?? self::DEFAULT_PER_PAGE, ['orders.*'], 'page', $filters['page-number'] ?? 1);
 
         # если установлен фильтр "Принятые" или "Доставлено" и заказы просматривает владелец маршрута
-        if (in_array($filter_type, [self::FILTER_TYPE_ACCEPTED, self::FILTER_TYPE_DELIVERED]) && $route->user_id == $request->user()->id) {
+        if (in_array($filter_type, [self::FILTER_TYPE_ACCEPTED, self::FILTER_TYPE_DELIVERED]) && $route->user_id == $auth_user_id) {
             foreach ($orders as $order) {
                 foreach ($order->rates as $rate) {
                     # если ставка по заказу создана владельцем маршрута, то устанавливаем "Да" для "Подтвержденная ставка просмотрена исполнителем?"
@@ -375,6 +376,9 @@ class OrderController extends Controller
         })
         ->when(!empty($filters['shop']), function ($query) use ($filters) {
             return $query->whereIn('orders.shop_slug', $filters['shop']);
+        })
+        ->when(!($filters['show_my_orders'] ?? false), function ($query) {
+            return $query->where('orders.user_id', '<>', request()->user()->id);
         });
 
         return $orders;
