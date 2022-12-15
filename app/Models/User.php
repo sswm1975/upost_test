@@ -32,7 +32,7 @@ use App\Models\Traits\TimestampSerializable;
  * @property string|null $currency Валюта
  * @property string|null $validation Признак проверки пользователя
  * @property string|null $role Роль
- * @property string $photo Ссылка на фотографию (аватар)
+ * @property string|null $photo Ссылка на фотографию (аватар)
  * @property string|null $resume Биография/Резюме
  * @property string $wallet Баланс в долларах
  * @property int $scores_count Количество баллов
@@ -213,7 +213,7 @@ class User extends Authenticatable
     public function setPhotoAttribute($photo)
     {
         if (empty($photo)) {
-            return $this->attributes['photo'] = null;
+            $this->attributes['photo'] = null;
         }
 
         $uri_parts = explode('/', $photo);
@@ -243,7 +243,7 @@ class User extends Authenticatable
         return __("message.user.genders.$this->gender");
     }
 
-    public function getValidationNameAttribute($value): string
+    public function getValidationNameAttribute(): string
     {
         return __("message.user.validations.$this->validation");
     }
@@ -263,13 +263,13 @@ class User extends Authenticatable
         return round($this->reviews_count ? $this->scores_count / $this->reviews_count : 0, 2);
     }
 
-    public function getPhotoAttribute($photo): string
+    public function getPhotoAttribute(): string
     {
-        if (is_null($photo)) {
+        if (empty($this->photo)) {
             return asset('storage/user_no_photo.png');
         }
 
-        return asset("storage/{$this->id}/user/{$photo}");
+        return asset("storage/{$this->id}/user/{$this->photo}");
     }
 
     public function getPhotoThumbAttribute(): string
