@@ -42,9 +42,9 @@ return [
         'uk' => 'Замовник отримав товар.',
     ],
     'dispute_opened' => [
-        'en' => '<span>dispute_initiator</span> opened a dispute because:<br><span>dispute_problem</span><br><span>dispute_text</span>',
-        'ru' => '<span>dispute_initiator</span> открыл спор по причине:<br><span>dispute_problem</span><br><span>dispute_text</span>',
-        'uk' => '<span>dispute_initiator</span> відкрив суперечку з причин:<br><span>dispute_problem</span><br><span>dispute_text</span>',
+        'en' => '<div class="dispute_message_container"><b><span class="disput_user_name">dispute_initiator</span> opened a dispute because:</b><br><span class="disput_theme_title">dispute_problem</span><br><span class="disput_text_description">dispute_text</span></div>',
+        'ru' => '<div class="dispute_message_container"><b><span class="disput_user_name">dispute_initiator</span> открыл спор по причине:</b><br><span class="disput_theme_title">dispute_problem</span><br><span class="disput_text_description">dispute_text</span></div>',
+        'uk' => '<div class="dispute_message_container"><b><span class="disput_user_name">dispute_initiator</span> відкрив суперечку з причин:</b><br><span class="disput_theme_title">dispute_problem</span><br><span class="disput_text_description">dispute_text</span></div>',
     ],
     'dispute_canceled' => [
         'en' => 'The dispute has been canceled.',
