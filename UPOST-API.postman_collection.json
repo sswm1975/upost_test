@@ -4268,7 +4268,7 @@
 										},
 										{
 											"key": "description",
-											"value": "Крутой монитор <script>",
+											"value": "блять Крутой монитор 123234567487 <script> сука",
 											"description": "Опис замовлення",
 											"type": "text"
 										},
@@ -4621,7 +4621,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/route/{{route_id}}/show?filter_type=orders",
+									"raw": "{{host}}/{{endpoint}}/orders/route/{{route_id}}/show?filter_type=orders&show_my_orders=1",
 									"host": [
 										"{{host}}"
 									],
@@ -4637,6 +4637,11 @@
 											"key": "filter_type",
 											"value": "orders",
 											"description": "Тип отбора заказов (orders, my_offers, accepted, delivered / Заказы, Мои предложения, Принятые,  Доставлено)"
+										},
+										{
+											"key": "show_my_orders",
+											"value": "1",
+											"description": "Показывать свои заказы (по-умолчанию, 0-не показывать)"
 										},
 										{
 											"key": "price_from",
