@@ -265,11 +265,11 @@ class User extends Authenticatable
 
     public function getPhotoAttribute(): string
     {
-        if (empty($this->photo)) {
+        if (empty($photo = $this->attributes['photo'])) {
             return asset('storage/user_no_photo.png');
         }
 
-        return asset("storage/{$this->id}/user/{$this->photo}");
+        return asset("storage/{$this->id}/user/{$photo}");
     }
 
     public function getPhotoThumbAttribute(): string
