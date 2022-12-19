@@ -57,7 +57,7 @@ class ApiRequestLogging
         $log->server_ip = $request->ip();
         $log->client_ip = $request->server('HTTP_WP_CLIENT_IP');
         $log->prefix = $request->segment(2);
-        $log->url = Str::substr($request->fullUrl(), 1,1000);
+        $log->url = Str::substr($request->fullUrl(), 0,1000);
         $log->method = $request->method();
         $log->input = $request->toArray();
         $log->output = $output;
