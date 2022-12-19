@@ -22,12 +22,12 @@ class SetLanguage
         # - параметр запроса "lang";
         # - установленный язык в профиле пользователя;
         # - дефолтный язык (en).
-        if ($request->filled('lang') && in_array($request->get('lang'), config('app.languages'))) {
-            $lang = $request->get('lang');
-        } elseif (isset($request->user()->lang)) {
-            $lang = $request->user()->lang;
-        } else {
-            $lang = config('app.default_language');
+        $lang = config('app.default_language');
+        if ($request->filled('lang')) {
+            $lang = strtolower(substr($request->input('lang'), 0, 2));
+            if (!in_array($lang, config('app.languages')) && isset($request->user()->lang)) {
+                $lang = $request->user()->lang;
+            }
         }
 
         App::setLocale($lang);
