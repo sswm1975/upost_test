@@ -56,6 +56,7 @@ class ApiRequestLogging
         $log->duration_request = $endTime - $request->server('REQUEST_TIME_FLOAT');
         $log->server_ip = $request->ip();
         $log->client_ip = $request->server('HTTP_WP_CLIENT_IP');
+        $log->user_id = $request->user()->id ?? null;
         $log->prefix = $request->segment(2);
         $log->url = Str::substr($request->fullUrl(), 0,1000);
         $log->method = $request->method();

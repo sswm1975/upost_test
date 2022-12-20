@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $duration_request Продолжительность от формирования запроса до отдачи ответа (в секундах)
  * @property string|null $server_ip Серверный (WordPress) IP-адрес
  * @property string|null $client_ip Клиентский (WordPress) IP-адрес
+ * @property int|null $user_id
  * @property string|null $prefix Префикс маршрута
  * @property string|null $url Ссылка
  * @property string|null $method Метод
@@ -36,6 +37,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereServerIp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Log whereUserId($value)
  * @mixin \Eloquent
  */
 class Log extends Model
