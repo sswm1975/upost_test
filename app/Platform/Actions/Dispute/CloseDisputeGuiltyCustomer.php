@@ -97,7 +97,7 @@ class CloseDisputeGuiltyCustomer extends RowAction
                     'user_id'     => $model->rate->user_id,
                     'notice_type' => $notice_type,
                     'object_id'   => $model->rate->order_id,
-                    'date'        => ['order_name' => $model->rate->order->name, 'rate_id' => $model->rate->id],
+                    'data'        => ['order_name' => $model->rate->order->name, 'rate_id' => $model->rate->id],
                 ]);
             }
 
