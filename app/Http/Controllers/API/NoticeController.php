@@ -32,7 +32,6 @@ class NoticeController extends Controller
         $lang = $request->user()->lang;
 
         $notices = Notice::query()
-            ->setIsoFormatDate('D MMM YYYY H:mm')
             ->select(
                 'notices.id',
                 'notices.notice_type AS type',
@@ -47,6 +46,7 @@ class NoticeController extends Controller
                 'notices.object_id',
                 'notices.data',
                 'notices.created_at',
+                'notices.updated_at',
                 DB::raw('DATE(notices.created_at) AS arcdate'))
             ->join('notice_types', 'notice_types.id', 'notices.notice_type')
             ->owner()
