@@ -13,6 +13,8 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use Encore\Admin\Show;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DisputeController extends AdminController
@@ -221,5 +223,26 @@ class DisputeController extends AdminController
     public function clearUnreadMessagesCount(int $chat_id)
     {
         Dispute::where('chat_id', $chat_id)->update(['unread_messages_count' => 0]);
+    }
+
+    /**
+     * Получить количество споров по фильтру.
+     * (используется App\Platform\Extensions\Nav\DisputesCounter - в хеадере счетчик споров)
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getDisputesCounter(Request $request): JsonResponse
+    {
+        $counter = Dispute::query()
+            ->when($request->filled('status'), function ($query) use ($request) {
+                return $query->where('status', $request->get('status'));
+            })
+            ->when($request->filled('admin_user_id', 0), function ($query) use ($request) {
+                return $query->where('admin_user_id', $request->get('admin_user_id'));
+            })
+            ->count();
+
+        return response()->json(['value' => $counter]);
     }
 }

@@ -34,6 +34,7 @@ Route::group([
     $router->get('transactions', 'TransactionController@index')->name('transactions.index')->middleware('admin.permission:allow,administrator');
 
     # Споры
+    $router->get('disputes/counter', 'DisputeController@getDisputesCounter')->name('disputes.counter')->middleware('admin.permission:check,disputes'); # Получить количество споров по фильтру
     $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes')->middleware('admin.permission:check,disputes');
     $router->get('disputes/{chat_id}/clear_unread_messages_count', 'DisputeController@clearUnreadMessagesCount')->name('disputes.clear_unread_messages_count')->middleware('admin.permission:check,disputes');
 

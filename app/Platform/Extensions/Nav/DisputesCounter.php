@@ -29,7 +29,7 @@ HTML;
 
     private function script(): string
     {
-        $url = route('api.disputes.counter', [
+        $url = route('platform.disputes.counter', [
             'status' => Admin::user()->isAdministrator() ? Dispute::STATUS_ACTIVE : Dispute::STATUS_APPOINTED,
             'admin_user_id' => Admin::user()->isAdministrator() ? 0 : Admin::user()->id,
         ]);
@@ -38,15 +38,13 @@ HTML;
 
         return <<<SCRIPT
 
-
-
 function update_disputes_counter() {
     let js_disputes_counter = $('.navbar-custom-menu').find('#js-disputes_counter');
-    let disputes_counter = 1*js_disputes_counter.text();
+    let disputes_counter = js_disputes_counter.text();
 
     $.get('$url', function(response) {
         if (response.value > disputes_counter) {
-            $.admin.toastr.warning('$message', 'Внимание', {positionClass:"toast-top-center",timeOut:0});
+            $.admin.toastr.warning('$message', 'Внимание', {positionClass:"toast-top-center"});
         }
         js_disputes_counter.text(response.value ? response.value : '');
     });

@@ -218,28 +218,4 @@ class DisputeController extends Controller
             'problems' => DisputeProblem::getList($id)
         ]);
     }
-
-    /**
-     * Получить количество споров по фильтру.
-     * (используется админкой)
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function getDisputesCounter(Request $request): JsonResponse
-    {
-        $counter = Dispute::query()
-            ->when($request->filled('status'), function ($query) use ($request) {
-                return $query->where('status', $request->get('status'));
-            })
-            ->when($request->filled('admin_user_id', 0), function ($query) use ($request) {
-                return $query->where('admin_user_id', $request->get('admin_user_id'));
-            })
-            ->count();
-
-        return response()->json([
-            'status'   => true,
-            'value' => $counter
-        ]);
-    }
 }
