@@ -67,6 +67,7 @@ class ApiRequestLoggingController extends AdminController
         $grid->column('duration_request', 'Duration F')->help('The duration from a WordPress request to sending the response.<br><sub class=\'text-danger\'>ResponseTime - REQUEST_TIME_FLOAT</sub>');
         $grid->column('server_ip', 'Server IP')->copyable()->filter();
         $grid->column('client_ip', 'Client IP')->copyable()->filter();
+        $grid->column('user_id')->filter();
         $grid->column('prefix')->filter(Log::groupBy('prefix')->pluck('prefix', 'prefix')->toArray());
         $grid->column('method')->filter(['GET' => 'GET', 'POST' => 'POST', 'DELETE' => 'DELETE']);
         $grid->column('url')->limit('80');
@@ -76,6 +77,9 @@ class ApiRequestLoggingController extends AdminController
 
                 $info = '';
                 foreach ($values as $key => $value) {
+                    if (is_array($value)) {
+                        $value = '[' . implode(', ', $value) . ']';
+                    }
                     $info .= "$key = $value<br>";
                 }
 
