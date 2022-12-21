@@ -270,7 +270,7 @@ function createResizedImage($src, int $size, string $full_filename)
 function strip_unsafe(string $content): string
 {
     # https://stackoverflow.com/questions/40264465/how-to-correctly-replace-multiple-white-spaces-with-a-single-white-space-in-php/40264711#40264711
-    $content = preg_replace("/\s+/u", ' ', preg_replace("/\x{00A0}|\x{000D}|\x{000C}|\x{0085}/u",' ', $content));
+    $content = preg_replace("/\s+/u", ' ', preg_replace("/\x{00A0}|\x{000D}|\x{000C}|\x{0085}/u",' ', str_replace(["&amp;nbsp;", '&nbsp;', "&nbsp;"], ' ', $content)));
 
     $unsafe = [
         '/<iframe(.*?)<\/iframe>/is',
