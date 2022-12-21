@@ -3,8 +3,6 @@
 namespace App\Events;
 
 use App\Models\Notice;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -15,52 +13,57 @@ class NoticeEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    private int $user_id;
-
-    public int $id;
-    public string $type;
-    public int $object_id;
-    public string $text;
-    public array $data;
-    public string $created_at;
+    /**
+     * Экземпляр уведомления.
+     *
+     * @var Notice
+     */
+    public Notice $notice;
 
     /**
-     * Create a new event instance.
+     * Создать новый экземпляр события.
      *
      * @return void
      */
     public function __construct(Notice $notice)
     {
-        # для полей с датой формат определяем как "4 жов 2022 13:09"
-        $notice->setIsoFormatDate('D MMM YYYY H:mm');
-
-        # этому пользователю отправляем сообщение
-        $this->user_id = $notice->user_id;
-
-        # определяем язык у пользователя
-        $lang = User::whereKey($notice->user_id)->value('lang');
-
-        # формируем уведомление
-        $this->id         = $notice->id;
-        $this->type       = $notice->notice_type;
-        $this->object_id  = $notice->object_id;
-        $this->text       = config("notice_types.{$notice->notice_type}.text_{$lang}");
-        $this->data       = $notice->data ?? [];
-        $this->created_at = $notice->created_at;
+        $this->notice = $notice;
     }
 
     /**
-     * Get the channels the event should broadcast on.
+     * Получите данные для трансляции.
+     *
+     * @return array
+     */
+    public function broadcastWith()
+    {
+        $notice = $this->notice;
+
+        return [
+            'id'                 => $notice->id,
+            'type'               => $notice->notice_type,
+            'object_id'          => $notice->object_id,
+            'text'               => config("notice_types.{$notice->notice_type}.text_{$notice->user->lang}"),
+            'data'               => $notice->data ?? [],
+            'created_at'         => $notice->created_at->format('Y-m-d H:i:s'),
+            'created_at_format1' => $notice->created_at_format1,
+            'created_at_format2' => $notice->created_at_format2,
+            'created_at_format3' => $notice->created_at_format3,
+        ];
+    }
+
+    /**
+     * Получить каналы трансляции события.
      *
      * @return PrivateChannel
      */
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel('user.' . $this->user_id);
+        return new PrivateChannel('user.' . $this->notice->user_id);
     }
 
     /**
-     * The event's broadcast name.
+     * Получить имя транслируемого события.
      *
      * @return string
      */

@@ -42,7 +42,12 @@ class Notice extends Model
 {
     use TimestampSerializable;
 
+    public $timestamps = false;
     protected $guarded = ['id'];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
     protected $casts = [
         'is_read' => 'boolean',
         'data'    => 'array',
@@ -57,6 +62,14 @@ class Notice extends Model
     public static function boot()
     {
         parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_at = $model->freshTimestamp();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_at = $model->freshTimestamp();
+        });
 
         static::created(function ($model) {
             try {
