@@ -18,8 +18,8 @@ class DisputeClosedReasonController extends AdminController
     ];
 
     const GUILTY = [
-        'performer' => 'Путешественник',
-        'customer'  => 'Заказчик',
+        CUSTOMER  => 'Заказчик',
+        PERFORMER => 'Исполнитель',
     ];
 
     public function menu(): array

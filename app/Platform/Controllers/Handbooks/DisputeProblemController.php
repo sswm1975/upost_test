@@ -17,19 +17,35 @@ class DisputeProblemController extends AdminController
         ['text' => 'Справочники', 'icon' => 'book'],
     ];
 
+    const INITIATORS = [
+        CUSTOMER  => 'Заказчик',
+        PERFORMER => 'Исполнитель',
+    ];
+
+    const RATE_STATUSES = [
+        'accepted'   => 'Принятая',
+        'buyed'      => 'Купленная',
+        'successful' => 'Успешная',
+    ];
+
+    const ORDER_STATUSES = [
+        'accepted'   => 'Доставка началась',
+        'buyed'      => 'Товар у путешественника',
+        'successful' => 'Заказчик получил товар',
+    ];
+
     public function menu(): array
     {
-        $counts = DisputeProblem::selectRaw('active, count(1) as total')
-            ->groupBy('active')
-            ->pluck('total', 'active')
+        $counts = DisputeProblem::selectRaw('initiator, count(1) as total')
+            ->groupBy('initiator')
+            ->pluck('total', 'initiator')
             ->toArray();
 
-        $statuses = [VALUE_ACTIVE => 'Действующие', VALUE_NOT_ACTIVE => 'Не активные'];
-        foreach ($statuses as $status => $name) {
+        $statuses = [];
+        foreach (self::INITIATORS as $status => $name) {
             $statuses[$status] = (object) [
                 'name'  => $name,
                 'count' => $counts[$status] ?? 0,
-                'color' => $status ? 'success' : 'danger',
             ];
         }
 
@@ -46,23 +62,27 @@ class DisputeProblemController extends AdminController
         $grid = new Grid(new DisputeProblem);
 
         # FILTERS
-        $grid->model()->where('active', request('status', VALUE_ACTIVE));
+        $grid->model()->where('initiator', request('status', array_key_first(self::INITIATORS)));
 
-        # QUICK CREATE
-        $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
-            $create->text('name_uk')->placeholder('Название 🇺🇦')->required();
-            $create->text('name_ru')->placeholder('Название 🇷🇺')->required();
-            $create->text('name_en')->placeholder('Название 🇬🇧')->required();
-            $create->integer('days')->placeholder('Дней')->inputmask(['alias' => 'integer'])->width('60px')->required();
-
+        $grid->selector(function (Grid\Tools\Selector $selector) {
+            $selector->selectOne('rate_status', 'СТАТУС', self::ORDER_STATUSES, function ($query, $value) {
+                $query->where('rate_status', $value);
+            });
         });
 
         # COLUMNS
         $grid->column('id', 'Код')->setAttributes(['align' => 'center'])->sortable();
-        $grid->column('name_uk', 'Название 🇺🇦');
-        $grid->column('name_ru', 'Название 🇷🇺');
-        $grid->column('name_en', 'Название 🇬🇧');
-        $grid->column('days', 'Дней')->sortable();
+        $grid->column('initiator', 'Инициатор')->replace(self::INITIATORS)->sortable();
+        $grid->column('rate_status', 'Ставка')->replace(self::RATE_STATUSES)->sortable();
+        $grid->column('text', 'Текст')
+            ->display(function () {
+                return sprintf('<span class="label label-warning">🇺🇦</span> %s<br><span class="label label-danger">🇷🇺</span> %s<br><span class="label label-primary">🇬🇧</span> %s',
+                    $this->name_uk,
+                    $this->name_ru,
+                    $this->name_en
+                );
+            });
+        $grid->column('days', 'Дней')->help('Количество дней на рассмотрение спора')->setAttributes(['align' => 'center'])->sortable();
         $grid->column('active', 'Действует')->switch(SWITCH_YES_NO)->sortable();
 
         return $grid;
@@ -78,10 +98,12 @@ class DisputeProblemController extends AdminController
         $form = new Form(new DisputeProblem);
 
         $form->display('id', 'Код');
+        $form->select('initiator', 'Инициатор')->options(self::INITIATORS)->required();
+        $form->select('rate_status', 'Статус ставки')->options(self::RATE_STATUSES)->required();
         $form->text('name_uk', 'Название 🇺🇦')->required();
         $form->text('name_ru', 'Название 🇷🇺')->required();
         $form->text('name_en', 'Название 🇬🇧')->required();
-        $form->currency('days', 'Дней')->symbol('∑')->digits(0)->rules('required|numeric');
+        $form->currency('days', 'Дней')->default(1)->symbol('∑')->digits(0)->rules('required|numeric');
         $form->switch('active', 'Действует')->default(1)->states(SWITCH_YES_NO);
 
         return $form;
