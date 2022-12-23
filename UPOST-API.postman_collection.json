@@ -3132,6 +3132,9 @@
 									}
 								}
 							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
 							"request": {
 								"auth": {
 									"type": "noauth"
@@ -3163,7 +3166,7 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/auth/login?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/auth/login",
 									"host": [
 										"{{host}}"
 									],
@@ -3176,7 +3179,8 @@
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)",
+											"disabled": true
 										}
 									]
 								}
@@ -8424,7 +8428,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/disputes/problems",
+									"raw": "{{host}}/{{endpoint}}/disputes/problems?rate_id=21",
 									"host": [
 										"{{host}}"
 									],
@@ -8434,6 +8438,11 @@
 										"problems"
 									],
 									"query": [
+										{
+											"key": "rate_id",
+											"value": "21",
+											"description": "Код ставки"
+										},
 										{
 											"key": "lang",
 											"value": "uk",
@@ -8673,7 +8682,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/purses/show?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/purses/show",
 									"host": [
 										"{{host}}"
 									],
@@ -8686,7 +8695,8 @@
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально"
+											"description": "Код мови (uk, ru, en) - опціонально",
+											"disabled": true
 										}
 									]
 								}
