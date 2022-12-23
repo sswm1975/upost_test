@@ -208,14 +208,33 @@ class DisputeController extends Controller
     /**
      * Получить справочник "Проблемы спора".
      *
-     * @param int $id
+     * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException|ValidationException|ValidatorException
      */
-    public function getProblems(int $id = 0): JsonResponse
+    public function getProblems(Request $request): JsonResponse
     {
+        $data = validateOrExit([
+            'rate_id' => 'required|integer',
+        ]);
+
+        if (! $rate = Rate::find($data['rate_id'], ['id', 'user_id', 'status'])) {
+            throw new ErrorException(__('message.rate_not_found'));
+        }
+
+        $initiator = $rate->user_id == $request->user()->id ? PERFORMER : CUSTOMER;
+
+        $problems = DisputeProblem::active()
+            ->where('initiator', '=', $initiator)
+            ->where('rate_status', '=', $rate->status)
+            ->language()
+            ->addSelect('id')
+            ->get()
+            ->toArray();
+
         return response()->json([
             'status'   => true,
-            'problems' => DisputeProblem::getList($id)
+            'problems' => $problems,
         ]);
     }
 }

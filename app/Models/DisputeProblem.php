@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\DisputeProblem
  *
  * @property int $id Код
+ * @property string $initiator Инициатор: Исполнитель или Заказчик
+ * @property string $rate_status Статус ставки
  * @property string $name_uk Наименование на украинском
  * @property string $name_ru Наименование на русском
  * @property string $name_en Наименование на английском
- * @property int $days Количество дней
+ * @property int $days Количество дней на рассмотрение спора
  * @property int $active Действует (да/нет)
  * @method static Builder|DisputeProblem active()
  * @method static Builder|DisputeProblem language()
@@ -22,15 +24,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|DisputeProblem whereActive($value)
  * @method static Builder|DisputeProblem whereDays($value)
  * @method static Builder|DisputeProblem whereId($value)
+ * @method static Builder|DisputeProblem whereInitiator($value)
  * @method static Builder|DisputeProblem whereNameEn($value)
  * @method static Builder|DisputeProblem whereNameRu($value)
  * @method static Builder|DisputeProblem whereNameUk($value)
+ * @method static Builder|DisputeProblem whereRateStatus($value)
  * @mixin \Eloquent
  */
 class DisputeProblem extends Model
 {
     protected $table = 'dispute_problems';
-    protected $fillable = ['name_uk', 'name_ru', 'name_en'];
+    protected $fillable = ['initiator', 'rate_status', 'name_uk', 'name_ru', 'name_en', 'days'];
     protected $attributes = ['active' => VALUE_ACTIVE];
     public $timestamps = false;
 
@@ -56,23 +60,5 @@ class DisputeProblem extends Model
     public function scopeActive($query)
     {
         return $query->where('active', VALUE_ACTIVE);
-    }
-
-    /**
-     * Получить справочник проблем для спора или выбранной проблемы.
-     *
-     * @param int $id
-     * @return array
-     */
-    public static function getList(int $id = 0): array
-    {
-        return static::query()
-            ->when(!empty($id), function ($query) use ($id) {
-                return $query->whereKey($id);
-            })
-            ->language()
-            ->addSelect('id')
-            ->get()
-            ->toArray();
     }
 }
