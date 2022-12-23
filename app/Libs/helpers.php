@@ -17,6 +17,9 @@ const VALUE_ACTIVE = 1;
 const VALUE_NOT_ACTIVE = 0;
 const VALUES_ACTING = [VALUE_ACTIVE => 'Действующие', VALUE_NOT_ACTIVE => 'Не активные'];
 
+const CUSTOMER = 'customer';
+const PERFORMER = 'performer';
+
 /**
  * Convert Null to Blank string.
  *
