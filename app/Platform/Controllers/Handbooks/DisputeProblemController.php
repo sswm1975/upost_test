@@ -22,6 +22,11 @@ class DisputeProblemController extends AdminController
         PERFORMER => 'Исполнитель',
     ];
 
+    const MENU_INITIATORS = [
+        CUSTOMER  => 'Для Заказчика',
+        PERFORMER => 'Для Исполнителя',
+    ];
+
     const RATE_STATUSES = [
         'accepted'   => 'Принятая',
         'buyed'      => 'Купленная',
@@ -42,7 +47,7 @@ class DisputeProblemController extends AdminController
             ->toArray();
 
         $statuses = [];
-        foreach (self::INITIATORS as $status => $name) {
+        foreach (self::MENU_INITIATORS as $status => $name) {
             $statuses[$status] = (object) [
                 'name'  => $name,
                 'count' => $counts[$status] ?? 0,
@@ -65,7 +70,7 @@ class DisputeProblemController extends AdminController
         $grid->model()->where('initiator', request('status', array_key_first(self::INITIATORS)));
 
         $grid->selector(function (Grid\Tools\Selector $selector) {
-            $selector->selectOne('rate_status', 'СТАТУС', self::ORDER_STATUSES, function ($query, $value) {
+            $selector->selectOne('rate_status', 'СТАТУС ЗАКАЗА', self::ORDER_STATUSES, function ($query, $value) {
                 $query->where('rate_status', $value);
             });
         });
