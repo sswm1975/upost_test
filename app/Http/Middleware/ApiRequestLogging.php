@@ -45,8 +45,8 @@ class ApiRequestLogging
         }
 
         if ($response instanceof \Illuminate\Http\RedirectResponse) {
-            \Log::notice(json_decode($response->getRequest()->getContent()));
             $output = json_decode($response->getRequest()->getContent());
+            \Log::notice($output);
         }
 
         $endTime = microtime(true);
