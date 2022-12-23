@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Broadcast;
  * - пользователь является админом или модератором.
  */
 Broadcast::channel('chat.{chat_id}', function ($user, $chat_id) {
-    $chat = Chat::find($chat_id);
+    $chat = Chat::find($chat_id, ['id', 'performer_id', 'customer_id']);
 
     return isset($chat->id) && (
             in_array($user->id, [$chat->performer_id, $chat->customer_id]) ||
