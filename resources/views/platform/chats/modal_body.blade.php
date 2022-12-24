@@ -375,7 +375,7 @@
         </div>
         <div class="col-md-12" style="padding: 0">
             <label class="control-label">Описание</label>
-            <div class="form-control" style="height:auto;" readonly><?= $chat->order_description ?></div>
+            <textarea rows="10" class="form-control form-control-sm" readonly>{!! $chat->order_description !!}</textarea>
         </div>
     </div>
 
@@ -464,7 +464,7 @@
         </div>
         <div class="col-md-12" style="padding: 0">
             <label class="control-label">Комментарий</label>
-            <div class="form-control" style="height:auto;" readonly><?= $chat->rate_comment ?></div>
+            <textarea rows="10" class="form-control form-control-sm" readonly>{!! $chat->rate_comment !!}</textarea>
         </div>
 
     </div>
