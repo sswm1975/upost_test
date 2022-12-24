@@ -43,7 +43,7 @@ class NoticeController extends AdminController
             ->modal('Данные', function($model) {
                 if (empty($model->data)) return 'Нет данных';
 
-                return '<pre>'. var_export($model->data, true) . '</pre>';
+                return '<pre>'.json_encode($model->data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT).'</pre>';
             });
         $grid->column('created_at', 'Создано');
         $grid->column('is_read', 'Прочитано')
