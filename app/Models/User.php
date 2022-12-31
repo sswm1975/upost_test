@@ -263,9 +263,9 @@ class User extends Authenticatable
         return round($this->reviews_count ? $this->scores_count / $this->reviews_count : 0, 2);
     }
 
-    public function getPhotoAttribute(): string
+    public function getPhotoAttribute($photo): string
     {
-        if (empty($photo = $this->attributes['photo'])) {
+        if (empty($photo)) {
             return asset('storage/user_no_photo.png');
         }
 

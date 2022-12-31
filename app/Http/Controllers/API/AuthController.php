@@ -229,7 +229,7 @@ class AuthController extends Controller
             ->when(!$is_email, function ($query) use ($login) {
                 return $query->wherePhone($login);
             })
-            ->first(['id']);
+            ->first();
     }
 
     /**
