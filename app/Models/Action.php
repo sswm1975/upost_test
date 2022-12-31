@@ -13,16 +13,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id Код пользователя (инициатора или участника действия)
  * @property int $is_owner Пользователь является инициатором действия?
  * @property string $name Наименование действия/события
- * @property mixed|null $data Данные
- * @property string $created_at Добавлено
+ * @property array|null $data Данные
+ * @property \Illuminate\Support\Carbon $created_at Добавлено
  * @method static \Illuminate\Database\Eloquent\Builder|Action newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Action newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Action query()
- * @method static \Illuminate\Database\Eloquent\Builder|Action whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Action whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Action whereData($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Action whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Action whereIsOwner($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Action whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Action whereUserId($value)
  * @mixin \Eloquent
  */
@@ -32,6 +32,7 @@ class Action extends Model
 
     public $timestamps = false;
     protected $guarded = ['id'];
+    protected $dates = ['created_at'];
     protected $casts = ['data' => 'array'];
 
     # User's actions
@@ -67,6 +68,5 @@ class Action extends Model
                 \Log::error($e->getMessage());
             }
         });
-
     }
 }
