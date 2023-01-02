@@ -406,7 +406,7 @@ class RateController extends Controller
         $rate->viewed_by_customer = true;
         $rate->chat_id = $chat->id;
         $rate->save();
-        $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
+        $rate->order->update(['status' => Order::STATUS_IN_WORK]);
 
         # информируем в чат, что заказчик оплатил заказ.
         Chat::addSystemMessage($chat->id, 'customer_paid_order');
@@ -586,7 +586,7 @@ class RateController extends Controller
             $rate->viewed_by_customer = true;
             $rate->chat_id = $chat->id;
             $rate->save();
-            $rate->order()->update(['status' => Order::STATUS_IN_WORK]);
+            $rate->order->update(['status' => Order::STATUS_IN_WORK]);
 
             Transaction::create([
                 'user_id'         => $liqpay['info']['user_id'],
@@ -701,6 +701,7 @@ class RateController extends Controller
         $rate = Rate::byKeyForOrderOwner($rate_id, [Rate::STATUS_BUYED], [Order::STATUS_IN_WORK])
             ->with('order')
             ->first();
+
         if (! $rate) {
             throw new ErrorException(__('message.rate_not_found'));
         }
@@ -708,7 +709,7 @@ class RateController extends Controller
         # меняем статусы на Ставке и Заказе
         $rate->status = Rate::STATUS_SUCCESSFUL;
         $rate->save();
-        $rate->order()->update(['status' => Order::STATUS_SUCCESSFUL]);
+        $rate->order->update(['status' => Order::STATUS_SUCCESSFUL]);
 
         # подсчитываем сумму налогов по заказу
         $taxes_sum = OrderDeduction::sumTaxesByOrder($rate->order_id);

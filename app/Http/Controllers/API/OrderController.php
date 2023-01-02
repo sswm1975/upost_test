@@ -162,12 +162,9 @@ class OrderController extends Controller
      */
     private static function closeOrder_int($id): JsonResponse
     {
-        $affected_rows = Order::isOwnerByKey($id)->update(['status' => Order::STATUS_CLOSED]);
+        Order::isOwnerByKey($id)->get()->each->update(['status' => Order::STATUS_CLOSED]);
 
-        return response()->json([
-            'status'        => $affected_rows > 0,
-            'affected_rows' => $affected_rows,
-        ]);
+        return response()->json(['status' => true]);
     }
 
     /**
@@ -834,12 +831,12 @@ class OrderController extends Controller
         }
 
         if ($order->user_id <> $request->get('user_id')) {
-            $order->increment('order_look');
+            $order->update(['looks' => $order->looks + 1]);
         }
 
         return response()->json([
             'status' => true,
-            'looks'  => $order->order_look,
+            'looks'  => $order->looks,
         ]);
     }
 

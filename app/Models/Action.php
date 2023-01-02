@@ -47,6 +47,17 @@ class Action extends Model
     const USER_AUTH_UPDATED     = 'user_auth_updated';
     const USER_PROFILE_UPDATED  = 'user_profile_updated';
 
+
+    # Order's actions
+    const ORDER_CREATED         = 'order_created';
+    const ORDER_UPDATES         = 'order_updated';
+    const ORDER_DELETED         = 'order_deleted';
+    const ORDER_RESTORED        = 'order_restored';
+    const ORDER_BANNED          = 'order_banned';
+    const ORDER_STATUS_CHANGED  = 'order_status_changed';
+    const ORDER_STRIKE_CHANGED  = 'order_strike_changed';
+    const ORDER_LOOKS_CHANGED   = 'order_looks_changed';
+
     ### BOOT ###
 
     /**
