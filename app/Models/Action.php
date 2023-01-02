@@ -13,11 +13,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id Код пользователя (инициатора или участника действия)
  * @property int $is_owner Пользователь является инициатором действия?
  * @property string $name Наименование действия/события
+ * @property array|null $changed Изменения
  * @property array|null $data Данные
  * @property \Illuminate\Support\Carbon $created_at Добавлено
  * @method static \Illuminate\Database\Eloquent\Builder|Action newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Action newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Action query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Action whereChanged($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Action whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Action whereData($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Action whereId($value)
@@ -33,7 +35,7 @@ class Action extends Model
     public $timestamps = false;
     protected $guarded = ['id'];
     protected $dates = ['created_at'];
-    protected $casts = ['data' => 'array'];
+    protected $casts = ['changed' => 'array', 'data' => 'array'];
 
     # User's actions
     const USER_LOGIN            = 'user_login';

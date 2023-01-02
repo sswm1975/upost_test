@@ -93,6 +93,7 @@ class UserObserver
             'user_id'  => $user->id,
             'is_owner' => YES,
             'name'     => $name,
+            'changed'  => $user->getChanges(),
             'data'     => Arr::only($user->toArray(), User::FIELDS_FOR_SHOW),
         ]);
     }

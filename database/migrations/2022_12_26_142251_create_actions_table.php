@@ -18,6 +18,7 @@ class CreateActionsTable extends Migration
             $table->unsignedInteger('user_id')->comment('Код пользователя (инициатора или участника действия)');
             $table->unsignedTinyInteger('is_owner')->comment('Пользователь является инициатором действия?');
             $table->string('name', 50)->comment('Наименование действия/события');
+            $table->json('changed')->nullable()->comment('Изменения');
             $table->json('data')->nullable()->comment('Данные');
             $table->timestamp('created_at')->comment('Добавлено');
         });
