@@ -4,9 +4,7 @@ namespace App\Providers;
 
 use App\Models\Currency;
 use App\Models\NoticeType;
-use App\Models\Order;
 use App\Models\Constant;
-use App\Observers\OrderObserver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
@@ -38,9 +36,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        # регистрируем наблюдатель за моделью Заказ
-        Order::observe(OrderObserver::class);
-
         if ($this->app->isLocal() || config('app.debug')) {
             DB::enableQueryLog();
             Mail::alwaysTo('sswm@i.ua');

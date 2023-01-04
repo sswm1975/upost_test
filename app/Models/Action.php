@@ -47,7 +47,6 @@ class Action extends Model
     const USER_AUTH_UPDATED     = 'user_auth_updated';
     const USER_PROFILE_UPDATED  = 'user_profile_updated';
 
-
     # Order's actions
     const ORDER_CREATED         = 'order_created';
     const ORDER_UPDATES         = 'order_updated';
@@ -57,6 +56,13 @@ class Action extends Model
     const ORDER_STATUS_CHANGED  = 'order_status_changed';
     const ORDER_STRIKE_CHANGED  = 'order_strike_changed';
     const ORDER_LOOKS_CHANGED   = 'order_looks_changed';
+
+    # Route's actions
+    const ROUTE_CREATED         = 'route_created';
+    const ROUTE_UPDATES         = 'route_updated';
+    const ROUTE_DELETED         = 'route_deleted';
+    const ROUTE_RESTORED        = 'route_restored';
+    const ROUTE_STATUS_CHANGED  = 'route_status_changed';
 
     ### BOOT ###
 
