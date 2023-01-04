@@ -50,11 +50,11 @@ class RouteController extends Controller
         $exists_route = Route::where($data)->count();
         if ($exists_route) throw new ErrorException(__('message.route_exists'));
 
-        $route_id = Route::insertGetId($data);
+        $route = Route::create($data);
 
         return response()->json([
             'status'   => true,
-            'route_id' => $route_id,
+            'route_id' => $route->id,
         ]);
     }
 
@@ -92,18 +92,17 @@ class RouteController extends Controller
      */
     private static function closeRoute_int($id): JsonResponse
     {
-        $affected_rows = Route::whereKey($id)
+        Route::whereKey($id)
             ->active()
             ->owner()
             ->whereDoesntHave('rates', function($query) {
                 return $query->whereNotIn('status', ['successful', 'done', 'failed', 'banned']);
             })
+            ->get()
+            ->each
             ->update(['status' => Order::STATUS_CLOSED]);
 
-        return response()->json([
-            'status'        => $affected_rows > 0,
-            'affected_rows' => $affected_rows,
-        ]);
+        return response()->json(['status' => true]);
     }
 
     /**

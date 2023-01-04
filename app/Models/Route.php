@@ -67,14 +67,12 @@ class Route extends Model
     use WithoutAppends;
 
     const STATUS_ACTIVE     = 'active';
-    const STATUS_IN_WORK    = 'in_work';
     const STATUS_SUCCESSFUL = 'successful';
     const STATUS_CLOSED     = 'closed';
     const STATUS_BANNED     = 'banned';
 
     const STATUSES = [
         self::STATUS_ACTIVE,
-        self::STATUS_IN_WORK,
         self::STATUS_SUCCESSFUL,
         self::STATUS_CLOSED,
         self::STATUS_BANNED,
@@ -189,7 +187,7 @@ class Route extends Model
     {
         switch ($type) {
             case self::FILTER_TYPE_ACTIVE:
-                $query->whereIn('status', [self::STATUS_ACTIVE, self::STATUS_IN_WORK]);
+                $query->active();
                 break;
             case self::FILTER_TYPE_COMPLETED:
                 $query->whereIn('status', [self::STATUS_CLOSED, self::STATUS_SUCCESSFUL, self::STATUS_BANNED]);
