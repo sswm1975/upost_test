@@ -178,7 +178,7 @@ class RateController extends Controller
      */
     public function cancelRate(int $rate_id): JsonResponse
     {
-        if (! $rate = Rate::byKeyForRateOwner($rate_id)->first(['id', 'status'])) {
+        if (! $rate = Rate::byKeyForRateOwner($rate_id)->first()) {
             throw new ErrorException(__('message.rate_not_found'));
         }
 
@@ -198,7 +198,7 @@ class RateController extends Controller
      */
     public function deleteRate(int $rate_id): JsonResponse
     {
-        $rate = Rate::byKeyForRateOwner($rate_id, [Rate::STATUS_ACTIVE, Rate::STATUS_CANCELED])->first(['id']);
+        $rate = Rate::byKeyForRateOwner($rate_id, [Rate::STATUS_ACTIVE, Rate::STATUS_CANCELED])->first();
         if (! $rate) {
             throw new ErrorException(__('message.rate_not_found'));
         }

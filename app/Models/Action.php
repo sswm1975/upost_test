@@ -64,6 +64,13 @@ class Action extends Model
     const ROUTE_RESTORED        = 'route_restored';
     const ROUTE_STATUS_CHANGED  = 'route_status_changed';
 
+    # Rate's actions
+    const RATE_CREATED         = 'rate_created';
+    const RATE_UPDATES         = 'rate_updated';
+    const RATE_DELETED         = 'rate_deleted';
+    const RATE_RESTORED        = 'rate_restored';
+    const RATE_STATUS_CHANGED  = 'rate_status_changed';
+
     ### BOOT ###
 
     /**
