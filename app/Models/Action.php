@@ -71,6 +71,12 @@ class Action extends Model
     const RATE_RESTORED        = 'rate_restored';
     const RATE_STATUS_CHANGED  = 'rate_status_changed';
 
+    # Список публичных событий
+    const PUBLIC_EVENTS = [
+        self::ORDER_UPDATES,
+        self::ORDER_DELETED,
+    ];
+
     ### BOOT ###
 
     /**
@@ -88,7 +94,14 @@ class Action extends Model
 
         static::created(function ($model) {
             try {
-                broadcast(new ActionEvent($model));
+                # броадкастим по частному каналу
+                broadcast(new ActionEvent($model, false));
+
+                # если действие есть в списке публичных событий, то броадкастим по публичному каналу исключая текущего пользователя
+                if (in_array($model->name, static::PUBLIC_EVENTS)) {
+                    broadcast(new ActionEvent($model, true))->toOthers();
+                }
+
             } catch (\Exception $e) {
                 \Log::error('Action broadcast error');
                 \Log::error($e->getMessage());
