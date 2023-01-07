@@ -110,13 +110,13 @@ class OrderController extends AdminController
         $grid->column('shop_slug', 'Магазин')
             ->filter(request()->missing('_export_') ? Shop::pluck('name', 'slug')->toArray() : [])
             ->sortable();
-        $grid->column('products_count', 'Кол-во')
-            ->setAttributes(['align'=>'center'])
-            ->sortable();
         $grid->column('price', 'Цена')
             ->price()
             ->filter('range')
             ->setAttributes(['align'=>'right'])
+            ->sortable();
+        $grid->column('products_count', 'Кол-во')
+            ->setAttributes(['align'=>'center'])
             ->sortable();
         $grid->column('total_amount', 'Сумма')
             ->price()
@@ -144,15 +144,6 @@ class OrderController extends AdminController
 
                 return "{$value}&nbsp;<span class='label label-default'>{$this->deductions_count}</span>";
             })
-            ->setAttributes(['align'=>'center'])
-            ->sortable();
-        $grid->column('user_price', 'Доход')
-            ->price()
-            ->filter('range')
-            ->setAttributes(['align'=>'right'])
-            ->sortable();
-        $grid->column('user_currency', 'Валюта дохода')
-            ->filter(array_combine(config('app.currencies'), config('app.currencies')))
             ->setAttributes(['align'=>'center'])
             ->sortable();
         $grid->column('user_price_usd', 'Доход в $')

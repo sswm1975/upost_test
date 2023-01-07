@@ -328,8 +328,16 @@
                     <input class="form-control form-control-sm" value="{{ $chat->order_price }} {{ $chat->order_currency }}" readonly>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">Вознаграждение</span>
-                    <input class="form-control form-control-sm" value="{{ $chat->order_profit_price }} {{ $chat->order_profit_currency }}" readonly>
+                    <span class="input-group-addon">Всего в валюте клиента (<i>кол-во * цена</i>)</span>
+                    <input class="form-control form-control-sm" value="{{ sprintf('%.2f', $chat->order_price * $chat->order_products_count) }} {{ $chat->order_currency }}" readonly>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Всего в долларах (<i>кол-во * цена</i>)</span>
+                    <input class="form-control form-control-sm" value="{{ sprintf('%.2f', $chat->order_price_usd * $chat->order_products_count) }} $" readonly>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Вознаграждение в долларах</span>
+                    <input class="form-control form-control-sm" value="{{ $chat->order_profit_price_usd }} $" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Откуда</span>
