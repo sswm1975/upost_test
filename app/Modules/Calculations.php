@@ -24,13 +24,13 @@ class Calculations
     public static function run(Order $order, bool $recalculation = false)
     {
         # рассчитываем суммы комиссий
-        $fees = static::calcFees($order->price_usd, $order->id);
+        $fees = static::calcFees($order->total_amount_usd, $order->id);
 
         # рассчитываем налоги по стране экспорта
-        $export = static::calcTaxes('export', $order->from_country_id, $order->price_usd, $order->id);
+        $export = static::calcTaxes('export', $order->from_country_id, $order->total_amount_usd, $order->id);
 
         # рассчитываем налоги по стране импорта
-        $import = static::calcTaxes('import', $order->to_country_id, $order->price_usd, $order->id);
+        $import = static::calcTaxes('import', $order->to_country_id, $order->total_amount_usd, $order->id);
 
         # объединяем все расчеты
         $calculations = array_merge($fees, $export, $import);

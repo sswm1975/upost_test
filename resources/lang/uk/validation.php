@@ -175,7 +175,7 @@ return [
         'country_from' => 'Країна (звідки)',
         'country_to' => 'Країна (куди)',
         'currency' => 'Валюта',
-        'user_currency' => 'Валюта ціни доставки',
+        'user_price_usd' => 'Ціна доставки',
         'current_password' => 'Поточний пароль',
         'date' => 'Дата',
         'date_from' => 'Початкова дата',

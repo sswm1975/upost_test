@@ -14,7 +14,6 @@ class OrderObserver
     {
         $order->slug = Str::slug($order->name) . '-'. Str::random(8);
         $order->price_usd = convertPriceToUsd($order->price, $order->currency);
-        $order->user_price_usd = convertPriceToUsd($order->user_price, $order->user_currency);
         $order->register_date = Date::now()->toDateString();
     }
 
@@ -29,21 +28,16 @@ class OrderObserver
 
     public function updating(Order $order)
     {
-        # если изменилась цена, количество или валюта товара, то пересчитываем цену в долларах
-        if ($order->isDirty(['price', 'products_count', 'currency'])) {
+        # если изменилась цена или валюта товара, то пересчитываем цену в долларах
+        if ($order->isDirty(['price', 'currency'])) {
             $order->price_usd = convertPriceToUsd($order->price, $order->currency);
-        }
-
-        # если изменилась сумма или валюта вознаграждения, то пересчитываем вознаграждение в долларах
-        if ($order->isDirty(['user_price', 'user_currency'])) {
-            $order->user_price_usd = convertPriceToUsd($order->user_price, $order->user_currency);
         }
     }
 
     public function updated(Order $order)
     {
         # если по заказу были изменения полей, которые влияют на общую стоимость заказа, то пересчитываем налоги и комиссии
-        if ($order->wasChanged(['price', 'price_usd', 'currency', 'products_count'])) {
+        if ($order->wasChanged(['price_usd', 'currency', 'products_count'])) {
             OrderDeductionJob::dispatch($order, true);
         }
 
@@ -71,8 +65,8 @@ class OrderObserver
         # изменены данные заказа
         if ($order->wasChanged([
             'name', 'product_link', 'price', 'currency', 'products_count', 'description', 'images',
-            'from_country_id', 'from_city_id', 'to_country_id', 'to_city_id',
-            'wait_range_id', 'user_price', 'user_currency', 'not_more_price'
+            'from_country_id', 'from_city_id', 'to_country_id', 'to_city_id', 'wait_range_id',
+            'user_price_usd', 'not_more_price'
         ])) {
             $this->addAction($order, Action::ORDER_UPDATES);
         }

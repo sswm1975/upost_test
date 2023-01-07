@@ -49,7 +49,7 @@ class ChatController extends Controller
         $rows = Chat::interlocutors()
             ->with([
                 'interlocutor:id,name,photo,scores_count,reviews_count',
-                'order:id,name,price,currency,price_usd,user_price,user_currency,user_price_usd,images,status',
+                'order:id,name,price,currency,price_usd,user_price_usd,images,status',
                 'last_message',
                 'last_message.user:id,name',
             ])

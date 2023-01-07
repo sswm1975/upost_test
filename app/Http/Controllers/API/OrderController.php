@@ -15,7 +15,6 @@ use App\Models\User;
 use App\Models\WaitRange;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -88,8 +87,7 @@ class OrderController extends Controller
             'to_country_id'  => 'required|integer|exists:countries,id',
             'to_city_id'     => 'sometimes|nullable|integer|exists:cities,id,country_id,' . request('to_country_id', 0),
             'wait_range_id'  => 'required|integer|exists:wait_ranges,id,active,1',
-            'user_price'     => 'required|numeric',
-            'user_currency'  => 'required|in:' . implode(',', config('app.currencies')),
+            'user_price_usd' => 'required|numeric|min:10',
             'not_more_price' => 'required|boolean',
             'images'         => 'required|array|max:8',
         ];

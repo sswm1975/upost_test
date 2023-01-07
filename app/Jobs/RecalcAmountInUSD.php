@@ -88,7 +88,7 @@ class RecalcAmountInUSD implements ShouldQueue
     }
 
     /**
-     * Обновить долларовый эквивалент цены и вознаграждения по активным заказам.
+     * Обновить долларовый эквивалент цены товара по активным заказам.
      * (если стоимость заказа в долларах изменится, то выполнится пересчет всех налогов и комиссий по заказу - подхватит наблюдатель OrderObserver).
      *
      * @return void
@@ -104,7 +104,6 @@ class RecalcAmountInUSD implements ShouldQueue
                 $updated = 0;
                 foreach ($orders as $order) {
                     $order->price_usd = convertPriceToUsd($order->price, $order->currency);
-                    $order->user_price_usd = convertPriceToUsd($order->user_price, $order->user_currency);
                     $order->timestamps = false;
                     if ($order->isDirty()) $updated +=1;
                     $order->save();

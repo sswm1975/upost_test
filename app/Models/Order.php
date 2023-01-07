@@ -34,8 +34,6 @@ use Illuminate\Support\Str;
  * @property string $register_date Дата регистрации
  * @property string|null $deadline Дата окончания заказа
  * @property int|null $wait_range_id Код диапазона ожидания
- * @property mixed $user_price Сумма дохода
- * @property string|null $user_currency Валюта дохода
  * @property mixed $user_price_usd Сумма дохода в долларах
  * @property int $not_more_price Признак "Не принимать ставки выше данной цены"
  * @property int $is_user_active Признак активности пользователя
@@ -51,14 +49,14 @@ use Illuminate\Support\Str;
  * @property-read array $images_medium
  * @property-read array $images_original
  * @property-read array $images_thumb
- * @property-read mixed $price_selected_currency
+ * @property-read float|mixed $price_selected_currency
  * @property-read string $selected_currency
  * @property-read string $short_name
  * @property-read string $status_name
  * @property-read string $total_amount
  * @property-read string $total_amount_selected_currency
  * @property-read string $total_amount_usd
- * @property-read mixed $user_price_selected_currency
+ * @property-read float|mixed $user_price_selected_currency
  * @property-read \App\Models\Rate|null $rate_confirmed
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
@@ -98,9 +96,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereToCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereToCountryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserPriceUsd($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereWaitRangeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order withoutAppends(array $appends = [])
@@ -116,7 +112,6 @@ class Order extends Model
     protected $casts = [
         'price'          => 'decimal:2',
         'price_usd'      => 'decimal:2',
-        'user_price'     => 'decimal:2',
         'user_price_usd' => 'decimal:2',
         'images'         => 'array',
         'strikes'        => 'array',
@@ -154,35 +149,43 @@ class Order extends Model
     /**
      *
      * Описание полей:
-     * price - цена товара;
-     * currency - валюта для цены товара;
-     * products_count - количество товара;
-     * total_amount (вирт.) - общая сумма заказа в валюте создания заказа (price * products_count);
-     * price_usd - цена товара в долларах, рассчитанная в момент создания заказа (price * курс доллара);
-     * total_amount_usd (вирт.) - общая сумма заказа в долларах (price_usd * products_count);
-     * user_price - сумма вознаграждения;
-     * user_currency - валюта вознаграждения;
-     * user_price_usd (вирт.) - сумма вознаграждения в долларах, рассчитанная в момент создания заказа (user_price * курс доллара);
-     * price_selected_currency (вирт.) - цена товара в выбранной валюте;
-     * selected_currency (вирт.) - выбранная валюта;
-     * total_amount_selected_currency (вирт.) - общая сумма заказа в выбранной валюте (price_selected_currency * products_count);
-     * user_price_selected_currency (вирт.) - сумма вознаграждения в выбранной валюте.
+     * price - цена товара
+     * currency - валюта для цены товара
+     * products_count - количество товара
+     * price_usd - цена товара в долларах, рассчитанная в момент создания заказа (price * курс доллара)
+     * user_price_usd - сумма вознаграждения в долларах
+     * total_amount (вирт.) - общая сумма заказа в валюте создания заказа (price * products_count)
+     * total_amount_usd (вирт.) - общая сумма заказа в долларах (price_usd * products_count)
+     * selected_currency (вирт.) - выбранная валюта
+     * price_selected_currency (вирт.) - цена товара в выбранной валюте
+     * user_price_selected_currency (вирт.) - сумма вознаграждения в выбранной валюте
+     * total_amount_selected_currency (вирт.) - общая сумма заказа в выбранной валюте (price_selected_currency * products_count)
      */
 
     ### GETTERS ###
 
     /**
+     * Общая сумма заказа в валюте создания заказа (price * products_count).
      *
      * @return string
      */
     public function getTotalAmountAttribute(): string
     {
-        return $this->products_count == 1 ? $this->price : $this->price * $this->products_count;
+        return $this->products_count == 1
+            ? $this->price
+            : sprintf('%.2f', $this->price * $this->products_count);
     }
 
+    /**
+     * Общая сумма заказа в долларах (price_usd * products_count).
+     *
+     * @return string
+     */
     public function getTotalAmountUsdAttribute(): string
     {
-        return $this->products_count == 1 ? $this->price_usd : $this->price_usd * $this->products_count;
+        return $this->products_count == 1
+            ? $this->price_usd
+            : sprintf('%.2f',$this->price_usd * $this->products_count);
     }
 
     /**
@@ -213,27 +216,42 @@ class Order extends Model
         return $currency;
     }
 
-    public function getPriceSelectedCurrencyAttribute()
+    /**
+     * Цена товара в выбранной валюте.
+     *
+     * @return string
+     */
+    public function getPriceSelectedCurrencyAttribute(): string
     {
         if ($this->selected_currency == '$') return $this->price_usd;
 
         if ($this->selected_currency == $this->currency) return $this->price;
 
-        return round($this->price_usd * getCurrencyRate($this->selected_currency), 2);
+        return sprintf('%.2f',$this->price_usd * getCurrencyRate($this->selected_currency));
     }
 
-    public function getUserPriceSelectedCurrencyAttribute()
+    /**
+     * Сумма вознаграждения в выбранной валюте.
+     *
+     * @return string
+     */
+    public function getUserPriceSelectedCurrencyAttribute(): string
     {
         if ($this->selected_currency == '$') return $this->user_price_usd;
 
-        if ($this->selected_currency == $this->user_currency) return $this->user_price;
-
-        return round($this->user_price_usd * getCurrencyRate($this->selected_currency), 2);
+        return sprintf('%.2f',$this->user_price_usd * getCurrencyRate($this->selected_currency));
     }
 
+    /**
+     * Общая сумма заказа в выбранной валюте (price_selected_currency * products_count)
+     *
+     * @return string
+     */
     public function getTotalAmountSelectedCurrencyAttribute(): string
     {
-        return $this->products_count == 1 ? $this->price_selected_currency : $this->price_selected_currency * $this->products_count;
+        return $this->products_count == 1
+            ? $this->price_selected_currency
+            : sprintf('%.2f',$this->price_selected_currency * $this->products_count);
     }
 
     public function getShortNameAttribute(): string
