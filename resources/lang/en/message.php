@@ -157,8 +157,20 @@ return [
 
     # Transaction attributes
     'transaction' => [
+        'statuses' => [
+            'new'       => 'New',
+            'appointed' => 'Appointed',
+            'rejected'  => 'Rejected',
+            'done'      => 'Done',
+            'created'   => 'Created',
+            'approved'  => 'Approved',
+            'canceled'  => 'Canceled',
+            'failed'    => 'Failed',
+        ],
         'types' => [
             'payment' => 'Order payment',
+            'reward' => 'Reward',
+            'refund' => 'Refund',
         ],
     ],
 ];

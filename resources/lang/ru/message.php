@@ -157,8 +157,20 @@ return [
 
     # Transaction attributes
     'transaction' => [
+        'statuses' => [
+            'new'       => 'Новая',
+            'appointed' => 'Назначена',
+            'rejected'  => 'Отклоненная',
+            'done'      => 'Выполненная',
+            'created'   => 'Созданная',
+            'approved'  => 'Оплаченная',
+            'canceled'  => 'Отмененная',
+            'failed'    => 'Отказанная',
+        ],
         'types' => [
             'payment' => 'Оплата заказа',
+            'reward' => 'Вознаграждение',
+            'refund' => 'Возврат средств',
         ],
     ],
 ];

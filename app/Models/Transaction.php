@@ -74,7 +74,7 @@ class Transaction extends Model
 
     public function getStatusNameAttribute(): string
     {
-        return $this->status;
+        return __("message.transaction.statuses.$this->status");
     }
 
     public function getTypeNameAttribute(): string
