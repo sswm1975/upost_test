@@ -4272,7 +4272,7 @@
 										},
 										{
 											"key": "description",
-											"value": "блять Крутой монитор 123234567487 <script> сука",
+											"value": "Крутой монитор",
 											"description": "Опис замовлення",
 											"type": "text"
 										},
@@ -4298,8 +4298,7 @@
 											"key": "to_city_id",
 											"value": "2",
 											"description": "Код міста прибуття (опційно)",
-											"type": "text",
-											"disabled": true
+											"type": "text"
 										},
 										{
 											"key": "wait_range_id",
@@ -4308,15 +4307,9 @@
 											"type": "text"
 										},
 										{
-											"key": "user_price",
-											"value": "100",
-											"description": "Сума винагороди",
-											"type": "text"
-										},
-										{
-											"key": "user_currency",
-											"value": "$",
-											"description": "Валюта винагороди",
+											"key": "user_price_usd",
+											"value": "12",
+											"description": "Сума винагороди в доларах",
 											"type": "text"
 										},
 										{
@@ -4578,7 +4571,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 52);"
+											"pm.variables.set(\"order_id\", 23);"
 										],
 										"type": "text/javascript"
 									}
@@ -4588,7 +4581,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/show?lang=ru",
+									"raw": "{{host}}/{{endpoint}}/orders/{{order_id}}/show?lang=ru&currency=₴",
 									"host": [
 										"{{host}}"
 									],
@@ -4601,7 +4594,13 @@
 									"query": [
 										{
 											"key": "lang",
-											"value": "ru"
+											"value": "ru",
+											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										},
+										{
+											"key": "currency",
+											"value": "₴",
+											"description": "Валюта ($, ₴, €, ₽) - опціонально ($ за замовчуванням)"
 										}
 									]
 								}
@@ -5995,7 +5994,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"rate_id\", 13);"
+											"pm.variables.set(\"rate_id\", 83);"
 										],
 										"type": "text/javascript"
 									}
@@ -6009,27 +6008,22 @@
 									"formdata": [
 										{
 											"key": "route_id",
-											"value": "1",
+											"value": "13",
 											"type": "text"
 										},
 										{
 											"key": "order_id",
-											"value": "1",
+											"value": "21",
 											"type": "text"
 										},
 										{
-											"key": "amount",
-											"value": "150",
-											"type": "text"
-										},
-										{
-											"key": "currency",
-											"value": "₴",
+											"key": "amount_usd",
+											"value": "21",
 											"type": "text"
 										},
 										{
 											"key": "deadline",
-											"value": "2022-05-27",
+											"value": "2023-01-08",
 											"type": "text"
 										},
 										{
@@ -6040,7 +6034,8 @@
 										{
 											"key": "lang",
 											"value": "uk",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
@@ -6074,7 +6069,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"rate_id\", 13);"
+											"pm.variables.set(\"rate_id\", 21);"
 										],
 										"type": "text/javascript"
 									}
@@ -6084,7 +6079,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/show?lang=uk",
+									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/show?lang=uk&currency=₴",
 									"host": [
 										"{{host}}"
 									],
@@ -6099,6 +6094,11 @@
 											"key": "lang",
 											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+										},
+										{
+											"key": "currency",
+											"value": "₴",
+											"description": "Валюта ($, ₴, €, ₽) - опціонально ($ за замовчуванням)"
 										}
 									]
 								}
