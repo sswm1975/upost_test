@@ -167,6 +167,10 @@
             <div class="row" style="padding: 15px 0;">
                 <div class="col-md-12">
                     <div class="input-group">
+                        <span class="input-group-addon">Код</span>
+                        <input type="text" class="form-control form-control" value="{{ $dispute->id }}" readonly>
+                    </div>
+                    <div class="input-group">
                         <span class="input-group-addon">Проблема №{{ $dispute->problem->id }}</span>
                         <input type="text" class="form-control form-control" value="{{ $dispute->problem->name }}" readonly>
                     </div>
@@ -176,7 +180,7 @@
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon">Создано</span>
-                        <input class="form-control form-control-sm" value="{{ formatDateTime($dispute->created_at, false) }}" title="{{ formatDateTime($dispute->created_at) }}" readonly>
+                        <input class="form-control form-control-sm" value="{{ formatDateTime($dispute->created_at) }}" readonly>
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon">Дедлайн</span>
@@ -188,7 +192,7 @@
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon">Состояние</span>
-                        <input class="form-control form-control-sm" value="{{ $dispute->status }}" readonly>
+                        <input class="form-control form-control-sm" value="{{ $dispute->status }}" title="{{ __("message.dispute.statuses.$dispute->status") }}" readonly>
                     </div>
                 </div>
             </div>
@@ -212,6 +216,10 @@
     <div class="tab-pane" id="customer">
         <div class="row" style="padding: 15px 0;">
             <div class="col-sm-8">
+                <div class="input-group">
+                    <span class="input-group-addon">Код</span>
+                    <input type="text" class="form-control form-control" value="{{ $chat->customer_id }}" readonly>
+                </div>
                 <div class="input-group">
                     <span class="input-group-addon">ФИО</span>
                     <input type="text" class="form-control form-control" value="{{ $chat->customer_name }}" readonly>
@@ -242,7 +250,7 @@
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Дата регистрации</span>
-                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->customer_register_date) }}" readonly>
+                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->customer_register_date, false) }}" readonly>
                 </div>
             </div>
             <div class="col-sm-4" style="padding-left: 0">
@@ -259,6 +267,10 @@
     <div class="tab-pane" id="performer">
         <div class="row" style="padding: 15px 0;">
             <div class="col-sm-8">
+                <div class="input-group">
+                    <span class="input-group-addon">Код</span>
+                    <input type="text" class="form-control form-control" value="{{ $chat->performer_id }}" readonly>
+                </div>
                 <div class="input-group">
                     <span class="input-group-addon">ФИО</span>
                     <input type="text" class="form-control form-control" value="{{ $chat->performer_name }}" readonly>
@@ -289,7 +301,7 @@
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Дата регистрации</span>
-                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->performer_register_date) }}" readonly>
+                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->performer_register_date, false) }}" readonly>
                 </div>
             </div>
             <div class="col-sm-4" style="padding-left: 0">
@@ -308,11 +320,11 @@
             <div class="col-sm-8">
                 <div class="input-group">
                     <span class="input-group-addon">Статус заказа № {{ $chat->order_id }}</span>
-                    <input type="text" class="form-control form-control" value="{{ $chat->order_status }}" readonly>
+                    <input type="text" class="form-control form-control" value="{{ $chat->order_status }}" title="{{ __("message.order.statuses.$chat->order_status") }}" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Наименование</span>
-                    <input type="text" class="form-control form-control" value="{{ $chat->order_name }}" readonly>
+                    <input type="text" class="form-control form-control" value="{{ $chat->order_name }}" title="{{ $chat->order_name }}" readonly>
                 </div>
                 <div class="input-group">
                     @php($anchor = $chat->order_url ? "<a href='{$chat->order_url}' target='_blank'><i class='fa fa-external-link'></i></a>" : '')
@@ -337,15 +349,15 @@
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Вознаграждение в долларах</span>
-                    <input class="form-control form-control-sm" value="{{ $chat->order_profit_price_usd }} $" readonly>
+                    <input class="form-control form-control-sm" value="{{ $chat->order_profit_usd }} $" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Откуда</span>
-                    <input class="form-control form-control-sm" value="{{ $chat->order_from_country }}, {{ $chat->order_from_city }}" readonly>
+                    <input class="form-control form-control-sm" value="{{ $chat->order_from_country }}@isset($chat->order_from_city), @endisset{{ $chat->order_from_city }}" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Куда</span>
-                    <input class="form-control form-control-sm" value="{{ $chat->order_to_country }}, {{ $chat->order_to_city }}" readonly>
+                    <input class="form-control form-control-sm" value="{{ $chat->order_to_country }}@isset($chat->order_to_country), @endisset{{ $chat->order_to_city }}" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Создано</span>
@@ -391,8 +403,12 @@
         <div class="row" style="padding: 15px 0;">
             <div class="col-sm-12">
                 <div class="input-group">
-                    <span class="input-group-addon">Статус маршрута № {{ $chat->route_id }}</span>
-                    <input type="text" class="form-control form-control" value="{{ $chat->route_status }}" readonly>
+                    <span class="input-group-addon">Код</span>
+                    <input type="text" class="form-control form-control" value="{{ $chat->route_id }}" readonly>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Статус</span>
+                    <input type="text" class="form-control form-control" value="{{ $chat->route_status }}" title="{{ __("message.route.statuses.$chat->route_status") }}" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Откуда</span>
@@ -404,42 +420,51 @@
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Создано</span>
-                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->route_created_at, false) }}" title="{{ formatDateTime($chat->route_created_at) }}" readonly>
+                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->route_created_at) }}" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Дедлайн</span>
                     <input class="form-control form-control-sm" value="{{ formatDateTime($chat->route_deadline, false) }}" readonly>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Просмотрено заказы</span>
+                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->route_viewed_orders_at) }}" readonly>
                 </div>
             </div>
         </div>
     </div>
 
+    @if ($chat->rate_id)
     <div class="tab-pane" id="rate">
         <div class="row" style="padding: 15px 0;">
             <div class="col-sm-8">
                 <div class="input-group">
-                    <span class="input-group-addon">Статус ставки № {{ $chat->route_id }}</span>
-                    <input type="text" class="form-control form-control" value="{{ $chat->route_status }}" readonly>
+                    <span class="input-group-addon">Код</span>
+                    <input type="text" class="form-control form-control" value="{{ $chat->rate_id }}" readonly>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">Сумма</span>
-                    <input class="form-control form-control-sm" value="{{ $chat->rate_amount }} {{ $chat->rate_currency }}" readonly>
+                    <span class="input-group-addon">Статус</span>
+                    <input type="text" class="form-control form-control" value="{{ $chat->rate_status }}" title="{{ __("message.rate.statuses.$chat->rate_status") }}" readonly>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">Откуда</span>
-                    <input class="form-control form-control-sm" value="{{ $chat->route_from_country }}, {{ $chat->route_from_city }}" readonly>
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon">Куда</span>
-                    <input class="form-control form-control-sm" value="{{ $chat->route_to_country }}, {{ $chat->route_to_city }}" readonly>
+                    <span class="input-group-addon">Вознаграждение в долларах</span>
+                    <input class="form-control form-control-sm" value="{{ $chat->rate_amount_usd }} $" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Создано</span>
-                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->route_created_at, false) }}" title="{{ formatDateTime($chat->route_created_at) }}" readonly>
+                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->rate_created_at) }}" readonly>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Дедлайн</span>
-                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->route_deadline, false) }}" readonly>
+                    <input class="form-control form-control-sm" value="{{ formatDateTime($chat->rate_deadline, false) }}" readonly>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Новая ставка просмотрена заказчиком?</span>
+                    <input class="form-control form-control-sm" value="{{ $chat->rate_viewed_by_customer ? 'Да' : 'Нет' }}" readonly>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Подтвержденная ставка просмотрена исполнителем?</span>
+                    <input class="form-control form-control-sm" value="{{ $chat->rate_viewed_by_performer ? 'Да' : 'Нет' }}" readonly>
                 </div>
             </div>
             <div class="col-sm-4" style="padding-left: 0">
@@ -474,6 +499,6 @@
             <label class="control-label">Комментарий</label>
             <textarea rows="10" class="form-control form-control-sm" readonly>{!! $chat->rate_comment !!}</textarea>
         </div>
-
     </div>
+    @endif
 </div>

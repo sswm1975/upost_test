@@ -46,7 +46,7 @@ class ChatMessage implements Renderable
             o.price_usd AS order_price_usd,
             o.currency AS order_currency,
             o.products_count AS order_products_count,
-            o.user_price_usd AS order_profit_price_usd,
+            o.user_price_usd AS order_profit_usd,
             o.status AS order_status,
             o.created_at AS order_created_at,
             o.deadline AS order_deadline,
@@ -73,14 +73,17 @@ class ChatMessage implements Renderable
             ctr.name_ru AS route_to_city,
             r.created_at AS route_created_at,
             r.deadline AS route_deadline,
+            r.viewed_orders_at AS route_viewed_orders_at,
 
-            rates.amount AS rate_amount,
-            rates.currency AS rate_currency,
+            rates.id AS rate_id,
+            rates.amount_usd AS rate_amount_usd,
             rates.comment AS rate_comment,
             rates.images AS rate_images,
             rates.status AS rate_status,
             rates.created_at AS rate_created_at,
             rates.deadline AS rate_deadline,
+            rates.viewed_by_customer AS rate_viewed_by_customer,
+            rates.viewed_by_performer AS rate_viewed_by_performer,
 
             EXISTS (SELECT 1 FROM disputes WHERE chat_id = chats.id) AS exists_dispute
         ")
@@ -114,6 +117,7 @@ class ChatMessage implements Renderable
 
         $title = view('platform.chats.modal_title')
             ->with('exists_dispute', $chat->exists_dispute)
+            ->with('exists_rate', $chat->rate_id)
             ->render();
 
         $content = view('platform.chats.modal_body')

@@ -65,7 +65,7 @@ class ChatController extends AdminController
                 o.price_usd AS order_price_usd,
                 o.currency AS order_currency,
                 o.products_count AS order_products_count,
-                o.user_price_usd AS order_profit_price_usd,
+                o.user_price_usd AS order_profit_usd,
                 o.status AS order_status,
                 o.deadline AS order_deadline,
                 o.images AS order_images,
@@ -143,10 +143,10 @@ class ChatController extends AdminController
 
         $grid->column('order_id', 'OId')->sortable();
         $grid->column('order_name', 'Order');
-        $grid->column('order_price', 'Price');
+        $grid->column('order_price', 'Price')->setAttributes(['align'=>'right']);
         $grid->column('order_currency', '#');
-        $grid->column('order_profit_price', 'Profit');
-        $grid->column('order_profit_currency', '#');
+        $grid->column('order_profit_usd', 'Profit')->setAttributes(['align'=>'right']);
+        $grid->column('order_profit_currency', '#')->default('$');
 
         $grid->column('performer_id', 'PId')->sortable();
         $grid->column('performer_name', 'Performer');
