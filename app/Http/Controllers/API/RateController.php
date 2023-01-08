@@ -37,12 +37,11 @@ class RateController extends Controller
     protected static function rules4saveRate(): array
     {
         return  [
-            'route_id' => 'required|integer|exists:routes,id,status,active,user_id,'.request()->user()->id,
-            'order_id' => 'required|integer|exists:orders,id,status,active',
-            'deadline' => 'required|date_format:Y-m-d|after_or_equal:'.date('Y-m-d'),
-            'amount'   => 'required|numeric',
-            'currency' => 'required|in:' . implode(',', config('app.currencies')),
-            'comment'  => 'nullable|string|censor|max:1000',
+            'route_id'   => 'required|integer|exists:routes,id,status,active,user_id,'.request()->user()->id,
+            'order_id'   => 'required|integer|exists:orders,id,status,active',
+            'deadline'   => 'required|date_format:Y-m-d|after_or_equal:'.date('Y-m-d'),
+            'amount_usd' => 'required|numeric|min:10',
+            'comment'    => 'nullable|string|censor|max:1000',
         ];
     }
 
@@ -65,13 +64,12 @@ class RateController extends Controller
 
         # проверяем запрет на превышение суммы вознаграждения, установленного на заказе
         $order = Order::find($data['order_id'], ['user_price_usd', 'not_more_price', 'user_id']);
-        $amount_usd = convertPriceToUsd($data['amount'], $data['currency']);
-        if ($order->not_more_price && $amount_usd > $order->user_price_usd) {
+        if ($order->not_more_price && $data['amount_usd'] > $order->user_price_usd) {
             throw new ErrorException(__('message.rate_exists_limit_user_price'));
         }
 
         # создаем ставку
-        $rate = Rate::create(array_merge($data, compact('amount_usd')));
+        $rate = Rate::create($data);
 
         return response()->json([
             'status'  => true,
@@ -103,14 +101,9 @@ class RateController extends Controller
 
         # проверяем запрет на превышение суммы вознаграждения, установленного на заказе
         $order = Order::find($data['order_id'], ['user_price_usd', 'not_more_price', 'user_id']);
-        $amount_usd = convertPriceToUsd($data['amount'], $data['currency']);
-        if ($order->not_more_price && $amount_usd > $order->user_price_usd) {
+        if ($order->not_more_price && $data['amount_usd'] > $order->user_price_usd) {
             throw new ErrorException(__('message.rate_exists_limit_user_price'));
         }
-
-        # конвертируем число в вещественную строку (если суммы одинаковые в таблице и во входном параметре, то обновление данных в таблице не будет)
-        $data['amount'] = number_format($data['amount'], 2);
-        $data['amount_usd'] = number_format($amount_usd, 2);
 
         # изменяем ставку
         $rate->update($data);
@@ -719,7 +712,7 @@ class RateController extends Controller
             'user_id'     => $rate->user_id,
             'rate_id'     => $rate_id,
             'order_id'    => $rate->order_id,
-            'amount'      => $rate->order->price_usd + $rate->order->user_price_usd + $taxes_sum,
+            'amount'      => $rate->order->total_amount_usd + $rate->amount_usd + $taxes_sum,
             'type'        => Payment::TYPE_REWARD,
             'description' => 'Вознаграждение по заказу "' . $rate->order->name . '"',
         ]);

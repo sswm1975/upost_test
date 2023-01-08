@@ -18,8 +18,6 @@ use Carbon\Carbon;
  * @property int $route_id Код маршрута
  * @property int $order_id Код заказа
  * @property int $chat_id Код чата
- * @property mixed $amount Сумма дохода
- * @property string $currency Валюта дохода
  * @property mixed $amount_usd Сумма дохода в долларах
  * @property string $deadline Дата выполнения
  * @property string|null $comment Комментарий
@@ -53,12 +51,10 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Rate notViewedByPerformer()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate owner()
  * @method static \Illuminate\Database\Eloquent\Builder|Rate query()
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereAmountUsd($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereComment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Rate whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereDeadline($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereImages($value)
@@ -82,7 +78,6 @@ class Rate extends Model
     protected $guarded = ['id'];
     public $timestamps = true;
     protected $casts = [
-        'amount'              => 'decimal:2',
         'amount_usd'          => 'decimal:2',
         'viewed_by_customer'  => 'boolean',
         'viewed_by_performer' => 'boolean',
@@ -186,9 +181,7 @@ class Rate extends Model
     {
         if ($this->selected_currency == '$') return $this->amount_usd;
 
-        if ($this->selected_currency == $this->currency) return $this->amount;
-
-        return round($this->amount_usd * getCurrencyRate($this->selected_currency), 2);
+        return sprintf('%.2f',$this->amount_usd * getCurrencyRate($this->selected_currency));
     }
 
     public function getStatusNameAttribute(): string

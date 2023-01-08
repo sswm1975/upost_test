@@ -17,9 +17,6 @@ class RateObserver
      */
     public function created(Rate $rate)
     {
-        # если неактивно уведомление "Появилась новая ставка", то выходим
-        if (!active_notice_type($notice_type = NoticeType::NEW_RATE)) return;
-
         # к ставке добавляем данные заказа
         $rate->load([
             'order' => function ($query) {
@@ -27,16 +24,18 @@ class RateObserver
             },
         ]);
 
+        # если активно уведомление "Появилась новая ставка", то создаем уведомление
+        if (active_notice_type($notice_type = NoticeType::NEW_RATE)) {
+            Notice::create([
+                'user_id'     => $rate->order->user_id,
+                'notice_type' => $notice_type,
+                'object_id'   => $rate->order->id,
+                'data'        => ['order_name' => $rate->order->name, 'rate_id' => $rate->id],
+            ]);
+        }
+
         # добавляем действие "Создана ставка"
         $this->addAction($rate, Action::RATE_CREATED);
-
-        # создаем уведомление
-        Notice::create([
-            'user_id'     => $rate->order->user_id,
-            'notice_type' => $notice_type,
-            'object_id'   => $rate->order->id,
-            'data'        => ['order_name' => $rate->order->name, 'rate_id' => $rate->id],
-        ]);
     }
 
     /**
