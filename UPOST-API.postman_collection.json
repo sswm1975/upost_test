@@ -8693,6 +8693,18 @@
 									],
 									"query": [
 										{
+											"key": "sorting",
+											"value": "asc",
+											"description": "Сортування (asc,desc)",
+											"disabled": true
+										},
+										{
+											"key": "page-number",
+											"value": "2",
+											"description": "Номер сторінки",
+											"disabled": true
+										},
+										{
 											"key": "lang",
 											"value": "uk",
 											"description": "Код мови (uk, ru, en) - опціонально",
