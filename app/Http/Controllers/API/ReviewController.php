@@ -12,7 +12,6 @@ use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ReviewController extends Controller
@@ -26,7 +25,7 @@ class ReviewController extends Controller
      */
     public function addReview(Request $request): JsonResponse
     {
-        $user_id = request()->user()->id;
+        $user_id = $request->user()->id;
 
         $data = validateOrExit([
             'rate_id' => 'required|integer',
@@ -35,8 +34,8 @@ class ReviewController extends Controller
         ]);
 
         # запрещаем дублировать отзыв
-        $is_double = Review::owner()->whereRateId($data['rate_id'])->count();
-        if ($is_double) throw new ErrorException(__('message.review_add_double'));
+        $exists = Review::owner()->whereRateId($data['rate_id'])->exists();
+        if ($exists) throw new ErrorException(__('message.review_exists'));
 
         # авторизированный пользователь должен быть владельцем заказа или маршрута, а ставка быть в статусе Успешная или Завершенная
         $rate = Rate::whereKey($data['rate_id'])
@@ -64,18 +63,12 @@ class ReviewController extends Controller
         }
 
         # создаем отзыв
-        Review::create($data);
-
-        # получателю отзыва увеличиваем рейтинг
-        User::whereKey($data['recipient_id'])
-            ->update([
-                'reviews_count' => DB::raw('reviews_count + 1'),
-                'scores_count'  => DB::raw("scores_count + {$data['scores']}"),
-            ]);
+        $review = Review::create($data);
 
         return response()->json([
             'status' => true,
-            'rate'   => $rate,
+            'review' => null_to_blank($review),
+            'rate'   => null_to_blank($rate),
         ]);
     }
 

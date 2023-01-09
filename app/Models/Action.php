@@ -71,6 +71,11 @@ class Action extends Model
     const RATE_RESTORED        = 'rate_restored';
     const RATE_STATUS_CHANGED  = 'rate_status_changed';
 
+    # Review's actions
+    const REVIEW_CREATED       = 'review_created';
+    const REVIEW_UPDATES       = 'review_updated';
+    const REVIEW_DELETED       = 'review_deleted';
+
     # Список публичных событий
     const PUBLIC_EVENTS = [
         self::ORDER_UPDATES,
