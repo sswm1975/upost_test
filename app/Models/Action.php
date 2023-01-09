@@ -76,6 +76,10 @@ class Action extends Model
     const REVIEW_UPDATES       = 'review_updated';
     const REVIEW_DELETED       = 'review_deleted';
 
+    # Message's actions
+    const MESSAGES_CREATED     = 'message_created';
+    const MESSAGES_RECEIVED    = 'message_received';
+
     # Список публичных событий
     const PUBLIC_EVENTS = [
         self::ORDER_UPDATES,
