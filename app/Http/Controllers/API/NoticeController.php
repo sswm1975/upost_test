@@ -56,7 +56,8 @@ class NoticeController extends Controller
             ->when($data['status'] == 'read', function ($query) {
                 $query->where('notices.is_read', 1);
             })
-            ->orderBy('id', $data['sorting'] ?? self::DEFAULT_SORTING)
+            ->orderBy('arcdate', $data['sorting'] ?? self::DEFAULT_SORTING)
+            ->orderBy('id', 'desc')
             ->get()
             ->groupBy('arcdate')
             ->makeHidden('arcdate')
