@@ -39,7 +39,7 @@ class MessageObserver
         Action::create([
             'user_id'  => $message->user_id,
             'is_owner' => $auth_user_id == $message->user_id,
-            'name'     => Action::MESSAGES_CREATED,
+            'name'     => Action::MESSAGE_CREATED,
             'changed'  => $message->getChanges(),
             'data'     => $message,
         ]);
@@ -48,7 +48,7 @@ class MessageObserver
         Action::create([
             'user_id'  => $message->chat->interlocutor_id,
             'is_owner' => false,
-            'name'     => Action::MESSAGES_RECEIVED,
+            'name'     => Action::MESSAGE_RECEIVED,
             'changed'  => $message->getChanges(),
             'data'     => $message,
         ]);

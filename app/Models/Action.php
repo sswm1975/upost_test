@@ -77,8 +77,8 @@ class Action extends Model
     const REVIEW_DELETED       = 'review_deleted';
 
     # Message's actions
-    const MESSAGES_CREATED     = 'message_created';
-    const MESSAGES_RECEIVED    = 'message_received';
+    const MESSAGE_CREATED     = 'message_created';
+    const MESSAGE_RECEIVED    = 'message_received';
 
     # Список публичных событий
     const PUBLIC_EVENTS = [
