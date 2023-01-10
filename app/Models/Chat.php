@@ -283,11 +283,11 @@ class Chat extends Model
      * Чаты, по которым в сообщениях есть поисковая строка.
      * Поиск выполняется:
      * - по тексту сообщения;
-     * - по имени и фамилии заказчика;
+     * - по имени и фамилии заказчика/исполнителя;
      * - по наименованию заказа.
      *
      * @param $query
-     * @param string $search
+     * @param string $search Строка поиска
      * @return mixed
      */
     public function scopeSearchMessage($query, string $search)
@@ -295,6 +295,8 @@ class Chat extends Model
         return $query->whereHas('messages', function ($q) use ($search) {
             $q->whereRaw("MATCH(text) AGAINST (? IN BOOLEAN MODE)", [$search]);
         })->orWhereHas('customer', function ($q) use ($search) {
+            $q->whereRaw("MATCH(name,surname) AGAINST (? IN BOOLEAN MODE)", [$search]);
+        })->orWhereHas('performer', function ($q) use ($search) {
             $q->whereRaw("MATCH(name,surname) AGAINST (? IN BOOLEAN MODE)", [$search]);
         })->orWhereHas('order', function ($q) use ($search) {
             $q->whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$search]);
@@ -378,12 +380,12 @@ class Chat extends Model
      */
     public static function getCountUnreadMessages(int $user_id): int
     {
-        $customer_unread_count = Chat::where('status', self::STATUS_ACTIVE)
+        $customer_unread_count = Chat::active()
             ->where('customer_id', $user_id)
             ->where('customer_unread_count', '>', 0)
             ->sum('customer_unread_count');
 
-        $performer_unread_count = Chat::where('status', self::STATUS_ACTIVE)
+        $performer_unread_count = Chat::active()
             ->where('performer_id', $user_id)
             ->where('performer_unread_count', '>', 0)
             ->sum('performer_unread_count');
