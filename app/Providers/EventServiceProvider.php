@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Dispute;
 use App\Models\Message;
 use App\Models\Order;
 use App\Models\Rate;
 use App\Models\Review;
 use App\Models\Route;
 use App\Models\User;
+use App\Observers\DisputeObserver;
 use App\Observers\MessageObserver;
 use App\Observers\OrderObserver;
 use App\Observers\RateObserver;
@@ -46,6 +48,7 @@ class EventServiceProvider extends ServiceProvider
         Rate::observe(RateObserver::class);
         Message::observe(MessageObserver::class);
         Review::observe(ReviewObserver::class);
+        Dispute::observe(DisputeObserver::class);
     }
 
     /**

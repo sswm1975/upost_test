@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Events\MessageAdd;
 use App\Models\Action;
+use App\Models\Chat;
 use App\Models\Message;
 
 class MessageObserver
@@ -22,33 +23,37 @@ class MessageObserver
 
         }
 
+        $auth_user_id = request()->user()->id ?? 0;
+        $chat = Chat::find($message->chat_id, ['id', 'customer_id', 'performer_id', 'customer_unread_count', 'performer_unread_count']);
+
+        # увеличиваем счетчик непрочитанных сообщений и броадкастим его
+        if (empty($auth_user_id) || $auth_user_id == $chat->performer_id) {
+            $chat->increment('customer_unread_count');
+            Chat::broadcastCountUnreadMessages($chat->customer_id);
+        }
+        if (empty($auth_user_id) || $auth_user_id == $chat->customer_id) {
+            $chat->increment('performer_unread_count');
+            Chat::broadcastCountUnreadMessages($chat->performer_id);
+        }
+
         # добавляем события "Сообщение создано" и "Сообщение получено"
-        $this->addActions($message);
+        $this->addAction($message, $auth_user_id, $chat->customer_id);
+        $this->addAction($message, $auth_user_id, $chat->performer_id);
     }
 
     /**
-     * Add actions.
+     * Add action.
      *
      * @param Message $message
+     * @param int $auth_user_id
+     * @param int $recipient_id
      */
-    private function addActions(Message $message)
+    private function addAction(Message $message, int $auth_user_id, int $recipient_id)
     {
-        $auth_user_id = request()->user()->id ?? 0;
-
-        # событие "Сообщение создано" для автора сообщения
         Action::create([
-            'user_id'  => $message->user_id,
+            'user_id'  => $recipient_id,
             'is_owner' => $auth_user_id == $message->user_id,
-            'name'     => Action::MESSAGE_CREATED,
-            'changed'  => $message->getChanges(),
-            'data'     => $message,
-        ]);
-
-        # событие "Сообщение получено" для собеседника чата
-        Action::create([
-            'user_id'  => $message->chat->interlocutor_id,
-            'is_owner' => false,
-            'name'     => Action::MESSAGE_RECEIVED,
+            'name'     => $auth_user_id == $message->user_id ? Action::MESSAGE_CREATED : Action::MESSAGE_RECEIVED,
             'changed'  => $message->getChanges(),
             'data'     => $message,
         ]);

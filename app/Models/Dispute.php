@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property int $id Код
  * @property int $user_id Код пользователя
+ * @property int $respondent_id Код пользователя ответчика
  * @property int $problem_id Код проблема
  * @property int $rate_id Код ставки
  * @property int $chat_id Код чата
@@ -37,16 +38,19 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read string $status_name
  * @property-read \App\Models\DisputeProblem $problem
  * @property-read \App\Models\Rate $rate
+ * @property-read \App\Models\User $respondent
  * @property-read \App\Models\Track|null $track
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute acting()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute active()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute appointed()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute closed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute completed()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute existsForChat(int $chat_id)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute inWork()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute notCompleted()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute query()
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereAdminUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereChatId($value)
@@ -59,6 +63,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereProblemId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereRateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereReasonClosingDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereRespondentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Dispute whereUnreadMessagesCount($value)
@@ -94,6 +99,12 @@ class Dispute extends Model
         self::STATUS_IN_WORK,
     ];
 
+    # завершенные статусы
+    const STATUSES_COMPLETED = [
+        self::STATUS_CLOSED,
+        self::STATUS_CANCELED,
+    ];
+
     # цвета статусов для админки
     const STATUS_COLORS = [
         self::STATUS_ACTIVE    => 'danger',
@@ -109,31 +120,6 @@ class Dispute extends Model
     protected $casts = ['images' => 'array'];
     protected $appends = ['status_name', 'images_thumb', 'images_original'];
     protected $attributes = ['status'  => self::STATUS_ACTIVE];
-
-    ### BOOT ###
-
-    /**
-     * Boot model.
-     *
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->user_id = request()->user()->id;
-            $model->created_at = $model->freshTimestamp();
-        });
-
-        static::updating(function ($model) {
-            $model->updated_at = $model->freshTimestamp();
-
-            if ($model->status == self::STATUS_CLOSED) {
-                $model->closed_user_id = request()->user()->id;
-            }
-        });
-    }
 
     ### GETTERS ###
 
@@ -220,6 +206,11 @@ class Dispute extends Model
         return $this->belongsTo(User::class, 'user_id')->withDefault();
     }
 
+    public function respondent(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'respondent_id')->withDefault();
+    }
+
     public function closed_user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'closed_user_id');
@@ -248,7 +239,7 @@ class Dispute extends Model
     ### SCOPES ###
 
     /**
-     * Активные чаты.
+     * Активные споры.
      *
      * @param $query
      * @return mixed
@@ -256,6 +247,28 @@ class Dispute extends Model
     public function scopeActive($query)
     {
         return $query->where('disputes.status', self::STATUS_ACTIVE);
+    }
+
+    /**
+     * Завершенные споры.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereIn('disputes.status', self::STATUSES_COMPLETED);
+    }
+
+    /**
+     * Не завершенные споры.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeNotCompleted($query)
+    {
+        return $query->whereNotIn('disputes.status', self::STATUSES_COMPLETED);
     }
 
     /**

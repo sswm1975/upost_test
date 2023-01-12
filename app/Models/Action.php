@@ -80,6 +80,11 @@ class Action extends Model
     const MESSAGE_CREATED     = 'message_created';
     const MESSAGE_RECEIVED    = 'message_received';
 
+    # Dispute's actions
+    const DISPUTE_CREATED         = 'dispute_created';
+    const DISPUTE_RECEIVED        = 'dispute_received';
+    const DISPUTE_STATUS_CHANGED  = 'dispute_status_changed';
+
     # Список публичных событий
     const PUBLIC_EVENTS = [
         self::ORDER_UPDATES,
