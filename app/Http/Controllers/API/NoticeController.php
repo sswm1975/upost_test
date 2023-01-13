@@ -24,8 +24,9 @@ class NoticeController extends Controller
     public function show(Request $request): JsonResponse
     {
         $data = validateOrExit([
-            'status'  => 'nullable|in:all,not_read,read',
-            'sorting' => 'in:asc,desc',
+            'status'        => 'nullable|in:all,not_read,read',
+            'sorting'       => 'in:asc,desc',
+            'inner_sorting' => 'in:asc,desc',
         ]);
         $data['status'] = $data['status'] ?? 'all';
 
@@ -57,7 +58,7 @@ class NoticeController extends Controller
                 $query->where('notices.is_read', 1);
             })
             ->orderBy('arcdate', $data['sorting'] ?? self::DEFAULT_SORTING)
-            ->orderBy('id', 'desc')
+            ->orderBy('id', $data['inner_sorting'] ?? self::DEFAULT_SORTING)
             ->get()
             ->groupBy('arcdate')
             ->makeHidden('arcdate')
