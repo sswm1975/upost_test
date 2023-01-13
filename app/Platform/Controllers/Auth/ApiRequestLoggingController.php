@@ -115,7 +115,7 @@ class ApiRequestLoggingController extends AdminController
                     $template = '<a href="#" class="grid-column-copyable text-muted" data-content="%s" title="Copied!"><i class="fa fa-copy"></i></a>';
                     $queries = [];
                     foreach ($grid->queries as $key => $query) {
-                        $queries[$key]['action'] = sprintf($template, $query['sql']);
+                        $queries[$key]['action'] = $key+1; #sprintf($template, $query['sql']);
                         $queries[$key] = array_merge($queries[$key], $query);
                     }
                     return new Table(['', 'QUERY', 'ROWS', 'TIME'], $queries);
