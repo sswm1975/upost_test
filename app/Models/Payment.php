@@ -79,26 +79,6 @@ class Payment extends Model
     protected $attributes = ['status' => self::STATUS_NEW];
     protected $appends = ['status_name', 'type_name'];
 
-    ### BOOT ###
-
-    /**
-     * Boot model.
-     *
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->created_at = $model->freshTimestamp();
-        });
-
-        static::updating(function ($model) {
-            $model->updated_at = $model->freshTimestamp();
-        });
-    }
-
     ### GETTERS ###
 
     public function getStatusNameAttribute(): string

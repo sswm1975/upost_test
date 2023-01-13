@@ -89,6 +89,10 @@ class Action extends Model
     const TRANSACTION_CREATED     = 'transaction_created';
     const TRANSACTION_UPDATES     = 'transaction_updated';
 
+    # Payment's actions
+    const PAYMENT_CREATED         = 'payment_created';
+    const PAYMENT_UPDATED         = 'payment_updated';
+
     # Список публичных событий
     const PUBLIC_EVENTS = [
         self::ORDER_UPDATES,
