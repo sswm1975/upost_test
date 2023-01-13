@@ -85,6 +85,10 @@ class Action extends Model
     const DISPUTE_RECEIVED        = 'dispute_received';
     const DISPUTE_STATUS_CHANGED  = 'dispute_status_changed';
 
+    # Transaction's actions
+    const TRANSACTION_CREATED     = 'transaction_created';
+    const TRANSACTION_UPDATES     = 'transaction_updated';
+
     # Список публичных событий
     const PUBLIC_EVENTS = [
         self::ORDER_UPDATES,

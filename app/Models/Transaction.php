@@ -69,6 +69,9 @@ class Transaction extends Model
     protected $casts = ['response' => 'array'];
     protected $dates = ['payed_at'];
     protected $appends = ['status_name', 'type_name'];
+    protected $attributes = ['type' => self::TYPE_PAYMENT];
+
+    public const TYPE_PAYMENT = 'payment';
 
     ### GETTERS ###
 
