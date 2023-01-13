@@ -100,7 +100,6 @@ class ChatController extends Controller
             'page'   => $rows->currentPage(),
             'pages'  => $rows->lastPage(),
             'chats'  => null_to_blank($rows->toArray()['data']),
-            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
