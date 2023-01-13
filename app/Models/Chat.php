@@ -279,28 +279,92 @@ class Chat extends Model
         });
     }
 
+
     /**
-     * Чаты, по которым в сообщениях есть поисковая строка.
+     * Поиск чатов.
      * Поиск выполняется:
      * - по тексту сообщения;
      * - по имени и фамилии заказчика/исполнителя;
      * - по наименованию заказа.
+     * Сортировка по весу общего поиска + последние сообщение.
      *
      * @param $query
-     * @param string $search Строка поиска
+     * @param string $search
+     * @param int $auth_user_id
      * @return mixed
+     *
+     * Сырой запрос
+     * SELECT
+     *   chats.id,
+     *   chats.customer_id,
+     *   chats.performer_id,
+     *   chats.performer_unread_count,
+     *   chats.customer_unread_count,
+     *   chats.route_id,
+     *   chats.order_id,
+     *   chats.status,
+     *   chats.lock_status,
+     *   chats.created_at,
+     *   SUM(MATCH(u.name,u.surname) AGAINST ('test' IN BOOLEAN MODE)) AS user_weight,
+     *   SUM(MATCH(o.name) AGAINST ('test' IN BOOLEAN MODE)) AS order_weight,
+     *   SUM(MATCH(m.text) AGAINST ('test' IN BOOLEAN MODE)) AS messages_weight,
+     *   SUM(
+     *     MATCH(u.name,u.surname) AGAINST ('test' IN BOOLEAN MODE) +
+     *     MATCH(o.name) AGAINST ('test' IN BOOLEAN MODE) +
+     *     MATCH(m.text) AGAINST ('test' IN BOOLEAN MODE)
+     *   ) AS all_weight,
+     *   (SELECT MAX(id) FROM messages WHERE chat_id = chats.id) AS last_message_id
+     * FROM `chats`
+     * LEFT JOIN `users` AS `u` ON `u`.`id` = IF(chats.customer_id = 1, chats.performer_id, chats.customer_id) AND MATCH(u.name, u.surname) AGAINST ('test' IN BOOLEAN MODE)
+     * LEFT JOIN `orders` AS `o` ON `o`.`id` = `chats`.`order_id` AND MATCH(o.name) AGAINST ('test' IN BOOLEAN MODE)
+     * LEFT JOIN `messages` as `m` on `m`.`chat_id` = `chats`.`id` AND MATCH(m.text) AGAINST ('test' IN BOOLEAN MODE)
+     * WHERE (`performer_id` = 1 or `customer_id` = 1)
+     * GROUP BY `chats`.`id`
+     * HAVING `all_weight` > 0
+     * ORDER BY `all_weight` DESC, `last_message_id` DESC
+     * LIMIT 5 OFFSET 0
      */
-    public function scopeSearchMessage($query, string $search)
+    public static function scopeBySearch($query, string $search, int $auth_user_id)
     {
-        return $query->whereHas('messages', function ($q) use ($search) {
-            $q->whereRaw("MATCH(text) AGAINST (? IN BOOLEAN MODE)", [$search]);
-        })->orWhereHas('customer', function ($q) use ($search) {
-            $q->whereRaw("MATCH(name,surname) AGAINST (? IN BOOLEAN MODE)", [$search]);
-        })->orWhereHas('performer', function ($q) use ($search) {
-            $q->whereRaw("MATCH(name,surname) AGAINST (? IN BOOLEAN MODE)", [$search]);
-        })->orWhereHas('order', function ($q) use ($search) {
-            $q->whereRaw("MATCH(name) AGAINST (? IN BOOLEAN MODE)", [$search]);
-        });
+        return $query
+            ->leftJoin('users AS u', function ($join) use ($search, $auth_user_id) {
+                $join->on('u.id', DB::raw("IF(chats.customer_id = {$auth_user_id}, chats.performer_id, chats.customer_id)"))
+                    ->whereRaw('MATCH(u.name, u.surname) AGAINST (? IN BOOLEAN MODE)', [$search]);
+            })
+            ->leftJoin('orders AS o', function ($join) use ($search) {
+                $join->on('o.id', '=', 'chats.order_id')
+                    ->whereRaw('MATCH(o.name) AGAINST (? IN BOOLEAN MODE)', [$search]);
+            })
+            ->leftJoin('messages AS m', function ($join) use ($search) {
+                $join->on('m.chat_id', '=', 'chats.id')
+                    ->whereRaw('MATCH(m.text) AGAINST (? IN BOOLEAN MODE)', [$search]);
+            })
+            ->selectRaw('
+                chats.id,
+                chats.customer_id,
+                chats.performer_id,
+                chats.performer_unread_count,
+                chats.customer_unread_count,
+                chats.route_id,
+                chats.order_id,
+                chats.status,
+                chats.lock_status,
+                chats.created_at,
+                SUM(MATCH(u.name,u.surname) AGAINST (? IN BOOLEAN MODE)) AS user_weight,
+                SUM(MATCH(o.name) AGAINST (? IN BOOLEAN MODE)) AS order_weight,
+                SUM(MATCH(m.text) AGAINST (? IN BOOLEAN MODE)) AS messages_weight,
+                SUM(
+	              MATCH(u.name,u.surname) AGAINST (? IN BOOLEAN MODE) +
+                  MATCH(o.name) AGAINST (? IN BOOLEAN MODE) +
+                  MATCH(m.text) AGAINST (? IN BOOLEAN MODE)
+	            ) AS all_weight,
+                (SELECT MAX(id) FROM messages WHERE chat_id = chats.id) AS last_message_id',
+                [$search, $search, $search, $search, $search, $search]
+            )
+            ->groupBy('chats.id')
+            ->having('all_weight', '>', 0)
+            ->orderBy('all_weight', 'desc')
+            ->orderBy('last_message_id', 'desc');
     }
 
     /**

@@ -36,39 +36,52 @@ class ChatController extends Controller
         ]);
 
         /**
-         * @var string $filter
-         * @var string|null $search
-         * @var int|null $count
-         * @var int|null $page
-         * @var string|null $sorting
+         * @var string $filter       Фильтрация, кем выступает пользователь - Заказчиком или Исполнителем
+         * @var string|null $search  Строка поиска
+         * @var int|null $count      Кол-во чатов на странице
+         * @var int|null $page       Номер страницы
+         * @var string|null $sorting Сортировка
+         * @var int $user_id         Код аутентифицированного пользователя
          */
         extract($data);
         $filter = $filter ?? 'all';
         $search = $search ?? '';
+        $count = $count ?? self::DEFAULT_PER_PAGE;
+        $page = $page ?? 1;
 
+        # формируем запрос
         $rows = Chat::interlocutors()
-            ->with([
-                'interlocutor:id,name,photo,scores_count,reviews_count',
-                'order:id,name,price,currency,price_usd,user_price_usd,images,status',
-                'last_message',
-                'last_message.user:id,name',
-            ])
-            ->withCount(['rate as is_delivered' => function ($query) {
+            ->when($filter == 'customer', function ($query) use ($user_id) {
+                return $query->where('customer_id', $user_id);
+            })
+            ->when($filter == 'performer', function ($query) use ($user_id) {
+                return $query->where('performer_id', $user_id);
+            })
+            ->when(empty($search), function ($query) {
+                return $query
+                    ->orderBy('chats.performer_unread_count', $sorting ?? self::DEFAULT_SORTING)
+                    ->orderBy('chats.customer_unread_count', $sorting ?? self::DEFAULT_SORTING)
+                    ->orderBy('chats.id', $sorting ?? self::DEFAULT_SORTING);
+            })
+            ->when(!empty($search), function ($query) use ($search, $user_id) {
+                return $query->bySearch($search, $user_id);
+            })
+           ->paginate($count, ['*'], 'page', $page);
+
+        # подгружаем связи
+        $rows->load([
+            'interlocutor:id,name,photo,scores_count,reviews_count',
+            'order:id,name,price,currency,price_usd,user_price_usd,images,status',
+            'last_message',
+            'last_message.user:id,name',
+        ]);
+
+        # узнаем, доставлен ли заказ
+        $rows->loadCount([
+            'rate AS is_delivered' => function ($query) {
                 $query->delivered();
-            }])
-            ->when($filter == 'customer', function ($query) {
-                return $query->where('customer_id', request()->user()->id);
-            })
-            ->when($filter == 'performer', function ($query) {
-                return $query->where('performer_id', request()->user()->id);
-            })
-            ->when(!empty($search), function ($query) use ($search) {
-                return $query->searchMessage($search);
-            })
-            ->orderBy('chats.performer_unread_count', $sorting ?? self::DEFAULT_SORTING)
-            ->orderBy('chats.customer_unread_count', $sorting ?? self::DEFAULT_SORTING)
-            ->orderBy('chats.id', $sorting ?? self::DEFAULT_SORTING)
-            ->paginate($count ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $page ?? 1);
+            }
+        ]);
 
         # убираем лишнее
         $rows->each(function ($chat) {
@@ -80,12 +93,14 @@ class ChatController extends Controller
             }
         });
 
+        # формируем ответ
         return response()->json([
             'status' => true,
             'count'  => $rows->total(),
             'page'   => $rows->currentPage(),
             'pages'  => $rows->lastPage(),
             'chats'  => null_to_blank($rows->toArray()['data']),
+            'sql'=>getSQLForFixDatabase()
         ]);
     }
 
