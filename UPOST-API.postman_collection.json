@@ -6737,7 +6737,7 @@
 									"formdata": [
 										{
 											"key": "rate_id",
-											"value": "10",
+											"value": "83",
 											"type": "text"
 										},
 										{
@@ -6785,7 +6785,7 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/reviews/show?author_id=30&recipient_type=customer&sorting=desc",
+									"raw": "{{host}}/{{endpoint}}/reviews/show?author_id=2&recipient_type=customer&sorting=desc",
 									"host": [
 										"{{host}}"
 									],
@@ -6803,7 +6803,7 @@
 										},
 										{
 											"key": "author_id",
-											"value": "30",
+											"value": "2",
 											"description": "Код автора відгука"
 										},
 										{
@@ -8737,7 +8737,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/notices/show?status=not_read&sorting=asc",
+									"raw": "{{host}}/{{endpoint}}/notices/show?status=not_read&sorting=asc&inner_sorting=asc",
 									"host": [
 										"{{host}}"
 									],
@@ -8755,7 +8755,12 @@
 										{
 											"key": "sorting",
 											"value": "asc",
-											"description": "Порядок сортировки (asc, desc)  (опционально)"
+											"description": "Порядок сортування дати створення нотифікації (asc, desc)  (опційно)"
+										},
+										{
+											"key": "inner_sorting",
+											"value": "asc",
+											"description": "Порядок сортування дати створення нотифікації (asc, desc)  (опційно)"
 										}
 									]
 								}
