@@ -57,34 +57,9 @@ class RecalcAmountInUSD implements ShouldQueue
 
         Log::channel('single')->info("Запуск...");
 
-        static::updateAmountUSDInRates();
         static::updateAmountUSDInOrders();
 
         Log::channel('single')->info("Выполнено");
-    }
-
-    /**
-     * Обновить сумму вознаграждения в долларовом эквиваленте по активным ставкам.
-     *
-     * @return void
-     */
-    public static function updateAmountUSDInRates()
-    {
-        Log::channel('single')->info("Cтавки:");
-
-        Rate::query()
-            ->active()
-            ->withoutAppends()
-            ->chunk(self::RATES_CHUNK_COUNT, function($rates) {
-                $updated = 0;
-                foreach ($rates as $rate) {
-                    $rate->amount_usd = convertPriceToUsd($rate->amount, $rate->currency);
-                    $rate->timestamps = false;
-                    if ($rate->isDirty()) $updated +=1;
-                    $rate->save();
-                }
-                Log::channel('single')->info(sprintf("- обновлено записей: %d из %d", $updated, count($rates)));
-            });
     }
 
     /**
@@ -100,6 +75,7 @@ class RecalcAmountInUSD implements ShouldQueue
         Order::query()
             ->active()
             ->withoutAppends()
+            ->withoutRelations()
             ->chunk(self::ORDERS_CHUNK_COUNT, function($orders) {
                 $updated = 0;
                 foreach ($orders as $order) {
