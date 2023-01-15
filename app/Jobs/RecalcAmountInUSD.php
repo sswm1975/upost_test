@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Order;
-use App\Models\Rate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,14 +11,12 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Пересчет долларового эквивалента по заказам и ставкам.
+ * Пересчет долларового эквивалента по заказам.
  *
  * Задание актуально после смены курсов валют.
- * Действия:
- * - обновляет суммы вознаграждения в долларовом эквиваленте (amount_usd) по активным ставкам;
- * - обновляет долларовый эквивалент цены (price_usd) и вознаграждения (user_price_usd) по активным заказам
- *   (если стоимость заказа в долларах изменится, то выполнится пересчет всех налогов и комиссий по заказу - подхватит
- *   наблюдатель OrderObserver).
+ * Действия: обновляет долларовый эквивалент цены (price_usd) по активным заказам
+ * (если стоимость заказа в долларах изменится, то выполнится пересчет всех налогов и комиссий по заказу - подхватит
+ * наблюдатель OrderObserver).
  */
 class RecalcAmountInUSD implements ShouldQueue
 {
@@ -38,13 +35,6 @@ class RecalcAmountInUSD implements ShouldQueue
      * @var int
      */
     const ORDERS_CHUNK_COUNT = 50;
-
-    /**
-     * Количество обрабатываемых ставок в блоке.
-     *
-     * @var int
-     */
-    const RATES_CHUNK_COUNT = 50;
 
     /**
      * Выполнить задание.
