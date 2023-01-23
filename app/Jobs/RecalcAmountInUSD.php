@@ -65,7 +65,6 @@ class RecalcAmountInUSD implements ShouldQueue
         Order::query()
             ->active()
             ->withoutAppends()
-            ->withoutRelations()
             ->chunk(self::ORDERS_CHUNK_COUNT, function($orders) {
                 $updated = 0;
                 foreach ($orders as $order) {
