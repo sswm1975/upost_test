@@ -27,10 +27,10 @@ use Illuminate\Support\Str;
  * @property int|null $products_count Количество товаров
  * @property string|null $description Описание заказа
  * @property array $images Фотографии заказа
- * @property int|null $from_country_id Код страны начала заказа
- * @property int|null $from_city_id Код города начала заказа
- * @property int|null $to_country_id Код страны окончания заказа
- * @property int|null $to_city_id Код города окончания заказа
+ * @property string $from_country_id Код страны откуда доставить заказ
+ * @property int|null $from_city_id Код города откуда доставить заказ
+ * @property string $to_country_id Код страны куда доставить заказ
+ * @property int|null $to_city_id Код города куда доставить заказ
  * @property string $register_date Дата регистрации
  * @property string|null $deadline Дата окончания заказа
  * @property int|null $wait_range_id Код диапазона ожидания
@@ -45,23 +45,23 @@ use Illuminate\Support\Str;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderDeduction[] $deductions
  * @property-read int|null $deductions_count
  * @property-read \App\Models\City|null $from_city
- * @property-read \App\Models\Country|null $from_country
+ * @property-read \App\Models\Country $from_country
  * @property-read array $images_medium
  * @property-read array $images_original
  * @property-read array $images_thumb
- * @property-read float|mixed $price_selected_currency
+ * @property-read string $price_selected_currency
  * @property-read string $selected_currency
  * @property-read string $short_name
  * @property-read string $status_name
  * @property-read string $total_amount
  * @property-read string $total_amount_selected_currency
  * @property-read string $total_amount_usd
- * @property-read float|mixed $user_price_selected_currency
+ * @property-read string $user_price_selected_currency
  * @property-read \App\Models\Rate|null $rate_confirmed
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
  * @property-read \App\Models\City|null $to_city
- * @property-read \App\Models\Country|null $to_country
+ * @property-read \App\Models\Country $to_country
  * @property-read \App\Models\User $user
  * @property-read \App\Models\WaitRange|null $wait_range
  * @method static \Illuminate\Database\Eloquent\Builder|Order active()
@@ -397,7 +397,7 @@ class Order extends Model
         $lang = app()->getLocale();
 
         return $this->belongsTo(Country::class, 'from_country_id', 'id')
-            ->select(['id', "name_{$lang} as name"])
+            ->select(['id', 'name_en', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -406,7 +406,7 @@ class Order extends Model
         $lang = app()->getLocale();
 
         return $this->belongsTo(City::class, 'from_city_id', 'id')
-            ->select(['id', "name_{$lang} as name"])
+            ->select(['id', 'name_en', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -415,7 +415,7 @@ class Order extends Model
         $lang = app()->getLocale();
 
         return $this->belongsTo(Country::class, 'to_country_id', 'id')
-            ->select(['id', "name_{$lang} as name"])
+            ->select(['id', 'name_en', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -424,7 +424,7 @@ class Order extends Model
         $lang = app()->getLocale();
 
         return $this->belongsTo(City::class, 'to_city_id', 'id')
-            ->select(['id', "name_{$lang} as name"])
+            ->select(['id', 'name_en', "name_{$lang} as name"])
             ->withDefault();
     }
 

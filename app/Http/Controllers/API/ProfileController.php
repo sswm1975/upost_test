@@ -6,9 +6,9 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Mail\SendTokenUserDataChange;
+use App\Models\City;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -89,14 +89,15 @@ class ProfileController extends Controller
     {
         return Validator::make($data,
             [
-                'name'     => 'sometimes|string|max:100',
-                'surname'  => 'sometimes|string|max:100',
-                'city_id'  => 'integer|exists:cities,id',
-                'status'   => 'in:' . implode(',', User::STATUSES),
-                'birthday' => 'date',
-                'gender'   => 'nullable|in:' . implode(',', User::GENDERS),
-                'photo'    => 'nullable|base64_image',
-                'resume'   => 'nullable|string|not_phone|censor',
+                'name'       => 'sometimes|string|max:100',
+                'surname'    => 'sometimes|string|max:100',
+                'country_id' => 'required|string|size:2|exists:countries,id',
+                'city'       => 'integer|city_name',
+                'status'     => 'in:' . implode(',', User::STATUSES),
+                'birthday'   => 'date',
+                'gender'     => 'nullable|in:' . implode(',', User::GENDERS),
+                'photo'      => 'nullable|base64_image',
+                'resume'     => 'nullable|string|not_phone|censor',
             ]
         );
     }
@@ -125,6 +126,9 @@ class ProfileController extends Controller
         if ($request->filled('resume')) {
             $data['resume'] = $this->processResume($data['resume']);
         }
+
+        $data['city_id'] = City::getId($data['country_id'], $data['city']);
+        unset($data['city']);
 
         $user->update($data);
 

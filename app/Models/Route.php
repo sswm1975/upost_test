@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\DB;
  *
  * @property int $id Код
  * @property int $user_id Код пользователя
- * @property int|null $from_country_id Код страны старта
+ * @property string $from_country_id Код страны старта
  * @property int|null $from_city_id Код города старта
- * @property int|null $to_country_id Код страны окончания
+ * @property string $to_country_id Код страны окончания
  * @property int|null $to_city_id Код города окончания
  * @property string|null $deadline Дата окончания маршрута
  * @property string $status Статус маршрута
@@ -26,14 +26,14 @@ use Illuminate\Support\Facades\DB;
  * @property \Illuminate\Support\Carbon|null $updated_at Дата обновления
  * @property \Illuminate\Support\Carbon|null $viewed_orders_at Дата просмотра заказов по маршруту
  * @property-read \App\Models\City|null $from_city
- * @property-read \App\Models\Country|null $from_country
+ * @property-read \App\Models\Country $from_country
  * @property-read string $status_name
  * @property-read \App\Models\Order|null $order
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
  * @property-read \App\Models\Review|null $review
  * @property-read \App\Models\City|null $to_city
- * @property-read \App\Models\Country|null $to_country
+ * @property-read \App\Models\Country $to_country
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Route active()
  * @method static \Illuminate\Database\Eloquent\Builder|Route existsCityInFromCity(array $cities)
@@ -113,7 +113,7 @@ class Route extends Model
         $lang = app()->getLocale();
 
         return $this->belongsTo(Country::class, 'from_country_id', 'id')
-            ->select(['id', "name_{$lang} as name"])
+            ->select(['id', 'name_en', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -122,7 +122,7 @@ class Route extends Model
         $lang = app()->getLocale();
 
         return $this->belongsTo(City::class, 'from_city_id', 'id')
-            ->select(['id', "name_{$lang} as name"])
+            ->select(['id', 'name_en', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -131,7 +131,7 @@ class Route extends Model
         $lang = app()->getLocale();
 
         return $this->belongsTo(Country::class, 'to_country_id', 'id')
-            ->select(['id', "name_{$lang} as name"])
+            ->select(['id', 'name_en', "name_{$lang} as name"])
             ->withDefault();
     }
 
@@ -140,7 +140,7 @@ class Route extends Model
         $lang = app()->getLocale();
 
         return $this->belongsTo(City::class, 'to_city_id', 'id')
-            ->select(['id', "name_{$lang} as name"])
+            ->select(['id', 'name_en', "name_{$lang} as name"])
             ->withDefault();
     }
 

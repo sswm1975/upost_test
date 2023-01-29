@@ -71,6 +71,14 @@ class AppServiceProvider extends ServiceProvider
         });
 
         /**
+         * Валидация: Проверка названия города (Regular Expressions for City name).
+         * Взято с https://stackoverflow.com/questions/11757013/regular-expressions-for-city-name
+         */
+        Validator::extend('city_name', function($attribute, $value, $parameters) {
+            return preg_match('/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/', $value) === 1;
+        });
+
+        /**
          * Валидация: Проверка base64 image-контента.
          */
         Validator::extend('base64_image', function ($attribute, $value, $parameters) {

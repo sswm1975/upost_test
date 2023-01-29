@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\OrderDeduction;
 use App\Models\Rate;
 use App\Models\Route;
@@ -28,9 +29,9 @@ class RouteController extends Controller
     {
         return [
             'from_country_id' => 'required|integer|exists:countries,id',
-            'from_city_id'    => 'sometimes|exists_or_null:cities,id,country_id,' . request('from_country_id',  0),
+            'from_city'       => 'sometimes|nullable|city_name',
             'to_country_id'   => 'required|integer|exists:countries,id',
-            'to_city_id'      => 'sometimes|exists_or_null:cities,id,country_id,' . request('to_country_id', 0),
+            'to_city'         => 'sometimes|nullable|city_name',
             'deadline'        => 'required|date|after_or_equal:'.date('Y-m-d'),
         ];
     }
@@ -46,6 +47,11 @@ class RouteController extends Controller
         if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
         $data = validateOrExit(self::rules4saveRoute());
+
+        $data['from_city_id'] = City::getId($data['from_country_id'], $data['from_city']);
+        $data['to_city_id'] = City::getId($data['to_country_id'], $data['to_city']);
+
+        unset($data['from_city'], $data['to_city']);
 
         $exists_route = Route::where($data)->count();
         if ($exists_route) throw new ErrorException(__('message.route_exists'));
@@ -74,6 +80,11 @@ class RouteController extends Controller
         }
 
         $data = validateOrExit(self::rules4saveRoute());
+
+        $data['from_city_id'] = City::getId($data['from_country_id'], $data['from_city']);
+        $data['to_city_id'] = City::getId($data['to_country_id'], $data['to_city']);
+
+        unset($data['from_city'], $data['to_city']);
 
         $affected = $route->update($data);
 

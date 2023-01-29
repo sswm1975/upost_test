@@ -74,12 +74,12 @@ class Calculations
      * Рассчитать налоги по заказу.
      *
      * @param string $type     Тип налога: export / import
-     * @param int $country_id  Страна
+     * @param string $country_id  Страна
      * @param float $amount    Сумма в долларах
      * @param int $order_id    Код заказа
      * @return array
      */
-    protected static function calcTaxes(string $type, int $country_id, float $amount, int $order_id): array
+    protected static function calcTaxes(string $type, string $country_id, float $amount, int $order_id): array
     {
         # узнаем список налогов по коду страны
         $taxes = Tax::$type($country_id)->toArray();

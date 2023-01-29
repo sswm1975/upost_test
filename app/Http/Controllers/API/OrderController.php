@@ -6,6 +6,7 @@ use App\Events\OrderBanned;
 use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\Country;
 use App\Models\Order;
 use App\Models\Rate;
@@ -76,20 +77,20 @@ class OrderController extends Controller
     protected static function rules4saveOrder(): array
     {
         return [
-            'name'           => 'required|string|censor|max:100',
-            'product_link'   => 'sometimes|nullable|string|max:1000|url',
-            'price'          => 'required|numeric',
-            'currency'       => 'required|in:' . implode(',', config('app.currencies')),
-            'products_count' => 'required|integer',
-            'description'    => 'sometimes|nullable|string|not_phone|censor|max:5000',
-            'from_country_id'=> 'required|integer|exists:countries,id',
-            'from_city_id'   => 'sometimes|nullable|integer|exists:cities,id,country_id,' . request('from_country_id',  0),
-            'to_country_id'  => 'required|integer|exists:countries,id',
-            'to_city_id'     => 'sometimes|nullable|integer|exists:cities,id,country_id,' . request('to_country_id', 0),
-            'wait_range_id'  => 'required|integer|exists:wait_ranges,id,active,1',
-            'user_price_usd' => 'required|numeric|min:10',
-            'not_more_price' => 'required|boolean',
-            'images'         => 'required|array|max:8',
+            'name'            => 'required|string|censor|max:100',
+            'product_link'    => 'sometimes|nullable|string|max:1000|url',
+            'price'           => 'required|numeric',
+            'currency'        => 'required|in:' . implode(',', config('app.currencies')),
+            'products_count'  => 'required|integer',
+            'description'     => 'sometimes|nullable|string|not_phone|censor|max:5000',
+            'from_country_id' => 'required|string|size:2|exists:countries,id',
+            'from_city'       => 'sometimes|nullable|city_name',
+            'to_country_id'   => 'required|string|size:2|exists:countries,id',
+            'to_city'         => 'sometimes|nullable|city_name',
+            'wait_range_id'   => 'required|integer|exists:wait_ranges,id,active,1',
+            'user_price_usd'  => 'required|numeric|min:10',
+            'not_more_price'  => 'required|boolean',
+            'images'          => 'required|array|max:8',
         ];
     }
 
@@ -105,6 +106,11 @@ class OrderController extends Controller
         if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
         $data = validateOrExit(self::rules4saveOrder());
+
+        $data['from_city_id'] = City::getId($data['from_country_id'], $data['from_city']);
+        $data['to_city_id'] = City::getId($data['to_country_id'], $data['to_city']);
+
+        unset($data['from_city'], $data['to_city']);
 
         /*
         // в комменте https://app.asana.com/0/0/1203522478775625/1203546293769110/f решено вообще убрать проверку на дубль
@@ -140,6 +146,11 @@ class OrderController extends Controller
         }
 
         $data = validateOrExit(self::rules4saveOrder());
+
+        $data['from_city_id'] = City::getId($data['from_country_id'], $data['from_city']);
+        $data['to_city_id'] = City::getId($data['to_country_id'], $data['to_city']);
+
+        unset($data['from_city'], $data['to_city']);
 
         static::checkExistsImages($data['images']);
 
@@ -404,7 +415,6 @@ class OrderController extends Controller
         return response()->json([
             'status'                => true,
             'order'                 => null_to_blank($order),
-            'countries_with_cities' => Country::getCountriesWithCities(),
             'wait_ranges'           => WaitRange::getWaitRanges(),
         ]);
     }

@@ -22,6 +22,7 @@ use App\Models\Traits\TimestampSerializable;
  * @property string $password Пароль
  * @property string|null $name Имя пользователя
  * @property string|null $surname Фамилия пользователя
+ * @property string|null $country_id Код страны
  * @property int|null $city_id Код города
  * @property string $status Статус
  * @property string|null $card_number Номер банковской карты
@@ -32,7 +33,7 @@ use App\Models\Traits\TimestampSerializable;
  * @property string|null $currency Валюта
  * @property string|null $validation Признак проверки пользователя
  * @property string|null $role Роль
- * @property string|null $photo Ссылка на фотографию (аватар)
+ * @property string $photo Ссылка на фотографию (аватар)
  * @property string|null $resume Биография/Резюме
  * @property string $wallet Баланс в долларах
  * @property int $scores_count Количество баллов
@@ -78,6 +79,7 @@ use App\Models\Traits\TimestampSerializable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCardName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCardNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCountryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
@@ -177,6 +179,7 @@ class User extends Authenticatable
         'reviews_count',        # количество отзывов
         'failed_delivery_count',# количество неудачных доставок
         'failed_receive_count', # количество неудачных получений
+        'country_id',           # країна
         'city_id',              # місто
         'validation',           # статус верифікації даних користувача
     ];

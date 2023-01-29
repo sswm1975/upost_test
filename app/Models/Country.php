@@ -9,16 +9,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * App\Models\Country
  *
- * @property int $id Код
+ * @property string $id ISO 3166-1 alpha-2 code
+ * @property string $alpha3 ISO 3166-1 alpha-3 code
+ * @property string $code ISO 3166-1 num-3 code
+ * @property string $name_en Наименование на английском
  * @property string $name_uk Наименование на украинском
  * @property string $name_ru Наименование на русском
- * @property string $name_en Наименование на английском
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\City[] $cities
  * @property-read int|null $cities_count
  * @method static Builder|Country language()
  * @method static Builder|Country newModelQuery()
  * @method static Builder|Country newQuery()
  * @method static Builder|Country query()
+ * @method static Builder|Country whereAlpha3($value)
+ * @method static Builder|Country whereCode($value)
  * @method static Builder|Country whereId($value)
  * @method static Builder|Country whereNameEn($value)
  * @method static Builder|Country whereNameRu($value)
@@ -29,7 +33,8 @@ class Country extends Model
 {
     protected $table = 'countries';
     protected $primaryKey = 'id';
-    protected $fillable  = ['name_uk', 'name_ru', 'name_en'];
+    protected $keyType = 'string';
+    public $incrementing = false;
     public $timestamps = false;
 
     /**
@@ -59,10 +64,10 @@ class Country extends Model
     /**
      * Получить список всех стран.
      *
-     * @param int $country_id
+     * @param string $country_id
      * @return array
      */
-    public static function getCountries(int $country_id = 0): array
+    public static function getCountries(string $country_id = null): array
     {
         return static::query()
             ->when(!empty($country_id), function ($query) use ($country_id) {

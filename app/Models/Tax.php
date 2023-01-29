@@ -22,12 +22,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Country[] $import_countries
  * @property-read int|null $import_countries_count
  * @method static \Illuminate\Database\Eloquent\Builder|Tax active()
- * @method static \Illuminate\Database\Eloquent\Builder|Tax export(int $country_id)
- * @method static \Illuminate\Database\Eloquent\Builder|Tax import(int $country_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax export(string $country_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax import(string $country_id)
  * @method static \Illuminate\Database\Eloquent\Builder|Tax newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tax newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tax query()
- * @method static \Illuminate\Database\Eloquent\Builder|Tax taxesForRelation(string $relation, int $country_id)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax taxesForRelation(string $relation, string $country_id)
  * @method static \Illuminate\Database\Eloquent\Builder|Tax whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tax whereAlias($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tax whereCode($value)
@@ -73,10 +73,10 @@ class Tax extends Model
      *
      * @param $query
      * @param string $relation  Типы связей: export_countries / import_countries
-     * @param int $country_id   Код страны
+     * @param string $country_id   Код страны
      * @return mixed
      */
-    public function scopeTaxesForRelation($query, string $relation, int $country_id)
+    public function scopeTaxesForRelation($query, string $relation, string $country_id)
     {
         return $query->active()
             ->whereHas($relation, function($q) use ($country_id) {
@@ -89,10 +89,10 @@ class Tax extends Model
      * Действующие налоги экспорта для выбранной страны.
      *
      * @param $query
-     * @param int $country_id Код страны
+     * @param string $country_id Код страны
      * @return mixed
      */
-    public function scopeExport($query, int $country_id)
+    public function scopeExport($query, string $country_id)
     {
         return $query->taxesForRelation('export_countries', $country_id);
     }
@@ -101,10 +101,10 @@ class Tax extends Model
      * Действующие налоги импорта для выбранной страны.
      *
      * @param $query
-     * @param int $country_id Код страны
+     * @param string $country_id Код страны
      * @return mixed
      */
-    public function scopeImport($query, int $country_id)
+    public function scopeImport($query, string $country_id)
     {
         return $query->taxesForRelation('import_countries', $country_id);
     }

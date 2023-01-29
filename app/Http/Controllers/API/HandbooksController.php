@@ -38,8 +38,6 @@ class HandbooksController extends Controller
 
         return response()->json([
             'status'                => true,
-            'countries'             => Country::getCountries(),
-            'countries_with_cities' => Country::getCountriesWithCities(),
             'prices'                => $prices,
             'wait_ranges'           => WaitRange::getWaitRanges(),
             'complaints'            => Complaint::getComplaints(),
