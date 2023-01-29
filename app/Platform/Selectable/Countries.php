@@ -13,10 +13,19 @@ class Countries extends Selectable
     public function make()
     {
         $this->column('id', 'Код');
-        $this->column('name_ru', 'Название');
+        $this->column('name_en', 'Название EN');
+        $this->column('name_uk', 'Название UK');
+        $this->column('name_ru', 'Название RU');
 
         $this->filter(function (Filter $filter) {
-            $filter->like('name_ru');
+            $filter->disableIdFilter();
+            $filter->equal('id', 'Код')->placeholder('Код страны');
+            $filter->where(function ($query) {
+                $query->where('name_en', 'like', "%{$this->input}%");
+                $query->orwhere('name_uk', 'like', "%{$this->input}%");
+                $query->orwhere('name_ru', 'like', "%{$this->input}%");
+            }, 'Название')->placeholder('Название страны');
+
         });
     }
 
@@ -24,7 +33,7 @@ class Countries extends Selectable
     {
         return function ($value) {
             if (is_array($value)) {
-                return implode(';', array_column($value,'name_ru'));
+                return implode(';', array_column($value,'id'));
             }
 
             return '';
