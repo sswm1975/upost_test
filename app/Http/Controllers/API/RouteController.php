@@ -28,9 +28,9 @@ class RouteController extends Controller
     protected static function rules4saveRoute(): array
     {
         return [
-            'from_country_id' => 'required|integer|exists:countries,id',
+            'from_country_id' => 'required|string|size:2|exists:countries,id',
             'from_city'       => 'sometimes|nullable|city_name',
-            'to_country_id'   => 'required|integer|exists:countries,id',
+            'to_country_id'   => 'required|string|size:2|exists:countries,id',
             'to_city'         => 'sometimes|nullable|city_name',
             'deadline'        => 'required|date|after_or_equal:'.date('Y-m-d'),
         ];
