@@ -91,8 +91,8 @@ class ProfileController extends Controller
             [
                 'name'       => 'sometimes|string|max:100',
                 'surname'    => 'sometimes|string|max:100',
-                'country_id' => 'required|string|size:2|exists:countries,id',
-                'city'       => 'integer|city_name',
+                'country_id' => 'sometimes|nullable|string|size:2|exists:countries,id',
+                'city'       => 'sometimes|nullable|city_name',
                 'status'     => 'in:' . implode(',', User::STATUSES),
                 'birthday'   => 'date',
                 'gender'     => 'nullable|in:' . implode(',', User::GENDERS),

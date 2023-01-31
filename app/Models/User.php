@@ -179,8 +179,8 @@ class User extends Authenticatable
         'reviews_count',        # количество отзывов
         'failed_delivery_count',# количество неудачных доставок
         'failed_receive_count', # количество неудачных получений
-        'country_id',           # країна
-        'city_id',              # місто
+        'country_id',           # країна проживання
+        'city_id',              # місто проживання
         'validation',           # статус верифікації даних користувача
     ];
 
@@ -192,7 +192,8 @@ class User extends Authenticatable
     const FIELDS_FOR_EDIT = [
         'name',                 # ім'я
         'surname',              # прізвище
-        'city_id',              # код міста проживання
+        'country_id',           # країна проживання
+        'city',                 # місто проживання
         'status',               # статус
         'birthday',             # дата народження
         'gender',               # стать

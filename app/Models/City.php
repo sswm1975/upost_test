@@ -52,8 +52,8 @@ class City extends Model
     {
         $lang = app()->getLocale();
 
-        return $this->belongsTo(Country::class, 'country', 'id')
-            ->select(['id', "name_{$lang} as name"]);
+        return $this->belongsTo(Country::class, 'country_id', 'id')
+            ->select(['id', 'name_en', "name_{$lang} as name"]);
     }
 
     ### QUERIES ###
@@ -67,9 +67,9 @@ class City extends Model
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function getId(string $country_id, string $name_en = null)
+    public static function getId(string $country_id = null, string $name_en = null)
     {
-        if (empty($name_en)) return null;
+        if (empty($country_id) || empty($name_en)) return null;
 
         $city_id = static::whereCountryId($country_id)->whereNameEn($name_en)->value('id');
 
