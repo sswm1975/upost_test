@@ -58,12 +58,19 @@ class PurseController extends Controller
             ->paginate(self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page-number'] ?? 1)
             ->toArray();
 
+        # вывод средств на карту - общая сумма всех транзакций со статусом "NEW" (см. https://app.asana.com/0/1202451331926444/1203863394246899/f)
+        $total = Payment::query()
+            ->where('payments.user_id', $user_id)
+            ->where('status', Payment::STATUS_NEW)
+            ->sum('amount');
+
         return response()->json([
             'status'       => true,
             'transactions' => null_to_blank($transactions['data']),
             'count'        => $transactions['total'],
             'page'         => $transactions['current_page'],
             'pages'        => $transactions['last_page'],
+            'total'        => $total,
         ]);
     }
 }
