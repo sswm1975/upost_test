@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Modules\MapsGoogleApi;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -74,16 +75,8 @@ class City extends Model
         $city_id = static::whereCountryId($country_id)->whereNameEn($name_en)->value('id');
 
         if (empty($city_id)) {
-            $client = new \GuzzleHttp\Client();
-
-            $response = $client->get("https://maps.googleapis.com/maps/api/geocode/json?address={$name_en},{$country_id}&sensor=false&language=uk&key=AIzaSyBTHIhhEBXmj8WFOhKzC28mi1hEe8MOPyU");
-            $json = json_decode($response->getBody());
-            $name_uk = $json->results[0]->address_components[0]->long_name;
-
-            $response = $client->get("https://maps.googleapis.com/maps/api/geocode/json?address={$name_en},{$country_id}&sensor=false&language=ru&key=AIzaSyBTHIhhEBXmj8WFOhKzC28mi1hEe8MOPyU");
-            $json = json_decode($response->getBody());
-            $name_ru = $json->results[0]->address_components[0]->long_name;
-
+            $name_uk = MapsGoogleApi::getCitiNameInLanguage($name_en, $country_id, 'uk');
+            $name_ru = MapsGoogleApi::getCitiNameInLanguage($name_en, $country_id, 'ru');
             $city_id = static::insertGetId(compact('country_id','name_en', 'name_uk', 'name_ru'));
         }
 
