@@ -7,8 +7,6 @@ use GuzzleHttp\Client;
 
 class MapsGoogleApi
 {
-    const KEY = 'AIzaSyBTHIhhEBXmj8WFOhKzC28mi1hEe8MOPyU';
-
     public static function getCitiNameInLanguage(string $city_en = null, string $country = null, string $language = 'en')
     {
         if (empty($city_en) || empty($country)) return null;
@@ -17,7 +15,7 @@ class MapsGoogleApi
             $city_en,
             $country,
             $language,
-            self::KEY
+            config('maps_google_api_key', '')
         );
 
         try {
