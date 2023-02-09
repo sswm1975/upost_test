@@ -56,6 +56,8 @@ class PasswordController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
+        unset($credentials['user_id']);
+
         $status = Password::reset($credentials, function ($user, $password) {
             $user->forceFill(['password' => $password])->save();
 
