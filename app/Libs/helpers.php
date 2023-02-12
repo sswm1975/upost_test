@@ -604,3 +604,25 @@ function active_notice_type(string $notice_type): bool
 {
     return config("notice_types.{$notice_type}.active", false);
 }
+
+/**
+ * Перевірка на співпадання переданих Країна/Місто (from/to).
+ *
+ * @param $from_country_id
+ * @param $from_city_id
+ * @param $to_country_id
+ * @param $to_city_id
+ * @return bool
+ */
+function isEqualCountryAndCity($from_country_id, $from_city_id, $to_country_id, $to_city_id): bool
+{
+    if (empty($from_country_id) || empty($to_country_id)) {
+        return true;
+    }
+
+    if ($from_country_id == $to_country_id && ($from_city_id ?? 0) == ($to_city_id ?? 0)) {
+        return true;
+    }
+
+    return false;
+}

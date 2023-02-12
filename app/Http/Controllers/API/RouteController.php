@@ -51,6 +51,10 @@ class RouteController extends Controller
         $data['from_city_id'] = City::getId($data['from_country_id'], $data['from_city']);
         $data['to_city_id'] = City::getId($data['to_country_id'], $data['to_city']);
 
+        if (isEqualCountryAndCity($data['from_country_id'], $data['from_city_id'], $data['to_country_id'], $data['to_city_id'])) {
+            throw new ErrorException(__('message.start_and_end_points_match'));
+        }
+
         unset($data['from_city'], $data['to_city']);
 
         $exists_route = Route::where($data)->count();
@@ -83,6 +87,10 @@ class RouteController extends Controller
 
         $data['from_city_id'] = City::getId($data['from_country_id'], $data['from_city']);
         $data['to_city_id'] = City::getId($data['to_country_id'], $data['to_city']);
+
+        if (isEqualCountryAndCity($data['from_country_id'], $data['from_city_id'], $data['to_country_id'], $data['to_city_id'])) {
+            throw new ErrorException(__('message.start_and_end_points_match'));
+        }
 
         unset($data['from_city'], $data['to_city']);
 

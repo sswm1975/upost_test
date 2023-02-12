@@ -49,6 +49,7 @@ return [
     'data_not_changed'        => 'The data has not changed.',
     'update_denied'           => 'Update denied.',
     'file_not_exists'         => 'The file does not exist: ',
+    'start_and_end_points_match' => 'Start and end points match.',
 
     'verification_code' => [
         'incorrect'         => 'Verification code is incorrect',

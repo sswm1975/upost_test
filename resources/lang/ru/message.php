@@ -49,6 +49,7 @@ return [
     'data_not_changed'        => 'Данные не изменились.',
     'update_denied'           => 'Обновление отклонено.',
     'file_not_exists'         => 'Файл не существует: ',
+    'start_and_end_points_match' => 'Совпадают начальные и конечные пункты.',
 
     'verification_code' => [
         'incorrect'         => 'Код подтверждения неверен',
