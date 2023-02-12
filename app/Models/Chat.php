@@ -478,12 +478,9 @@ class Chat extends Model
             $message->save();
         }
 
-        self::whereKey($chat_id)->update(
-            array_merge([
-                'customer_unread_count'  => DB::raw('customer_unread_count + ' . count($alias)),
-                'performer_unread_count' => DB::raw('performer_unread_count + ' . count($alias)),
-            ], $extra)
-        );
+        if (! empty($extra)) {
+            self::whereKey($chat_id)->update($extra);
+        }
 
         return true;
     }

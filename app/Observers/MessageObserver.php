@@ -24,16 +24,44 @@ class MessageObserver
         }
 
         $auth_user_id = request()->user()->id ?? 0;
-        $chat = Chat::find($message->chat_id, ['id', 'customer_id', 'performer_id', 'customer_unread_count', 'performer_unread_count']);
+        $chat = Chat::find($message->chat_id);
+
+        # для статуса блокировки
+        $extra = [];
 
         # увеличиваем счетчик непрочитанных сообщений и броадкастим его
         if (empty($auth_user_id) || $auth_user_id == $chat->performer_id) {
-            $chat->increment('customer_unread_count');
+            if ($auth_user_id == $chat->performer_id) {
+                # исполнителю было разрешено одно сообщение - меняем на блокировку всем
+                if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_PERFORMER) {
+                    $extra = ['lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL];
+                }
+                # всем было разрешено одно сообщение - меняем на разрешено заказчику одно сообщение
+                if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ALL) {
+                    $extra = ['lock_status' => Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_CUSTOMER];
+                }
+            }
+            $chat->increment('customer_unread_count', 1, $extra);
             Chat::broadcastCountUnreadMessages($chat->customer_id);
         }
         if (empty($auth_user_id) || $auth_user_id == $chat->customer_id) {
-            $chat->increment('performer_unread_count');
+            if ($auth_user_id == $chat->customer_id) {
+                # заказчику было разрешено одно сообщение - меняем на блокировку всем
+                if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_CUSTOMER) {
+                    $extra = ['lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL];
+                }
+                # всем было разрешено одно сообщение - меняем на разрешено исполнителю одно сообщение
+                if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ALL) {
+                    $extra = ['lock_status' => Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_PERFORMER];
+                }
+            }
+            $chat->increment('performer_unread_count', 1, $extra);
             Chat::broadcastCountUnreadMessages($chat->performer_id);
+        }
+
+        # если существует спор, то увеличиваем счетчик непрочитанных сообщений менеджером спора
+        if (!empty($chat->dispute)) {
+            $chat->dispute->increment('unread_messages_count');
         }
 
         # добавляем события "Сообщение создано" и "Сообщение получено"
@@ -53,7 +81,7 @@ class MessageObserver
         Action::create([
             'user_id'  => $recipient_id,
             'is_owner' => $auth_user_id == $message->user_id,
-            'name'     => $auth_user_id == $message->user_id ? Action::MESSAGE_CREATED : Action::MESSAGE_RECEIVED,
+            'name'     => $recipient_id == $message->user_id ? Action::MESSAGE_CREATED : Action::MESSAGE_RECEIVED,
             'changed'  => $message->getChanges(),
             'data'     => $message,
         ]);

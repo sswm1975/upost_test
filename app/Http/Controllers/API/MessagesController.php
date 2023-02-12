@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
-use App\Models\Dispute;
 use App\Models\Message;
 use App\Models\Order;
 use App\Models\Rate;
@@ -56,44 +55,11 @@ class MessagesController extends Controller
             ]);
         }
 
-        Message::create($data);
-
-        # меняем статусы блокировки
-        $extra = [];
-        if ($auth_user_id == $chat->customer_id) {
-            # заказчику было разрешено одно сообщение - меняем на блокировку всем
-            if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_CUSTOMER) {
-                $extra = ['lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL];
-            }
-            # всем было разрешено одно сообщение - меняем на разрешено исполнителю одно сообщение
-            if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ALL) {
-                $extra = ['lock_status' => Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_PERFORMER];
-            }
-        }
-        if ($auth_user_id == $chat->performer_id) {
-            # исполнителю было разрешено одно сообщение - меняем на блокировку всем
-            if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_PERFORMER) {
-                $extra = ['lock_status' => Chat::LOCK_STATUS_ADD_MESSAGE_LOCK_ALL];
-            }
-            # всем было разрешено одно сообщение - меняем на разрешено заказчику одно сообщение
-            if ($chat->lock_status == Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ALL) {
-                $extra = ['lock_status' => Chat::LOCK_STATUS_PERMIT_ONE_MESSAGE_ONLY_CUSTOMER];
-            }
-        }
-
-        $chat->increment($auth_user_id == $chat->performer_id ? 'customer_unread_count' : 'performer_unread_count', 1, $extra);
-
-        $recipient_id = $auth_user_id == $chat->performer_id ? $chat->customer_id : $chat->performer_id;
-        Chat::broadcastCountUnreadMessages($recipient_id);
-
-        # если существует спор, то увеличиваем счетчик непрочитанных сообщений менеджером спора
-        if (Dispute::existsForChat($chat->id)) {
-            $chat->dispute->increment('unread_messages_count');
-        }
+        $message = Message::create($data);
 
         return response()->json([
             'status' => true,
-            'lock_status' => $chat->lock_status,
+            'lock_status' => $message->chat->lock_status,
         ]);
     }
 
