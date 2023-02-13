@@ -54,6 +54,7 @@ class NoticeType extends Model
     const PROFILE_NOT_FILLED = 'profile_not_filled';         # Профиль не заполнен
     const EXISTS_NEW_ORDERS = 'exists_new_orders';           # Существуют новые заказы по маршруту
     const SERVICE_NOTICE = 'service_notice';                 # Сервисное уведомление
+    const ROUTE_CLOSED = 'route_closed';                     # Закрыт маршрут
 
     public static function boot()
     {

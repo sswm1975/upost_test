@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Action;
+use App\Models\Notice;
+use App\Models\NoticeType;
 use App\Models\Route;
 
 class RouteObserver
@@ -28,6 +30,21 @@ class RouteObserver
     {
         # изменился статус маршрута
         if ($route->wasChanged(['status'])) {
+
+            # если закрыт маршрут
+            if ($route->status == Route::STATUS_CLOSED) {
+
+                #  создаем уведомление "Закрыт маршрут"
+                if (active_notice_type($notice_type = NoticeType::ROUTE_CLOSED)) {
+                    Notice::create([
+                        'user_id'     => $route->user_id,
+                        'notice_type' => $notice_type,
+                        'object_id'   => $route->id,
+                        'data'        => ['route' => $route]
+                    ]);
+                }
+            }
+
             $this->addAction($route, Action::ROUTE_STATUS_CHANGED);
         }
 
