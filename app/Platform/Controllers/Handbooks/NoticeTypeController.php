@@ -18,6 +18,12 @@ class NoticeTypeController extends AdminController
         ['text' => 'Справочники', 'icon' => 'book'],
     ];
 
+    const MODES = [
+        'scheduler' => 'Планировщик',
+        'event' => 'Событие',
+        'manually' => 'Вручную',
+    ];
+
     public function menu(): array
     {
         $counts = NoticeType::selectRaw('active, count(1) as total')
@@ -62,7 +68,7 @@ class NoticeTypeController extends AdminController
                 return !empty($model->description) ? $model->description : 'Нет описания';
             })
             ->sortable();
-        $grid->column('mode', 'Режим')->filter(['scheduler' => 'Планировщик', 'event' => 'Событие', 'manually' => 'Вручную']);
+        $grid->column('mode', 'Режим')->filter(self::MODES);
         $grid->column('text', 'Уведомление')
             ->display(function () {
                 return sprintf('<span class="label label-warning">🇺🇦</span> %s<br><span class="label label-danger">🇷🇺</span> %s<br><span class="label label-primary">🇬🇧</span> %s',
@@ -95,6 +101,7 @@ class NoticeTypeController extends AdminController
         $form->text('text_ru', 'Уведомление 🇷🇺')->required();
         $form->text('text_en', 'Уведомление 🇬🇧')->required();
         $form->ckeditor('description', 'Описание');
+        $form->select('mode', 'Режим')->options(self::MODES)->required();
         $form->switch('active', 'Действует')->default(1)->states(SWITCH_YES_NO);
 
         return $form;
