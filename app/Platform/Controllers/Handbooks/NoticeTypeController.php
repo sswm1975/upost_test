@@ -71,6 +71,7 @@ class NoticeTypeController extends AdminController
         $grid->column('mode', 'Режим')->filter(self::MODES);
         $grid->column('text', 'Уведомление')
             ->display(function () {
+                /** @var NoticeType $this */
                 return sprintf('<span class="label label-warning">🇺🇦</span> %s<br><span class="label label-danger">🇷🇺</span> %s<br><span class="label label-primary">🇬🇧</span> %s',
                     $this->text_uk,
                     $this->text_ru,
