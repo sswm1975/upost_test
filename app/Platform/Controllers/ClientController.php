@@ -18,6 +18,7 @@ class ClientController extends AdminController
      *
      * @return array
      */
+/*
     public function menu(): array
     {
         $counts = User::selectRaw('status, count(1) as total')
@@ -36,6 +37,7 @@ class ClientController extends AdminController
 
         return compact('statuses');
     }
+*/
 
     /**
      * Make a grid builder.
@@ -52,7 +54,6 @@ class ClientController extends AdminController
         $grid->disableExport(false);
         $grid->disableColumnSelector(false);
         $grid->disableCreateButton();
-        $grid->paginate(20);
 
         # FILTERS
         $grid->filter(function ($filter) {
@@ -94,10 +95,10 @@ class ClientController extends AdminController
 
         $grid->quickSearch(function ($model, $query) {
             $model->where(function($model) use ($query) {
-                $model->where('name', 'like', "%{$query}%")
-                    ->orWhere('surname', 'like', "%{$query}%")
-                    ->orWhere('phone', 'like', "%{$query}%")
-                    ->orWhere('email', 'like', "%{$query}%");
+                $model->where('name', 'like', "%$query%")
+                    ->orWhere('surname', 'like', "%$query%")
+                    ->orWhere('phone', 'like', "%$query%")
+                    ->orWhere('email', 'like', "%$query%");
             });
         })->placeholder('Поиск по имени, телефону, емейлу');
 
@@ -129,7 +130,7 @@ class ClientController extends AdminController
             ->label(['unknown' => 'danger', 'male' => 'primary', 'female' => 'warning'])
             ->sortable();
         $grid->column('birthday', 'Дата рождения')->sortable();
-        $grid->column('city.name', 'Город');
+//        $grid->column('city.name', 'Город');
         $grid->column('wallet', 'Баланс')->filter('range')->setAttributes(['align'=>'right'])->sortable();
         $grid->column('currency', 'Валюта')
             ->filter(array_combine(config('app.currencies'), config('app.currencies')))
@@ -144,21 +145,22 @@ class ClientController extends AdminController
         $grid->column('card_name', 'Имя на карте')->sortable();
         $grid->column('resume_modal', 'Резюме')
             ->modal('Резюме', function () {
+                /** @var User $this */
                 $resume = $this->resume ?: '<h3>Резюме не заполнено</h3>';
                 return "
                     <div>
                         <div style='width: 20%; float: left; padding-right: 10px;'>
-                            <img src='$this->photo' class='img img-thumbnail'>
+                            <img src='$this->photo' class='img img-thumbnail' alt=''>
                         </div>
                         <div style='width: 80%; float: left; text-align: left;'>
-                            {$resume}
+                            $resume
                         </div>
                         <div style='clear:both; line-height: 0;'></div>
                     </div>
                 ";
             })
             ->setAttributes(['align'=>'center']);
-        $grid->column('status', 'Статус')->showOtherField('status_name')->sortable();
+//        $grid->column('status', 'Статус')->showOtherField('status_name')->sortable();
         $grid->column('validation', 'Валидация')->showOtherField('validation_name')->sortable();
         $grid->column('register_date', 'Зарегистрирован')->sortable();
         $grid->column('last_active', 'Последняя активность')->sortable();
@@ -187,7 +189,6 @@ class ClientController extends AdminController
      */
     protected function detail($id): Show
     {
-        dd(User::findOrFail($id));
         return $this->showFields(User::findOrFail($id));
     }
 }
