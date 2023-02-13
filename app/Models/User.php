@@ -116,17 +116,22 @@ class User extends Authenticatable
 
     protected $guarded = ['id'];
     protected $dates = ['last_active'];
+    protected $hidden = [
+        'status',               # статус
+        'country_id',           # країна проживання
+        'city_id',              # місто проживання
+    ];
     protected $appends = [
         'short_name',
         'full_name',
-        'status_name',
+//        'status_name',
         'gender_name',
         'validation_name',
         'photo_thumb',
         'photo_original',
         'register_date_human',
         'last_active_human',
-        'age',
+//        'age',
         'rating',
     ];
 
@@ -170,7 +175,7 @@ class User extends Authenticatable
         'surname',              # прізвище
         'register_date',        # дата реєстрації
         'last_active',          # час останньої активності
-        'status',               # статус
+//        'status',               # статус
         'birthday',             # день народження
         'gender',               # стать
         'photo',                # фото
@@ -179,8 +184,8 @@ class User extends Authenticatable
         'reviews_count',        # количество отзывов
         'failed_delivery_count',# количество неудачных доставок
         'failed_receive_count', # количество неудачных получений
-        'country_id',           # країна проживання
-        'city_id',              # місто проживання
+//        'country_id',           # країна проживання
+//        'city_id',              # місто проживання
         'validation',           # статус верифікації даних користувача
     ];
 
@@ -192,9 +197,9 @@ class User extends Authenticatable
     const FIELDS_FOR_EDIT = [
         'name',                 # ім'я
         'surname',              # прізвище
-        'country_id',           # країна проживання
-        'city',                 # місто проживання
-        'status',               # статус
+//        'country_id',           # країна проживання
+//        'city',                 # місто проживання
+//        'status',               # статус
         'birthday',             # дата народження
         'gender',               # стать
         'photo',                # фото

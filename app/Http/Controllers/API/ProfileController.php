@@ -56,7 +56,7 @@ class ProfileController extends Controller
         # удаляем поля с паролем и токеном
         unset($user->password, $user->api_token);
 
-        $user->load(['city.country']);
+//        $user->load(['city.country']);
         $user->loadCount(['orders', 'routes']);
 
         # добавляем последние 2 заказа, созданные пользователем
@@ -91,9 +91,9 @@ class ProfileController extends Controller
             [
                 'name'       => 'sometimes|string|max:100',
                 'surname'    => 'sometimes|string|max:100',
-                'country_id' => 'sometimes|nullable|string|size:2|exists:countries,id',
-                'city'       => 'sometimes|nullable|city_name',
-                'status'     => 'in:' . implode(',', User::STATUSES),
+//                'country_id' => 'sometimes|nullable|string|size:2|exists:countries,id',
+//                'city'       => 'sometimes|nullable|city_name',
+//                'status'     => 'in:' . implode(',', User::STATUSES),
                 'birthday'   => 'date',
                 'gender'     => 'nullable|in:' . implode(',', User::GENDERS),
                 'photo'      => 'nullable|base64_image',
@@ -127,8 +127,8 @@ class ProfileController extends Controller
             $data['resume'] = $this->processResume($data['resume']);
         }
 
-        $data['city_id'] = City::getId($data['country_id'], $data['city']);
-        unset($data['city']);
+//        $data['city_id'] = City::getId($data['country_id'], $data['city']);
+//        unset($data['city']);
 
         $user->update($data);
 

@@ -185,7 +185,7 @@ class AuthController extends Controller
         unset($user->password, $user->api_token);
 
         # добавляем страну/город пользователя
-        $user->load(['city.country']);
+//        $user->load(['city.country']);
 
         return response()->json([
             'status' => true,
