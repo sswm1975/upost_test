@@ -399,7 +399,7 @@ class RateController extends Controller
         $rate->viewed_by_customer = true;
         $rate->chat_id = $chat->id;
         $rate->save();
-        $rate->order->update(['status' => Order::STATUS_IN_WORK]);
+        $rate->order->update(['user_price_usd' => $rate->amount_usd,  'status' => Order::STATUS_IN_WORK]);
 
         # информируем в чат, что заказчик оплатил заказ.
         Chat::addSystemMessage($chat->id, 'customer_paid_order');
