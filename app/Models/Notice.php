@@ -56,7 +56,7 @@ class Notice extends Model
     protected $appends = [
         'created_at_format1',  # D MMM YYYY H:mm
         'created_at_format2',  # D MMM YYYY
-        'created_at_format3',  # YYYY-MM-D
+        'created_at_format3',  # YYYY-MM-DD
     ];
 
     public static function boot()
@@ -95,7 +95,7 @@ class Notice extends Model
 
     public function getCreatedAtFormat3Attribute(): string
     {
-        return $this->created_at->isoFormat('YYYY-MM-D');
+        return $this->created_at->isoFormat('YYYY-MM-DD');
     }
 
     ### RELATIONS ###
