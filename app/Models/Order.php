@@ -509,6 +509,7 @@ class Order extends Model
     public function scopeSearchByRoutes($query, bool $only_new = false, array $statuses = [self::STATUS_ACTIVE])
     {
         return $query->whereIn('orders.status', $statuses)
+            ->where('orders.user_id', '<>', request()->user()->id)
             ->whereBetweenColumns('routes.deadline', ['orders.register_date', 'orders.deadline'])
             ->whereColumn('orders.from_country_id', 'routes.from_country_id')
             ->whereColumn('orders.to_country_id', 'routes.to_country_id')
