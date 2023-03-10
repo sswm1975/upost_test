@@ -15,17 +15,15 @@ class OrderDeductionJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private Order $order;
-    private bool $recalculation;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Order $order, bool $recalculation = false)
+    public function __construct(Order $order)
     {
         $this->order = $order;
-        $this->recalculation = $recalculation;
     }
 
     /**
@@ -36,6 +34,6 @@ class OrderDeductionJob implements ShouldQueue
      */
     public function handle()
     {
-        Calculations::run($this->order, $this->recalculation);
+        Calculations::run($this->order);
     }
 }

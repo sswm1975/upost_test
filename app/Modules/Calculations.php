@@ -16,12 +16,11 @@ class Calculations
     /**
      * Выполнить расчет комиссий и налогов по заказу.
      *
-     * @param Order $order
-     * @param bool $recalculation
+     * @param Order $order           Заказ
      * @return void
      * @throws \Exception
      */
-    public static function run(Order $order, bool $recalculation = false)
+    public static function run(Order $order)
     {
         # рассчитываем суммы комиссий
         $fees = static::calcFees($order->total_amount_usd, $order->id);
@@ -35,13 +34,17 @@ class Calculations
         # объединяем все расчеты
         $calculations = array_merge($fees, $export, $import);
 
-        # если установлен флаг пересчета, то удаляем предыдущие расчеты
-        if ($recalculation) {
-            OrderDeduction::whereOrderId($order->id)->delete();
-        }
+        # удаляем предыдущие расчеты
+        OrderDeduction::whereOrderId($order->id)->delete();
 
         # расчеты заносим в таблицу
         OrderDeduction::insert($calculations);
+
+        # сохраняем общую сумму налогов и комиссий в заказе (выполняем без вызова событий)
+        $order->withoutEvents(function () use ($order, $calculations) {
+            $order->deduction_usd = collect($calculations)->sum('amount');
+            $order->save();
+        });
     }
 
     /**
@@ -73,10 +76,10 @@ class Calculations
     /**
      * Рассчитать налоги по заказу.
      *
-     * @param string $type     Тип налога: export / import
+     * @param string $type        Тип налога: export / import
      * @param string $country_id  Страна
-     * @param float $amount    Сумма в долларах
-     * @param int $order_id    Код заказа
+     * @param float $amount       Сумма в долларах
+     * @param int $order_id       Код заказа
      * @return array
      */
     protected static function calcTaxes(string $type, string $country_id, float $amount, int $order_id): array

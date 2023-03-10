@@ -38,7 +38,7 @@ class OrderObserver
     {
         # если по заказу были изменения полей, которые влияют на общую стоимость заказа, то пересчитываем налоги и комиссии
         if ($order->wasChanged(['price_usd', 'currency', 'products_count'])) {
-            OrderDeductionJob::dispatch($order, true);
+            OrderDeductionJob::dispatch($order);
         }
 
         # изменено кол-во просмотров

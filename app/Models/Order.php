@@ -21,10 +21,11 @@ use Illuminate\Support\Str;
  * @property string|null $slug Слаг
  * @property string|null $product_link Ссылка на товар в интернет магазине
  * @property string|null $shop_slug Слаг магазина
+ * @property int|null $products_count Количество товаров
  * @property mixed $price Цена
  * @property string|null $currency Валюта
  * @property mixed $price_usd Цена в долларах
- * @property int|null $products_count Количество товаров
+ * @property mixed $deduction_usd Сумма вычетов (налоги и комиссии) в долларах
  * @property string|null $description Описание заказа
  * @property array $images Фотографии заказа
  * @property string $from_country_id Код страны откуда доставить заказ
@@ -75,6 +76,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereDeductionUsd($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromCountryId($value)
@@ -113,6 +115,7 @@ class Order extends Model
         'price'          => 'decimal:2',
         'price_usd'      => 'decimal:2',
         'user_price_usd' => 'decimal:2',
+        'deduction_usd'  => 'decimal:2',
         'images'         => 'array',
         'strikes'        => 'array',
     ];

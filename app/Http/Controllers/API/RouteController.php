@@ -280,10 +280,9 @@ class RouteController extends Controller
      *         AND `viewed_by_performer` = 0
      *     ) AS rates_new_count,
      * 	   (
-     *       SELECT IFNULL(SUM(orders.price_usd * orders.products_count + IFNULL(order_deductions.amount, 0)), 0)
+     *       SELECT IFNULL(SUM(orders.price_usd * orders.products_count + orders.deduction_usd), 0)
      *       FROM orders
      *       JOIN rates ON rates.order_id = orders.id
-     *       LEFT JOIN order_deductions ON order_deductions.order_id = orders.id AND order_deductions.type IN ('tax_export', 'tax_import')
      *       WHERE routes.id = rates.route_id AND orders.status NOT IN ('active', 'banned', 'failed')
      *     ) AS budget_usd,
      *     (
@@ -332,12 +331,8 @@ class RouteController extends Controller
             }])
             ->withCount(['order as budget_usd' => function($query) {
                 $query
-                    ->leftJoin('order_deductions', function ($join) {
-                        $join->on('order_deductions.order_id', '=', 'orders.id')
-                            ->whereIn('order_deductions.type', OrderDeduction::TAXES_TYPE);
-                        })
                     ->whereNotIn('orders.status', [Order::STATUS_ACTIVE, Order::STATUS_FAILED, Order::STATUS_BANNED])
-                    ->select(DB::raw('IFNULL(SUM(orders.price_usd * orders.products_count + IFNULL(order_deductions.amount, 0)), 0)'));
+                    ->select(DB::raw('IFNULL(SUM(orders.price_usd * orders.products_count + orders.deduction_usd), 0)'));
             }])
             ->withCount(['order as profit_usd' => function($query) {
                 $query
