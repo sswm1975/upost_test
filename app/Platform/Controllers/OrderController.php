@@ -131,6 +131,11 @@ class OrderController extends AdminController
             ->filter('range')
             ->setAttributes(['align'=>'right'])
             ->sortable();
+        $grid->column('deduction_usd', 'Сумма удержаний')
+            ->price()
+            ->filter('range')
+            ->setAttributes(['align'=>'right'])
+            ->sortable();
         $grid->column('taxes_fees_modal', 'Taxes/Fees')
             ->modal('Удержания: Налоги и комиссии', function ($model) {
                 $deductions = $model->deductions->map(function ($deductions) {

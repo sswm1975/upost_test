@@ -47,6 +47,7 @@ class ChatMessage implements Renderable
             o.currency AS order_currency,
             o.products_count AS order_products_count,
             o.user_price_usd AS order_profit_usd,
+            o.deduction_usd AS order_deduction_usd,
             o.status AS order_status,
             o.created_at AS order_created_at,
             o.deadline AS order_deadline,
