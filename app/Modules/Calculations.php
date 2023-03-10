@@ -61,13 +61,17 @@ class Calculations
 
         $calculations = [];
         foreach ($fees as $fee) {
-            $calculations[] = [
-                'order_id'   => $order_id,
-                'type'       => 'fee',
-                'name'       => $fee,
-                'amount'     => $amount * config($fee, 0) / 100,
-                'created_at' => Carbon::now()->toDateTimeString(),
-            ];
+            $calc_fee = round($amount * config($fee, 0) / 100, 2);
+
+            if ($calc_fee > 0) {
+                $calculations[] = [
+                    'order_id'   => $order_id,
+                    'type'       => 'fee',
+                    'name'       => $fee,
+                    'amount'     => $calc_fee,
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                ];
+            }
         }
 
         return $calculations;
@@ -94,13 +98,15 @@ class Calculations
         $calculations = [];
         foreach ($taxes as $alias => $code) {
             $tax_amount = static::runScript($code, $amount);
-            $calculations[] = [
-                'order_id'   => $order_id,
-                'type'       => 'tax_' . $type,
-                'name'       => $alias,
-                'amount'     => $tax_amount,
-                'created_at' => Carbon::now()->toDateTimeString(),
-            ];
+            if ($tax_amount > 0) {
+                $calculations[] = [
+                    'order_id'   => $order_id,
+                    'type'       => 'tax_' . $type,
+                    'name'       => $alias,
+                    'amount'     => $tax_amount,
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                ];
+            }
         }
 
         return $calculations;
