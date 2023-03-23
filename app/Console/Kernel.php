@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\CloseExpiredNotices;
 use App\Jobs\CloseExpiredOrders;
 use App\Jobs\CloseExpiredRate;
 use App\Jobs\CloseExpiredRoutes;
@@ -62,7 +63,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('fill:currency_rates')
             ->description('Обновить курсы валют (сервис fixer.io)')
-            ->dailyAt('01:20')
+            ->dailyAt('01:30')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path('logs/fill_currency_rates.log'));
 
@@ -131,5 +132,11 @@ class Kernel extends ConsoleKernel
             ->dailyAt('0:13')
             ->timezone('Europe/Kiev')
             ->appendOutputTo(storage_path(ExistsNewOrders::LOG_FILE));
+
+        $schedule->job(new CloseExpiredNotices)
+            ->description('Закрыть просроченные уведомления')
+            ->dailyAt('0:20')
+            ->timezone('Europe/Kiev')
+            ->appendOutputTo(storage_path(CloseExpiredNotices::LOG_FILE));
     }
 }
