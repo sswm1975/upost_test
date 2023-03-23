@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Chat;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -49,6 +50,13 @@ class CloseExpiredOrders implements ShouldQueue
 
         # закрываем все просроченные заказы
         Order::whereKey($ids)->update(['status' => Order::STATUS_CLOSED]);
+
+        # закрываем чаты по закрытым заказом
+        Chat::active()
+            ->whereHas('order', function ($query) {
+                $query->where('status', Order::STATUS_CLOSED);
+            })
+            ->update(['status' => Chat::STATUS_CLOSED]);
 
         # логируем
         Log::channel('single')->info(
