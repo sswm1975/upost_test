@@ -326,6 +326,9 @@ class Chat extends Model
      */
     public static function scopeBySearch($query, string $search, int $auth_user_id)
     {
+        # минимальный вес
+        $min_weight = 2;
+
         return $query
             ->leftJoin('users AS u', function ($join) use ($search, $auth_user_id) {
                 $join->on('u.id', DB::raw("IF(chats.customer_id = {$auth_user_id}, chats.performer_id, chats.customer_id)"))
@@ -362,7 +365,7 @@ class Chat extends Model
                 [$search, $search, $search, $search, $search, $search]
             )
             ->groupBy('chats.id')
-            ->having('all_weight', '>', 0)
+            ->having('all_weight', '>', $min_weight)
             ->orderBy('all_weight', 'desc')
             ->orderBy('last_message_id', 'desc');
     }
