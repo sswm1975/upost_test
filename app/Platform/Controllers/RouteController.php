@@ -21,6 +21,7 @@ class RouteController extends AdminController
     public function menu(): array
     {
         $counts = Route::selectRaw('status, count(1) as total')
+            ->whereIn('status', [Route::STATUS_ACTIVE, Route::STATUS_CLOSED])
             ->groupBy('status')
             ->pluck('total', 'status')
             ->toArray();

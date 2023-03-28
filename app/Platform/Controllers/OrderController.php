@@ -22,6 +22,7 @@ class OrderController extends AdminController
     public function menu(): array
     {
         $counts = Order::selectRaw('status, count(1) as total')
+            ->whereIn('status', [Order::STATUS_ACTIVE, Order::STATUS_IN_WORK, Order::STATUS_SUCCESSFUL, Order::STATUS_CLOSED])
             ->groupBy('status')
             ->pluck('total', 'status')
             ->toArray();
