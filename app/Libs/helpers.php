@@ -24,7 +24,7 @@ const CUSTOMER = 'customer';
 const PERFORMER = 'performer';
 
 /**
- * Convert Null to Blank string.
+ * Convert Null to Blank string and other...
  *
  * @param array|object $data
  * @return array
@@ -35,9 +35,17 @@ function null_to_blank($data = []): array
     $json  = json_encode($data);
     $data = json_decode($json, true);
 
-    # рекурсивно все null-значения меняем на пустую строку
     array_walk_recursive($data, function (&$item) {
+        # все null-значения меняем на пустую строку
         if (is_null($item)) $item = '';
+
+        # все вещественные числа конвертим в целые, если это возможно ('125.00' -> 125; '966.70' -> 966.7; '844.57' -> 844.6
+        # https://www.tutorialkart.com/php/php-check-if-string-is-float/
+        # https://stackoverflow.com/questions/14531679/remove-useless-zero-digits-from-decimals-in-php
+        $float_string = (float) $item;
+        if (strval($float_string) == $item) {
+            $item = round($float_string,1) + 0;
+        }
     });
 
     return $data;
