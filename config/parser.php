@@ -42,6 +42,7 @@ return [
                 "//img[@width='64']/@data-originalimg",
                 "//button[@class='ux-image-filmstrip-carousel-item image']/img/@src",
                 "//button[@data-idx]/img/@src",
+                "//button/img[@loading]/@src",
             ],
         ],
 
