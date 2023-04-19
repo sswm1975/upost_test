@@ -84,10 +84,10 @@ class OrderController extends Controller
 
     protected function table()
     {
-        return view('platform.datatables.orders')->with('orders', $this->getData());
+        return view('platform.datatables.orders');
     }
 
-    public function getData()
+    public function getOrders()
     {
         $orders = Order::query()
             ->with(['user', 'from_country', 'from_city', 'to_country', 'to_city', 'wait_range'])
@@ -123,20 +123,62 @@ class OrderController extends Controller
             ]);
         }
 
-        return $data;
+        return compact('data');
     }
 
     protected static function scriptDataTable()
     {
+       $ajax_url = route('platform.ajax.orders');
+
         return <<<SCRIPT
-            $('#orders').DataTable({
-                fixedColumns: true,
-                columnDefs: [
-                    {targets: [17,19,20], render: DataTable.render.date()},
-                    {targets: 3, width2: "150px"},
-                    {targets: [3,5,7,9,11], width2: "150px"},
-                    {targets: [22], width2: "350px"},
+            function format(row) {
+                return (
+                    '<table>' +
+                        '<tr>' +
+                            '<td  style="width:90px">Товар:</td>' +
+                            '<td>' + row.name + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<td style="width:90px">Описание:</td>' +
+                            '<td>' + row.description + '</td>' +
+                        '</tr>' +
+                    '</table>'
+                );
+            }
+
+            var table = $('#orders').DataTable({
+                ajax: '{$ajax_url}',
+                processing: true,
+                columns: [
+                    {
+                        className: 'dt-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: '',
+                    },
+                    { data: 'id', className: 'dt-body-center' },
+                    { data: 'status' },
+                    { data: 'user_id', className: 'dt-body-center' },
+                    { data: 'user_full_name' },
+                    { data: 'from_country_id' },
+                    { data: 'from_country_name' },
+                    { data: 'from_city_id', className: 'dt-body-center' },
+                    { data: 'from_city_name' },
+                    { data: 'to_country_id', className: 'dt-body-center' },
+                    { data: 'to_country_name' },
+                    { data: 'to_city_id', className: 'dt-body-center' },
+                    { data: 'to_city_name' },
+                    { data: 'price', className: 'dt-body-right' },
+                    { data: 'currency', className: 'dt-body-center' },
+                    { data: 'price_usd', className: 'dt-body-right' },
+                    { data: 'user_price_usd', className: 'dt-body-right' },
+                    { data: 'products_count', className: 'dt-body-center' },
+                    { data: 'deadline', className: 'dt-body-center', render: DataTable.render.date() },
+                    { data: 'created_at', className: 'dt-body-center', render: DataTable.render.date() },
+                    { data: 'updated_at', className: 'dt-body-center', render: DataTable.render.date() },
+                    { data: 'strikes' },
                 ],
+                order: [[1, 'desc']],
                 language: {
                     procssing: "Подождите...",
                     search: "Поиск:",
@@ -161,9 +203,21 @@ class OrderController extends Controller
                 }
             });
 
-            setTimeout(function(){
-                $('input[type=search]').focus();
-            }, 1000);
+            // Add event listener for opening and closing details
+            $('#orders tbody').on('click', 'td.dt-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+            });
 SCRIPT;
     }
 
