@@ -2,90 +2,14 @@
 
 namespace App\Platform\Controllers\DataTables;
 
-use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Encore\Admin\Facades\Admin;
-use Encore\Admin\Layout\Content;
-use Illuminate\Support\Facades\Route;
 
-class OrderController extends Controller
+class OrderController extends BaseController
 {
-    /**
-     * Title for current resource.
-     *
-     * @var string
-     */
     protected string $title = 'Заказы';
-
-    /**
-     * Font Awesome icon.
-     *
-     * @var string
-     */
     protected string $icon = 'fa-shopping-bag';
-
-    /**
-     * Breadcrumb.
-     *
-     * @var array
-     */
-    protected array $breadcrumb = [];
-
-    /**
-     * Get content title.
-     *
-     * @return string
-     */
-    protected function title(): string
-    {
-        return ($this->icon ? "<i class='fa {$this->icon}'></i>&nbsp;" : '') . $this->title;
-    }
-
-    /**
-     * Get breadcrumb.
-     *
-     * @param mixed $id
-     * @return array
-     */
-    protected function breadcrumb($id = 0): array
-    {
-        $breadcrumb = array_merge($this->breadcrumb, [[
-            'text' => $this->title, 'icon' => str_replace('fa-', '', $this->icon)
-        ]]);
-
-        if (Route::getCurrentRoute()->getActionMethod() == 'index') {
-            return $breadcrumb;
-        }
-
-        if ($id) {
-            $breadcrumb = array_merge($breadcrumb, [['text' => $id]]);
-        }
-
-        return array_merge($breadcrumb, [['text' => $this->description()]]);
-    }
-
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     *
-     * @return Content
-     */
-    public function index(Content $content): Content
-    {
-        Admin::script($this->scriptDataTable());
-
-        $content->title($this->title())
-            ->description('&nbsp;')
-            ->breadcrumb(...$this->breadcrumb());
-
-        return $content->body($this->table());
-    }
-
-    protected function table()
-    {
-        return view('platform.datatables.orders');
-    }
+    protected string $view = 'platform.datatables.orders.table';
 
     public function getOrders()
     {
@@ -128,24 +52,9 @@ class OrderController extends Controller
 
     protected static function scriptDataTable()
     {
-       $ajax_url = route('platform.ajax.orders');
+        $ajax_url = route('platform.ajax.orders');
 
-        return <<<SCRIPT
-            function format(row) {
-                return (
-                    '<table>' +
-                        '<tr>' +
-                            '<td  style="width:90px">Товар:</td>' +
-                            '<td>' + row.name + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                            '<td style="width:90px">Описание:</td>' +
-                            '<td>' + row.description + '</td>' +
-                        '</tr>' +
-                    '</table>'
-                );
-            }
-
+        $script = <<<SCRIPT
             var table = $('#orders').DataTable({
                 ajax: '{$ajax_url}',
                 processing: true,
@@ -218,8 +127,22 @@ class OrderController extends Controller
                     tr.addClass('shown');
                 }
             });
+
+            function format(row) {
+                return (
+                    '<table>' +
+                        '<tr>' +
+                            '<td  style="width:90px">Товар:</td>' +
+                            '<td>' + row.name + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<td style="width:90px">Описание:</td>' +
+                            '<td>' + row.description + '</td>' +
+                        '</tr>' +
+                    '</table>'
+                );
+            }
 SCRIPT;
+        Admin::script($script);
     }
-
-
 }

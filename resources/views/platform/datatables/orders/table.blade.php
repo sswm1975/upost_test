@@ -3,6 +3,7 @@
 По стилям semanticui смотри https://fomantic-ui.com/collections/table.html
 По таблице dataTables смотри https://datatables.net/examples/basic_init/complex_header.html
 --}}
+
 <style>
     .table.compact>thead>tr>th{padding:4px 0}
     .table.compact>thead>tr:nth-child(-n+2)>th{text-align:center}
