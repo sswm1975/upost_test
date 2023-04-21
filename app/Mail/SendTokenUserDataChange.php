@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Lang;
 
 class SendTokenUserDataChange extends Mailable
 {
@@ -35,8 +36,10 @@ class SendTokenUserDataChange extends Mailable
      */
     public function build(): SendTokenUserDataChange
     {
-        return $this->subject('Код подтверждения смены данных профиля')
+        $url = rtrim(config('app.wordpress_url'), '/') . '?action=profile_update_verification&token='.$this->token.'&lang='.$this->lang;
+
+        return $this->subject(Lang::get('Profile data change confirmation code'))
             ->markdown("emails.{$this->lang}.send_token_user_data_change")
-            ->with(['token' => $this->token]);
+            ->with(['url' => $url]);
     }
 }

@@ -7,6 +7,7 @@ use App\Mail\OrderBanEmail;
 use App\Mail\SendTokenUserDataChange;
 use App\Mail\SocialChangePassword;
 use App\Models\User;
+use App\Models\UserChange;
 use App\Notifications\DeadlineRate;
 use Encore\Admin\Layout\Content;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -135,7 +136,7 @@ class MailingController extends Controller
      */
     private static function send_token_user_data_change(string $lang): SendTokenUserDataChange
     {
-        return new SendTokenUserDataChange(Str::random(8), $lang);
+        return new SendTokenUserDataChange(UserChange::generateToken(), $lang);
     }
 
     /**

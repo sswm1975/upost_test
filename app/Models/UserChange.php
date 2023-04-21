@@ -79,8 +79,8 @@ class UserChange extends Model
      *
      * @return string
      */
-    private static function generateToken(): string
+    public static function generateToken(): string
     {
-        return Str::random(8);
+        return Str::random(16);
     }
 }

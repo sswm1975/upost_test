@@ -59,7 +59,7 @@ Route::namespace('API')->group(function ($route) {
         $route->post('card/update', 'ProfileController@updateCard')->middleware(MIDDLEWARE_AUTH_BASIC);
 
         # Верифікація зміни даних користувача (тільки пароль/логін/картка)
-        $route->get('verification/{token}', 'ProfileController@verificationUserChanges')->middleware(MIDDLEWARE_AUTH_BASIC);
+        $route->get('profile/verification/{token}', 'ProfileController@verificationUserChanges');
 
         # Перевірка заповнення профілю (ім'я, прізвище, дата народження) у авторизованого користувача.
         $route->get('profile/is_filled', 'ProfileController@isProfileFilled')->middleware(MIDDLEWARE_AUTH_BASIC);
