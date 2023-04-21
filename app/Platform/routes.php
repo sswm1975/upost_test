@@ -20,8 +20,8 @@ Route::group([
     $router->get('clients/{id}', 'ClientController@show')->name('clients.show')->middleware('admin.permission:check,clients');;
 
     # Заказы
-    $router->get('orders', 'OrderController@index')->name('orders.index')->middleware('admin.permission:check,orders');
-    $router->get('orders/{id}', 'OrderController@show')->name('orders.show')->middleware('admin.permission:check,orders');
+    $router->get('orders', 'DataTables\OrderController@index')->name('orders.index')->middleware('admin.permission:check,orders');
+    $router->get('ajax/orders', 'DataTables\OrderController@getOrders')->name('ajax.orders')->middleware('admin.permission:check,orders');
 
     # Маршруты
     $router->get('routes', 'RouteController@index')->name('routes.index')->middleware('admin.permission:check,routes');
@@ -140,5 +140,16 @@ Route::group([
         $router->get('api_request_logging', 'ApiRequestLoggingController@index')->name('api_request_logging.index');
         $router->get('api_request_logging/toggle', 'ApiRequestLoggingController@toggleLog')->name('api_request_logging.toggle');
         $router->get('api_request_logging/truncate', 'ApiRequestLoggingController@truncateLog')->name('api_request_logging.truncate');
+    });
+
+    # Пункты меню OLD
+    $router->group([
+        'prefix'     => 'old',
+        'namespace'  => 'Old',
+        'middleware' => 'admin.permission:allow,administrator',
+        'as'         => 'old.',
+    ], function (Router $router) {
+        $router->get('orders', 'OrderController@index')->name('orders.index')->middleware('admin.permission:check,orders');
+        $router->get('orders/{id}', 'OrderController@show')->name('orders.show')->middleware('admin.permission:check,orders');
     });
 });
