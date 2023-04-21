@@ -92,6 +92,9 @@ Route::group([
 
         # Типы уведомлений
         $router->resource('notice_types', 'NoticeTypeController')->except(['delete'])->names('notice_types');
+
+        # Страны
+        $router->resource('countries', 'CountryController')->except(['delete'])->names('countries');
     });
 
     # Пункты меню "Настройки"
