@@ -61,15 +61,10 @@ Admin::style(<<<CSS
 CSS);
 
 /**
- * По стилям semanticui смотри https://fomantic-ui.com/collections/table.html
  * По таблице dataTables смотри https://datatables.net/examples/basic_init/complex_header.html
  */
-Admin::css('https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.css');
-Admin::css('https://cdn.datatables.net/1.13.4/css/dataTables.semanticui.min.css');
-
+Admin::css('https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css');
 Admin::js('https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js');
-Admin::js('https://cdn.datatables.net/1.13.4/js/dataTables.semanticui.min.js');
-Admin::js('https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.js');
 
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
     if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {

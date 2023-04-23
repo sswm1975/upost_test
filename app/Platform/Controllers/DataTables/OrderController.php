@@ -19,7 +19,7 @@ class OrderController extends BaseController
 
         $data = [];
         foreach ($orders as $order) {
-            array_push($data, (object) [
+            array_push($data, [
                 'id' => $order->id,
                 'status' => $order->status,
                 'user_id' => $order->user->id,
@@ -58,13 +58,9 @@ class OrderController extends BaseController
             var table = $('#orders').DataTable({
                 ajax: '{$ajax_url}',
                 processing: true,
+                scrollX: true,
+                stateSave:true,
                 columns: [
-                    {
-                        className: 'dt-control',
-                        orderable: false,
-                        data: null,
-                        defaultContent: '',
-                    },
                     { data: 'id', className: 'dt-body-center' },
                     { data: 'status' },
                     { data: 'user_id', className: 'dt-body-center' },
@@ -87,9 +83,9 @@ class OrderController extends BaseController
                     { data: 'updated_at', className: 'dt-body-center', render: DataTable.render.date() },
                     { data: 'strikes' },
                 ],
-                order: [[1, 'desc']],
+                order: [[0, 'desc']],
                 language: {
-                    procssing: "Подождите...",
+                    processing: "Подождите...",
                     search: "Поиск:",
                     lengthMenu: "Показать _MENU_ записей",
                     info: "Записи с _START_ до _END_ из _TOTAL_ записей",
@@ -111,37 +107,6 @@ class OrderController extends BaseController
                     }
                 }
             });
-
-            // Add event listener for opening and closing details
-            $('#orders tbody').on('click', 'td.dt-control', function () {
-                var tr = $(this).closest('tr');
-                var row = table.row(tr);
-
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                } else {
-                    // Open this row
-                    row.child(format(row.data())).show();
-                    tr.addClass('shown');
-                }
-            });
-
-            function format(row) {
-                return (
-                    '<table>' +
-                        '<tr>' +
-                            '<td  style="width:90px">Товар:</td>' +
-                            '<td>' + row.name + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                            '<td style="width:90px">Описание:</td>' +
-                            '<td>' + row.description + '</td>' +
-                        '</tr>' +
-                    '</table>'
-                );
-            }
 SCRIPT;
         Admin::script($script);
     }
