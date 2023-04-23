@@ -5,6 +5,7 @@
 --}}
 
 <style>
+    :focus-visible{outline:none}
     table.compact>thead>tr>th {background-color:#f9fafb}
     table.compact>thead>tr:first-child>th {border-top:1px solid lightgrey}
     table.compact>thead>tr:nth-child(-n+3)>th:first-child {border-left:1px solid lightgrey}
@@ -13,8 +14,9 @@
     table.compact>thead>tr:nth-child(-n+2)>th{text-align:center}
     .dataTables_wrapper {font-size:.9em}
     .dataTables_wrapper .dataTables_length select,
-    .dataTables_wrapper .dataTables_filter input {background-color: white}
+    .dataTables_wrapper .dataTables_filter input {background-color: white;padding: 3px 6px;border-radius:0}
     .dataTables_wrapper .dataTables_length label, .dataTables_wrapper .dataTables_filter label {font-weight:normal}
+    .dataTables_wrapper .dataTables_filter button {padding: 3px 7px;border: 1px solid transparent}
 </style>
 
     <table id="orders" class="order-column row-border hover cell-border compact nowrap" style="width:100%;background-color:white">
