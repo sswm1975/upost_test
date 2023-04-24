@@ -79,6 +79,10 @@ class OrderController extends BaseController
                 ajax: '{$ajax_url}',
                 processing: true,
                 deferRender: true,
+                fixedHeader: {
+                    header: true,
+                    headerOffset: 40,
+                },
                 scrollX: true,
                 columnDefs: [
                     { targets: [0], searchBuilderTitle: 'Код' },
