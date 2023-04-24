@@ -4,6 +4,7 @@ namespace App\Platform\Controllers\DataTables;
 
 use App\Models\Order;
 use Encore\Admin\Facades\Admin;
+use Illuminate\Support\Carbon;
 
 class OrderController extends BaseController
 {
@@ -34,10 +35,10 @@ class OrderController extends BaseController
                     'price_usd' => $order->price_usd,
                     'user_price_usd' => $order->user_price_usd,
                     'products_count' => $order->products_count,
-                    'deadline' => $order->deadline,
+                    'deadline' => Carbon::createFromFormat('Y-m-d', $order->deadline)->format('d.m.Y'),
                     'wait_range' => $order->wait_range->id,
-                    'created_at' => $order->created_at->toDateString(),
-                    'updated_at' => $order->updated_at->toDateString(),
+                    'created_at' => $order->created_at->format('d.m.Y'),
+                    'updated_at' => $order->updated_at->format('d.m.Y'),
                     'name' => $order->name,
                     'description' => $order->description,
                     'strikes' => implode(',', $order->strikes),
@@ -53,6 +54,23 @@ class OrderController extends BaseController
         $ajax_url = route('platform.ajax.orders');
 
         $script = <<<SCRIPT
+            $.fn.dataTable.moment( 'DD.MM.YYYY' );
+            $.fn.dataTable.moment( 'DD.MM.YYYY' );
+            $.fn.dataTable.moment( 'DD.MM.YYYY' );
+
+            // локализация для плагина DateTime
+            $.extend($.fn.dataTable.DateTime.defaults.i18n, {
+                previous: "Предыдущий",
+                next: "Следующий",
+                hours: "Часы",
+                minutes: "Минуты",
+                seconds: "Секунды",
+                unknown: "Неизвестный",
+                amPm: ["AM", "PM"],
+                months: {"0": "Январь", "1": "Февраль", "2": "Март", "3": "Апрель", "4": "Май", "5": "Июнь", "6": "Июль", "7": "Август", "8": "Сентябрь", "9": "Октябрь", "10": "Ноябрь", "11": "Декабрь"},
+                weekdays: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"]
+            });
+
             var table = $('#orders').DataTable({
                 dom: 'Blfrtip',
                 buttons:[
@@ -60,6 +78,7 @@ class OrderController extends BaseController
                 ],
                 ajax: '{$ajax_url}',
                 processing: true,
+                deferRender: true,
                 scrollX: true,
                 columnDefs: [
                     { targets: [0], searchBuilderTitle: 'Код' },
@@ -79,9 +98,9 @@ class OrderController extends BaseController
                     { targets: [14], searchBuilderTitle: 'Цена $' },
                     { targets: [15], searchBuilderTitle: 'Цена ком.' },
                     { targets: [16], searchBuilderTitle: 'Кол-во' },
-                    { targets: [17], searchBuilderTitle: 'Дата дедлайна' },
+                    { targets: [17], searchBuilderTitle: 'Дата доставки' },
                     { targets: [18], searchBuilderTitle: 'Дата создания' },
-                    { targets: [19], searchBuilderTitle: 'Дата обновления' },
+                    { targets: [19], searchBuilderTitle: 'Дата изменения' },
                     { targets: [20], searchBuilderTitle: 'Жалобы' },
                 ],
                 columns: [
@@ -102,9 +121,9 @@ class OrderController extends BaseController
                     { data: 'price_usd', className: 'dt-body-right' },
                     { data: 'user_price_usd', className: 'dt-body-right' },
                     { data: 'products_count', className: 'dt-body-center' },
-                    { data: 'deadline', className: 'dt-body-center', render: DataTable.render.date() },
-                    { data: 'created_at', className: 'dt-body-center', render: DataTable.render.date() },
-                    { data: 'updated_at', className: 'dt-body-center', render: DataTable.render.date() },
+                    { data: 'deadline', className: 'dt-body-center' },
+                    { data: 'created_at', className: 'dt-body-center' },
+                    { data: 'updated_at', className: 'dt-body-center' },
                     { data: 'strikes' },
                 ],
                 order: [[0, 'desc']],
@@ -123,7 +142,7 @@ class OrderController extends BaseController
 
             // Устанавливаем дефолтный фильтр для таблицы
             setTimeout(function() {
-                $('#orders').DataTable().searchBuilder.rebuild({
+                table.searchBuilder.rebuild({
                     criteria:[
                         {
                             data: 'Статус',
