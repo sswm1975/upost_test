@@ -55,11 +55,12 @@ class OrderController extends BaseController
         $script = <<<SCRIPT
             var table = $('#orders').DataTable({
                 dom: 'Blfrtip',
-                buttons:['searchBuilder'],
+                buttons:[
+                    'searchBuilder',
+                ],
                 ajax: '{$ajax_url}',
                 processing: true,
                 scrollX: true,
-                stateSave:true,
                 columnDefs: [
                     { targets: [0], searchBuilderTitle: 'Код' },
                     { targets: [1], searchBuilderTitle: 'Статус' },
@@ -119,6 +120,25 @@ class OrderController extends BaseController
             $('.dataTables_filter').on('click', 'button', function() {
                 table.search('').draw();
             });
+
+            // Устанавливаем дефолтный фильтр для таблицы
+            setTimeout(function() {
+                $('#orders').DataTable().searchBuilder.rebuild({
+                    criteria:[
+                        {
+                            data: 'Статус',
+                            condition: 'contains',
+                            value: ['active']
+                        },
+                        {
+                            data: 'Статус',
+                            condition: 'contains',
+                            value: ['in_work']
+                        }
+                    ],
+                    logic: 'OR'
+                });
+            }, 1000);
 
 SCRIPT;
         Admin::script($script);
