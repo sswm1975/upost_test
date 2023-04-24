@@ -14,9 +14,10 @@
     table.compact>thead>tr:nth-child(-n+2)>th{text-align:center}
     .dataTables_wrapper {font-size:.9em}
     .dataTables_wrapper .dataTables_length select,
-    .dataTables_wrapper .dataTables_filter input {background-color: white;padding: 3px 6px;border-radius:0}
+    .dataTables_wrapper .dataTables_filter input {background-color:white;padding:3px 6px;border-radius:0}
     .dataTables_wrapper .dataTables_length label, .dataTables_wrapper .dataTables_filter label {font-weight:normal}
-    .dataTables_wrapper .dataTables_filter button {padding: 3px 7px;border: 1px solid transparent}
+    .dataTables_wrapper .dataTables_filter button {padding:3px 7px;border:1px solid transparent}
+    button.dt-button {padding:3px 6px;margin-right:20px}
 </style>
 
     <table id="orders" class="order-column row-border hover cell-border compact nowrap" style="width:100%;background-color:white">
@@ -25,7 +26,7 @@
                 <th rowspan="2">Код</th>
                 <th rowspan="2">Статус</th>
                 <th colspan="2">Заказчик</th>
-                <th colspan="4">Из</th>
+                <th colspan="4">Откуда</th>
                 <th colspan="4">Куда</th>
                 <th colspan="5">Стоимость</th>
                 <th colspan="3">Даты</th>

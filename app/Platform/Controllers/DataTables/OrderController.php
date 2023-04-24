@@ -54,13 +54,35 @@ class OrderController extends BaseController
 
         $script = <<<SCRIPT
             var table = $('#orders').DataTable({
+                dom: 'Blfrtip',
+                buttons:['searchBuilder'],
                 ajax: '{$ajax_url}',
                 processing: true,
                 scrollX: true,
                 stateSave:true,
-                search: {
-                    return: true
-                },
+                columnDefs: [
+                    { targets: [0], searchBuilderTitle: 'Код' },
+                    { targets: [1], searchBuilderTitle: 'Статус' },
+                    { targets: [2], searchBuilderTitle: 'Код заказчика' },
+                    { targets: [3], searchBuilderTitle: 'ФИО заказчика' },
+                    { targets: [4], searchBuilderTitle: 'Откуда Код страны' },
+                    { targets: [5], searchBuilderTitle: 'Откуда Страна' },
+                    { targets: [6], searchBuilderTitle: 'Откуда Код города' },
+                    { targets: [7], searchBuilderTitle: 'Откуда Город' },
+                    { targets: [8], searchBuilderTitle: 'Куда Код страны' },
+                    { targets: [9], searchBuilderTitle: 'Куда Страна' },
+                    { targets: [10], searchBuilderTitle: 'Куда Код города' },
+                    { targets: [11], searchBuilderTitle: 'Куда город' },
+                    { targets: [12], searchBuilderTitle: 'Цена' },
+                    { targets: [13], searchBuilderTitle: 'Валюта' },
+                    { targets: [14], searchBuilderTitle: 'Цена $' },
+                    { targets: [15], searchBuilderTitle: 'Цена ком.' },
+                    { targets: [16], searchBuilderTitle: 'Кол-во' },
+                    { targets: [17], searchBuilderTitle: 'Дата дедлайна' },
+                    { targets: [18], searchBuilderTitle: 'Дата создания' },
+                    { targets: [19], searchBuilderTitle: 'Дата обновления' },
+                    { targets: [20], searchBuilderTitle: 'Жалобы' },
+                ],
                 columns: [
                     { data: 'id', className: 'dt-body-center' },
                     { data: 'status' },
@@ -86,26 +108,7 @@ class OrderController extends BaseController
                 ],
                 order: [[0, 'desc']],
                 language: {
-                    processing: "Подождите...",
-                    search: "Поиск:",
-                    lengthMenu: "Показать _MENU_ записей",
-                    info: "Записи с _START_ до _END_ из _TOTAL_ записей",
-                    infoEmpty: "Записи с 0 до 0 из 0 записей",
-                    infoFiltered: "(отфильтровано из _MAX_ записей)",
-                    infoPostFix: "",
-                    loadingRecords: "Загрузка записей...",
-                    zeroRecords: "Записи отсутствуют.",
-                    emptyTable: "В таблице отсутствуют данные",
-                    paginate: {
-                        first: "Первая",
-                        previous: "«",
-                        next: "»",
-                        last: "Последняя"
-                    },
-                    aria: {
-                        sortAscending: ": активировать для сортировки столбца по возрастанию",
-                        sortDescending: ": активировать для сортировки столбца по убыванию"
-                    }
+                    url: '/vendor/datatables/ru.json'    // взято и подправлено с https://cdn.datatables.net/plug-ins/1.13.4/i18n/ru.json
                 }
             });
 
