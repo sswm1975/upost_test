@@ -72,9 +72,35 @@ class OrderController extends BaseController
             });
 
             var table = $('#orders').DataTable({
-                dom: 'Blfrtip',
+                dom: 'Bfrtip',
+                lengthMenu: [
+                    [ 10, 25, 50, -1 ],
+                    [ '10 строк', '25 строк', '50 строк', 'Все записи' ]
+                ],
                 buttons:[
                     'searchBuilder',
+                    'pageLength',
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Excel',
+                        title: null,
+                        sheetName: 'Exported data',
+                        autoFilter: true,
+                        createEmptyCells: true,
+                        exportOptions: {
+                            columns: ':visible',
+                            format: {
+                                header: function ( text, index, node ) {
+                                    // вместо порядковых номеров подставляем название столбцов из списка searchBuilderTitle
+                                    return $('#orders').DataTable().init().columnDefs[index].searchBuilderTitle;
+                                }
+                            }
+                        },
+                        customize: function( xlsx ) {
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                            $('row:first c', sheet).attr( 's', '42' );
+                        }
+                    }
                 ],
                 ajax: '{$ajax_url}',
                 processing: true,
@@ -136,16 +162,9 @@ class OrderController extends BaseController
                 }
             });
 
-            // возле поля Поиск добавляем кнопку "Очистить поле поиска"
-            $('<button type="button" class="btn-danger"><i class="fa fa-times"></i></button>').appendTo('div.dataTables_filter');
-
-            // нажата кнопка "Очистить поле поиска"
-            $('.dataTables_filter').on('click', 'button', function() {
-                table.search('').draw();
-            });
-
-            // Устанавливаем дефолтный фильтр для таблицы
+            // код ниже выполняем с задержкой, пока загрузятся данные таблицы
             setTimeout(function() {
+                // Устанавливаем дефолтный фильтр для таблицы
                 table.searchBuilder.rebuild({
                     criteria:[
                         {
@@ -161,6 +180,12 @@ class OrderController extends BaseController
                     ],
                     logic: 'OR'
                 });
+
+                // возле поля Поиск добавляем кнопку "Очистить поле поиска"
+                $('<button type="button" class="btn-danger"><i class="fa fa-times"></i></button>').appendTo('div.dataTables_filter');
+
+                // нажата кнопка "Очистить поле поиска"
+                $('.dataTables_filter').on('click', 'button', () =>  table.search('').draw());
             }, 1000);
 
 SCRIPT;
