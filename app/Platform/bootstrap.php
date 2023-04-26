@@ -68,6 +68,7 @@ Admin::css('https://cdn.datatables.net/searchbuilder/1.4.2/css/searchBuilder.dat
 Admin::css('https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css');
 Admin::css('https://cdn.datatables.net/datetime/1.4.0/css/dataTables.dateTime.min.css');
 Admin::css('https://cdn.datatables.net/fixedheader/3.3.2/css/fixedHeader.dataTables.min.css');
+Admin::css('https://cdn.datatables.net/select/1.6.2/css/select.dataTables.min.css');
 
 Admin::js('//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js');
 Admin::js('https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js');
@@ -78,6 +79,7 @@ Admin::js('//cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js');
 Admin::js('https://cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js');
 Admin::js('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js');
 Admin::js('https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js');
+Admin::js('https://cdn.datatables.net/select/1.6.2/js/dataTables.select.min.js');
 
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
     if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {

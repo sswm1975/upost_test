@@ -110,6 +110,7 @@ class OrderController extends BaseController
                     headerOffset: 40,
                 },
                 scrollX: true,
+                select: true,
                 columnDefs: [
                     { targets: [0], searchBuilderTitle: 'Код' },
                     { targets: [1], searchBuilderTitle: 'Статус' },

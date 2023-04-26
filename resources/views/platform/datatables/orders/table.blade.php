@@ -21,7 +21,7 @@
     .dataTables_wrapper button.dt-button {padding:3px 6px}
 </style>
 
-    <table id="orders" class="order-column row-border hover cell-border compact nowrap" style="width:100%;background-color:white">
+    <table id="orders" class="display cell-border compact nowrap" style="width:100%;background-color:white">
         <thead>
             <tr>
                 <th rowspan="2">Код</th>
