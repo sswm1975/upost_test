@@ -82,14 +82,14 @@
         "logicAnd": "И",
         "logicOr": "Или",
         "title": {
-            "0": "Фильтр",
-            "_": "Фильтр (%d)"
+            "0": "<i class='fa fa-filter'></i><span class='hidden-xs'>&nbsp;&nbsp;Фильтр",
+            "_": "<i class='fa fa-filter'></i><span class='hidden-xs'>&nbsp;&nbsp;Фильтр (%d)"
         },
         "value": "Значение",
         "add": "Добавить условие",
         "button": {
-            "0": "Фильтр",
-            "_": "Фильтр (%d)"
+            "0": "<i class='fa fa-filter'></i><span class='hidden-xs'>&nbsp;&nbsp;Фильтр",
+            "_": "<i class='fa fa-filter'></i><span class='hidden-xs'>&nbsp;&nbsp;Фильтр (%d)"
         },
         "clearAll": "Очистить всё",
         "condition": "Условие",
@@ -118,13 +118,13 @@
         "colvisRestore": "Восстановить видимость",
         "copy": "Копировать",
         "copyKeys": "Нажмите ctrl or u2318 + C, чтобы скопировать данные таблицы в буфер обмена.  Для отмены, щелкните по сообщению или нажмите escape.",
-        "copyTitle": "Скопировать в буфер обмена",
+        "copyTitle": "Копирование в буфер обмена",
         "csv": "CSV",
         "excel": "Excel",
         "pageLength": {
-            "-1": "Показать все строки",
-            "_": "Показать %d строк",
-            "1": "Показать 1 строку"
+            "-1": "<i class='fa fa-eye'></i><span class='hidden-xs'>&nbsp;&nbsp;Показать все строки",
+            "_": "<i class='fa fa-eye'></i><span class='hidden-xs'>&nbsp;&nbsp;Показать %d строк",
+            "1": "<i class='fa fa-eye'></i><span class='hidden-xs'>&nbsp;&nbsp;Показать 1 строку"
         },
         "removeState": "Удалить",
         "renameState": "Переименовать",

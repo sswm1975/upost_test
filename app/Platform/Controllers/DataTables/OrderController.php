@@ -78,11 +78,19 @@ class OrderController extends BaseController
                     [ '10 строк', '25 строк', '50 строк', 'Все записи' ]
                 ],
                 buttons:[
-                    'searchBuilder',
-                    'pageLength',
+                    {
+                        extend: 'searchBuilder',
+                        className: 'bg-blue',
+                    },
+                    {
+                        extend: 'pageLength',
+                        className: 'bg-orange',
+                    },
                     {
                         extend: 'colvis',
-                        collectionLayout: 'fixed',
+                        text: '<i class="fa fa-table"></i>',
+                        titleAttr: 'Видимость столбцов',
+                        className: 'bg-green',
                         columnText: function ( dt, idx, title ) {
                             var column_title = $('#orders').DataTable().init().columnDefs[idx].searchBuilderTitle;
                             return title + ': ' + column_title;
@@ -91,7 +99,9 @@ class OrderController extends BaseController
                     },
                     {
                         extend: 'excelHtml5',
-                        text: 'Excel',
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        titleAttr: 'Экспорт в Excel',
+                        className: 'bg-maroon',
                         title: null,
                         sheetName: 'Exported data',
                         autoFilter: true,
@@ -107,9 +117,25 @@ class OrderController extends BaseController
                         },
                         customize: function( xlsx ) {
                             var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                            $('row:first c', sheet).attr( 's', '42' );
+                            $('row:first c', sheet).attr( 's', '32' );
                         }
-                    }
+                    },
+                    {
+                        extend: 'copyHtml5',
+                        text: '<i class="fa fa-files-o"></i>',
+                        titleAttr: 'Копировать в буфер',
+                        className: 'bg-fuchsia',
+                        title: null,
+                        exportOptions: {
+                            columns: ':visible',
+                            format: {
+                                header: function ( text, index, node ) {
+                                    // вместо порядковых номеров подставляем название столбцов из списка searchBuilderTitle
+                                    return $('#orders').DataTable().init().columnDefs[index].searchBuilderTitle;
+                                }
+                            }
+                        },
+                    },
                 ],
                 ajax: '{$ajax_url}',
                 processing: true,
@@ -119,7 +145,9 @@ class OrderController extends BaseController
                     headerOffset: 40,
                 },
                 scrollX: true,
-                select: true,
+                select: {
+                    info: false
+                },
                 columnDefs: [
                     { targets: [0], searchBuilderTitle: 'Код' },
                     { targets: [1], searchBuilderTitle: 'Статус' },
