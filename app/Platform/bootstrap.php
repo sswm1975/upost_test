@@ -80,6 +80,7 @@ Admin::js('https://cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeade
 Admin::js('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js');
 Admin::js('https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js');
 Admin::js('https://cdn.datatables.net/select/1.6.2/js/dataTables.select.min.js');
+Admin::js('https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js');
 
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
     if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {

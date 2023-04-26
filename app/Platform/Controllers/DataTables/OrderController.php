@@ -81,6 +81,15 @@ class OrderController extends BaseController
                     'searchBuilder',
                     'pageLength',
                     {
+                        extend: 'colvis',
+                        collectionLayout: 'fixed',
+                        columnText: function ( dt, idx, title ) {
+                            var column_title = $('#orders').DataTable().init().columnDefs[idx].searchBuilderTitle;
+                            return title + ': ' + column_title;
+                        },
+                        postfixButtons: ['colvisRestore'],
+                    },
+                    {
                         extend: 'excelHtml5',
                         text: 'Excel',
                         title: null,
@@ -160,6 +169,13 @@ class OrderController extends BaseController
                 order: [[0, 'desc']],
                 language: {
                     url: '/vendor/datatables/ru.json'    // взято и подправлено с https://cdn.datatables.net/plug-ins/1.13.4/i18n/ru.json
+                },
+                initComplete: function () {
+                    // возле поля Поиск добавляем кнопку "Очистить поле поиска"
+                    $('<button type="button" class="btn-danger"><i class="fa fa-times"></i></button>').appendTo('div.dataTables_filter');
+
+                    // нажата кнопка "Очистить поле поиска"
+                    $('.dataTables_filter').on('click', 'button', () =>  table.search('').draw());
                 }
             });
 
@@ -181,12 +197,6 @@ class OrderController extends BaseController
                     ],
                     logic: 'OR'
                 });
-
-                // возле поля Поиск добавляем кнопку "Очистить поле поиска"
-                $('<button type="button" class="btn-danger"><i class="fa fa-times"></i></button>').appendTo('div.dataTables_filter');
-
-                // нажата кнопка "Очистить поле поиска"
-                $('.dataTables_filter').on('click', 'button', () =>  table.search('').draw());
             }, 1000);
 
 SCRIPT;

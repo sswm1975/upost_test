@@ -19,6 +19,45 @@
     .dataTables_wrapper .dataTables_length label, .dataTables_wrapper .dataTables_filter label {font-weight:normal}
     .dataTables_wrapper .dataTables_filter button {padding:3px 7px;border:1px solid transparent}
     .dataTables_wrapper button.dt-button {padding:3px 6px}
+
+    /* Стили для плагина "Видимость столбцов", взятл с https://stackoverflow.com/questions/32701006/checkbox-for-each-button-to-select-a-column-in-datatables-1-10-without-colvis */
+    .dt-button-collection .dt-button.buttons-columnVisibility {
+        background: none !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0.25em 1em !important;
+        margin: 0 !important;
+        text-align: left !important;
+    }
+    .dt-button-collection .buttons-columnVisibility:before,
+    .dt-button-collection .buttons-columnVisibility.active span:before {
+        display:block;
+        position:absolute;
+        top:1.2em;
+        left:0;
+        width:12px;
+        height:12px;
+        box-sizing:border-box;
+    }
+    .dt-button-collection .buttons-columnVisibility:before {
+        content:' ';
+        margin-top:-8px;
+        margin-left:10px;
+        border:1px solid black;
+        border-radius:3px;
+    }
+    .dt-button-collection .buttons-columnVisibility.active span:before {
+        content:'\2714';
+        margin-top: -11px;
+        margin-left: 11px;
+        text-align: center;
+        text-shadow: 1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
+    }
+    .dt-button-collection .buttons-columnVisibility span {
+        margin-left:17px;
+    }
+    /* END Стили для плагина "Видимость столбцов" */
 </style>
 
     <table id="orders" class="display cell-border compact nowrap" style="width:100%;background-color:white">
