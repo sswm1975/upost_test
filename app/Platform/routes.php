@@ -24,8 +24,8 @@ Route::group([
     $router->get('ajax/orders', 'DataTables\OrderController@getOrders')->name('ajax.orders')->middleware('admin.permission:check,orders');
 
     # Маршруты
-    $router->get('routes', 'RouteController@index')->name('routes.index')->middleware('admin.permission:check,routes');
-    $router->get('routes/{id}', 'RouteController@show')->name('routes.show')->middleware('admin.permission:check,routes');
+    $router->get('routes', 'DataTables\RouteController@index')->name('routes.index')->middleware('admin.permission:check,routes');
+    $router->get('ajax/routes', 'DataTables\RouteController@getData')->name('ajax.routes')->middleware('admin.permission:check,routes');
 
     # Платежи (Заявки на выплату)
     $router->resource('payments', 'PaymentController', ['except' => ['delete']])->names('payments')->middleware('admin.permission:check,payments');
@@ -152,7 +152,12 @@ Route::group([
         'middleware' => 'admin.permission:allow,administrator',
         'as'         => 'old.',
     ], function (Router $router) {
+        # Заказы
         $router->get('orders', 'OrderController@index')->name('orders.index')->middleware('admin.permission:check,orders');
         $router->get('orders/{id}', 'OrderController@show')->name('orders.show')->middleware('admin.permission:check,orders');
+
+        # Маршруты
+        $router->get('routes', 'RouteController@index')->name('routes.index')->middleware('admin.permission:check,routes');
+        $router->get('routes/{id}', 'RouteController@show')->name('routes.show')->middleware('admin.permission:check,routes');
     });
 });

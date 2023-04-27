@@ -7,6 +7,7 @@ use App\Models\Traits\WithoutAppends;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\DB;
@@ -152,6 +153,11 @@ class Route extends Model
     function order(): HasOneThrough
     {
         return $this->hasOneThrough(Order::class, Rate::class, 'route_id', 'id', 'id', 'order_id');
+    }
+
+    function orders(): HasManyThrough
+    {
+        return $this->hasManyThrough(Order::class, Rate::class, 'route_id', 'id', 'id', 'order_id');
     }
 
     public function review(): MorphOne
