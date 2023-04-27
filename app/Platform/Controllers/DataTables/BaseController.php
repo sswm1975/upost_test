@@ -3,6 +3,7 @@
 namespace App\Platform\Controllers\DataTables;
 
 use App\Http\Controllers\Controller;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use Illuminate\Support\Facades\Route;
 
@@ -30,11 +31,11 @@ class BaseController extends Controller
     protected array $breadcrumb = [];
 
     /**
-     * View template for table.
+     * Entity.
      *
      * @var string
      */
-    protected string $view = '';
+    protected string $entity = '';
 
     /**
      * Get content title.
@@ -78,20 +79,21 @@ class BaseController extends Controller
      */
     public function index(Content $content): Content
     {
-        $this->scriptDataTable();
+        Admin::style(getCss('platform.datatables.common'));
+        Admin::script($this->script());
 
         $content->title($this->title())
             ->description('&nbsp;')
             ->breadcrumb(...$this->breadcrumb());
 
-        return $content->body($this->table());
+        return $content->body(view('platform.datatables.' . $this->entity . '.table'));
     }
 
-    /**
-     * @return string
-     */
-    protected function table()
+    protected function script()
     {
-        return view($this->view);
+        $script = 'platform.datatables.' . $this->entity . '.script';
+        $ajax_url = route('platform.ajax.' . $this->entity);
+
+        return getScript($script, compact('ajax_url'));
     }
 }

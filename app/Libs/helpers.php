@@ -644,13 +644,20 @@ function isEqualCountryAndCity($from_country_id, $from_city_id, $to_country_id, 
  */
 function getScript($file, $data = [])
 {
-    $sql_file = resource_path(str_replace('.', '/', 'views/' . $file) . '.js');
-    $content = file_get_contents($sql_file);
+    $filename = resource_path(str_replace('.', '/', 'views/' . $file) . '.js');
+    $content = file_get_contents($filename);
 
     foreach ($data as $key => $value) {
         $content = str_replace('$' . $key, $value, $content);
     }
 
     return $content;
+}
+
+function getCss($file)
+{
+    $filename = resource_path(str_replace('.', '/', 'views/' . $file) . '.css');
+
+    return file_get_contents($filename);
 }
 

@@ -3,18 +3,17 @@
 namespace App\Platform\Controllers\DataTables;
 
 use App\Models\Order;
-use Encore\Admin\Facades\Admin;
 use Illuminate\Support\Carbon;
 
 class OrderController extends BaseController
 {
     protected string $title = 'Заказы';
     protected string $icon = 'fa-shopping-bag';
-    protected string $view = 'platform.datatables.orders.table';
+    protected string $entity = 'orders';
 
-    public function getOrders()
+    public function getData()
     {
-        $orders = Order::with(['user', 'from_country', 'from_city', 'to_country', 'to_city', 'wait_range'])
+        $data = Order::with(['user', 'from_country', 'from_city', 'to_country', 'to_city', 'wait_range'])
             ->get()
             ->map(function ($order) {
                 return [
@@ -46,15 +45,6 @@ class OrderController extends BaseController
             })
             ->all();
 
-        return ['data' => $orders];
-    }
-
-    protected function scriptDataTable()
-    {
-        $ajax_url = route('platform.ajax.orders');
-
-        $script = getScript('platform.datatables.orders.script', compact('ajax_url'));
-
-        Admin::script($script);
+        return compact('data');
     }
 }

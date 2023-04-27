@@ -50,7 +50,6 @@ var table = $('#orders').DataTable({
             className: 'bg-green',
             columnText: function ( dt, index, title ) {
                 // дополняем порядковые номера названием столбцов из списка searchBuilderTitle
-                console.log(index);
                 return title + ': ' + table.init().columnDefs[index].searchBuilderTitle;
             },
             postfixButtons: ['colvisRestore'],

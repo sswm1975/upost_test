@@ -3,14 +3,13 @@
 namespace App\Platform\Controllers\DataTables;
 
 use App\Models\Route;
-use Encore\Admin\Facades\Admin;
 use Illuminate\Support\Carbon;
 
 class RouteController extends BaseController
 {
     protected string $title = 'Маршруты';
     protected string $icon = 'fa-location-arrow';
-    protected string $view = 'platform.datatables.routes.table';
+    protected string $entity = 'routes';
 
     public function getData()
     {
@@ -41,14 +40,5 @@ class RouteController extends BaseController
             ->all();
 
         return compact('data');
-    }
-
-    protected function scriptDataTable()
-    {
-        $ajax_url = route('platform.ajax.routes');
-
-        $script = getScript('platform.datatables.routes.script', compact('ajax_url'));
-
-        Admin::script($script);
     }
 }

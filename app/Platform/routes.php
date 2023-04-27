@@ -21,7 +21,7 @@ Route::group([
 
     # Заказы
     $router->get('orders', 'DataTables\OrderController@index')->name('orders.index')->middleware('admin.permission:check,orders');
-    $router->get('ajax/orders', 'DataTables\OrderController@getOrders')->name('ajax.orders')->middleware('admin.permission:check,orders');
+    $router->get('ajax/orders', 'DataTables\OrderController@getData')->name('ajax.orders')->middleware('admin.permission:check,orders');
 
     # Маршруты
     $router->get('routes', 'DataTables\RouteController@index')->name('routes.index')->middleware('admin.permission:check,routes');
