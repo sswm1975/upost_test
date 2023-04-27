@@ -54,6 +54,7 @@ class OrderController extends BaseController
         $ajax_url = route('platform.ajax.orders');
 
         $script = <<<SCRIPT
+
             $.fn.dataTable.moment( 'DD.MM.YYYY' );
             $.fn.dataTable.moment( 'DD.MM.YYYY' );
             $.fn.dataTable.moment( 'DD.MM.YYYY' );
@@ -71,17 +72,30 @@ class OrderController extends BaseController
                 weekdays: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"]
             });
 
+            $.fn.dataTable.ext.buttons.footer_toggle = {
+                text: '<i class="fa fa-caret-square-o-down"></i>',
+                className: 'bg-light-blue buttons-footer_toggle',
+                action: function ( e, dt, node, config ) {
+                    config.showFooter = !config.showFooter;
+                    this.text( config.showFooter ? '<i class="fa fa-caret-square-o-up"></i>' : '<i class="fa fa-caret-square-o-down"></i>' );
+                    $( dt.footer() ).toggle();
+                    dt.draw();
+                },
+                showFooter: false,
+            };
+
             var table = $('#orders').DataTable({
                 dom: 'Bfrtip',
                 lengthMenu: [
-                    [ 10, 25, 50, -1 ],
-                    [ '10 строк', '25 строк', '50 строк', 'Все записи' ]
+                    [ 10, 20, 50, 100, -1 ],
+                    [ '10 строк', '20 строк', '50 строк', '100 строк', 'Все записи' ]
                 ],
                 buttons:[
                     {
                         extend: 'searchBuilder',
                         className: 'bg-blue',
                     },
+                    'footer_toggle',
                     {
                         extend: 'pageLength',
                         className: 'bg-orange',
@@ -91,9 +105,9 @@ class OrderController extends BaseController
                         text: '<i class="fa fa-table"></i>',
                         titleAttr: 'Видимость столбцов',
                         className: 'bg-green',
-                        columnText: function ( dt, idx, title ) {
-                            var column_title = $('#orders').DataTable().init().columnDefs[idx].searchBuilderTitle;
-                            return title + ': ' + column_title;
+                        columnText: function ( dt, index, title ) {
+                            // дополняем порядковые номера названием столбцов из списка searchBuilderTitle
+                            return title + ': ' + table.init().columnDefs[index].searchBuilderTitle;
                         },
                         postfixButtons: ['colvisRestore'],
                     },
@@ -111,7 +125,7 @@ class OrderController extends BaseController
                             format: {
                                 header: function ( text, index, node ) {
                                     // вместо порядковых номеров подставляем название столбцов из списка searchBuilderTitle
-                                    return $('#orders').DataTable().init().columnDefs[index].searchBuilderTitle;
+                                    return table.init().columnDefs[index].searchBuilderTitle;
                                 }
                             }
                         },
@@ -131,10 +145,17 @@ class OrderController extends BaseController
                             format: {
                                 header: function ( text, index, node ) {
                                     // вместо порядковых номеров подставляем название столбцов из списка searchBuilderTitle
-                                    return $('#orders').DataTable().init().columnDefs[index].searchBuilderTitle;
+                                    return table.init().columnDefs[index].searchBuilderTitle;
                                 }
                             }
                         },
+                    },
+                    {
+                        text: '<i class="fa fa-refresh"></i>',
+                        titleAttr: 'Обновить данные',
+                        action: function ( e, dt, node, config ) {
+                            dt.ajax.reload();
+                        }
                     },
                 ],
                 ajax: '{$ajax_url}',
@@ -195,6 +216,7 @@ class OrderController extends BaseController
                     { data: 'strikes' },
                 ],
                 order: [[0, 'desc']],
+                stateSave: true,
                 language: {
                     url: '/vendor/datatables/ru.json'    // взято и подправлено с https://cdn.datatables.net/plug-ins/1.13.4/i18n/ru.json
                 },
@@ -204,29 +226,18 @@ class OrderController extends BaseController
 
                     // нажата кнопка "Очистить поле поиска"
                     $('.dataTables_filter').on('click', 'button', () =>  table.search('').draw());
-                }
+
+                    // Filter event handler
+                    $(table.table().container()).on( 'keyup', 'tfoot input', function () {
+                        table.column( $(this).data('index') ).search( this.value ).draw();
+                    });
+
+                    // в заголовки футера добавляем подсказки с наименованием столбца
+                    $( table.footer() ).find('th').each(function(index, th) {
+                        $(th).prop('title', table.init().columnDefs[index].searchBuilderTitle);
+                    });
+                },
             });
-
-            // код ниже выполняем с задержкой, пока загрузятся данные таблицы
-            setTimeout(function() {
-                // Устанавливаем дефолтный фильтр для таблицы
-                table.searchBuilder.rebuild({
-                    criteria:[
-                        {
-                            data: 'Статус',
-                            condition: 'contains',
-                            value: ['active']
-                        },
-                        {
-                            data: 'Статус',
-                            condition: 'contains',
-                            value: ['in_work']
-                        }
-                    ],
-                    logic: 'OR'
-                });
-            }, 1000);
-
 SCRIPT;
         Admin::script($script);
     }
