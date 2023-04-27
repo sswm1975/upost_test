@@ -20,9 +20,10 @@
     .dataTables_wrapper .dataTables_filter button {padding:3px 7px;border:1px solid transparent}
     .dataTables_wrapper button.dt-button {padding:3px 6px}
 
+    div.dt-buttons .dt-button {border-radius: 0}
     .dataTables_wrapper tbody tr:last-child td {border-bottom: 1px solid rgba(0, 0, 0, 0.15)}
     .dataTables_wrapper button.buttons-footer_toggle,
-    .dataTables_wrapper button.buttons-copy {margin-left:-6px}
+    .dataTables_wrapper button.buttons-copy {margin-left:-5px}
 
     /* Стили для плагина "Видимость столбцов", взятл с https://stackoverflow.com/questions/32701006/checkbox-for-each-button-to-select-a-column-in-datatables-1-10-without-colvis */
     .dt-button-collection .dt-button.buttons-columnVisibility {
@@ -54,7 +55,7 @@
     .dt-button-collection .buttons-columnVisibility.active span:before {
         content:'\2714';
         margin-top: -11px;
-        margin-left: 11px;
+        margin-left: 10px;
         text-align: center;
         text-shadow: 1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
     }
