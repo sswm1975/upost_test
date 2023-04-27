@@ -634,3 +634,23 @@ function isEqualCountryAndCity($from_country_id, $from_city_id, $to_country_id, 
 
     return false;
 }
+
+/**
+ * Получить JS-скрипт
+ *
+ * @param  string $file расположение JS-файла без указания расширения (можно использовать точечную нотацию)
+ * @param  array  $data ассоциированный массив данных
+ * @return string
+ */
+function getScript($file, $data = [])
+{
+    $sql_file = resource_path(str_replace('.', '/', 'views/' . $file) . '.js');
+    $content = file_get_contents($sql_file);
+
+    foreach ($data as $key => $value) {
+        $content = str_replace('$' . $key, $value, $content);
+    }
+
+    return $content;
+}
+
