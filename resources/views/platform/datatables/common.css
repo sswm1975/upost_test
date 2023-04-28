@@ -5,7 +5,7 @@ table.compact>thead>tr:nth-child(-n+3)>th:first-child {border-left:1px solid lig
 table.compact>thead>tr:nth-child(-n+3)>th{border-right:1px solid lightgrey}
 table.compact>thead>tr:nth-child(3)>th{background:lightgrey}
 table.compact>thead>tr:nth-child(-n+2)>th{text-align:center}
-.dataTables_wrapper {font-size:.9em}
+.dataTables_wrapper .dataTables_scroll{font-size:.9em}
 .dataTables_wrapper .dataTables_length {margin-left:20px}
 .dataTables_wrapper .dataTables_length select,
 .dataTables_wrapper .dataTables_filter input {background-color:white;padding:3px 6px;border-radius:0}
