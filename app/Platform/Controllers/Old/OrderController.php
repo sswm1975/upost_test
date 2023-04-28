@@ -22,14 +22,15 @@ class OrderController extends AdminController
      */
     public function menu(): array
     {
+        $menu_statuses = [Order::STATUS_ACTIVE, Order::STATUS_IN_WORK, Order::STATUS_SUCCESSFUL, Order::STATUS_CLOSED];
         $counts = Order::selectRaw('status, count(1) as total')
-            ->whereIn('status', [Order::STATUS_ACTIVE, Order::STATUS_IN_WORK, Order::STATUS_SUCCESSFUL, Order::STATUS_CLOSED])
+            ->whereIn('status', $menu_statuses)
             ->groupBy('status')
             ->pluck('total', 'status')
             ->toArray();
 
         $statuses = [];
-        foreach (Order::STATUSES as $status) {
+        foreach ($menu_statuses as $status) {
             $statuses[$status] = (object) [
                 'name'  => __("message.order.statuses.$status"),
                 'count' => $counts[$status] ?? 0,

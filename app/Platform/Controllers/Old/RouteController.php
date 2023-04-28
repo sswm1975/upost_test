@@ -21,14 +21,15 @@ class RouteController extends AdminController
      */
     public function menu(): array
     {
+        $menu_statuses = [Route::STATUS_ACTIVE, Route::STATUS_CLOSED];
         $counts = Route::selectRaw('status, count(1) as total')
-            ->whereIn('status', [Route::STATUS_ACTIVE, Route::STATUS_CLOSED])
+            ->whereIn('status', $menu_statuses)
             ->groupBy('status')
             ->pluck('total', 'status')
             ->toArray();
 
         $statuses = [];
-        foreach (Route::STATUSES as $status) {
+        foreach ($menu_statuses as $status) {
             $statuses[$status] = (object) [
                 'name'  => __("message.route.statuses.$status"),
                 'count' => $counts[$status] ?? 0,
