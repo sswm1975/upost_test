@@ -4,6 +4,7 @@ namespace App\Platform\Controllers\DataTables;
 
 use App\Models\Route;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class RouteController extends BaseController
 {
@@ -13,20 +14,23 @@ class RouteController extends BaseController
 
     public function getData()
     {
-        $data = Route::with(['user', 'from_country', 'from_city', 'to_country', 'to_city', 'orders', 'orders.deductions', 'rates'])
+        # узнаем кол-во споров в разрезе маршрутов
+        $disputes = DB::table('rates')
+            ->join('disputes', 'disputes.rate_id', '=', 'rates.id')
+            ->select('route_id', DB::raw('count(1) as total'))
+            ->groupBy('route_id')
+            ->pluck('total', 'route_id')
+            ->all();
+
+        # отбираем маршруты
+        $data = Route::with(['user', 'from_country', 'from_city', 'to_country', 'to_city', 'orders', 'orders.deductions'])
             ->get()
-            ->map(function ($router) {
+            ->map(function ($router) use ($disputes) {
                 # подсчитываем сумму налогов и комиссий
                 $order_tax_usd = $order_fee_usd = 0;
                 foreach ($router->orders as $order) {
                     $order_tax_usd += $order->deductions->whereIn('type', ['tax_export', 'tax_import'])->sum('amount');
                     $order_fee_usd += $order->deductions->where('type', 'fee')->sum('amount');
-                }
-
-                # подсчитываем кол-во споров
-                $disputes_cnt = 0;
-                foreach ($router->rates as $rate) {
-                    $disputes_cnt += $rate->disputes_count;
                 }
 
                 return [
@@ -50,7 +54,7 @@ class RouteController extends BaseController
                     'orders_profit_usd' => $router->orders->sum('user_price_usd'),
                     'orders_tax_usd' => $order_tax_usd,
                     'order_fee_usd' => $order_fee_usd,
-                    'disputes_cnt' => $disputes_cnt,
+                    'disputes_cnt' => $disputes[$router->id] ?? 0,
                 ];
             })
             ->all();
