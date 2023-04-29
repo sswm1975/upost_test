@@ -86,6 +86,14 @@ class BaseController extends Controller
             ->description('&nbsp;')
             ->breadcrumb(...$this->breadcrumb());
 
+        # если есть в классе наследнике метод menu, то подгружаем доп.стили и меню
+        if (method_exists($this, 'menu')) {
+            Admin::style(self::styleMenu());
+            $content->row(
+                view('platform.datatables.menu', $this->menu())
+            );
+        }
+
         return $content->body(view('platform.datatables.' . $this->entity . '.table'));
     }
 
@@ -95,5 +103,25 @@ class BaseController extends Controller
         $ajax_url = route('platform.ajax.' . $this->entity);
 
         return getScript($script, compact('ajax_url'));
+    }
+
+    /**
+     * Get menu style.
+     *
+     * @return string
+     */
+    protected static function styleMenu(): string
+    {
+        return <<<EOT
+            .box.grid-box {border-top: 0;}
+            .nav-statuses li:first-child {margin-left: 20px;}
+            .nav-statuses li a {padding:4px 7px;}
+            .nav-statuses li a.active {border-color: lightgray; background: white; border-bottom: 1px solid white;}
+            .nav-statuses .label {padding: 0.1em 0.3em; border-radius: 50%;}
+
+            div.dataTables_wrapper {background: white; padding-top: 10px; padding-bottom: 4px;}
+            div.dataTables_wrapper div.dt-buttons {padding-left: 10px;}
+            div.dataTables_wrapper div.dataTables_filter {padding-right: 10px;}
+EOT;
     }
 }

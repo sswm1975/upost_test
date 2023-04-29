@@ -11,9 +11,37 @@ class OrderController extends BaseController
     protected string $icon = 'fa-shopping-bag';
     protected string $entity = 'orders';
 
+    /**
+     * Меню в разрезе статусов.
+     *
+     * @return array
+     */
+    public function menu(): array
+    {
+        $menu_statuses = [Order::STATUS_ACTIVE, Order::STATUS_IN_WORK, Order::STATUS_SUCCESSFUL, Order::STATUS_CLOSED];
+
+        $statuses = [];
+        foreach ($menu_statuses as $status) {
+            $statuses[$status] = __("message.order.statuses.$status");
+        }
+        $statuses['all'] =  'Все';
+
+        return compact('statuses');
+    }
+
+    /**
+     * Получить данные для таблицы.
+     *
+     * @return array
+     */
     public function getData()
     {
+        $status = request('status', Order::STATUS_ACTIVE);
+
         $data = Order::with(['user', 'from_country', 'from_city', 'to_country', 'to_city', 'wait_range'])
+            ->when($status != 'all', function ($query) use ($status) {
+                $query->where('status', $status);
+            })
             ->get()
             ->map(function ($order) {
                 return [

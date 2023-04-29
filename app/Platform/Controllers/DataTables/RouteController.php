@@ -12,6 +12,29 @@ class RouteController extends BaseController
     protected string $icon = 'fa-location-arrow';
     protected string $entity = 'routes';
 
+    /**
+     * Меню в разрезе статусов.
+     *
+     * @return array
+     */
+    public function menu(): array
+    {
+        $menu_statuses = [Route::STATUS_ACTIVE, Route::STATUS_CLOSED];
+
+        $statuses = [];
+        foreach ($menu_statuses as $status) {
+            $statuses[$status] = __("message.route.statuses.$status");
+        }
+        $statuses['all'] =  'Все';
+
+        return compact('statuses');
+    }
+
+    /**
+     * Получить данные для таблицы.
+     *
+     * @return array
+     */
     public function getData()
     {
         # узнаем кол-во споров в разрезе маршрутов
@@ -22,8 +45,13 @@ class RouteController extends BaseController
             ->pluck('total', 'route_id')
             ->all();
 
+        $status = request('status', Route::STATUS_ACTIVE);
+
         # отбираем маршруты
         $data = Route::with(['user', 'from_country', 'from_city', 'to_country', 'to_city', 'orders', 'orders.deductions'])
+            ->when($status != 'all', function ($query) use ($status) {
+                $query->where('status', $status);
+            })
             ->get()
             ->map(function ($router) use ($disputes) {
                 # подсчитываем сумму налогов и комиссий

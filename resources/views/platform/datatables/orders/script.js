@@ -1,3 +1,7 @@
+// меню со статусами, активируем 1-ый пункт
+var menu_statuses = $('ul.nav-statuses');
+menu_statuses.find('li:first-child a').addClass('active');
+
 $.fn.dataTable.moment( 'DD.MM.YYYY' );
 $.fn.dataTable.moment( 'DD.MM.YYYY' );
 $.fn.dataTable.moment( 'DD.MM.YYYY' );
@@ -101,7 +105,14 @@ var table = $('#orders').DataTable({
             }
         },
     ],
-    ajax: '$ajax_url',
+    ajax: {
+        url: '$ajax_url',
+        data: function (params) {
+            if (menu_statuses.length) {
+                params.status = menu_statuses.find('a.active').data('status');
+            }
+        },
+    },
     processing: true,
     deferRender: true,
     fixedHeader: {
@@ -180,4 +191,11 @@ var table = $('#orders').DataTable({
             $(th).prop('title', table.init().columnDefs[index].searchBuilderTitle);
         });
     },
+});
+
+// клик на пункт меню со статусом
+menu_statuses.on('click', 'a', function () {
+    menu_statuses.find('a').removeClass('active');
+    $(this).addClass('active');
+    table.ajax.reload();
 });
