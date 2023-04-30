@@ -83,7 +83,7 @@ Admin::js('https://cdn.datatables.net/select/1.6.2/js/dataTables.select.min.js')
 Admin::js('https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js');
 
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
-    if (Admin::user()->inRoles(['administrator', 'dispute_manager'])) {
+    if (config('show_dispute_in_navbar') && Admin::user()->inRoles(['administrator', 'dispute_manager'])) {
         $navbar->right(new Nav\DisputesCounter);
     }
     $navbar->right(new Nav\FullScreen());
