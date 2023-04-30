@@ -79,8 +79,9 @@ class BaseController extends Controller
      */
     public function index(Content $content): Content
     {
-        Admin::style(getCss('platform.datatables.common'));
-        Admin::script($this->script());
+        static::styleCommon();
+
+        $this->script();
 
         $content->title($this->title())
             ->description('&nbsp;')
@@ -88,7 +89,7 @@ class BaseController extends Controller
 
         # если есть в классе наследнике метод menu, то подгружаем доп.стили и меню
         if (method_exists($this, 'menu')) {
-            Admin::style(self::styleMenu());
+            static::styleMenu();
             $content->row(
                 view('platform.datatables.menu', $this->menu())
             );
@@ -97,24 +98,40 @@ class BaseController extends Controller
         return $content->body(view('platform.datatables.' . $this->entity . '.table'));
     }
 
+    /**
+     * Load DataTables script.
+     */
     protected function script()
     {
-        $script = 'platform.datatables.' . $this->entity . '.script';
+        # инициализируем ссылку для AJAX-запроса
         $ajax_url = route('platform.ajax.' . $this->entity);
+        $script_content = "var ajax_url = '$ajax_url';";
 
-        return getScript($script, compact('ajax_url'));
+        # добавляем объявление столбцов
+        $script_content .= getScript('platform.datatables.' . $this->entity . '.init');
+
+        # добавляем инициализацию DataTables
+        $script_content .= getScript('platform.datatables.common');
+
+        Admin::script($script_content);
+    }
+
+    /**
+     * Get common style.
+     */
+    protected static function styleCommon()
+    {
+        Admin::style(getCss('platform.datatables.common'));
     }
 
     /**
      * Get menu style.
-     *
-     * @return string
      */
-    protected static function styleMenu(): string
+    protected static function styleMenu()
     {
-        return <<<EOT
+        Admin::style(<<<EOT
             .box.grid-box {border-top: 0;}
-            .nav-statuses li:first-child {margin-left: 20px;}
+            .nav-statuses li:first-child {margin-left: 10px;}
             .nav-statuses li a {padding:4px 7px;}
             .nav-statuses li a.active {border-color: lightgray; background: white; border-bottom: 1px solid white;}
             .nav-statuses .label {padding: 0.1em 0.3em; border-radius: 50%;}
@@ -122,6 +139,6 @@ class BaseController extends Controller
             div.dataTables_wrapper {background: white; padding-top: 10px; padding-bottom: 4px;}
             div.dataTables_wrapper div.dt-buttons {padding-left: 10px;}
             div.dataTables_wrapper div.dataTables_filter {padding-right: 10px;}
-EOT;
+EOT);
     }
 }

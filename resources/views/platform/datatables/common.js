@@ -54,7 +54,7 @@ var table = $('#orders').DataTable({
             className: 'bg-green',
             columnText: function ( dt, index, title ) {
                 // дополняем порядковые номера названием столбцов из списка searchBuilderTitle
-                return title + ': ' + table.init().columnDefs[index].searchBuilderTitle;
+                return title + ': ' + table.init().columns[index].searchBuilderTitle;
             },
             postfixButtons: ['colvisRestore'],
         },
@@ -72,7 +72,7 @@ var table = $('#orders').DataTable({
                 format: {
                     header: function ( text, index, node ) {
                         // вместо порядковых номеров подставляем название столбцов из списка searchBuilderTitle
-                        return table.init().columnDefs[index].searchBuilderTitle;
+                        return table.init().columns[index].searchBuilderTitle;
                     }
                 }
             },
@@ -92,7 +92,7 @@ var table = $('#orders').DataTable({
                 format: {
                     header: function ( text, index, node ) {
                         // вместо порядковых номеров подставляем название столбцов из списка searchBuilderTitle
-                        return table.init().columnDefs[index].searchBuilderTitle;
+                        return table.init().columns[index].searchBuilderTitle;
                     }
                 }
             },
@@ -106,7 +106,7 @@ var table = $('#orders').DataTable({
         },
     ],
     ajax: {
-        url: '$ajax_url',
+        url: ajax_url,
         data: function (params) {
             if (menu_statuses.length) {
                 params.status = menu_statuses.find('a.active').data('status');
@@ -123,56 +123,11 @@ var table = $('#orders').DataTable({
     select: {
         info: false
     },
-    columnDefs: [
-        { targets: [0], searchBuilderTitle: 'Код' },
-        { targets: [1], searchBuilderTitle: 'Статус' },
-        { targets: [2], searchBuilderTitle: 'Код путешественника' },
-        { targets: [3], searchBuilderTitle: 'ФИО путешественника' },
-        { targets: [4], searchBuilderTitle: 'Откуда Код страны' },
-        { targets: [5], searchBuilderTitle: 'Откуда Страна' },
-        { targets: [6], searchBuilderTitle: 'Откуда Код города' },
-        { targets: [7], searchBuilderTitle: 'Откуда Город' },
-        { targets: [8], searchBuilderTitle: 'Куда Код страны' },
-        { targets: [9], searchBuilderTitle: 'Куда Страна' },
-        { targets: [10], searchBuilderTitle: 'Куда Код города' },
-        { targets: [11], searchBuilderTitle: 'Куда город' },
-        { targets: [12], searchBuilderTitle: 'Кол-во' },
-        { targets: [13], searchBuilderTitle: 'Стоимость заказов' },
-        { targets: [14], searchBuilderTitle: 'Налоги по заказам' },
-        { targets: [15], searchBuilderTitle: 'Комиссия по заказам' },
-        { targets: [16], searchBuilderTitle: 'Доход по заказам' },
-        { targets: [17], searchBuilderTitle: 'Дата доставки' },
-        { targets: [18], searchBuilderTitle: 'Дата создания' },
-        { targets: [19], searchBuilderTitle: 'Дата изменения' },
-        { targets: [20], searchBuilderTitle: 'Кол-во споров' },
-    ],
-    columns: [
-        { data: 'id', className: 'dt-body-center' },
-        { data: 'status' },
-        { data: 'user_id', className: 'dt-body-center' },
-        { data: 'user_full_name' },
-        { data: 'from_country_id' },
-        { data: 'from_country_name' },
-        { data: 'from_city_id', className: 'dt-body-center' },
-        { data: 'from_city_name' },
-        { data: 'to_country_id', className: 'dt-body-center' },
-        { data: 'to_country_name' },
-        { data: 'to_city_id', className: 'dt-body-center' },
-        { data: 'to_city_name' },
-        { data: 'orders_cnt', className: 'dt-body-right' },
-        { data: 'orders_price_usd', className: 'dt-body-right' },
-        { data: 'orders_tax_usd', className: 'dt-body-right' },
-        { data: 'order_fee_usd', className: 'dt-body-right' },
-        { data: 'orders_profit_usd', className: 'dt-body-right' },
-        { data: 'deadline', className: 'dt-body-center' },
-        { data: 'created_at', className: 'dt-body-center' },
-        { data: 'updated_at', className: 'dt-body-center' },
-        { data: 'disputes_cnt', className: 'dt-body-center' },
-    ],
+    columns: columns,
     order: [[0, 'desc']],
     stateSave: true,
     language: {
-        url: '/vendor/datatables/ru.json'    // взято и подправлено с https://cdn.datatables.net/plug-ins/1.13.4/i18n/ru.json
+        url: '/vendor/datatables/ru.json' // взято и подправлено с https://cdn.datatables.net/plug-ins/1.13.4/i18n/ru.json
     },
     initComplete: function () {
         // возле поля Поиск добавляем кнопку "Очистить поле поиска"
@@ -188,7 +143,7 @@ var table = $('#orders').DataTable({
 
         // в заголовки футера добавляем подсказки с наименованием столбца
         $( table.footer() ).find('th').each(function(index, th) {
-            $(th).prop('title', table.init().columnDefs[index].searchBuilderTitle);
+            $(th).prop('title', table.init().columns[index].searchBuilderTitle);
         });
     },
 });
