@@ -1,3 +1,7 @@
+$.fn.dataTable.moment( 'DD.MM.YYYY' );
+$.fn.dataTable.moment( 'DD.MM.YYYY' );
+$.fn.dataTable.moment( 'DD.MM.YYYY' );
+
 var columns = [
     { data: 'id', className: 'dt-body-center', searchBuilderTitle: 'Код' },
     { data: 'status', searchBuilderTitle: 'Статус' },

@@ -2,10 +2,6 @@
 var menu_statuses = $('ul.nav-statuses');
 menu_statuses.find('li:first-child a').addClass('active');
 
-$.fn.dataTable.moment( 'DD.MM.YYYY' );
-$.fn.dataTable.moment( 'DD.MM.YYYY' );
-$.fn.dataTable.moment( 'DD.MM.YYYY' );
-
 // локализация для плагина DateTime
 $.extend($.fn.dataTable.DateTime.defaults.i18n, {
     previous: "Предыдущий",
@@ -117,7 +113,7 @@ var table = $('#orders').DataTable({
     deferRender: true,
     fixedHeader: {
         header: true,
-        headerOffset: 40,
+        headerOffset: 50,
     },
     scrollX: true,
     select: {
