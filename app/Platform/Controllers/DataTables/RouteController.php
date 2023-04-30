@@ -11,6 +11,7 @@ class RouteController extends BaseController
     protected string $title = 'Маршруты';
     protected string $icon = 'fa-location-arrow';
     protected string $entity = 'routes';
+    protected int $count_columns = 21;
 
     /**
      * Меню в разрезе статусов.

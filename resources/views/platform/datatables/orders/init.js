@@ -23,5 +23,6 @@ var columns = [
     { data: 'deadline', className: 'dt-body-center', searchBuilderTitle: 'Дата доставки' },
     { data: 'created_at', className: 'dt-body-center', searchBuilderTitle: 'Дата создания' },
     { data: 'updated_at', className: 'dt-body-center', searchBuilderTitle: 'Дата изменения' },
+    { data: 'name', searchBuilderTitle: 'Наименование' },
     { data: 'strikes', searchBuilderTitle: 'Жалобы' },
 ];

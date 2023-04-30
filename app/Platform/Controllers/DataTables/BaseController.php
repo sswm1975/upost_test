@@ -38,6 +38,13 @@ class BaseController extends Controller
     protected string $entity = '';
 
     /**
+     * Count of columns in table.
+     *
+     * @var int
+     */
+    protected int $count_columns = 0;
+
+    /**
      * Get content title.
      *
      * @return string
@@ -95,7 +102,9 @@ class BaseController extends Controller
             );
         }
 
-        return $content->body(view('platform.datatables.' . $this->entity . '.table'));
+        $view = view('platform.datatables.' . $this->entity . '.table', ['count_columns' => $this->count_columns]);
+
+        return $content->body($view);
     }
 
     /**

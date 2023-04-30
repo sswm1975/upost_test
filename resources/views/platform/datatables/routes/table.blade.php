@@ -1,4 +1,4 @@
-<table id="orders" class="display cell-border compact nowrap" style="width:100%;background-color:white">
+<table id="grid" class="display cell-border compact nowrap" style="width:100%;background-color:white">
     <thead>
         <tr>
             <th rowspan="2">Код</th>
@@ -31,14 +31,14 @@
             <th>изменен</th>
         </tr>
         <tr>
-            @for($i=1; $i<=21; $i++)
+            @for($i=1; $i<=$count_columns; $i++)
                 <th>{{ $i }}</th>
             @endfor
         </tr>
     </thead>
     <tfoot style="display:none">
         <tr>
-            @for($i=1; $i<=21; $i++)
+            @for($i=1; $i<=$count_columns; $i++)
                 <th>
                     <input type="text" data-index="{{ $i-1 }}" size="1" style="width:100%">
                 </th>

@@ -10,6 +10,7 @@ class OrderController extends BaseController
     protected string $title = 'Заказы';
     protected string $icon = 'fa-shopping-bag';
     protected string $entity = 'orders';
+    protected int $count_columns = 22;
 
     /**
      * Меню в разрезе статусов.
@@ -63,11 +64,9 @@ class OrderController extends BaseController
                     'user_price_usd' => $order->user_price_usd,
                     'products_count' => $order->products_count,
                     'deadline' => Carbon::createFromFormat('Y-m-d', $order->deadline)->format('d.m.Y'),
-                    'wait_range' => $order->wait_range->id,
                     'created_at' => $order->created_at->format('d.m.Y'),
                     'updated_at' => $order->updated_at->format('d.m.Y'),
                     'name' => $order->name,
-                    'description' => $order->description,
                     'strikes' => implode(',', $order->strikes),
                 ];
             })
