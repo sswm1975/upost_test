@@ -126,14 +126,8 @@ var table = $('#grid').DataTable({
         url: '/vendor/datatables/ru.json' // взято и подправлено с https://cdn.datatables.net/plug-ins/1.13.4/i18n/ru.json
     },
     initComplete: function () {
-        // возле поля Поиск добавляем кнопку "Очистить поле поиска"
-        $('<button type="button" class="btn-danger"><i class="fa fa-times"></i></button>').appendTo('div.dataTables_filter');
-
-        // нажата кнопка "Очистить поле поиска"
-        $('.dataTables_filter').on('click', 'button', () =>  table.search('').draw());
-
-        // Filter event handler
-        $(table.table().container()).on( 'keyup', 'tfoot input', function () {
+        // обработчик ввода данных в полях поиска, что находятся в футере таблицы
+        $(table.table().container()).on( 'keyup search input paste cut', 'tfoot input', function () {
             table.column( $(this).data('index') ).search( this.value ).draw();
         });
 

@@ -41,7 +41,7 @@
         <tr>
             @for($i=1; $i<=$count_columns; $i++)
                 <th>
-                    <input type="text" data-index="{{ $i-1 }}" size="1" style="width:100%">
+                    <input type="search" data-index="{{ $i-1 }}" size="1" aria-controls="grid" style="width:100%">
                 </th>
             @endfor
         </tr>
