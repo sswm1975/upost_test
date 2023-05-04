@@ -48,7 +48,7 @@
 
     $('#grid-ajax-modal').on('hidden.bs.modal', function (e) {
         clearTimeout(timer_reload_chat);
-        $.get('/platform/disputes/{{ $chat->id }}/clear_unread_messages_count');
+        $.get('/platform/old/disputes/{{ $chat->id }}/clear_unread_messages_count');
         $.admin.reload();
     });
 

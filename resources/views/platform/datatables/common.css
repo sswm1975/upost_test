@@ -13,6 +13,8 @@ table.compact>thead>tr:nth-child(-n+2)>th{text-align:center}
 .dataTables_wrapper button.dt-button {padding:3px 6px}
 
 div.dt-buttons .dt-button {border-radius: 0}
+div.dt-button-collection {width:auto}
+
 .dataTables_wrapper tbody tr:last-child td {border-bottom: 1px solid rgba(0, 0, 0, 0.15)}
 .dataTables_wrapper button.buttons-footer_toggle,
 .dataTables_wrapper button.buttons-copy {margin-left:-5px}

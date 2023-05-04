@@ -1,6 +1,5 @@
 // меню со статусами, активируем 1-ый пункт
 var menu_statuses = $('ul.nav-statuses');
-menu_statuses.find('li:first-child a').addClass('active');
 
 // локализация для плагина DateTime
 $.extend($.fn.dataTable.DateTime.defaults.i18n, {
@@ -33,7 +32,7 @@ var table = $('#grid').DataTable({
         [ 10, 20, 50, 100, -1 ],
         [ '10 строк', '20 строк', '50 строк', '100 строк', 'Все записи' ]
     ],
-    buttons:[
+    buttons: [
         {
             extend: 'searchBuilder',
             className: 'bg-blue',
@@ -100,12 +99,31 @@ var table = $('#grid').DataTable({
                 dt.ajax.reload();
             }
         },
+        {
+            extend: 'collection',
+            name: 'actions',
+            text: 'Действия',
+            enabled: false,
+            autoClose: true ,
+            buttons: [],
+        },
     ],
     ajax: {
         url: ajax_url,
         data: function (params) {
             if (menu_statuses.length) {
                 params.status = menu_statuses.find('a.active').data('status');
+            }
+        },
+        beforeSend: function () {
+            table.buttons('.action').remove();
+        },
+        complete: function (data) {
+            if (typeof actions == 'undefined') return;
+
+            var status = menu_statuses.find('a.active').data('status');
+            if (! $.isEmptyObject( actions[status]) ) {
+                table.button().add('7-0', actions[status]);
             }
         },
     },
@@ -125,7 +143,7 @@ var table = $('#grid').DataTable({
     language: {
         url: '/vendor/datatables/ru.json' // взято и подправлено с https://cdn.datatables.net/plug-ins/1.13.4/i18n/ru.json
     },
-    initComplete: function () {
+    initComplete: function (settings, json) {
         // обработчик ввода данных в полях поиска, что находятся в футере таблицы
         $(table.table().container()).on( 'keyup search input paste cut', 'tfoot input', function () {
             table.column( $(this).data('index') ).search( this.value ).draw();
@@ -135,6 +153,15 @@ var table = $('#grid').DataTable({
         $( table.footer() ).find('th').each(function(index, th) {
             $(th).prop('title', table.init().columns[index].searchBuilderTitle);
         });
+
+        table.on( 'select deselect', function () {
+            if (typeof actions == 'undefined') return;
+
+            var selectedRows = table.rows( { selected: true } ).count();
+            var status = menu_statuses.find('a.active').data('status');
+            var exists_actions = ! $.isEmptyObject( actions[status] );
+            table.button('actions:name').enable( selectedRows > 0 && exists_actions );
+        } );
     },
 });
 

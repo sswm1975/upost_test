@@ -27,16 +27,15 @@ Route::group([
     $router->get('routes', 'DataTables\RouteController@index')->name('routes.index')->middleware('admin.permission:check,routes');
     $router->get('ajax/routes', 'DataTables\RouteController@getData')->name('ajax.routes')->middleware('admin.permission:check,routes');
 
+    # Споры
+    $router->get('disputes', 'DataTables\DisputeController@index')->name('disputes.index')->middleware('admin.permission:check,disputes');
+    $router->get('ajax/disputes', 'DataTables\DisputeController@getData')->name('ajax.disputes')->middleware('admin.permission:check,disputes');
+
     # Платежи (Заявки на выплату)
     $router->resource('payments', 'PaymentController', ['except' => ['delete']])->names('payments')->middleware('admin.permission:check,payments');
 
     # Транзакции
     $router->get('transactions', 'TransactionController@index')->name('transactions.index')->middleware('admin.permission:allow,administrator');
-
-    # Споры
-    $router->get('disputes/counter', 'DisputeController@getDisputesCounter')->name('disputes.counter')->middleware('admin.permission:check,disputes'); # Получить количество споров по фильтру
-    $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes')->middleware('admin.permission:check,disputes');
-    $router->get('disputes/{chat_id}/clear_unread_messages_count', 'DisputeController@clearUnreadMessagesCount')->name('disputes.clear_unread_messages_count')->middleware('admin.permission:check,disputes');
 
     # Треки доставки
     $router->resource('tracks', 'TrackController')->names('tracks')->middleware('admin.permission:allow,administrator');
@@ -159,5 +158,10 @@ Route::group([
         # Маршруты
         $router->get('routes', 'RouteController@index')->name('routes.index')->middleware('admin.permission:check,routes');
         $router->get('routes/{id}', 'RouteController@show')->name('routes.show')->middleware('admin.permission:check,routes');
+
+        # Споры
+        $router->get('disputes/counter', 'DisputeController@getDisputesCounter')->name('disputes.counter')->middleware('admin.permission:check,disputes'); # Получить количество споров по фильтру
+        $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes')->middleware('admin.permission:check,disputes');
+        $router->get('disputes/{chat_id}/clear_unread_messages_count', 'DisputeController@clearUnreadMessagesCount')->name('disputes.clear_unread_messages_count')->middleware('admin.permission:check,disputes');
     });
 });
