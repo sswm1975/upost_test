@@ -102,7 +102,7 @@ var table = $('#grid').DataTable({
         {
             extend: 'collection',
             name: 'actions',
-            text: 'Действия',
+            text: 'Операции',
             enabled: false,
             autoClose: true ,
             buttons: [],
@@ -119,8 +119,13 @@ var table = $('#grid').DataTable({
             table.buttons('.action').remove();
         },
         complete: function (data) {
+            // лочим кнопку "Операции"
+            table.button('actions:name').disable();
+
+            // если init.js нет объявления переменной actions (операции в разрезе статусов), то выходим
             if (typeof actions == 'undefined') return;
 
+            // для кнопки "Операции" подгружаем подпункты с операциями в зависимости от статуса
             var status = menu_statuses.find('a.active').data('status');
             if (! $.isEmptyObject( actions[status]) ) {
                 table.button().add('7-0', actions[status]);

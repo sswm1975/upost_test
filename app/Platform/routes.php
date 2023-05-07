@@ -30,6 +30,11 @@ Route::group([
     # Споры
     $router->get('disputes', 'DataTables\DisputeController@index')->name('disputes.index')->middleware('admin.permission:check,disputes');
     $router->get('ajax/disputes', 'DataTables\DisputeController@getData')->name('ajax.disputes')->middleware('admin.permission:check,disputes');
+    $router->post('disputes/appoint', 'DataTables\DisputeController@appointDispute')->middleware('admin.permission:check,disputes');
+    $router->post('disputes/in_work', 'DataTables\DisputeController@inWorkDispute')->middleware('admin.permission:check,disputes');
+    $router->post('disputes/close/guilty_performer', 'DataTables\DisputeController@closeDisputeGuiltyPerformer')->middleware('admin.permission:check,disputes');
+    $router->post('disputes/close/guilty_customer', 'DataTables\DisputeController@closeDisputeGuiltyCustomer')->middleware('admin.permission:check,disputes');
+    $router->post('disputes/canceled', 'DataTables\DisputeController@canceledDispute')->middleware('admin.permission:check,disputes');
 
     # Платежи (Заявки на выплату)
     $router->resource('payments', 'PaymentController', ['except' => ['delete']])->names('payments')->middleware('admin.permission:check,payments');
