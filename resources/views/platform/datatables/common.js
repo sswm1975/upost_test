@@ -159,6 +159,7 @@ var table = $('#grid').DataTable({
             $(th).prop('title', table.init().columns[index].searchBuilderTitle);
         });
 
+        // выделение/снятие выделения со строк таблицы
         table.on( 'select deselect', function () {
             if (typeof actions == 'undefined') return;
 

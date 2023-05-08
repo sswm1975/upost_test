@@ -35,6 +35,7 @@ Route::group([
     $router->post('disputes/close/guilty_performer', 'DataTables\DisputeController@closeDisputeGuiltyPerformer')->middleware('admin.permission:check,disputes');
     $router->post('disputes/close/guilty_customer', 'DataTables\DisputeController@closeDisputeGuiltyCustomer')->middleware('admin.permission:check,disputes');
     $router->post('disputes/canceled', 'DataTables\DisputeController@canceledDispute')->middleware('admin.permission:check,disputes');
+    $router->post('disputes/set_chat_lock_status', 'DataTables\DisputeController@setChatLockStatus')->middleware('admin.permission:check,disputes');
 
     # Платежи (Заявки на выплату)
     $router->resource('payments', 'PaymentController', ['except' => ['delete']])->names('payments')->middleware('admin.permission:check,payments');

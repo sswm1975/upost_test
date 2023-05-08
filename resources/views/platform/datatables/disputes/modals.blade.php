@@ -10,7 +10,7 @@
                     <div class="form-group">
                         <label>Менеджер</label>
                             <select class="form-control" style="width: 100%;" name="admin_user_id" data-value="">
-                                @foreach($users as $id => $name)
+                                @foreach($data['users'] as $id => $name)
                                     <option value="{{ $id }}">{{ $name }}</option>
                                 @endforeach
                         </select>
@@ -37,7 +37,7 @@
                     <div class="form-group">
                         <label>Причина</label>
                         <select class="form-control" style="width: 100%;" name="dispute_closed_reason_id" data-value="">
-                            @foreach($closed_reasons['guilty_performer'] as $id => $name)
+                            @foreach($data['closed_reasons']['guilty_performer'] as $id => $name)
                                 <option value="{{ $id }}">{{ $name }}</option>
                             @endforeach
                         </select>
@@ -68,7 +68,7 @@
                     <div class="form-group">
                         <label>Причина</label>
                         <select class="form-control" style="width: 100%;" name="dispute_closed_reason_id" data-value="">
-                            @foreach($closed_reasons['guilty_customer'] as $id => $name)
+                            @foreach($data['closed_reasons']['guilty_customer'] as $id => $name)
                                 <option value="{{ $id }}">{{ $name }}</option>
                             @endforeach
                         </select>
@@ -76,6 +76,33 @@
                     <div class="form-group">
                         <label>Детальное описание закрытия спора</label>
                         <textarea name="reason_closing_description" class="form-control" rows="5" placeholder="Введите детальное описание причины закрытия спора"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal" tabindex="-1" role="dialog" id="chat_lock_status_modal">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Установить статус блокировки для чата</h4>
+            </div>
+            <form action="/platform/disputes/set_chat_lock_status">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Статус</label>
+                        <select class="form-control" style="width: 100%;" name="chat_lock_status" data-value="">
+                            @foreach($data['chat_lock_status'] as $id => $name)
+                                <option value="{{ $id }}">{{ $name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">

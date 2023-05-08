@@ -7,6 +7,7 @@
             <th colspan="2">Менеджер</th>
             <th colspan="2">Инициатор</th>
             <th colspan="2">Ответчик</th>
+            <th rowspan="2">Статус<br>блокировки чата</th>
             <th colspan="3">Даты</th>
         </tr>
         <tr>

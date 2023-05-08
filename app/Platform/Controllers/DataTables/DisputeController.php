@@ -12,7 +12,6 @@ use App\Models\Payment;
 use App\Models\Rate;
 use App\Models\Track;
 use App\Models\Transaction;
-use Encore\Admin\Actions\Response;
 use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\JsonResponse;
@@ -24,7 +23,7 @@ class DisputeController extends BaseController
     protected string $title = 'Споры';
     protected string $icon = 'fa-gavel';
     protected string $entity = 'disputes';
-    protected int $count_columns = 14;
+    protected int $count_columns = 15;
 
     /**
      * Меню в разрезе статусов.
@@ -38,16 +37,26 @@ class DisputeController extends BaseController
         return compact('statuses');
     }
 
+    /**
+     * Index interface.
+     *
+     * @param Content $content
+     *
+     * @return Content
+     */
     public function index(Content $content): Content
     {
         $content = parent::index($content);
 
-        $users = Administrator::whereNotNull('user_id')->pluck('username', 'id');
-        $closed_reasons =[
-            'guilty_performer' => DisputeClosedReason::whereGuilty('performer')->pluck('name', 'id'),
-            'guilty_customer' => DisputeClosedReason::whereGuilty('customer')->pluck('name', 'id'),
+        $data = [
+            'users' => Administrator::whereNotNull('user_id')->pluck('username', 'id'),
+            'closed_reasons' => [
+                'guilty_performer' => DisputeClosedReason::whereGuilty('performer')->pluck('name', 'id'),
+                'guilty_customer'  => DisputeClosedReason::whereGuilty('customer')->pluck('name', 'id'),
+            ],
+            'chat_lock_status' => Chat::LOCK_STATUSES,
         ];
-        $content->row(view('platform.datatables.disputes.modals', compact('users', 'closed_reasons')));
+        $content->row(view('platform.datatables.disputes.modals', compact('data')));
 
         return $content;
     }
@@ -62,7 +71,7 @@ class DisputeController extends BaseController
         $status = request('status', Dispute::STATUS_ACTIVE);
 
         # отбираем маршруты
-        $data = Dispute::with(['problem', 'user', 'respondent', 'admin_user'])
+        $data = Dispute::with(['problem', 'user', 'respondent', 'admin_user', 'chat'])
             ->when($status != 'all', function ($query) use ($status) {
                 $query->where('status', $status);
             })
@@ -75,7 +84,7 @@ class DisputeController extends BaseController
                     'problem_name' => $row->problem->name,
                     'problem_days' => $row->problem->days,
                     'manager_id' => $row->admin_user->id ?? '',
-                    'manager_full_name' => $row->admin_user->full_name ?? '',
+                    'manager_full_name' => $row->admin_user->name ?? '',
                     'user_id' => $row->user->id,
                     'user_full_name' => $row->user->full_name,
                     'respondent_id' => $row->respondent->id,
@@ -83,6 +92,7 @@ class DisputeController extends BaseController
                     'deadline' => $row->deadline->format('d.m.Y'),
                     'created_at' => $row->created_at->format('d.m.Y'),
                     'updated_at' => !empty($row->updated_at) ? $row->updated_at->format('d.m.Y') : '',
+                    'chat_lock_status' => Chat::LOCK_STATUSES[$row->chat->lock_status],
                 ];
             })
             ->all();
@@ -298,6 +308,26 @@ class DisputeController extends BaseController
         }
 
         return static::jsonResponse('Диспуты закрыты!');
+    }
+
+    /**
+     * Установка статуса блокировки для чата.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function setChatLockStatus(Request $request): JsonResponse
+    {
+        if (!$request->filled(['ids', 'chat_lock_status'])) {
+            return static::jsonResponse('Не заполнены обязательные параметры!', false);
+        }
+
+        $ids = json_decode($request->input('ids'));
+        Chat::whereHas('dispute', function ($query) use ($ids) {
+            $query->whereKey($ids);
+        })->update(['lock_status' => $request->input('chat_lock_status')]);
+
+        return static::jsonResponse('Статус для блокировки чата назначен!');
     }
 
     /**

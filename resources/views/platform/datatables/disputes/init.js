@@ -7,13 +7,14 @@ var columns = [
     { data: 'status', searchBuilderTitle: 'Статус' },
     { data: 'problem_id', className: 'dt-body-center', searchBuilderTitle: 'Код проблемы' },
     { data: 'problem_name', searchBuilderTitle: 'Проблема' },
-    { data: 'problem_days', className: 'dt-body-center', searchBuilderTitle: 'Кол-во дней' },
+    { data: 'problem_days', className: 'dt-body-center', searchBuilderTitle: 'Кол-во дней', help: 'Кол-во дней на рассмотрение проблемы' },
     { data: 'manager_id', className: 'dt-body-center', searchBuilderTitle: 'Код путешественника' },
     { data: 'manager_full_name', searchBuilderTitle: 'ФИО путешественника' },
     { data: 'user_id', className: 'dt-body-center', searchBuilderTitle: 'Код путешественника' },
     { data: 'user_full_name', searchBuilderTitle: 'ФИО путешественника' },
     { data: 'respondent_id', className: 'dt-body-center', searchBuilderTitle: 'Код путешественника' },
     { data: 'respondent_full_name', searchBuilderTitle: 'ФИО путешественника' },
+    { data: 'chat_lock_status', searchBuilderTitle: 'Статус блокировки чата' },
     { data: 'deadline', className: 'dt-body-center', searchBuilderTitle: 'Дата доставки' },
     { data: 'created_at', className: 'dt-body-center', searchBuilderTitle: 'Дата создания' },
     { data: 'updated_at', className: 'dt-body-center', searchBuilderTitle: 'Дата изменения' },
@@ -77,12 +78,20 @@ $.fn.dataTable.ext.buttons.cancelDispute = {
         });
     }
 };
+$.fn.dataTable.ext.buttons.setChatLockStatus = {
+    text: 'Установить статус блокировки для чата',
+    className: 'action',
+    action: function (e, dt, node, config) {
+        $('#chat_lock_status_modal').modal('show');
+    }
+};
 
 // операции в разрезе статусов
 var actions = {
     active: ['appointDispute'],
     appointed: ['inWorkDispute'],
-    in_work: ['closeDisputeGuiltyPerformer', 'closeDisputeGuiltyCustomer', 'cancelDispute'],
+    in_work: ['closeDisputeGuiltyPerformer', 'closeDisputeGuiltyCustomer', 'cancelDispute', 'setChatLockStatus'],
+    closed: ['setChatLockStatus'],
 };
 
 // отправить аякс-запрос
