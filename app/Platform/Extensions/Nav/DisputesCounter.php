@@ -29,7 +29,7 @@ HTML;
 
     private function script(): string
     {
-        $url = route('platform.disputes.counter', [
+        $url = route('platform.old.disputes.counter', [
             'status' => Admin::user()->isAdministrator() ? Dispute::STATUS_ACTIVE : Dispute::STATUS_APPOINTED,
             'admin_user_id' => Admin::user()->isAdministrator() ? 0 : Admin::user()->id,
         ]);
