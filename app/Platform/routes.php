@@ -37,6 +37,11 @@ Route::group([
     $router->post('disputes/canceled', 'DataTables\DisputeController@canceledDispute')->middleware('admin.permission:check,disputes');
     $router->post('disputes/set_chat_lock_status', 'DataTables\DisputeController@setChatLockStatus')->middleware('admin.permission:check,disputes');
 
+    # Чаты
+    $router->get('chats', 'DataTables\ChatController@index')->name('chats.index')->middleware('admin.permission:check,chats');
+    $router->get('ajax/chats', 'DataTables\ChatController@getData')->name('ajax.chats')->middleware('admin.permission:check,chats');
+    $router->post('chats/set_chat_lock_status', 'DataTables\ChatController@setChatLockStatus')->middleware('admin.permission:check,chats');
+
     # Платежи (Заявки на выплату)
     $router->resource('payments', 'PaymentController', ['except' => ['delete']])->names('payments')->middleware('admin.permission:check,payments');
 
@@ -45,11 +50,6 @@ Route::group([
 
     # Треки доставки
     $router->resource('tracks', 'TrackController')->names('tracks')->middleware('admin.permission:allow,administrator');
-
-    # Чаты
-    $router->get('chats', 'ChatController@index')->name('chats.index')->middleware('admin.permission:check,chats');
-    $router->post('chats/add_message', 'ChatController@addMessage')->name('chats.add_message')->middleware('admin.permission:check,chats');
-    $router->put('chats/{chat}', 'ChatController@update')->name('chats.update')->middleware('admin.permission:check,chats');
 
     # Обратная связь
     $router->get('feedback', 'FeedbackController@index')->name('feedback.index');
@@ -169,5 +169,10 @@ Route::group([
         $router->get('disputes/counter', 'DisputeController@getDisputesCounter')->name('disputes.counter')->middleware('admin.permission:check,disputes'); # Получить количество споров по фильтру
         $router->resource('disputes', 'DisputeController', ['except' => ['delete']])->names('disputes')->middleware('admin.permission:check,disputes');
         $router->get('disputes/{chat_id}/clear_unread_messages_count', 'DisputeController@clearUnreadMessagesCount')->name('disputes.clear_unread_messages_count')->middleware('admin.permission:check,disputes');
+
+        # Чаты
+        $router->get('chats', 'ChatController@index')->name('chats.index')->middleware('admin.permission:check,chats');
+        $router->post('chats/add_message', 'ChatController@addMessage')->name('chats.add_message')->middleware('admin.permission:check,chats');
+        $router->put('chats/{chat}', 'ChatController@update')->name('chats.update')->middleware('admin.permission:check,chats');
     });
 });

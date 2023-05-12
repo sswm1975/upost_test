@@ -55,7 +55,7 @@
     let $chat_send_form = $(".send_form");
     $chat_send_form.find("button.submit").click(function () {
         $.ajax({
-            url: "{{ route('platform.chats.add_message') }}",
+            url: "{{ route('platform.old.chats.add_message') }}",
             method: 'POST',
             data: $chat_send_form.serialize(),
             success: function (data) {
