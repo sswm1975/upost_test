@@ -3,6 +3,7 @@
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
 
+	@if(config('admin.enable_user_panel'))
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel">
             <div class="pull-left image">
@@ -13,6 +14,8 @@
                 <small class="text-primary">{{ Admin::user()->roles[0]->name }}</small>
             </div>
         </div>
+        <!-- /.user-panel -->
+        @endif
 
         @if(config('admin.enable_menu_search'))
         <!-- search form (Optional) -->
@@ -37,7 +40,7 @@
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header">{{ trans('admin.menu') }}</li>
+            <!-- <li class="header">{{ trans('admin.menu') }}</li> -->
 
             @each('admin::partials.menu', Admin::menu(), 'item')
 
