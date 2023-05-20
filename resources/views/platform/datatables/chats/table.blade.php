@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th rowspan="2">Код</th>
-            <th colspan="3">Чат</th>
+            <th colspan="4">Чат</th>
             <th colspan="2">Заказчик</th>
             <th colspan="2">Путешественник</th>
             <th colspan="2">Заказ</th>
@@ -11,6 +11,7 @@
         <tr>
             <th>статус</th>
             <th>блокировка</th>
+            <th title="Имя администратора, который курирует спор">админ</th>
             <th>создан</th>
             <th>код</th>
             <th>фио</th>

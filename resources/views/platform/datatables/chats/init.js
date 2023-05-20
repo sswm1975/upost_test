@@ -4,6 +4,7 @@ var columns = [
     { data: 'id', className: 'dt-body-center', searchBuilderTitle: 'Код' },
     { data: 'status', searchBuilderTitle: 'Статус' },
     { data: 'lock_status', searchBuilderTitle: 'Блокировка' },
+    { data: 'dispute_admin_user_name', searchBuilderTitle: 'Админ' },
     { data: 'created_at', className: 'dt-body-center', searchBuilderTitle: 'Дата создания' },
     { data: 'customer_id', className: 'dt-body-center', searchBuilderTitle: 'Код заказчика' },
     { data: 'customer_full_name', searchBuilderTitle: 'ФИО заказчика' },

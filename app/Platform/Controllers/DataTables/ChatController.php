@@ -12,7 +12,7 @@ class ChatController extends BaseController
     protected string $title = 'Чаты';
     protected string $icon = 'fa-shopping-bag';
     protected string $entity = 'chats';
-    protected int $count_columns = 12;
+    protected int $count_columns = 13;
 
     /**
      * Меню в разрезе статусов.
@@ -60,7 +60,7 @@ class ChatController extends BaseController
     {
         $status = request('status', Chat::STATUS_ACTIVE);
 
-        $data = Chat::with(['customer', 'performer', 'order', 'route'])
+        $data = Chat::with(['customer', 'performer', 'order', 'route', 'dispute.admin_user'])
             ->when($status != 'all', function ($query) use ($status) {
                 $query->where('status', $status);
             })
@@ -79,6 +79,7 @@ class ChatController extends BaseController
                     'order_status' => $row->order->status_name,
                     'route_id' => $row->route->id,
                     'route_status' => $row->route->status_name,
+                    'dispute_admin_user_name' => $row->dispute->admin_user->name ?? '',
                 ];
             })
             ->all();
