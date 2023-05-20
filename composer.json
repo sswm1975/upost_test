@@ -37,7 +37,8 @@
         "omnipay/paypal": "^3.0",
         "pavelpage/censorship": "^1.0",
         "pusher/pusher-php-server": "~3.0",
-        "spatie/eloquent-sortable": "^3.11"
+        "spatie/eloquent-sortable": "^3.11",
+        "stripe/stripe-php": "^10.13"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
