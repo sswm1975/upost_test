@@ -14,8 +14,8 @@ class AddStripeColumnsInUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('stripe_customer_id')->nullable()->comment('Идентификатор пользователя в платежной системе Stripe');
-            $table->string('stripe_payment_method')->nullable()->comment('Идентификатор способа оплаты в платежной системе Stripe');
+            $table->string('stripe_customer_id')->nullable()->collation('utf8mb4_bin')->comment('Идентификатор пользователя в платежной системе Stripe');
+            $table->string('stripe_payment_method')->nullable()->collation('utf8mb4_bin')->comment('Идентификатор способа оплаты в платежной системе Stripe');
         });
     }
 

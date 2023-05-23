@@ -2,6 +2,7 @@
 
 namespace App\Payments;
 
+use phpDocumentor\Reflection\Types\Integer;
 use Stripe\StripeClient;
 
 class Stripe
@@ -60,21 +61,24 @@ class Stripe
      * Create a PaymentMethod.
      * https://stripe.com/docs/api/payment_methods/create?lang=php
      *
-     * @param array $card
+     * @param string $number
+     * @param string $exp_month
+     * @param string $exp_year
+     * @param string $cvc
      * @return \Stripe\PaymentMethod
      * @throws \Stripe\Exception\ApiErrorException
      */
-    public static function createPaymentMethod($card = [])
+    public static function createPaymentMethod_Card(string $number, string $exp_month, string $exp_year, string $cvc)
     {
         $stripe = new StripeClient(config('services.stripe.secret'));
 
         $response = $stripe->paymentMethods->create([
             'type' => 'card',
             'card' => [
-                'number' => $card['number'],
-                'exp_month' => $card['exp_month'],
-                'exp_year' => $card['exp_year'],
-                'cvc' => $card['cvc'],
+                'number' => $number,
+                'exp_month' => $exp_month,
+                'exp_year' => $exp_year,
+                'cvc' => $cvc,
             ],
         ]);
 
@@ -85,12 +89,15 @@ class Stripe
      * Update a PaymentMethod.
      * https://stripe.com/docs/api/payment_methods/update?lang=php
      *
-     * @param $payment_method
-     * @param array $card
+     * @param string $payment_method
+     * @param string $number
+     * @param string $exp_month
+     * @param string $exp_year
+     * @param string $cvc
      * @return \Stripe\PaymentMethod
      * @throws \Stripe\Exception\ApiErrorException
      */
-    public static function updatePaymentMethod($payment_method, $card = [])
+    public static function updatePaymentMethod_Card(string $payment_method, string $number, string $exp_month, string $exp_year, string $cvc)
     {
         $stripe = new StripeClient(config('services.stripe.secret'));
 
@@ -99,10 +106,10 @@ class Stripe
             [
                 'type' => 'card',
                 'card' => [
-                    'number' => $card['number'],
-                    'exp_month' => $card['exp_month'],
-                    'exp_year' => $card['exp_year'],
-                    'cvc' => $card['cvc'],
+                    'number' => $number,
+                    'exp_month' => $exp_month,
+                    'exp_year' => $exp_year,
+                    'cvc' => $cvc,
                 ],
             ]
         );
@@ -145,6 +152,111 @@ class Stripe
         $response = $stripe->paymentMethods->detach(
             $payment_method,
             []
+        );
+
+        return $response;
+    }
+
+    /**
+     * Create a product.
+     *
+     * @param $name
+     * @param $description
+     * @return \Stripe\Product
+     * @throws \Stripe\Exception\ApiErrorException
+     */
+    public static function createProduct($name, $description)
+    {
+        $stripe = new StripeClient(config('services.stripe.secret'));
+
+        $response = $stripe->products->create([
+            'name' => $name,
+            'description' => $description,
+        ]);
+
+        return $response;
+    }
+
+    /**
+     * Update a product.
+     *
+     * @param $product_id
+     * @param $name
+     * @param $description
+     * @return \Stripe\Product
+     * @throws \Stripe\Exception\ApiErrorException
+     */
+    public static function updateProduct($product_id, $name, $description)
+    {
+        $stripe = new StripeClient(config('services.stripe.secret'));
+
+        $response = $stripe->products->update(
+            $product_id,
+            [
+                'name' => $name,
+                'description' => $description,
+            ]
+        );
+
+        return $response;
+    }
+
+    /**
+     * Delete a product.
+     *
+     * @param $product_id
+     * @return \Stripe\Product
+     * @throws \Stripe\Exception\ApiErrorException
+     */
+    public static function deleteProduct($product_id)
+    {
+        $stripe = new StripeClient(config('services.stripe.secret'));
+
+        $response = $stripe->products->delete($product_id, []);
+
+        return $response;
+    }
+
+    /**
+     * Create price.
+     *
+     * @param Integer $amount
+     * @param $product_id
+     * @return \Stripe\Price
+     * @throws \Stripe\Exception\ApiErrorException
+     */
+    public static function createPrice(integer $amount, $product_id)
+    {
+        $stripe = new StripeClient(config('services.stripe.secret'));
+
+        $response = $stripe->prices->create([
+            'unit_amount' => $amount,
+            'currency' => 'usd',
+            'product' => $product_id,
+        ]);
+
+        return $response;
+    }
+
+    /**
+     * Update a price.
+     *
+     * @param $price_id
+     * @param $amount
+     * @param $product_id
+     * @return \Stripe\Price
+     * @throws \Stripe\Exception\ApiErrorException
+     */
+    public static function updatePrice($price_id, $amount, $product_id)
+    {
+        $stripe = new StripeClient(config('services.stripe.secret'));
+
+        $response = $stripe->prices->update(
+            $price_id,
+            [
+                'unit_amount' => $amount,
+                'product' => $product_id,
+            ]
         );
 
         return $response;
