@@ -74,7 +74,7 @@ class AuthController extends Controller
 
         # если ошибка, то по всем правилам одинаковое сообщение: "These credentials do not match our records."
         if ($validator->fails()) {
-            throw new ValidatorException([__('message.auth_failed')]);
+            throw new ValidatorException(__('message.auth_failed'));
         }
 
         # получаем проверенные входные данные

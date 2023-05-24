@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Action;
 use App\Models\User;
+use App\Payments\Stripe;
 use Illuminate\Support\Arr;
 
 class UserObserver
@@ -45,6 +46,16 @@ class UserObserver
         # Изменены основные данные пользователя
         if ($user->wasChanged(User::FIELDS_FOR_EDIT)) {
             $this->addAction($user,Action::USER_PROFILE_UPDATED);
+        }
+
+        # Были изменены данные, которые отправляются в Stripe
+        if ($user->wasChanged(['phone', 'email', 'name', 'surname'])) {
+            (new Stripe)->updateCustomer($user->stripe_customer_id, $user->full_name, $user->email, $user->phone);
+        }
+
+        # Если по юзеру добавился идентификатор пользователя Stripe или платежный метод Stripe и они будут не пустые, то связываем их
+        if ($user->wasChanged(['stripe_customer_id', 'stripe_payment_method']) && $user->stripe_customer_id && $user->stripe_payment_method) {
+            (new Stripe)->attachPaymentMethod($user->stripe_payment_method, $user->stripe_customer_id);
         }
     }
 

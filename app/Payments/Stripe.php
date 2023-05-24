@@ -2,11 +2,20 @@
 
 namespace App\Payments;
 
+use Exception;
 use phpDocumentor\Reflection\Types\Integer;
+use Stripe\Exception\CardException;
 use Stripe\StripeClient;
 
 class Stripe
 {
+    private $stripe;
+
+    public function __construct()
+    {
+        $this->stripe = new StripeClient(config('services.stripe.secret'));;
+    }
+
     /**
      * Create a customer.
      * https://stripe.com/docs/api/customers/create?lang=php
@@ -14,20 +23,23 @@ class Stripe
      * @param string $name
      * @param string $email
      * @param string $phone
-     * @return \Stripe\Customer
-     * @throws \Stripe\Exception\ApiErrorException
+     * @return array|\Stripe\Customer
      */
-    public static function createCustomer(string $name, string $email = '', string $phone = '')
+    public function createCustomer(string $name, string $email = '', string $phone = '')
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
+        $customer = null;
 
-        $response = $stripe->customers->create([
-            'name' => $name,
-            'email' => $email,
-            'phone' => $phone ,
-        ]);
+        try {
+            $customer = $this->stripe->customers->create([
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone ,
+            ]);
+        } catch (Exception $e) {
+            $customer['error'] = $e->getMessage();
+        }
 
-        return $response;
+        return $customer;
     }
 
     /**
@@ -41,48 +53,54 @@ class Stripe
      * @return \Stripe\Customer
      * @throws \Stripe\Exception\ApiErrorException
      */
-    public static function updateCustomer(string $customer_id, string $name, string $email = '', string $phone = '')
+    public function updateCustomer(string $customer_id, string $name, string $email = '', string $phone = '')
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
+        $customer = null;
 
-        $response = $stripe->customers->update(
-            $customer_id,
-            [
-                'name' => $name,
-                'email' => $email,
-                'phone' => $phone ,
-            ]
-        );
+        try {
+            $customer = $this->stripe->customers->update(
+                $customer_id,
+                [
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone ,
+                ]
+            );
+        } catch (Exception $e) {
+            $customer['error'] = $e->getMessage();
+        }
 
-        return $response;
+        return $customer;
     }
 
     /**
      * Create a PaymentMethod.
      * https://stripe.com/docs/api/payment_methods/create?lang=php
      *
-     * @param string $number
-     * @param string $exp_month
-     * @param string $exp_year
-     * @param string $cvc
-     * @return \Stripe\PaymentMethod
-     * @throws \Stripe\Exception\ApiErrorException
+     * @param array $card_data
+     * @return array|\Stripe\PaymentMethod
      */
-    public static function createPaymentMethod_Card(string $number, string $exp_month, string $exp_year, string $cvc)
+    public function createPaymentMethod_Card($card_data)
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
+        $card = null;
 
-        $response = $stripe->paymentMethods->create([
-            'type' => 'card',
-            'card' => [
-                'number' => $number,
-                'exp_month' => $exp_month,
-                'exp_year' => $exp_year,
-                'cvc' => $cvc,
-            ],
-        ]);
+        try {
+            $card = $this->stripe->paymentMethods->create([
+                'type' => 'card',
+                'card' => [
+                    'number' => $card_data['card_number'],
+                    'exp_month' => $card_data['card_exp_month'],
+                    'exp_year' => $card_data['card_exp_year'],
+                    'cvc' => $card_data['card_cvc'],
+                ],
+            ]);
+        } catch (CardException $e) {
+            $card['error'] = $e->getError()->message;
+        } catch (Exception $e) {
+            $card['error'] = $e->getMessage();
+        }
 
-        return $response;
+        return $card;
     }
 
     /**
@@ -90,31 +108,33 @@ class Stripe
      * https://stripe.com/docs/api/payment_methods/update?lang=php
      *
      * @param string $payment_method
-     * @param string $number
-     * @param string $exp_month
-     * @param string $exp_year
-     * @param string $cvc
-     * @return \Stripe\PaymentMethod
-     * @throws \Stripe\Exception\ApiErrorException
+     * @param array $card_data
+     * @return array|\Stripe\PaymentMethod
      */
-    public static function updatePaymentMethod_Card(string $payment_method, string $number, string $exp_month, string $exp_year, string $cvc)
+    public  function updatePaymentMethod_Card(string $payment_method, array $card_data)
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
+        $card = null;
 
-        $response = $stripe->paymentMethods->update(
-            $payment_method,
-            [
-                'type' => 'card',
-                'card' => [
-                    'number' => $number,
-                    'exp_month' => $exp_month,
-                    'exp_year' => $exp_year,
-                    'cvc' => $cvc,
-                ],
-            ]
-        );
+        try {
+            $card = $this->stripe->paymentMethods->update(
+                $payment_method,
+                [
+                    'type' => 'card',
+                    'card' => [
+                        'number' => $card_data['card_number'],
+                        'exp_month' => $card_data['card_exp_month'],
+                        'exp_year' => $card_data['card_exp_year'],
+                        'cvc' => $card_data['card_cvc'],
+                    ],
+                ]
+            );
+        } catch (CardException $e) {
+            $card['error'] = $e->getError()->message;
+        } catch (Exception $e) {
+            $card['error'] = $e->getMessage();
+        }
 
-        return $response;
+        return $card;
     }
 
     /**
@@ -126,11 +146,9 @@ class Stripe
      * @return \Stripe\PaymentMethod
      * @throws \Stripe\Exception\ApiErrorException
      */
-    public static function attachPaymentMethod($payment_method, $customer_id)
+    public function attachPaymentMethod($payment_method, $customer_id)
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
-
-        $response = $stripe->paymentMethods->attach(
+        $response = $this->stripe->paymentMethods->attach(
             $payment_method,
             ['customer' => $customer_id]
         );

@@ -103,8 +103,6 @@ class AppServiceProvider extends ServiceProvider
          * Валидация: Проверка корректности номера банковской пластиковой карты.
          */
         Validator::extend('bankcard', function($attribute, $value, $parameters) {
-            $value = str_replace('-', '', $value);
-
             # в ПК должны быть только цифры
             if ( $value != preg_replace('/[^\d]/','', $value) ) {
                 return false;

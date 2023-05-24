@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,12 +15,16 @@ class ValidatorException extends Exception
     /**
      * ValidatorException constructor.
      *
-     * @param array $errors
+     * @param mixed $error
      */
-    public function __construct(Array $errors)
+    public function __construct($error)
     {
         parent::__construct();
-        $this->errors = $errors;
+        if (is_array($error) || $error instanceof Arrayable) {
+            $this->errors = $error;
+        } else {
+            $this->errors = [$error];
+        }
     }
 
     /**

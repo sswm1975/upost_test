@@ -16,7 +16,10 @@ use Illuminate\Support\Str;
  * @property string|null $phone Телефон
  * @property string|null $password Пароль
  * @property string|null $card_number Номер банковской карточки
- * @property string|null $card_name Наименование банковской карточки
+ * @property string|null $card_name Имя на банковской карточки
+ * @property int|null $card_exp_month Месяц окончания банковской карточки
+ * @property int|null $card_exp_year Год окончания банковской карточки
+ * @property string|null $card_cvc CVC-код на банковской карточке
  * @property \Illuminate\Support\Carbon|null $created_at Дата добавления
  * @property \Illuminate\Support\Carbon|null $updated_at Дата редактирования
  * @property \Illuminate\Support\Carbon|null $deleted_at Дата удаления
@@ -25,6 +28,9 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|UserChange newQuery()
  * @method static \Illuminate\Database\Query\Builder|UserChange onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|UserChange query()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserChange whereCardCvc($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserChange whereCardExpMonth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserChange whereCardExpYear($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserChange whereCardName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserChange whereCardNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserChange whereCreatedAt($value)
@@ -52,6 +58,9 @@ class UserChange extends Model
         'password',
         'card_number',
         'card_name',
+        'card_exp_month',
+        'card_exp_year',
+        'card_cvc',
     ];
 
     public static function boot()
