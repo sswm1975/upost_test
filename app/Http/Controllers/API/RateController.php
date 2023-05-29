@@ -16,13 +16,11 @@ use App\Models\Payment;
 use App\Models\Rate;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Modules\Liqpay;
-use App\Modules\PayPal;
+use App\Payments\Stripe;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
@@ -226,37 +224,63 @@ class RateController extends Controller
     }
 
     /**
-     * Оплатить через PayPal по выбранной ставке.
+     * Оплатить через Stripe по выбранной ставке.
      *
      * @param int $rate_id
      * @param Request $request
      * @return JsonResponse
-     * @throws ErrorException
+     * @throws ValidatorException
      */
     public function purchase(int $rate_id, Request $request): JsonResponse
     {
         # ищем активную ставку, где владельцем активного заказа является авторизированный пользователь
+        /** @var Rate $rate */
         $rate = Rate::byKeyForOrderOwner($rate_id, [Rate::STATUS_ACTIVE], [Order::STATUS_ACTIVE])
-            ->with([
-                'order',
-                'route.to_country',
-                'route.to_city',
-            ])
+            ->with('order')
             ->first();
 
-        if (! $rate) {
-            throw new ErrorException(__('message.rate_not_found'));
+        if (empty($rate)) {
+            throw new ValidatorException(__('message.rate_not_found'));
+        }
+
+        if (empty($rate->order->stripe_product_id)) {
+            throw new ValidatorException('Field stripe_product_id empty.');
         }
 
         /* TODO Расчет суммы для оплаты: Нужно реализовать конвертацию цены и дохода; добавить пошлину за ввоз; суммировать все расчеты */
         $order_amount = $rate->order->price_usd * $rate->order->products_count;
         $delivery_amount = $rate->amount_usd;
-        $paypal_fee = round($order_amount * config('paypal_fee_percent') / 100, 2);
         $company_fee = round($order_amount * config('company_fee_percent') / 100, 2);
         $export_tax = 0;
-        $total_amount = $order_amount + $delivery_amount + $paypal_fee + $export_tax + $company_fee;
+        $total_amount = $order_amount + $delivery_amount + $export_tax + $company_fee;
+        $payment_service_fee = round($total_amount * 2.9 / 100, 2) + 0.30;
 
         $user = $request->user();
+
+        $stripe = new Stripe;
+        if (empty($rate->stripe_price_id)) {
+            $price = $stripe->createPrice($rate->order->stripe_product_id, $total_amount * 100, $rate->id);
+            if (!empty($price['error'])) {
+                throw new ValidatorException($price['error']);
+            }
+            $price_id = $price->id;
+            $rate->stripe_price_id = $price_id;
+            $rate->save();
+        } else {
+//            $price = $stripe->updatePrice($rate->stripe_price_id, $total_amount * 100);
+//            if (!empty($price['error'])) {
+//                throw new ValidatorException($price['error']);
+//            }
+            $price_id = $rate->stripe_price_id;
+        }
+
+        $transaction = Transaction::whereRateId($rate->id)->whereStatus('created')->first(['id', 'purchase_redirect_url']);
+        if (!empty($transaction)) {
+            return response()->json([
+                'status' => true,
+                'url'    => $transaction->purchase_redirect_url,
+            ]);
+        }
 
         $transaction = Transaction::create([
             'user_id'             => $user->id,
@@ -264,14 +288,12 @@ class RateController extends Controller
             'amount'              => $total_amount,
             'order_amount'        => $order_amount,
             'delivery_amount'     => $delivery_amount,
-            'payment_service_fee' => $paypal_fee,
+            'payment_service_fee' => $payment_service_fee,
             'export_tax'          => $export_tax,
             'company_fee'         => $company_fee,
             'description'         => $rate->order->name,
             'status'              => 'new',
         ]);
-
-        $paypal = new PayPal;
 
         $uri = $request->get('callback_url', config('app.wordpress_url'));
         $callback_url = preg_replace('/&status=.*/', '', $uri);
@@ -280,79 +302,58 @@ class RateController extends Controller
             'transaction_id' => $transaction->id,
             'callback_url'   => $callback_url,
         ];
-
-        $params = [
-            'amount'          => $total_amount,
-            'currency'        => 'USD',
-            'items' => [
-                [
-                    'name'     => $rate->order->name,
-                    'price'    => $total_amount,
-                    'quantity' => 1
-                ],
-            ],
-            'returnUrl' => route('purchase_success', $return_params),
-            'cancelUrl' => route('purchase_error', $return_params),
+        $purchase_params = [
+            'customer_id' => $user->stripe_customer_id,
+            'price_id' => $price_id,
+            'transaction_id' => $transaction->id,
+            'purchase_success_url' => route('purchase_success', $return_params),
+            'purchase_error_url' => route('purchase_error', $return_params),
         ];
-        $transaction->purchase_params = $params;
+        $transaction->purchase_params = $purchase_params;
         $transaction->save();
 
-        try {
-            $response = $paypal->purchase($params);
-            $transaction->purchase_response = $response->getData();
-            $transaction->status = 'created';
+        $checkout_session = $stripe->createCheckout($purchase_params);
+        if (!empty($checkout_session['error'])) {
+            $transaction->complete_error = $checkout_session['error'];
+            $transaction->status = 'failed';
             $transaction->save();
 
-            if ($response->isRedirect()) {
-                $transaction->purchase_redirect_url = $response->getRedirectUrl();
-                $transaction->save();
-
-                return response()->json([
-                    'status' => true,
-                    'url'    => $response->getRedirectUrl(),
-                ]);
-            } else {
-                # платеж не прошел
-                $transaction->purchase_error = $response->getMessage();
-                $transaction->status = 'failed';
-                $transaction->save();
-
-                throw new ErrorException($response->getMessage());
-            }
-        } catch(\Exception $e) {
-            $transaction->purchase_exception = $e->getCode() . ' ' . $e->getMessage();
-            $transaction->status = 'exception';
-            $transaction->save();
-
-            throw new ErrorException($e->getMessage());
+            throw new ValidatorException($checkout_session['error']);
         }
+        $transaction->purchase_response = $checkout_session->toJSON();
+        $transaction->purchase_redirect_url = $checkout_session->url;
+        $transaction->status = 'created';
+        $transaction->save();
+
+        return response()->json([
+            'status' => true,
+            'url'    => $checkout_session->url,
+        ]);
     }
 
     /**
-     * Завершение обработки PayPal транзакции (после того, как транзакция будет одобрена, её нужно завершить).
+     * Клиент успешно оплатил в Stripe.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|void
      */
     public function purchaseSuccess(Request $request)
     {
-        $callback_url = $request->get('callback_url', config('app.wordpress_url'));
+        if ($request->missing(['callback_url', 'transaction_id'])) {
+            Log::channel('stripe')->error('[RateController.purchaseSuccess] Отсутствуют обязательные параметры: callback_url or transaction_id!');
+            Log::channel('stripe')->debug('[RateController.purchaseSuccess] Параметры запроса:');
+            Log::channel('stripe')->debug($request->all());
 
-        if ($request->missing(['paymentId', 'PayerID', 'transaction_id'])) {
-            Log::channel('paypal')->error('[purchaseSuccess] Отсутствуют обязательные параметры: paymentId or PayerID or transaction_id (Транзакция отклонена)!');
-            Log::channel('paypal')->debug('[purchaseSuccess] Параметры запроса:');
-            Log::channel('paypal')->debug($request->all());
-
-            return redirect($callback_url . '&' . http_build_query([
+            return redirect(config('app.wordpress_url') . '?' . http_build_query([
                 'status' => false,
-                'error'  => '[purchaseSuccess] Транзакция отклонена (отсутствуют обязательные параметры)!',
+                'error'  => '[purchaseSuccess] Отсутствуют обязательные параметры!',
             ]));
         }
-
+        $callback_url = $request->get('callback_url');
         $transaction_id = $request->get('transaction_id');
-        $transaction = Transaction::find($transaction_id);
-        if (! $transaction) {
-            Log::channel('paypal')->error("[purchaseSuccess] Транзакция с кодом {$transaction_id} не найдена!");
+
+        if (empty($transaction = Transaction::find($transaction_id))) {
+            Log::channel('stripe')->error("[RateController.purchaseSuccess] Транзакция с кодом {$transaction_id} не найдена!");
 
             return redirect($callback_url . '&' . http_build_query([
                 'status' => false,
@@ -360,25 +361,9 @@ class RateController extends Controller
             ]));
         }
 
-        $paypal = new PayPal;
-
-        $response = $paypal->complete($request->get('PayerID'), $request->get('paymentId'));
-        if (! $response->isSuccessful()) {
-            $transaction->complete_error = $response->getMessage();
-            $transaction->status = 'not_successful';
-            $transaction->save();
-
-            return redirect($callback_url . '&' . http_build_query([
-                'status' => false,
-                'error'  => $response->getMessage(),
-            ]));
-        }
-
         # КЛИЕНТ УСПЕШНО ОПЛАТИЛ
-        $payment = $response->getData();
-
-        $transaction->complete_response = $payment;
-        $transaction->status = $payment['state'];
+//        $transaction->complete_response = $payment;
+        $transaction->status = 'payed';
         $transaction->payed_at = Carbon::now()->toDateTimeString();
         $transaction->save();
 
@@ -414,215 +399,47 @@ class RateController extends Controller
             ]);
         }
 
-        return redirect($callback_url . '&' . http_build_query([
-            'status'     => true,
-            'payment_id' => $payment['id'],
-        ]));
+        return redirect($callback_url . '&status=true');
     }
 
     /**
-     * Пользователь отменил PayPal платеж.
+     * Пользователь отменил платеж.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|void
      */
     public function purchaseError(Request $request)
     {
-        $callback_url = $request->get('callback_url', config('app.wordpress_url'));
+        if ($request->missing(['callback_url', 'transaction_id'])) {
+            Log::channel('stripe')->error('[RateController.purchaseError] Отсутствуют обязательные параметры: callback_url or transaction_id!');
+            Log::channel('stripe')->debug('[RateController.purchaseError] Параметры запроса:');
+            Log::channel('stripe')->debug($request->all());
 
-        if ($request->missing('transaction_id')) {
-            $error = '[purchaseError] Отсутствует обязательный параметр transaction_id (Платёж отклонён)!';
-            Log::channel('paypal')->error($error);
-            Log::channel('paypal')->debug('[purchaseError] Параметры запроса:');
-            Log::channel('paypal')->debug($request->all());
-
-            return redirect($callback_url . '&' . http_build_query([
+            return redirect(config('app.wordpress_url') . '?' . http_build_query([
                 'status' => false,
-                'error'  => $error,
+                'error'  => '[purchaseError] Отсутствуют обязательные параметры!',
             ]));
         }
-
+        $callback_url = $request->get('callback_url');
         $transaction_id = $request->get('transaction_id');
-        $transaction = Transaction::find($transaction_id);
-        if (! $transaction) {
-            $error = "[purchaseError] Транзакция с кодом {$transaction_id} не найдена (Платёж отклонён)!";
-            Log::channel('paypal')->error($error);
+
+        if (empty($transaction = Transaction::find($transaction_id))) {
+            Log::channel('stripe')->error("[RateController.purchaseError] Транзакция с кодом {$transaction_id} не найдена!");
 
             return redirect($callback_url . '&' . http_build_query([
                 'status' => false,
-                'error'  => $error,
+                'error'  => "[purchaseError] Транзакция с кодом {$transaction_id} не найдена!",
             ]));
         }
 
-        $transaction->complete_error = $request->all();
-        $transaction->status = 'canceled';
-        $transaction->save();
+//        $transaction->complete_error = $request->all();
+//        $transaction->status = 'canceled';
+//        $transaction->save();
 
         return redirect($callback_url . '&' . http_build_query([
             'status'  => false,
             'error' => 'Пользователь отменил платеж.',
         ]));
-    }
-
-    /**
-     * Подготовить данные для оплаты по выбранной ставке (формирование параметров для Liqpay-платежа).
-     *
-     * @param int $rate_id
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function preparePayment(int $rate_id, Request $request): JsonResponse
-    {
-        # ищем активную ставку, где владельцем активного заказа является авторизированный пользователь
-        $rate = Rate::byKeyForOrderOwner($rate_id, [Rate::STATUS_ACTIVE], [Order::STATUS_ACTIVE])
-            ->with([
-                'order',
-                'route.user:id,name,surname,photo,scores_count,reviews_count,status,gender,birthday,validation,last_active,register_date',
-                'route.to_country',
-                'route.to_city',
-            ])
-            ->first();
-
-        if (! $rate) {
-            throw new ErrorException(__('message.rate_not_found'));
-        }
-
-        /* TODO Расчет суммы для оплаты: Нужно реализовать конвертацию цены и дохода; добавить пошлину за ввоз; суммировать все расчеты */
-        $order_amount = $rate->order->products_count * $rate->order->price;
-        $delivery_amount = 1 * $rate->amount;
-        $export_tax = 0;
-        $liqpay_fee = round($order_amount * config('liqpay_fee_percent') / 100, 2);
-        $company_fee = round($rate->order->price * config('company_fee_percent') / 100, 2);
-        $total_amount = $rate->order->price + $rate->amount + $export_tax + $liqpay_fee + $company_fee;
-        $currency = 'UAH';
-
-        $user = $request->user();
-        $callback_url = $request->get('callback_url', config('app.wordpress_url'));
-
-        $info = [
-            'user_id'         => $user->id,
-            'rate_id'         => $rate_id,
-            'order_amount'    => $rate->order->products_count * $rate->order->price,
-            'delivery_amount' => $delivery_amount,
-            'export_tax'      => $export_tax,
-            'payment_service_fee'  => $liqpay_fee,
-            'company_fee'     => $company_fee,
-            'total_amount'    => $total_amount,
-            'currency'        => $currency,
-        ];
-
-        $params = Liqpay::create_params(
-            $user->full_name,
-            $total_amount,
-            'UAH',
-            'Оплата заказа "' . $rate->order->name . '"',
-            $info,
-            'ru',
-            $callback_url,
-        );
-
-        $payment = array_merge($params, $info);
-
-        return response()->json([
-            'status'  => true,
-            'rate'    => $rate,
-            'payment' => $payment,
-        ]);
-    }
-
-    /**
-     * Обработать результат оплаты от Liqpay и сохранение транзакции.
-     * (описание см. https://www.liqpay.ua/documentation/api/callback)
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ErrorException
-     */
-    public function callbackPayment(Request $request): JsonResponse
-    {
-        $data = $request->get('data');
-        $signature = $request->get('signature');
-
-        if (empty($data) || empty($signature) ) {
-            throw new ErrorException('Нет данных в data и/или в signature');
-        }
-
-        $response = Liqpay::decode_responce($data, $signature);
-        if (isset($response['error'])) {
-            throw new ErrorException($response['error']);
-        }
-
-        $liqpay = $response['data'];
-        $rate_id = $liqpay['info']['rate_id'];
-
-        config(['logging.channels.daily.path' => storage_path('logs/payments/payment.log')]);
-        Log::channel('daily')->info($liqpay);
-
-        if (! in_array($liqpay['status'], ['success', 'sandbox'])) {
-            throw new ErrorException('Статус платежа не равен "success" или "sandbox", получен статус "'.$liqpay['status'].'"');
-        }
-
-        $rate = Rate::whereKey($rate_id)->active()->first();
-        if (! $rate) {
-            throw new ErrorException(__('message.rate_not_found'));
-        }
-
-        # ищем существующий чат или создаем новый
-        $chat = Chat::searchOrCreate($rate->route_id, $rate->order_id, $rate->user_id, $liqpay['info']['user_id']);
-
-        DB::beginTransaction();
-
-        try {
-            # обновляем данные по ставке
-            $rate->status = Rate::STATUS_ACCEPTED;
-            $rate->viewed_by_customer = true;
-            $rate->chat_id = $chat->id;
-            $rate->save();
-            $rate->order->update(['status' => Order::STATUS_IN_WORK]);
-
-            Transaction::create([
-                'user_id'         => $liqpay['info']['user_id'],
-                'rate_id'         => $rate_id,
-                'amount'          => $liqpay['amount'],
-                'order_amount'    => $liqpay['info']['order_amount'],
-                'payment_service_fee' => $liqpay['info']['payment_service_fee'],
-                'delivery_amount' => $liqpay['info']['delivery_amount'],
-                'company_fee'     => $liqpay['info']['company_fee'],
-                'export_tax'      => $liqpay['info']['export_tax'],
-                'description'     => $liqpay['description'],
-                'status'          => $liqpay['status'],
-                'complete_response' => $liqpay,
-                'payed_at'        => gmdate('Y-m-d H:i:s', strtotime("+2 hours", $liqpay['end_date'] / 1000)),
-            ]);
-
-            # информируем в чат, что заказчик оплатил заказ.
-            Chat::addSystemMessage($chat->id, 'customer_paid_order');
-
-            # создаем уведомление "Ставка принята" для Путешественника
-            if (active_notice_type($notice_type = NoticeType::RATE_ACCEPTED)) {
-                Notice::create([
-                    'user_id'     => $rate->user_id,
-                    'notice_type' => $notice_type,
-                    'object_id'   => $rate->order_id,
-                    'data'        => ['order_name' => $rate->order->name, 'rate_id' => $rate->id],
-                ]);
-            }
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollback();
-
-            Log::channel('daily')->debug($e->getMessage());
-
-            throw new ErrorException($e->getMessage());
-        }
-
-        return response()->json([
-            'status' => true,
-            'liqpay' => null_to_blank($liqpay),
-            'rate'   => null_to_blank($rate),
-        ]);
     }
 
     /**

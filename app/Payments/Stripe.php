@@ -3,7 +3,6 @@
 namespace App\Payments;
 
 use Exception;
-use phpDocumentor\Reflection\Types\Integer;
 use Stripe\Exception\CardException;
 use Stripe\StripeClient;
 
@@ -13,7 +12,7 @@ class Stripe
 
     public function __construct()
     {
-        $this->stripe = new StripeClient(config('services.stripe.secret'));;
+        $this->stripe = new StripeClient(config('services.stripe.secret'));
     }
 
     /**
@@ -111,7 +110,7 @@ class Stripe
      * @param array $card_data
      * @return array|\Stripe\PaymentMethod
      */
-    public  function updatePaymentMethod_Card(string $payment_method, array $card_data)
+    public function updatePaymentMethod_Card(string $payment_method, array $card_data)
     {
         $card = null;
 
@@ -163,11 +162,9 @@ class Stripe
      * @return \Stripe\PaymentMethod
      * @throws \Stripe\Exception\ApiErrorException
      */
-    public static function detachPaymentMethod($payment_method)
+    public function detachPaymentMethod($payment_method)
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
-
-        $response = $stripe->paymentMethods->detach(
+        $response = $this->stripe->paymentMethods->detach(
             $payment_method,
             []
         );
@@ -178,45 +175,47 @@ class Stripe
     /**
      * Create a product.
      *
-     * @param $name
-     * @param $description
-     * @return \Stripe\Product
-     * @throws \Stripe\Exception\ApiErrorException
+     * @param array $data
+     * @return array|\Stripe\Product
      */
-    public static function createProduct($name, $description)
+    public function createProduct(array $data)
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
+        $product = null;
 
-        $response = $stripe->products->create([
-            'name' => $name,
-            'description' => $description,
-        ]);
+        try {
+            $product = $this->stripe->products->create([
+                'name' => $data['name'],
+            ]);
+        } catch (Exception $e) {
+            $product['error'] = $e->getMessage();
+        }
 
-        return $response;
+        return $product;
     }
 
     /**
      * Update a product.
      *
-     * @param $product_id
-     * @param $name
-     * @param $description
-     * @return \Stripe\Product
-     * @throws \Stripe\Exception\ApiErrorException
+     * @param string $product_id
+     * @param array $data
+     * @return array|\Stripe\Product
      */
-    public static function updateProduct($product_id, $name, $description)
+    public function updateProduct(string $product_id, array $data)
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
+        $product = null;
 
-        $response = $stripe->products->update(
-            $product_id,
-            [
-                'name' => $name,
-                'description' => $description,
-            ]
-        );
+        try {
+            $product = $this->stripe->products->update(
+                $product_id,
+                [
+                    'name' => $data['name'],
+                ]
+            );
+        } catch (Exception $e) {
+            $product['error'] = $e->getMessage();
+        }
 
-        return $response;
+        return $product;
     }
 
     /**
@@ -226,11 +225,9 @@ class Stripe
      * @return \Stripe\Product
      * @throws \Stripe\Exception\ApiErrorException
      */
-    public static function deleteProduct($product_id)
+    public function deleteProduct($product_id)
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
-
-        $response = $stripe->products->delete($product_id, []);
+        $response = $this->stripe->products->delete($product_id, []);
 
         return $response;
     }
@@ -238,45 +235,85 @@ class Stripe
     /**
      * Create price.
      *
-     * @param Integer $amount
      * @param $product_id
-     * @return \Stripe\Price
-     * @throws \Stripe\Exception\ApiErrorException
+     * @param $amount
+     * @param $rate_id
+     * @return array|\Stripe\Price
      */
-    public static function createPrice(integer $amount, $product_id)
+    public function createPrice($product_id, $amount, $rate_id)
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
+        $price = null;
 
-        $response = $stripe->prices->create([
-            'unit_amount' => $amount,
-            'currency' => 'usd',
-            'product' => $product_id,
-        ]);
+        try {
+            $price = $this->stripe->prices->create([
+                'product' => $product_id,
+                'unit_amount' => $amount,
+                'currency' => 'usd',
+                'metadata' => [
+                    'rate_id' => $rate_id,
+                ],
+            ]);
+        } catch (Exception $e) {
+            $price['error'] = $e->getMessage();
+        }
 
-        return $response;
+        return $price;
     }
 
     /**
+     * !!! Не использовать - выдает ошибки
      * Update a price.
      *
      * @param $price_id
      * @param $amount
-     * @param $product_id
      * @return \Stripe\Price
      * @throws \Stripe\Exception\ApiErrorException
      */
-    public static function updatePrice($price_id, $amount, $product_id)
+    public function updatePrice($price_id, $amount)
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
+        $price = null;
 
-        $response = $stripe->prices->update(
-            $price_id,
-            [
-                'unit_amount' => $amount,
-                'product' => $product_id,
-            ]
-        );
+        try {
+            $price = $this->stripe->prices->update(
+                $price_id,
+                [
+                    'currency_options' => [
+                        'usd' => [
+                            'unit_amount' => $amount
+                        ]
+                    ]
+                ]
+            );
+        } catch (Exception $e) {
+            $price['error'] = $e->getMessage();
+        }
 
-        return $response;
+        return $price;
+    }
+
+    public function createCheckout($data)
+    {
+        $checkout_session = null;
+
+        try {
+            $checkout_session = $this->stripe->checkout->sessions->create([
+                'line_items' => [[
+                    'price' => $data['price_id'],
+                    'quantity' => 1,
+                ]],
+                'customer' => $data['customer_id'],
+                'mode' => 'payment',
+                'client_reference_id' => $data['transaction_id'],
+                'success_url' => $data['purchase_success_url'],
+                'cancel_url' => $data['purchase_error_url'],
+                'automatic_tax' => [
+                    'enabled' => false,
+                ],
+            ]);
+        } catch (Exception $e) {
+            $checkout_session['error'] = $e->getMessage();
+        }
+
+        return $checkout_session;
     }
 }

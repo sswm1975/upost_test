@@ -26,6 +26,7 @@ use Illuminate\Support\Str;
  * @property string|null $currency Валюта
  * @property mixed $price_usd Цена в долларах
  * @property mixed $deduction_usd Сумма вычетов (налоги и комиссии) в долларах
+ * @property mixed $user_price_usd Сумма дохода в долларах
  * @property string|null $description Описание заказа
  * @property array $images Фотографии заказа
  * @property string $from_country_id Код страны откуда доставить заказ
@@ -35,7 +36,6 @@ use Illuminate\Support\Str;
  * @property string $register_date Дата регистрации
  * @property string|null $deadline Дата окончания заказа
  * @property int|null $wait_range_id Код диапазона ожидания
- * @property mixed $user_price_usd Сумма дохода в долларах
  * @property int $not_more_price Признак "Не принимать ставки выше данной цены"
  * @property int $is_user_active Признак активности пользователя
  * @property int $looks Количество просмотров
@@ -43,6 +43,7 @@ use Illuminate\Support\Str;
  * @property array|null $strikes Жалобы
  * @property \Illuminate\Support\Carbon|null $created_at Добавлено
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property string|null $stripe_product_id Идентификатор товара в платежной системе Stripe
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderDeduction[] $deductions
  * @property-read int|null $deductions_count
  * @property-read \App\Models\City|null $from_city
@@ -95,6 +96,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereStrikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereStripeProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereToCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereToCountryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)

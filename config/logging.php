@@ -54,9 +54,9 @@ return [
             'days' => 14,
         ],
 
-        'paypal' => [
+        'stripe' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/paypal.log'),
+            'path' => storage_path('logs/stripe.log'),
             'level' => 'debug',
             'days' => 30,
         ],

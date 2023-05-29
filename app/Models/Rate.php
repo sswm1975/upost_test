@@ -27,6 +27,7 @@ use Carbon\Carbon;
  * @property string $status Статус
  * @property \Illuminate\Support\Carbon $created_at Добавлено
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property string|null $stripe_price_id Идентификатор цены в платежной системе Stripe
  * @property-read \App\Models\Chat|null $chat
  * @property-read \App\Models\Dispute|null $dispute
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Dispute[] $disputes
@@ -61,6 +62,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereOrderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereRouteId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rate whereStripePriceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rate whereViewedByCustomer($value)

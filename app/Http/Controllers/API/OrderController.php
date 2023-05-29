@@ -14,6 +14,7 @@ use App\Models\Route;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\WaitRange;
+use App\Payments\Stripe;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -124,6 +125,12 @@ class OrderController extends Controller
 
         static::checkExistsImages($data['images']);
 
+        $product = (new Stripe)->createProduct($data);
+        if (!empty($product['error'])) {
+            throw new ValidatorException($product['error']);
+        }
+        $data['stripe_product_id'] = $product->id;
+
         $order = Order::create($data);
 
         return response()->json([
@@ -145,6 +152,7 @@ class OrderController extends Controller
     {
         if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
+        /** @var Order $order */
         if (! $order = Order::isOwnerByKey($order_id)->first()) {
             throw new ErrorException(__('message.order_not_found'));
         }
@@ -161,6 +169,20 @@ class OrderController extends Controller
         unset($data['from_city'], $data['to_city']);
 
         static::checkExistsImages($data['images']);
+
+        $stripe = new Stripe;
+        if (empty($order->stripe_product_id)) {
+            $product = $stripe->createProduct($data);
+            if (!empty($product['error'])) {
+                throw new ValidatorException($product['error']);
+            }
+            $data['stripe_product_id'] = $product->id;
+        } else {
+            $product = $stripe->updateProduct($order->stripe_product_id, $data);
+            if (!empty($product['error'])) {
+                throw new ValidatorException($product['error']);
+            }
+        }
 
         $affected = $order->update($data);
 
