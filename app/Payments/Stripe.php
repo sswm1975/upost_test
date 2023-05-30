@@ -297,6 +297,7 @@ class Stripe
 
         try {
             $checkout_session = $this->stripe->checkout->sessions->create([
+                'payment_intent_data' => ['setup_future_usage' => 'off_session'],
                 'line_items' => [[
                     'price' => $data['price_id'],
                     'quantity' => 1,
@@ -307,7 +308,7 @@ class Stripe
                 'success_url' => $data['purchase_success_url'],
                 'cancel_url' => $data['purchase_error_url'],
                 'automatic_tax' => [
-                    'enabled' => false,
+                    'enabled' => true,
                 ],
             ]);
         } catch (Exception $e) {
