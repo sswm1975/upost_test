@@ -249,6 +249,7 @@ class Stripe
                 'product' => $product_id,
                 'unit_amount' => $amount,
                 'currency' => 'usd',
+                'tax_behavior' => 'exclusive',
                 'metadata' => [
                     'rate_id' => $rate_id,
                 ],
