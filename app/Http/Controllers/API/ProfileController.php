@@ -130,6 +130,11 @@ class ProfileController extends Controller
             if (isset($customer['id'])) {
                 $data['stripe_customer_id'] = $customer['id'];
             }
+        } else {
+            $customer = $stripe->updateCustomer($user->stripe_customer_id, $user->full_name, $user->email, $user->phone);
+            if (isset($customer['error'])) {
+                throw new ValidatorException($customer['error']);
+            }
         }
 
         $user->update($data);
@@ -288,6 +293,9 @@ class ProfileController extends Controller
         # регистрируем пользователя в Stripe
         if (empty($user->stripe_customer_id)) {
             $customer = $stripe->createCustomer($user->full_name, $user->email, $user->phone);
+            if (isset($customer['error'])) {
+                throw new ValidatorException($customer['error']);
+            }
             if ($customer['id']) {
                 $user->stripe_customer_id = $customer['id'];
             }

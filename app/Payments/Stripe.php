@@ -32,7 +32,7 @@ class Stripe
             $customer = $this->stripe->customers->create([
                 'name' => $name,
                 'email' => $email,
-                'phone' => $phone ,
+                'phone' => $phone,
             ]);
         } catch (Exception $e) {
             $customer['error'] = $e->getMessage();
@@ -62,7 +62,7 @@ class Stripe
                 [
                     'name' => $name,
                     'email' => $email,
-                    'phone' => $phone ,
+                    'phone' => $phone,
                 ]
             );
         } catch (Exception $e) {
@@ -309,7 +309,7 @@ class Stripe
                 'success_url' => $data['purchase_success_url'],
                 'cancel_url' => $data['purchase_error_url'],
                 'automatic_tax' => [
-                    'enabled' => true,
+                    'enabled' => false,
                 ],
             ]);
         } catch (Exception $e) {
