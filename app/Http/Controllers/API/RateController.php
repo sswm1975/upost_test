@@ -247,18 +247,19 @@ class RateController extends Controller
             throw new ValidatorException('Field stripe_product_id empty.');
         }
 
-        /* TODO Расчет суммы для оплаты: Нужно реализовать конвертацию цены и дохода; добавить пошлину за ввоз; суммировать все расчеты */
+        $user = $request->user();
+
+        $stripe = new Stripe;
+
+        # Расчет суммы для оплаты
         $order_amount = $rate->order->price_usd * $rate->order->products_count;
         $delivery_amount = $rate->amount_usd;
         $company_fee = round($order_amount * config('company_fee_percent') / 100, 2);
         $export_tax = 0;
         $payment_amount = $order_amount + $delivery_amount + $export_tax + $company_fee;
-        $payment_service_fee = round($payment_amount * 2.9 / 100, 2) + 0.30;
-        $total_amount = $payment_amount + $payment_service_fee;
+        $total_amount = $stripe->calculatePrice($payment_amount);
+        $payment_service_fee = $total_amount - $payment_amount;
 
-        $user = $request->user();
-
-        $stripe = new Stripe;
         if (empty($rate->stripe_price_id)) {
             $price = $stripe->createPrice($rate->order->stripe_product_id, round($total_amount * 100), $rate->id);
             if (!empty($price['error'])) {

@@ -318,4 +318,20 @@ class Stripe
 
         return $checkout_session;
     }
+
+    /**
+     * Расчет суммы, которую нужно передавать при Stripe-оплате.
+     *
+     * @param $amount
+     * @return float
+     */
+    public function calculatePrice($amount)
+    {
+        $commissionRate = 0.029;   // Комісійна ставка (2.9%)
+        $commissionFee = 0.30;     // Фіксована комісія ($0.30)
+
+        $price = ($amount + $commissionFee) / (1 - $commissionRate);
+
+        return round($price, 2);
+    }
 }
