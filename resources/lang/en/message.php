@@ -179,4 +179,15 @@ return [
             'refund' => 'Refund',
         ],
     ],
+
+    # Withdrawal attributes
+    'withdrawal' => [
+        'statuses' => [
+            'new'         => 'New',
+            'done'        => 'Done',
+            'in_progress' => 'In progress',
+            'fail'        => 'Fail',
+            'expired'     => 'Expired',
+        ],
+    ],
 ];

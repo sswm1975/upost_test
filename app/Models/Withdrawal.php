@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Withdrawal extends Model
 {
@@ -15,8 +16,17 @@ class Withdrawal extends Model
     const STATUS_FAIL = 'fail';
     const STATUS_EXPIRED = 'expired';
 
+    const STATUSES = [
+        self::STATUS_NEW,
+        self::STATUS_IN_PROGRESS,
+        self::STATUS_DONE,
+        self::STATUS_EXPIRED,
+        self::STATUS_FAIL,
+    ];
+
     public $timestamps = false;
     protected $guarded = ['id'];
+    protected $dates = ['created_at', 'updated_at',];
 
     ### BOOT ###
 
@@ -43,6 +53,13 @@ class Withdrawal extends Model
         });
     }
 
+    ### RELATIONS ###
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     ### SCOPES ###
 
     public function scopeOwner($query)
@@ -56,5 +73,4 @@ class Withdrawal extends Model
             ->whereIn('status', [Withdrawal::STATUS_NEW, Withdrawal::STATUS_IN_PROGRESS])
             ->exists();
     }
-
 }

@@ -27,6 +27,10 @@ Route::group([
     $router->get('routes', 'DataTables\RouteController@index')->name('routes.index')->middleware('admin.permission:check,routes');
     $router->get('ajax/routes', 'DataTables\RouteController@getData')->name('ajax.routes')->middleware('admin.permission:check,routes');
 
+    # Заявки на вивід грошей
+    $router->get('withdrawals', 'DataTables\WithdrawalsController@index')->name('withdrawals.index')->middleware('admin.permission:check,withdrawals');
+    $router->get('ajax/withdrawals', 'DataTables\WithdrawalsController@getData')->name('ajax.withdrawals')->middleware('admin.permission:check,withdrawals');
+
     # Споры
     $router->get('disputes', 'DataTables\DisputeController@index')->name('disputes.index')->middleware('admin.permission:check,disputes');
     $router->get('ajax/disputes', 'DataTables\DisputeController@getData')->name('ajax.disputes')->middleware('admin.permission:check,disputes');

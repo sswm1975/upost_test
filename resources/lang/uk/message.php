@@ -178,4 +178,16 @@ return [
             'refund' => 'Повернення коштів',
         ],
     ],
+
+
+    # Withdrawal attributes
+    'withdrawal' => [
+        'statuses' => [
+            'new'         => 'Нова',
+            'done'        => 'Виконана',
+            'in_progress' => 'В работі',
+            'fail'        => 'Відміна',
+            'expired'     => 'Застаріла',
+        ],
+    ],
 ];
