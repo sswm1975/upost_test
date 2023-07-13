@@ -237,6 +237,12 @@ Route::namespace('API')->group(function ($route) {
         $route->get('show', 'PurseController@show');
     });
 
+    # Вывод денег
+    $route->prefix('withdrawals')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
+        # Создать заявку на вывод денежных средств
+        $route->post('add', 'WithdrawalsController@add');
+    });
+
     # Уведомления
     $route->prefix('notices')->middleware(MIDDLEWARE_AUTH_BASIC)->group(function ($route) {
         # Получить уведомления

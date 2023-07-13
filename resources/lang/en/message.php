@@ -51,6 +51,12 @@ return [
     'file_not_exists'         => 'The file does not exist: ',
     'start_and_end_points_match' => 'Start and end points match.',
 
+    'wallet' => [
+        'not_enough_funds' => 'There are not enough funds.',
+        'exists_unfinished_withdrawals' => 'There is an unfinished withdrawal request.',
+     ],
+
+
     'verification_code' => [
         'incorrect'         => 'Verification code is incorrect',
         'send_error'        => 'Error sending verification code',

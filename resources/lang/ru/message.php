@@ -51,6 +51,11 @@ return [
     'file_not_exists'         => 'Файл не существует: ',
     'start_and_end_points_match' => 'Совпадают начальные и конечные пункты.',
 
+    'wallet' => [
+        'not_enough_funds' => 'Нет достаточно средств.',
+        'exists_unfinished_withdrawals' => 'Есть незавершенная заявка на вывод денег.',
+     ],
+
     'verification_code' => [
         'incorrect'         => 'Код подтверждения неверен',
         'send_error'        => 'Ошибка при отправке кода подтверждения',
