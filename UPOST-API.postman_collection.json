@@ -4,7 +4,8 @@
 		"name": "UPOST-API",
 		"description": "Всі запити можуть передавати опційний параметр <b>lang</b> – мова, на якій повертати помилки. Параметр <b>lang</b> може приймати одне із значень:\n<ul>\n<li>en – англійська <i>(за замовчуванням)</i></li>\n<li>ru – російська</li>\n<li>uk – українська</li>\n</ul>",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "13123179"
+		"_exporter_id": "13123179",
+		"_collection_link": "https://www.postman.com/upost-team/workspace/upost-api/collection/13123179-f2e97f9f-13a8-4d1c-a88a-54607e27586b?action=share&creator=13123179&source=collection_link"
 	},
 	"item": [
 		{
@@ -194,26 +195,29 @@
 									"formdata": [
 										{
 											"key": "phone",
-											"value": "{{phone}}",
-											"description": "Телефон",
+											"value": "+380978353645",
 											"type": "text"
 										},
 										{
 											"key": "email",
-											"value": "{{email}}",
-											"description": "Емейл",
+											"value": "Sdrrtutug.artk@gmail.com",
 											"type": "text"
 										},
 										{
 											"key": "password",
-											"value": "{{password}}",
-											"description": "Пароль",
+											"value": "qqqqqq",
 											"type": "text"
 										},
 										{
 											"key": "password_confirmation",
-											"value": "{{password}}",
+											"value": "qqqqqq",
 											"description": "Підтвердження паролю",
+											"type": "text"
+										},
+										{
+											"key": "check",
+											"value": "1",
+											"description": "Згоден з умовами",
 											"type": "text"
 										}
 									]
@@ -3637,7 +3641,77 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "Публічні дані користувача",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/{{endpoint}}/users/{{user_id}}/profile?lang=uk",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"{{endpoint}}",
+												"users",
+												"{{user_id}}",
+												"profile"
+											],
+											"query": [
+												{
+													"key": "lang",
+													"value": "uk",
+													"description": "Код мови (uk, ru, en) - опціонально (en за замовчуванням)"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 20 Feb 2023 07:28:23 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.35 (Win64) OpenSSL/1.1.1i PHP/7.4.16"
+										},
+										{
+											"key": "Vary",
+											"value": "Authorization"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.4.16"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5, max=99"
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": true,\n    \"result\": {\n        \"user\": {\n            \"id\": 1,\n            \"name\": \"Сергій\",\n            \"surname\": \"Шкода\",\n            \"register_date\": \"2022-05-19\",\n            \"last_active\": \"2023-02-20 09:28:16\",\n            \"birthday\": \"1975-10-21\",\n            \"gender\": \"male\",\n            \"photo\": \"http://upost.test/storage/1/user/image_20220519170533_6286523167f0e.jpg\",\n            \"resume\": \"Крутой спец во всем!\",\n            \"scores_count\": 4,\n            \"reviews_count\": 1,\n            \"failed_delivery_count\": 0,\n            \"failed_receive_count\": 5,\n            \"validation\": \"no_valid\",\n            \"orders_count\": 1,\n            \"routes_count\": 2,\n            \"short_name\": \"Сергій Ш.\",\n            \"full_name\": \"Сергій Шкода\",\n            \"gender_name\": \"Чоловічий\",\n            \"validation_name\": \"Не перевірений\",\n            \"photo_thumb\": \"http://upost.test/storage/1/user/image_thumb_20220519170533_6286523167f0e.jpg\",\n            \"photo_original\": \"http://upost.test/storage/1/user/image_original_20220519170533_6286523167f0e.jpg\",\n            \"register_date_human\": \"9 місяців\",\n            \"last_active_human\": \"8 секунд тому\",\n            \"rating\": \"4\"\n        },\n        \"last_orders\": [\n            {\n                \"id\": 7,\n                \"user_id\": 1,\n                \"name\": \"Монитор 27\",\n                \"slug\": \"monitor-27-dell-s2721ds-3WRyQeKP\",\n                \"product_link\": \"\",\n                \"shop_slug\": \"\",\n                \"price\": \"1456.23\",\n                \"currency\": \"$\",\n                \"price_usd\": \"1456.23\",\n                \"products_count\": 1,\n                \"description\": \"Крутой монитор\",\n                \"images\": [\n                    \"http://upost.test/storage/1/orders/image_20230128220113_63d584a9a311e.jpg\"\n                ],\n                \"from_country_id\": \"UA\",\n                \"from_city_id\": 1,\n                \"to_country_id\": \"PL\",\n                \"to_city_id\": \"\",\n                \"register_date\": \"2023-01-28\",\n                \"deadline\": \"2023-02-28\",\n                \"wait_range_id\": 1,\n                \"user_price_usd\": \"12.00\",\n                \"not_more_price\": 1,\n                \"is_user_active\": 0,\n                \"looks\": 0,\n                \"status\": \"active\",\n                \"strikes\": [],\n                \"created_at\": \"2023-01-28 21:48:06\",\n                \"updated_at\": \"2023-02-12 22:09:09\",\n                \"rates_count\": 0,\n                \"total_deductions_usd\": \"58.24\",\n                \"has_rate\": 0,\n                \"my_rate_id\": \"\",\n                \"read_rates_count\": 0,\n                \"unread_rates_count\": 0,\n                \"total_amount\": \"1456.23\",\n                \"total_amount_usd\": \"1456.23\",\n                \"selected_currency\": \"$\",\n                \"price_selected_currency\": \"1456.23\",\n                \"total_amount_selected_currency\": \"1456.23\",\n                \"user_price_selected_currency\": \"12.00\",\n                \"short_name\": \"Монитор 27\",\n                \"status_name\": \"Активна\",\n                \"images_thumb\": [\n                    \"http://upost.test/storage/1/orders/image_thumb_20230128220113_63d584a9a311e.jpg\"\n                ],\n                \"images_medium\": [\n                    \"http://upost.test/storage/1/orders/image_medium_20230128220113_63d584a9a311e.jpg\"\n                ],\n                \"images_original\": [\n                    \"http://upost.test/storage/1/orders/image_original_20230128220113_63d584a9a311e.jpg\"\n                ],\n                \"user\": {\n                    \"id\": 1,\n                    \"name\": \"Сергій\",\n                    \"surname\": \"Шкода\",\n                    \"register_date\": \"2022-05-19\",\n                    \"last_active\": \"2023-02-20 09:28:16\",\n                    \"birthday\": \"1975-10-21\",\n                    \"gender\": \"male\",\n                    \"photo\": \"http://upost.test/storage/1/user/image_20220519170533_6286523167f0e.jpg\",\n                    \"resume\": \"Крутой спец во всем!\",\n                    \"scores_count\": 4,\n                    \"reviews_count\": 1,\n                    \"failed_delivery_count\": 0,\n                    \"failed_receive_count\": 5,\n                    \"validation\": \"no_valid\",\n                    \"successful_orders_count\": 0,\n                    \"short_name\": \"Сергій Ш.\",\n                    \"full_name\": \"Сергій Шкода\",\n                    \"gender_name\": \"Чоловічий\",\n                    \"validation_name\": \"Не перевірений\",\n                    \"photo_thumb\": \"http://upost.test/storage/1/user/image_thumb_20220519170533_6286523167f0e.jpg\",\n                    \"photo_original\": \"http://upost.test/storage/1/user/image_original_20220519170533_6286523167f0e.jpg\",\n                    \"register_date_human\": \"9 місяців\",\n                    \"last_active_human\": \"8 секунд тому\",\n                    \"rating\": \"4\"\n                },\n                \"from_country\": {\n                    \"id\": \"UA\",\n                    \"name_en\": \"Ukraine\",\n                    \"name\": \"Україна\"\n                },\n                \"from_city\": {\n                    \"id\": 1,\n                    \"name_en\": \"Kyiv\",\n                    \"name\": \"Київ\"\n                },\n                \"to_country\": {\n                    \"id\": \"PL\",\n                    \"name_en\": \"Poland\",\n                    \"name\": \"Польща\"\n                },\n                \"to_city\": [],\n                \"rates\": [],\n                \"deductions\": [\n                    {\n                        \"id\": 7,\n                        \"order_id\": 7,\n                        \"type\": \"fee\",\n                        \"name\": \"company_fee_percent\",\n                        \"amount\": \"29.12\",\n                        \"created_at\": \"2023-01-28 21:48:06\"\n                    },\n                    {\n                        \"id\": 8,\n                        \"order_id\": 7,\n                        \"type\": \"fee\",\n                        \"name\": \"paypal_fee_percent\",\n                        \"amount\": \"29.12\",\n                        \"created_at\": \"2023-01-28 21:48:06\"\n                    }\n                ],\n                \"rate_confirmed\": \"\"\n            }\n        ],\n        \"last_routes\": [\n            {\n                \"id\": 2,\n                \"user_id\": 1,\n                \"from_country_id\": \"UA\",\n                \"from_city_id\": 6,\n                \"to_country_id\": \"UA\",\n                \"to_city_id\": 1,\n                \"deadline\": \"2023-02-04\",\n                \"status\": \"active\",\n                \"created_at\": \"2023-01-31 19:03:51\",\n                \"updated_at\": \"2023-01-31 19:03:54\",\n                \"viewed_orders_at\": \"2023-01-31 19:03:54\",\n                \"status_name\": \"Активний\",\n                \"user\": {\n                    \"id\": 1,\n                    \"name\": \"Сергій\",\n                    \"surname\": \"Шкода\",\n                    \"register_date\": \"2022-05-19\",\n                    \"last_active\": \"2023-02-20 09:28:16\",\n                    \"birthday\": \"1975-10-21\",\n                    \"gender\": \"male\",\n                    \"photo\": \"http://upost.test/storage/1/user/image_20220519170533_6286523167f0e.jpg\",\n                    \"resume\": \"Крутой спец во всем!\",\n                    \"scores_count\": 4,\n                    \"reviews_count\": 1,\n                    \"failed_delivery_count\": 0,\n                    \"failed_receive_count\": 5,\n                    \"validation\": \"no_valid\",\n                    \"successful_orders\": 0,\n                    \"short_name\": \"Сергій Ш.\",\n                    \"full_name\": \"Сергій Шкода\",\n                    \"gender_name\": \"Чоловічий\",\n                    \"validation_name\": \"Не перевірений\",\n                    \"photo_thumb\": \"http://upost.test/storage/1/user/image_thumb_20220519170533_6286523167f0e.jpg\",\n                    \"photo_original\": \"http://upost.test/storage/1/user/image_original_20220519170533_6286523167f0e.jpg\",\n                    \"register_date_human\": \"9 місяців\",\n                    \"last_active_human\": \"8 секунд тому\",\n                    \"rating\": \"4\"\n                },\n                \"from_country\": {\n                    \"id\": \"UA\",\n                    \"name_en\": \"Ukraine\",\n                    \"name\": \"Україна\"\n                },\n                \"from_city\": {\n                    \"id\": 6,\n                    \"name_en\": \"Cherkasy\",\n                    \"name\": \"Черкаси\"\n                },\n                \"to_country\": {\n                    \"id\": \"UA\",\n                    \"name_en\": \"Ukraine\",\n                    \"name\": \"Україна\"\n                },\n                \"to_city\": {\n                    \"id\": 1,\n                    \"name_en\": \"Kyiv\",\n                    \"name\": \"Київ\"\n                }\n            },\n            {\n                \"id\": 1,\n                \"user_id\": 1,\n                \"from_country_id\": \"PL\",\n                \"from_city_id\": 2,\n                \"to_country_id\": \"UA\",\n                \"to_city_id\": 5,\n                \"deadline\": \"2023-02-01\",\n                \"status\": \"closed\",\n                \"created_at\": \"2023-01-31 05:54:42\",\n                \"updated_at\": \"2023-02-13 10:34:40\",\n                \"viewed_orders_at\": \"2023-01-31 05:54:45\",\n                \"status_name\": \"Закритий\",\n                \"user\": {\n                    \"id\": 1,\n                    \"name\": \"Сергій\",\n                    \"surname\": \"Шкода\",\n                    \"register_date\": \"2022-05-19\",\n                    \"last_active\": \"2023-02-20 09:28:16\",\n                    \"birthday\": \"1975-10-21\",\n                    \"gender\": \"male\",\n                    \"photo\": \"http://upost.test/storage/1/user/image_20220519170533_6286523167f0e.jpg\",\n                    \"resume\": \"Крутой спец во всем!\",\n                    \"scores_count\": 4,\n                    \"reviews_count\": 1,\n                    \"failed_delivery_count\": 0,\n                    \"failed_receive_count\": 5,\n                    \"validation\": \"no_valid\",\n                    \"successful_orders\": 0,\n                    \"short_name\": \"Сергій Ш.\",\n                    \"full_name\": \"Сергій Шкода\",\n                    \"gender_name\": \"Чоловічий\",\n                    \"validation_name\": \"Не перевірений\",\n                    \"photo_thumb\": \"http://upost.test/storage/1/user/image_thumb_20220519170533_6286523167f0e.jpg\",\n                    \"photo_original\": \"http://upost.test/storage/1/user/image_original_20220519170533_6286523167f0e.jpg\",\n                    \"register_date_human\": \"9 місяців\",\n                    \"last_active_human\": \"8 секунд тому\",\n                    \"rating\": \"4\"\n                },\n                \"from_country\": {\n                    \"id\": \"PL\",\n                    \"name_en\": \"Poland\",\n                    \"name\": \"Польща\"\n                },\n                \"from_city\": {\n                    \"id\": 2,\n                    \"name_en\": \"Warsaw\",\n                    \"name\": \"Варшава\"\n                },\n                \"to_country\": {\n                    \"id\": \"UA\",\n                    \"name_en\": \"Ukraine\",\n                    \"name\": \"Україна\"\n                },\n                \"to_city\": {\n                    \"id\": 5,\n                    \"name_en\": \"Kryvyi Rih\",\n                    \"name\": \"Кривий Ріг\"\n                }\n            }\n        ]\n    }\n}"
+								}
+							]
 						},
 						{
 							"name": "Приватні дані користувача",
@@ -3704,13 +3778,6 @@
 											"key": "surname",
 											"value": "Freelancer",
 											"description": "Прізвище",
-											"type": "text",
-											"disabled": true
-										},
-										{
-											"key": "city_id",
-											"value": "4",
-											"description": "Код міста проживання",
 											"type": "text",
 											"disabled": true
 										},
@@ -3835,7 +3902,7 @@
 									"formdata": [
 										{
 											"key": "old_password",
-											"value": "qwerty",
+											"value": "testtest",
 											"description": "Старий пароль",
 											"type": "text"
 										},
@@ -3849,6 +3916,12 @@
 											"key": "password_confirmation",
 											"value": "testtest",
 											"description": "Підтвердження нового паролю",
+											"type": "text"
+										},
+										{
+											"key": "sender",
+											"value": "email",
+											"description": "Через що підтвердити (email)",
 											"type": "text"
 										}
 									]
@@ -3947,6 +4020,24 @@
 											"key": "card_name",
 											"value": "Вася Пупкин",
 											"description": "Ім'я та призвище на карті",
+											"type": "text"
+										},
+										{
+											"key": "card_exp_month",
+											"value": "12",
+											"description": "Місяц закінчення дії картки",
+											"type": "text"
+										},
+										{
+											"key": "card_exp_year",
+											"value": "2025",
+											"description": "Рік закінцення дії картки",
+											"type": "text"
+										},
+										{
+											"key": "card_cvc",
+											"value": "023",
+											"description": "CVC-код",
 											"type": "text"
 										},
 										{
@@ -4278,26 +4369,26 @@
 										},
 										{
 											"key": "from_country_id",
-											"value": "3",
+											"value": "UA",
 											"description": "Код країни з якої починається замовлення",
 											"type": "text"
 										},
 										{
-											"key": "from_city_id",
-											"value": "",
-											"description": "Код міста початку (опційно)",
+											"key": "from_city",
+											"value": "Kyiv",
+											"description": "Назва міста початку (опційно)",
 											"type": "text"
 										},
 										{
 											"key": "to_country_id",
-											"value": "2",
+											"value": "PL",
 											"description": "Код краіни кінця замовлення",
 											"type": "text"
 										},
 										{
-											"key": "to_city_id",
-											"value": "2",
-											"description": "Код міста прибуття (опційно)",
+											"key": "to_city",
+											"value": "Warsaw",
+											"description": "Назва міста прибуття (опційно)",
 											"type": "text"
 										},
 										{
@@ -4410,26 +4501,26 @@
 										},
 										{
 											"key": "from_country_id",
-											"value": "3",
+											"value": "UA",
 											"description": "Код країни з якої починається замовлення",
 											"type": "text"
 										},
 										{
-											"key": "from_city_id",
-											"value": "4",
-											"description": "Код міста початку (опційно)",
+											"key": "from_city",
+											"value": "Kyiv",
+											"description": "Назва міста початку (опційно)",
 											"type": "text"
 										},
 										{
 											"key": "to_country_id",
-											"value": "2",
+											"value": "PL",
 											"description": "Код краіни кінця замовлення",
 											"type": "text"
 										},
 										{
-											"key": "to_city_id",
-											"value": "2",
-											"description": "Код міста прибуття (опційно)",
+											"key": "to_city",
+											"value": "Warsaw",
+											"description": "Назва міста прибуття (опційно)",
 											"type": "text"
 										},
 										{
@@ -4534,7 +4625,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"order_id\", 18);"
+											"pm.variables.set(\"order_id\", 7);"
 										],
 										"type": "text/javascript"
 									}
@@ -4614,7 +4705,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"pm.variables.set(\"route_id\", 10);"
+											"pm.variables.set(\"route_id\", 4);"
 										],
 										"type": "text/javascript"
 									}
@@ -5988,6 +6079,42 @@
 							"response": []
 						},
 						{
+							"name": "Оплата",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"rate_id\", 2);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/rates/{{rate_id}}/purchase",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"rates",
+										"{{rate_id}}",
+										"purchase"
+									]
+								},
+								"description": "Ставку может создать только Исполнитель (путешественник).  \nПри создании ставки нужно указать следующие обязательные параметры:\n\n| Параметр | Описание | Валидация |\n| --- | --- | --- |\n| route_id | Код маршрута | Маршрут принадлежит авторизированному пользователю (routes.user_id = auth.user_id) и является активным (routes.status=active). |\n| order_id | Код заказа | Заказ существует и имеет активный статус (orders.status=active) |\n| amount | Сумма вознаграждения | Если на заказе установлен признак «Не принимать ставки выше данной суммы» (orders.not_more_price=1), то сконвертированная в доллар сумма вознаграждения не должна превышать суммы вознаграждения в долларах установленного на заказе (orders.user_price_usd) |\n| currency | Валюта вознаграждения | Одна из валют: ₴, ₽, $, € |\n| deadline | Срок, до которого будет доставлен товар | Текущая или последующие даты |\n| comment | Комментарий к ставке | Не более 1000 букв, без матов |\n\nДублировать ставку запрещено: проверяются активные ставки авторизированного пользователя (исполнителя) по полям route_id, order_id. Т.е. поиск дубля выполняется по следующим критериям:  \nrate.user_id = auth.user_id И rates.status = active И rates.route_id = params.route_id И rates.order_id = params.order_id.\n\nПосле прохождения валидации:\n\n*   создается чат c заполнением полей: status = active, lock_status = without_lock, performer_id = Владелец маршрута, customer_id - Владелец Заказа;\n*   создается ставка в статусе active\n*   в чат отправляется системное сообщение «performer_suggested_route» (Путешественник предложил маршрут)."
+							},
+							"response": []
+						},
+						{
 							"name": "Редагувати ставку",
 							"event": [
 								{
@@ -6248,7 +6375,7 @@
 							"response": []
 						},
 						{
-							"name": "Підгоотвити по ставці дані для проплати",
+							"name": "Підгоотвити по ставці дані для проплати (Liqpay)",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -7839,7 +7966,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/chats/show?count=5&page=1&filter=customer&lang=ru",
+									"raw": "{{host}}/{{endpoint}}/chats/show",
 									"host": [
 										"{{host}}"
 									],
@@ -7852,12 +7979,14 @@
 										{
 											"key": "count",
 											"value": "5",
-											"description": "Кол-во чатов на странице (опционально)"
+											"description": "Кол-во чатов на странице (опционально)",
+											"disabled": true
 										},
 										{
 											"key": "page",
 											"value": "1",
-											"description": "Текущая страница  (опционально)"
+											"description": "Текущая страница  (опционально)",
+											"disabled": true
 										},
 										{
 											"key": "sorting",
@@ -7867,19 +7996,21 @@
 										},
 										{
 											"key": "search",
-											"value": "Мобилка Нокиа",
+											"value": "test",
 											"description": "Строка для поиска по сообщениям чатов",
 											"disabled": true
 										},
 										{
 											"key": "filter",
 											"value": "customer",
-											"description": "Фильтр (all, customer, performer)  (опционально)"
+											"description": "Фильтр (all, customer, performer)  (опционально)",
+											"disabled": true
 										},
 										{
 											"key": "lang",
 											"value": "ru",
-											"description": "Язык"
+											"description": "Язык",
+											"disabled": true
 										}
 									]
 								}
@@ -8032,7 +8163,7 @@
 									"formdata": [
 										{
 											"key": "chat_id",
-											"value": "3",
+											"value": "2",
 											"type": "text"
 										},
 										{
@@ -8809,6 +8940,40 @@
 										"{{endpoint}}",
 										"notices",
 										"set_read"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Заявка на вивід грошей",
+					"item": [
+						{
+							"name": "Сворення заявки на вивід грошей",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "lang",
+											"value": "uk",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/{{endpoint}}/withdrawals/add",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"{{endpoint}}",
+										"withdrawals",
+										"add"
 									]
 								}
 							},
