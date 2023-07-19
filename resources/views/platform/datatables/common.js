@@ -107,6 +107,16 @@ var table = $('#grid').DataTable({
             autoClose: true ,
             buttons: [],
         },
+        {
+            text: '<i class="fa fa-check-square-o"></i>',
+            titleAttr: 'Выделить всё',
+            extend: 'selectAll',
+        },
+        {
+            text: '<i class="fa fa-square-o"></i>',
+            titleAttr: 'Снять выделение',
+            extend: 'selectNone',
+        },
     ],
     ajax: {
         url: ajax_url,
@@ -176,4 +186,40 @@ menu_statuses.on('click', 'a', function () {
     menu_statuses.find('a').removeClass('active');
     $(this).addClass('active');
     table.ajax.reload();
+});
+
+// отправить аякс-запрос
+function send_ajax(form, url)
+{
+    var data = new FormData(form);
+    data.append('_token', $.admin.token);
+    data.append('ids', JSON.stringify(table.rows( { selected: true } ).data().pluck('id').toArray()));
+
+    $.ajax({
+        method: 'POST',
+        url: form === undefined ? url : form.action,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            if (data.status) {
+                $(form).closest('.modal').modal('hide');
+                table.ajax.reload();
+                toastr.success(data.message);
+            } else {
+                toastr.warning(data.message, 'Внимание');
+            }
+        },
+        error:function(request){
+            console.log(request);
+            toastr.error('Детализация в console.log', 'Ошибка');
+        }
+    });
+}
+
+// обработчик модалок
+$('.modal form').off('submit').on('submit', function (e) {
+    e.preventDefault();
+    send_ajax(this);
 });

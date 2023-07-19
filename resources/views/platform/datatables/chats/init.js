@@ -28,39 +28,3 @@ $.fn.dataTable.ext.buttons.setChatLockStatus = {
 var actions = {
     active: ['setChatLockStatus'],
 };
-
-// отправить аякс-запрос
-function send_ajax(form, url)
-{
-    var data = new FormData(form);
-    data.append('_token', $.admin.token);
-    data.append('ids', JSON.stringify(table.rows( { selected: true } ).data().pluck('id').toArray()));
-
-    $.ajax({
-        method: 'POST',
-        url: form === undefined ? url : form.action,
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-            if (data.status) {
-                $(form).closest('.modal').modal('hide');
-                table.ajax.reload();
-                toastr.success(data.message);
-            } else {
-                toastr.warning(data.message, 'Внимание');
-            }
-        },
-        error:function(request){
-            console.log(request);
-            toastr.error('Детализация в console.log', 'Ошибка');
-        }
-    });
-}
-
-// обработчик модалок
-$('.modal form').off('submit').on('submit', function (e) {
-    e.preventDefault();
-    send_ajax(this);
-});
