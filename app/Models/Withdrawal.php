@@ -6,6 +6,34 @@ use App\Models\Traits\TimestampSerializable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * App\Models\Withdrawal
+ *
+ * @property int $id Код
+ * @property int $user_id Користувач
+ * @property string $amount Сума
+ * @property string $email Електрона адреса
+ * @property string $status Статус
+ * @property int|null $file_id CSV-файл, в якому відправлена заявка на вивід грошей
+ * @property \Illuminate\Support\Carbon|null $created_at Створено
+ * @property \Illuminate\Support\Carbon|null $updated_at Змінено
+ * @property-read \App\Models\WithdrawalFile|null $file
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal existsUnfinished()
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal owner()
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal whereFileId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Withdrawal whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Withdrawal extends Model
 {
     use TimestampSerializable;
@@ -58,6 +86,11 @@ class Withdrawal extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function file(): BelongsTo
+    {
+        return $this->belongsTo(WithdrawalFile::class);
     }
 
     ### SCOPES ###

@@ -5,12 +5,15 @@
             <th rowspan="2">Статус</th>
             <th colspan="3">Заказчик</th>
             <th rowspan="2">Сумма</th>
+            <th colspan="2">Файл</th>
             <th colspan="2">Даты</th>
         </tr>
         <tr>
             <th>код</th>
             <th>ФИО</th>
             <th>Емейл</th>
+            <th>код</th>
+            <th>название</th>
             <th>создано</th>
             <th>изменено</th>
         </tr>

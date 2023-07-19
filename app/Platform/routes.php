@@ -30,6 +30,8 @@ Route::group([
     # Заявки на вивід грошей
     $router->get('withdrawals', 'DataTables\WithdrawalsController@index')->name('withdrawals.index')->middleware('admin.permission:check,withdrawals');
     $router->get('ajax/withdrawals', 'DataTables\WithdrawalsController@getData')->name('ajax.withdrawals')->middleware('admin.permission:check,withdrawals');
+    $router->post('withdrawals/create_csv', 'DataTables\WithdrawalsController@createCSVFile')->name('withdrawals.create_csv')->middleware('admin.permission:check,withdrawals');
+    $router->get('withdrawals/download_csv/{id}', 'DataTables\WithdrawalsController@downloadCSVFile')->name('withdrawals.download_csv')->middleware('admin.permission:check,withdrawals');
 
     # Споры
     $router->get('disputes', 'DataTables\DisputeController@index')->name('disputes.index')->middleware('admin.permission:check,disputes');
