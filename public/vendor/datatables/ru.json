@@ -136,7 +136,9 @@
         "removeAllStates": "Удалить все состояния",
         "savedStates": "Сохраненные состояния",
         "stateRestore": "Состояние %d",
-        "updateState": "Обновить"
+        "updateState": "Обновить",
+	"selectAll": "Выделить всё",
+        "selectNone": "Снять выделение"
     },
     "decimal": ".",
     "infoThousands": ",",
