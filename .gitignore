@@ -2,8 +2,7 @@
 /public/storage
 /public/content
 /public/upload
-/storage/*.key
-/storage/logs/*
+/storage/*
 /vendor
 !/vendor
 /vendor/*
