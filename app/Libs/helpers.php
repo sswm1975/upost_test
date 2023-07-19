@@ -4,6 +4,7 @@ use App\Exceptions\ValidatorException;
 use App\Models\Dispute;
 use App\Models\Tax;
 use App\Modules\Calculations;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -659,5 +660,62 @@ function getCss($file)
     $filename = resource_path(str_replace('.', '/', 'views/' . $file) . '.css');
 
     return file_get_contents($filename);
+}
+
+/**
+ * Сформировать JSON-ответ.
+ *
+ * @param string $message
+ * @param bool $status
+ * @return JsonResponse
+ */
+function jsonResponse(string $message, bool $status = true): JsonResponse
+{
+    return response()->json(
+        compact('status', 'message'),
+        200,
+        ['Content-Type' => 'application/json; charset=utf-8'],
+        JSON_UNESCAPED_UNICODE
+    );
+}
+
+/**
+ * Сохранить массив в CSV-файл.
+ *
+ * @param array $array       Массив (если 1-ый элемент массива объект или ассоциативный массив, то ключи будут заголовками таблицы)
+ * @param string $filename   Имя файла без расширения (по умолчанию название файла test.csv)
+ * @param string $separator  Разделитель столбцов (по умолчанию ";")
+ * @throws Exception
+ */
+function saveArrayToFile(array $array, string $filename = 'test.csv', string $separator = ';')
+{
+    if (count($array) == 0) {
+        throw new Exception('Array empty.');
+    }
+
+    if (strpos($filename, '.csv') === false) {
+        $filename .= '.csv';
+    }
+    $fp = fopen($filename, 'w');
+
+    # UTF-8 BOM
+    fwrite($fp, chr(0xEF).chr(0xBB).chr(0xBF));
+
+    # добавляем название столбцов, если 1-ый элемент массива является объектом или ассоциативным массивом
+    if (is_object($array[0]) || array_keys($array[0]) !== range(0, count($array[0]) - 1)) {
+        $headers = array_keys((array)$array[0]);
+        fputcsv($fp, $headers, $separator);
+    }
+
+    # перебираем массив и заносим данные в файл
+    foreach ($array as $row) {
+        $fields = array_map(function ($field) {
+            return is_array($field) ? '[' . implode(',', $field) . ']' : $field;
+        }, (array)($row));
+        fputcsv($fp, $fields, $separator);
+    }
+
+    # закрываем файл
+    fclose($fp);
 }
 
