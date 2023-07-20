@@ -80,8 +80,7 @@ class WithdrawalsController extends BaseController
         }
 
         $ids = json_decode($request->input('ids'));
-        $withdrawals = Withdrawal::whereKey($ids)->where('status', Withdrawal::STATUS_NEW);
-        $rows = collect($withdrawals->get());
+        $rows = Withdrawal::with('user:id,name,surname')->whereKey($ids)->where('status', Withdrawal::STATUS_NEW)->get();
 
         $path = storage_path() . self::FOLDER_CSV_FILES;
         if (! File::exists($path)) {
@@ -102,16 +101,22 @@ class WithdrawalsController extends BaseController
         $full_filename = $path . $file->name;
         $handle = fopen($full_filename, 'w');
         fputs($handle, chr(0xEF) . chr(0xBB) . chr(0xBF)); # add BOM to fix UTF-8 in Excel
-        fputcsv($handle, ["Name", "Email"], ';');
-        foreach ($withdrawals->get() as $row) {
-            fputcsv($handle, [
+        fputcsv($handle, ["name", "recipientEmail", "paymentReference", "amountCurrency", "amount", "sourceCurrency", "targetCurrency", "type"], ',');
+        foreach ($rows as $row) {
+            fputs($handle, implode(",", array_map("encodeFunc", [
+                $row->user->full_name,
                 $row->email,
+                $row->id,
+                'USD',
                 $row->amount,
-            ], ';');
+                'USD',
+                'USD',
+                'EMAIL'
+            ]))."\r\n");
         }
         fclose($handle);
 
-        $withdrawals->update([
+        Withdrawal::whereKey($ids)->where('status', Withdrawal::STATUS_NEW)->update([
             'file_id' => $file->id,
             'status' => Withdrawal::STATUS_IN_PROGRESS,
             'updated_at' => Carbon::now(),

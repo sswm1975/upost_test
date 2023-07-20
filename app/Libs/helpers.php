@@ -719,3 +719,18 @@ function saveArrayToFile(array $array, string $filename = 'test.csv', string $se
     fclose($fp);
 }
 
+/**
+ * Используется в WithdrawalsController::createCSVFile.
+ *
+ * @param $value
+ * @return string
+ */
+function encodeFunc($value) {
+    ///remove any ESCAPED double quotes within string.
+    $value = str_replace('\\"','"',$value);
+    //then force escape these same double quotes And Any UNESCAPED Ones.
+    $value = str_replace('"','\"',$value);
+    //force wrap value in quotes and return
+    return '"'.$value.'"';
+}
+
