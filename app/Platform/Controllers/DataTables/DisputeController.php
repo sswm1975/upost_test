@@ -12,6 +12,7 @@ use App\Models\Payment;
 use App\Models\Rate;
 use App\Models\Track;
 use App\Models\Transaction;
+use App\Payments\Stripe;
 use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\JsonResponse;
@@ -183,6 +184,25 @@ class DisputeController extends BaseController
         $disputes = Dispute::findMany($ids);
 
         foreach ($disputes as $model) {
+            # добавляем код заказчика для сохранения в таблице StripeLog при выполнении createRefund
+            $request->merge(['dispute_user_id' => $model->rate->order->user_id]);
+
+            # ищем транзакцию по оплате Заказчиком
+            $transaction = Transaction::firstWhere('rate_id', '=', $model->rate->id);
+
+            # создаем отмену платежа в Stripe
+            $stripe = new Stripe;
+            $refund = $stripe->createRefund($transaction->stripe_payment_intent_id);
+
+            # если ошибка, то фиксируем это и ошибку отправляем в админку
+            if (!empty($refund['error'])) {
+                $transaction->complete_error = $refund['error'];
+                $transaction->status = 'failed';
+                $transaction->save();
+
+                return static::jsonResponse($refund['error'], false);
+            }
+
             DB::beginTransaction();
 
             try {
@@ -201,9 +221,15 @@ class DisputeController extends BaseController
                 # путешественнику увеличиваем счетчик "Количество неудачных доставок"
                 $model->rate->user()->increment('failed_delivery_count');
 
-                # создаем заявку на возврат средств Заказчику
-                $transaction = Transaction::firstWhere('rate_id', '=', $model->rate->id);
-                Payment::create(['user_id' => $model->rate->order->user_id, 'rate_id' => $model->rate->id, 'order_id' => $model->rate->order_id, 'amount' => $transaction->amount - $transaction->service_fee, 'type' => Payment::TYPE_REFUND, 'description' => 'Возмещение средств заказчику по спору №' . $model->id,]);
+                # создаем платеж на возмещение средств
+                Payment::create([
+                    'user_id' => $model->rate->order->user_id,
+                    'rate_id' => $model->rate->id,
+                    'order_id' => $model->rate->order_id,
+                    'amount' => $transaction->amount - $transaction->service_fee,
+                    'type' => Payment::TYPE_REFUND,
+                    'description' => 'Возмещение средств заказчику по спору №' . $model->id,
+                ]);
 
                 # информируем в чат причину закрытия спора, а также отсылаем ссылку на информацию, что делать дальше
                 # меняем статус чата на закрытый и блокируем на добавление новых сообщений

@@ -6,12 +6,10 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\ValidatorException;
 use App\Http\Controllers\Controller;
 use App\Mail\SendTokenUserDataChange;
-use App\Payments\Stripe;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\UserChange;
@@ -121,20 +119,6 @@ class ProfileController extends Controller
 
         if ($request->filled('resume')) {
             $data['resume'] = $this->processResume($data['resume']);
-        }
-
-        # регистрируем пользователя в Stripe
-        $stripe = new Stripe;
-        if (empty($user->stripe_customer_id)) {
-            $customer = $stripe->createCustomer($user->full_name, $user->email, $user->phone);
-            if (isset($customer['id'])) {
-                $data['stripe_customer_id'] = $customer['id'];
-            }
-        } else {
-            $customer = $stripe->updateCustomer($user->stripe_customer_id, $user->full_name, $user->email, $user->phone);
-            if (isset($customer['error'])) {
-                throw new ValidatorException($customer['error']);
-            }
         }
 
         $user->update($data);
@@ -264,44 +248,19 @@ class ProfileController extends Controller
             'card_exp_month' => 'required|numeric|between:1,12',
             'card_exp_year'  => 'required|numeric|min:' . date('Y') . '|max:' . (date('Y')+10),
             'card_cvc'       => 'required|size:3',
-            'sender'         => Rule::requiredIf(function () use ($request) {
-                                    # если в страйп ещё не регистрировались, то параметр sender не обязателен
-                                    if (empty($request->user()->stripe_payment_method)) return false;
-
-                                    # в противном случае подтверждаем пока только через email
-                                    return $request->get('sender') == 'email';
-                                }),
+            'sender'         => 'required|in:email',
         ]);
 
         $user = $request->user();
 
-        # если "Способ оплаты" ранее был зарегистрирован в Stripe, то обрабатываем через "Подтверждение изменения данных"
-        if (!empty($user->stripe_payment_method)) {
+        # если ранее номер ПК уже вводился, то обрабатываем через "Подтверждение изменения данных"
+        if (!empty($user->card_number)) {
             if (isset($data['sender']) && $data['sender'] == 'email') {
                 return $this->sendVerificationCode($user, $data);
             }
             throw new ValidatorException('Params sender error!');
         }
 
-        # отправляем данные о ПК в Stripe
-        $stripe = new Stripe;
-        $payment_method = $stripe->createPaymentMethod_Card($data);
-        if (!empty($payment_method['error'])) {
-            throw new ValidatorException($payment_method['error']);
-        }
-
-        # регистрируем пользователя в Stripe
-        if (empty($user->stripe_customer_id)) {
-            $customer = $stripe->createCustomer($user->full_name, $user->email, $user->phone);
-            if (isset($customer['error'])) {
-                throw new ValidatorException($customer['error']);
-            }
-            if ($customer['id']) {
-                $user->stripe_customer_id = $customer['id'];
-            }
-        }
-
-        $user->stripe_payment_method = $payment_method['id'];
         $user->card_number = $data['card_number'];
         $user->card_name = $data['card_name'];
         $user->save();
@@ -337,15 +296,6 @@ class ProfileController extends Controller
         $user->fill($data)->save();
 
         $user_change->delete();
-
-        # если по пользователю указан "Способ оплаты" и в изменениях есть данные об платежной карте,
-        # то отправляем данные о ПК в Stripe
-        if (!empty($user->stripe_payment_method) && !empty($data['card_number'])) {
-            $payment_method = (new Stripe)->updatePaymentMethod_Card($user->stripe_payment_method, $data);
-            if (!empty($payment_method['error'])) {
-                throw new ValidatorException($payment_method['error']);
-            }
-        }
 
         return response()->json([
             'status'  => true,

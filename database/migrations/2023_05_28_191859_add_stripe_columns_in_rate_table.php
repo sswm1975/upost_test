@@ -14,7 +14,7 @@ class AddStripeColumnsInRateTable extends Migration
     public function up()
     {
         Schema::table('rates', function (Blueprint $table) {
-            $table->string('stripe_price_id')->nullable()->collation('utf8mb4_bin')->comment('Идентификатор цены в платежной системе Stripe');
+            $table->string('stripe_price_id')->nullable()->comment('Идентификатор цены в платежной системе Stripe');
         });
     }
 

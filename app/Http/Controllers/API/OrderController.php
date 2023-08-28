@@ -125,10 +125,9 @@ class OrderController extends Controller
 
         static::checkExistsImages($data['images']);
 
+        # отправляем в Stripe обновленные данные о товаре
         $product = (new Stripe)->createProduct($data);
-        if (!empty($product['error'])) {
-            throw new ValidatorException($product['error']);
-        }
+        if (!empty($product['error'])) throw new ValidatorException($product['error']);
         $data['stripe_product_id'] = $product->id;
 
         $order = Order::create($data);
@@ -170,21 +169,13 @@ class OrderController extends Controller
 
         static::checkExistsImages($data['images']);
 
-        $stripe = new Stripe;
-        if (empty($order->stripe_product_id)) {
-            $product = $stripe->createProduct($data);
-            if (!empty($product['error'])) {
-                throw new ValidatorException($product['error']);
-            }
-            $data['stripe_product_id'] = $product->id;
-        } else {
-            $product = $stripe->updateProduct($order->stripe_product_id, $data);
-            if (!empty($product['error'])) {
-                throw new ValidatorException($product['error']);
-            }
-        }
-
         $affected = $order->update($data);
+
+        if ($affected) {
+            # отправляем в Stripe обновленные данные о товаре
+            $product = (new Stripe)->updateProduct($order->stripe_product_id, $data);
+            if (!empty($product['error'])) throw new ValidatorException($product['error']);
+        }
 
         return response()->json([
             'status'   => $affected,

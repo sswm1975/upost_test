@@ -21,16 +21,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $export_tax Налог на вывоз товара
  * @property string|null $description Описание
  * @property string|null $status Статус транзакции
- * @property mixed|null $purchase_params Параметры для PayPal purchase
- * @property mixed|null $purchase_response Ответ от PayPal purchase
+ * @property array|null $purchase_params Параметры для PayPal purchase
+ * @property array|null $purchase_response Ответ от PayPal purchase
  * @property string|null $purchase_redirect_url Ссылка для оплаты в PayPal
- * @property string|null $purchase_error Ошибка при purchase (статус failed)
- * @property string|null $purchase_exception Исключение при purchase (статус exception)
- * @property mixed|null $complete_response Ответ от сервиса PayPal
- * @property mixed|null $complete_error Ошибка при complete (статус not_successful)
+ * @property array|null $complete_response Ответ от сервиса PayPal
+ * @property array|null $complete_error Ошибка при complete (статус not_successful)
  * @property \Illuminate\Support\Carbon|null $created_at Дата добавления
  * @property \Illuminate\Support\Carbon|null $updated_at Дата обновления
  * @property \Illuminate\Support\Carbon|null $payed_at Дата оплаты
+ * @property string|null $stripe_checkout_session_id Идентификатор сеанса оплаты в платежной системе Stripe
+ * @property string|null $stripe_payment_intent_id Идентификатор платежного намерения в платежной системе Stripe (используется при Refund)
  * @property-read string $status_name
  * @property-read string $type_name
  * @property-read \App\Models\User $user
@@ -49,13 +49,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereOrderAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction wherePayedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction wherePaymentServiceFee($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Transaction wherePurchaseError($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Transaction wherePurchaseException($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction wherePurchaseParams($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction wherePurchaseRedirectUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction wherePurchaseResponse($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereRateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereStripeCheckoutSessionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereStripePaymentIntentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Transaction whereUserId($value)
@@ -66,7 +66,13 @@ class Transaction extends Model
     use TimestampSerializable;
 
     protected $guarded = ['id'];
-    protected $casts = ['response' => 'array'];
+    protected $casts = [
+        'response' => 'array',
+        'purchase_params' => 'array',
+        'purchase_response' => 'array',
+        'complete_response' => 'array',
+        'complete_error' => 'array',
+    ];
     protected $dates = ['payed_at'];
     protected $appends = ['status_name', 'type_name'];
     protected $attributes = ['type' => self::TYPE_PAYMENT];

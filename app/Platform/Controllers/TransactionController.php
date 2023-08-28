@@ -56,8 +56,6 @@ class TransactionController extends AdminController
             ->setAttributes(['align'=>'center']);
 
         $grid->column('purchase_redirect_url', 'Ссылка для оплаты в PayPal')->url();
-        $grid->column('purchase_error')->help('Ошибка при purchase (статус failed)');
-        $grid->column('purchase_exception')->help('Исключение при purchase (статус exception)');
 
         $grid->column('complete_response_modal', 'Ответ complete PayPal')
             ->modal('Ответ от сервиса PayPal (complete)', function () {

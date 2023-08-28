@@ -260,21 +260,14 @@ class RateController extends Controller
         $total_amount = $stripe->calculatePrice($payment_amount);
         $payment_service_fee = $total_amount - $payment_amount;
 
-        if (empty($rate->stripe_price_id)) {
-            $price = $stripe->createPrice($rate->order->stripe_product_id, round($total_amount * 100), $rate->id);
-            if (!empty($price['error'])) {
-                throw new ValidatorException($price['error']);
-            }
-            $price_id = $price->id;
-            $rate->stripe_price_id = $price_id;
-            $rate->save();
-        } else {
-//            $price = $stripe->updatePrice($rate->stripe_price_id, $total_amount * 100);
-//            if (!empty($price['error'])) {
-//                throw new ValidatorException($price['error']);
-//            }
-            $price_id = $rate->stripe_price_id;
+        # фиксируем цену в Stripe
+        $price = $stripe->createPrice($rate->order->stripe_product_id, round($total_amount * 100), $rate->id);
+        if (!empty($price['error'])) {
+            throw new ValidatorException($price['error']);
         }
+        $price_id = $price->id;
+        $rate->stripe_price_id = $price_id;
+        $rate->save();
 
         $transaction = Transaction::whereRateId($rate->id)->whereStatus('created')->first(['id', 'purchase_redirect_url']);
         if (!empty($transaction)) {
@@ -322,8 +315,16 @@ class RateController extends Controller
 
             throw new ValidatorException($checkout_session['error']);
         }
-        $transaction->purchase_response = $checkout_session->toJSON();
+        if (empty($checkout_session->id)) {
+            $transaction->complete_error = $checkout_session;
+            $transaction->status = 'failed';
+            $transaction->save();
+
+            throw new ValidatorException('There is no payment ID.');
+        }
+        $transaction->purchase_response = $checkout_session;
         $transaction->purchase_redirect_url = $checkout_session->url;
+        $transaction->stripe_checkout_session_id = $checkout_session->id;
         $transaction->status = 'created';
         $transaction->save();
 
@@ -363,8 +364,19 @@ class RateController extends Controller
             ]));
         }
 
+        # в запрос добавляем код пользователя (используется в StripeLog при добавлении новой записи как request()->user()->id)
+        $user = User::find($transaction->user_id, ['id']);
+        $request->merge(['user' =>  $user]);
+        $request->setUserResolver(function () use ($user) {
+            return $user;
+        });
+
         # КЛИЕНТ УСПЕШНО ОПЛАТИЛ
-//        $transaction->complete_response = $payment;
+        $stripe = new Stripe;
+        $payment = $stripe->retrieveCheckout($transaction->stripe_checkout_session_id);    # получаем детальную инфу об оплате
+
+        $transaction->stripe_payment_intent_id = $payment->payment_intent;  # сохраняем payment_intent чтобы его использовать для возврата платежи (Refund), если спор решится в пользу Заказчика
+        $transaction->complete_response = $payment;                         # сохраняем всю инфу об успешном платеже
         $transaction->status = 'payed';
         $transaction->payed_at = Carbon::now()->toDateTimeString();
         $transaction->save();
@@ -434,9 +446,9 @@ class RateController extends Controller
             ]));
         }
 
-//        $transaction->complete_error = $request->all();
-//        $transaction->status = 'canceled';
-//        $transaction->save();
+        $transaction->complete_error = $request->all();
+        $transaction->status = 'canceled';
+        $transaction->save();
 
         return redirect($callback_url . '&' . http_build_query([
             'status'  => false,

@@ -2,14 +2,27 @@
 
 namespace App\Payments;
 
+use App\Models\StripeLog;
 use Exception;
-use Stripe\Exception\CardException;
 use Stripe\StripeClient;
 
 class Stripe
 {
+    const CUSTOMER_CREATE = 'customer_create';
+    const CUSTOMER_UPDATE = 'customer_update';
+    const PRODUCT_CREATE = 'product_create';
+    const PRODUCT_UPDATE = 'product_update';
+    const PRODUCT_DELETE = 'product_delete';
+    const PRICE_CREATE = 'price_create';
+    const CHECKOUT_SESSIONS_CREATE = 'checkout_sessions_create';
+    const CHECKOUT_SESSIONS_RETRIEVE = 'checkout_sessions_retrieve';
+    const REFUND_CREATE = 'refund_create';
+
     private $stripe;
 
+    /**
+     * Init Stripe Client.
+     */
     public function __construct()
     {
         $this->stripe = new StripeClient(config('services.stripe.secret'));
@@ -17,159 +30,56 @@ class Stripe
 
     /**
      * Create a customer.
-     * https://stripe.com/docs/api/customers/create?lang=php
+     * @link https://stripe.com/docs/api/customers/create?lang=php
      *
-     * @param string $name
-     * @param string $email
-     * @param string $phone
+     * @param array $params
      * @return array|\Stripe\Customer
      */
-    public function createCustomer(string $name, string $email = '', string $phone = '')
+    public function createCustomer(array $params)
     {
         $customer = null;
+        $is_error = false;
 
         try {
             $customer = $this->stripe->customers->create([
-                'name' => $name,
-                'email' => $email,
-                'phone' => $phone,
+                'name'  => $params['name'],
+                'email' => $params['email'],
+                'phone' => $params['phone'],
             ]);
         } catch (Exception $e) {
             $customer['error'] = $e->getMessage();
+            $is_error = true;
         }
+
+        StripeLog::add(self::CUSTOMER_CREATE, $params, $customer,$is_error);
 
         return $customer;
     }
 
     /**
      * Update a customer.
-     * https://stripe.com/docs/api/customers/update?lang=php
+     * @link https://stripe.com/docs/api/customers/update?lang=php
      *
      * @param string $customer_id
-     * @param string $name
-     * @param string $email
-     * @param string $phone
+     * @param array $params
      * @return \Stripe\Customer
      * @throws \Stripe\Exception\ApiErrorException
      */
-    public function updateCustomer(string $customer_id, string $name, string $email = '', string $phone = '')
+    public function updateCustomer(string $customer_id, array $params)
     {
         $customer = null;
+        $is_error = false;
 
         try {
-            $customer = $this->stripe->customers->update(
-                $customer_id,
-                [
-                    'name' => $name,
-                    'email' => $email,
-                    'phone' => $phone,
-                ]
-            );
+            $customer = $this->stripe->customers->update($customer_id, $params);
         } catch (Exception $e) {
             $customer['error'] = $e->getMessage();
+            $is_error = true;
         }
+
+        StripeLog::add(self::CUSTOMER_UPDATE, $params, $customer, $is_error);
 
         return $customer;
-    }
-
-    /**
-     * Create a PaymentMethod.
-     * https://stripe.com/docs/api/payment_methods/create?lang=php
-     *
-     * @param array $card_data
-     * @return array|\Stripe\PaymentMethod
-     */
-    public function createPaymentMethod_Card($card_data)
-    {
-        $card = null;
-
-        try {
-            $card = $this->stripe->paymentMethods->create([
-                'type' => 'card',
-                'card' => [
-                    'number' => $card_data['card_number'],
-                    'exp_month' => $card_data['card_exp_month'],
-                    'exp_year' => $card_data['card_exp_year'],
-                    'cvc' => $card_data['card_cvc'],
-                ],
-            ]);
-        } catch (CardException $e) {
-            $card['error'] = $e->getError()->message;
-        } catch (Exception $e) {
-            $card['error'] = $e->getMessage();
-        }
-
-        return $card;
-    }
-
-    /**
-     * Update a PaymentMethod.
-     * https://stripe.com/docs/api/payment_methods/update?lang=php
-     *
-     * @param string $payment_method
-     * @param array $card_data
-     * @return array|\Stripe\PaymentMethod
-     */
-    public function updatePaymentMethod_Card(string $payment_method, array $card_data)
-    {
-        $card = null;
-
-        try {
-            $card = $this->stripe->paymentMethods->update(
-                $payment_method,
-                [
-                    'type' => 'card',
-                    'card' => [
-                        'number' => $card_data['card_number'],
-                        'exp_month' => $card_data['card_exp_month'],
-                        'exp_year' => $card_data['card_exp_year'],
-                        'cvc' => $card_data['card_cvc'],
-                    ],
-                ]
-            );
-        } catch (CardException $e) {
-            $card['error'] = $e->getError()->message;
-        } catch (Exception $e) {
-            $card['error'] = $e->getMessage();
-        }
-
-        return $card;
-    }
-
-    /**
-     * Attach a PaymentMethod to a Customer.
-     * https://stripe.com/docs/api/payment_methods/attach?lang=php
-     *
-     * @param $payment_method
-     * @param $customer_id
-     * @return \Stripe\PaymentMethod
-     * @throws \Stripe\Exception\ApiErrorException
-     */
-    public function attachPaymentMethod($payment_method, $customer_id)
-    {
-        $response = $this->stripe->paymentMethods->attach(
-            $payment_method,
-            ['customer' => $customer_id]
-        );
-
-        return $response;
-    }
-
-    /**
-     * Detach a PaymentMethod from a Customer.
-     *
-     * @param $payment_method
-     * @return \Stripe\PaymentMethod
-     * @throws \Stripe\Exception\ApiErrorException
-     */
-    public function detachPaymentMethod($payment_method)
-    {
-        $response = $this->stripe->paymentMethods->detach(
-            $payment_method,
-            []
-        );
-
-        return $response;
     }
 
     /**
@@ -180,54 +90,66 @@ class Stripe
      */
     public function createProduct(array $data)
     {
-        $product = null;
+        $response = null;
 
         try {
-            $product = $this->stripe->products->create([
+            $response = $this->stripe->products->create([
                 'name' => $data['name'],
             ]);
         } catch (Exception $e) {
-            $product['error'] = $e->getMessage();
+            $response['error'] = $e->getMessage();
         }
 
-        return $product;
+        StripeLog::add(self::PRODUCT_CREATE, $data, $response, isset($response['error']));
+
+        return $response;
     }
 
     /**
      * Update a product.
      *
-     * @param string $product_id
-     * @param array $data
+     * @param string $product
+     * @param array $params
      * @return array|\Stripe\Product
      */
-    public function updateProduct(string $product_id, array $data)
+    public function updateProduct(string $product, array $params)
     {
-        $product = null;
+        $response = null;
 
         try {
-            $product = $this->stripe->products->update(
-                $product_id,
+            $response = $this->stripe->products->update(
+                $product,
                 [
-                    'name' => $data['name'],
+                    'name' => $params['name'],
                 ]
             );
         } catch (Exception $e) {
-            $product['error'] = $e->getMessage();
+            $response['error'] = $e->getMessage();
         }
 
-        return $product;
+        StripeLog::add(self::PRODUCT_UPDATE, array_merge(compact('product'), $params), $response, isset($response['error']));
+
+        return $response;
     }
 
     /**
      * Delete a product.
      *
-     * @param $product_id
+     * @param $product
      * @return \Stripe\Product
      * @throws \Stripe\Exception\ApiErrorException
      */
-    public function deleteProduct($product_id)
+    public function deleteProduct($product)
     {
-        $response = $this->stripe->products->delete($product_id, []);
+        $response = null;
+
+        try {
+            $response = $this->stripe->products->delete($product, []);
+        } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        StripeLog::add(self::PRODUCT_DELETE, compact('product'), $response, isset($response['error']));
 
         return $response;
     }
@@ -240,13 +162,13 @@ class Stripe
      * @param $rate_id
      * @return array|\Stripe\Price
      */
-    public function createPrice($product_id, $amount, $rate_id)
+    public function createPrice($product, $amount, $rate_id)
     {
-        $price = null;
+        $response = null;
 
         try {
-            $price = $this->stripe->prices->create([
-                'product' => $product_id,
+            $response = $this->stripe->prices->create([
+                'product' => $product,
                 'unit_amount' => $amount,
                 'currency' => 'usd',
                 'tax_behavior' => 'exclusive',
@@ -255,68 +177,84 @@ class Stripe
                 ],
             ]);
         } catch (Exception $e) {
-            $price['error'] = $e->getMessage();
+            $response['error'] = $e->getMessage();
         }
 
-        return $price;
+        StripeLog::add(self::PRICE_CREATE, compact('product', 'amount', 'rate_id'), $response, isset($response['error']));
+
+        return $response;
     }
 
     /**
-     * !!! Не использовать - выдает ошибки
-     * Update a price.
+     * Создать checkout sessions платеж на оплату по ссылке.
      *
-     * @param $price_id
-     * @param $amount
-     * @return \Stripe\Price
-     * @throws \Stripe\Exception\ApiErrorException
+     * @param $params
+     * @return array|\Stripe\Checkout\Session
      */
-    public function updatePrice($price_id, $amount)
+    public function createCheckout($params)
     {
-        $price = null;
-
         try {
-            $price = $this->stripe->prices->update(
-                $price_id,
-                [
-                    'currency_options' => [
-                        'usd' => [
-                            'unit_amount' => $amount
-                        ]
-                    ]
-                ]
-            );
-        } catch (Exception $e) {
-            $price['error'] = $e->getMessage();
-        }
-
-        return $price;
-    }
-
-    public function createCheckout($data)
-    {
-        $checkout_session = null;
-
-        try {
-            $checkout_session = $this->stripe->checkout->sessions->create([
+            $response = $this->stripe->checkout->sessions->create([
                 'payment_intent_data' => ['setup_future_usage' => 'off_session'],
                 'line_items' => [[
-                    'price' => $data['price_id'],
+                    'price' => $params['price_id'],
                     'quantity' => 1,
                 ]],
-                'customer' => $data['customer_id'],
+                'customer' => $params['customer_id'],
                 'mode' => 'payment',
-                'client_reference_id' => $data['transaction_id'],
-                'success_url' => $data['purchase_success_url'],
-                'cancel_url' => $data['purchase_error_url'],
+                'client_reference_id' => $params['transaction_id'],
+                'success_url' => $params['purchase_success_url'],
+                'cancel_url' => $params['purchase_error_url'],
                 'automatic_tax' => [
                     'enabled' => false,
                 ],
             ]);
         } catch (Exception $e) {
-            $checkout_session['error'] = $e->getMessage();
+            $response['error'] = $e->getMessage();
         }
 
-        return $checkout_session;
+        StripeLog::add(self::CHECKOUT_SESSIONS_CREATE, $params, $response, isset($response['error']));
+
+        return $response;
+    }
+
+    /**
+     * Получить детальную информацию об оплате.
+     *
+     * @param $checkout_session
+     * @return \Stripe\Checkout\Session
+     */
+    public function retrieveCheckout($checkout_session)
+    {
+        try {
+            $response = $this->stripe->checkout->sessions->retrieve($checkout_session, []);
+        } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        StripeLog::add(self::CHECKOUT_SESSIONS_RETRIEVE, compact('checkout_session'), $response, isset($response['error']));
+
+        return $response;
+    }
+
+    /**
+     * Create a refund.
+     * @link https://stripe.com/docs/api/refunds/create
+     *
+     * @param $charge
+     * @return array|\Stripe\Refund
+     */
+    public function createRefund($payment_intent)
+    {
+        try {
+            $response = $this->stripe->refunds->create(compact('payment_intent'));
+        } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        StripeLog::add(self::REFUND_CREATE, compact('payment_intent'), $response, isset($response['error']));
+
+        return $response;
     }
 
     /**

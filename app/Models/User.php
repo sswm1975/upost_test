@@ -47,6 +47,7 @@ use App\Models\Traits\TimestampSerializable;
  * @property \Illuminate\Support\Carbon|null $last_active Дата и время последней активности
  * @property \Illuminate\Support\Carbon $created_at Добавлено
  * @property \Illuminate\Support\Carbon|null $updated_at Изменено
+ * @property string|null $stripe_customer_id Идентификатор пользователя в платежной системе Stripe
  * @property-read \App\Models\City|null $city
  * @property-read string $age
  * @property-read string $full_name
@@ -101,6 +102,7 @@ use App\Models\Traits\TimestampSerializable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereScoresCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereStripeCustomerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereSurname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereValidation($value)

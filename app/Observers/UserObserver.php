@@ -6,6 +6,7 @@ use App\Models\Action;
 use App\Models\User;
 use App\Payments\Stripe;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class UserObserver
 {
@@ -18,6 +19,24 @@ class UserObserver
     public function created(User $user)
     {
         $this->addAction($user,Action::USER_REGISTER);
+
+        # в запрос добавляем код пользователя (используется в StripeLog при добавлении новой записи как request()->user()->id)
+        request()->merge(['user' =>  $user]);
+        request()->setUserResolver(function () use ($user) {
+            return $user;
+        });
+
+        # регистрируем пользователя в Stripe
+        $customer = (new Stripe)->createCustomer([
+            'name'  => $user->full_name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+        ]);
+
+        # сохраняем полученный из Stripe код пользователя
+        if (isset($customer['id'])) {
+            DB::table('users')->where('id', $user->id)->update(['stripe_customer_id' => $customer['id']]);
+        }
     }
 
     /**
@@ -50,12 +69,11 @@ class UserObserver
 
         # Были изменены данные, которые отправляются в Stripe
         if ($user->wasChanged(['phone', 'email', 'name', 'surname'])) {
-            (new Stripe)->updateCustomer($user->stripe_customer_id, $user->full_name, $user->email, $user->phone);
-        }
-
-        # Если по юзеру добавился идентификатор пользователя Stripe или платежный метод Stripe и они будут не пустые, то связываем их
-        if ($user->wasChanged(['stripe_customer_id', 'stripe_payment_method']) && $user->stripe_customer_id && $user->stripe_payment_method) {
-            (new Stripe)->attachPaymentMethod($user->stripe_payment_method, $user->stripe_customer_id);
+            (new Stripe)->updateCustomer($user->stripe_customer_id, [
+                'name'  => $user->full_name,
+                'email' => $user->email,
+                'phone' => $user->phone
+            ]);
         }
     }
 
