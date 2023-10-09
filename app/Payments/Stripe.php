@@ -17,6 +17,7 @@ class Stripe
     const CHECKOUT_SESSIONS_CREATE = 'checkout_sessions_create';
     const CHECKOUT_SESSIONS_RETRIEVE = 'checkout_sessions_retrieve';
     const REFUND_CREATE = 'refund_create';
+    const PAYOUT_CREATE = 'payout_create';
 
     private $stripe;
 
@@ -256,6 +257,49 @@ class Stripe
 
         return $response;
     }
+
+    /**
+     * Create a payout.
+     * @link https://stripe.com/docs/api/payouts/create
+     * @param $amount
+     * @param $description
+     *
+     * @return \Stripe\Payout
+     */
+    public function createPayout($amount, $description)
+    {
+        $params = [
+            'amount'      => $amount,
+            'currency'    => 'usd',
+            'description' => $description,
+        ];
+        try {
+            $response = $this->stripe->payouts->create($params);
+        } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        StripeLog::add(self::PAYOUT_CREATE, $params, $response, isset($response['error']));
+
+        return $response;
+    }
+
+    /**
+     * Retrieve balance.
+     * @link https://stripe.com/docs/api/balance/balance_retrieve
+     * @return array|\Stripe\Balance
+     */
+    public function getBalance()
+    {
+        try {
+            $response = $this->stripe->balance->retrieve([]);
+        } catch (Exception $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        return $response;
+    }
+
 
     /**
      * Расчет суммы, которую нужно передавать при Stripe-оплате.

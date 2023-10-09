@@ -4,6 +4,7 @@ namespace App\Platform\Controllers\DataTables;
 
 use App\Models\Withdrawal;
 use App\Models\WithdrawalFile;
+use App\Payments\Stripe;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -81,23 +82,35 @@ class WithdrawalsController extends BaseController
 
         $ids = json_decode($request->input('ids'));
         $rows = Withdrawal::with('user:id,name,surname')->whereKey($ids)->where('status', Withdrawal::STATUS_NEW)->get();
+        $total_amount = round($rows->sum('amount') * 100);
+
+        $stripe = new Stripe;
+        $response = $stripe->createPayout($total_amount, 'Withdrawal applications ids: ' . $request->input('ids'));
+        if (isset($response['error'])) {
+            return jsonResponse($response['error'], false);
+        }
+
+        $file = WithdrawalFile::create();
+
+        # Формування ім'я файлу по шаблону: номер файлу + дата з часом + кількості заявок + сума в центах.
+        # Наприклад: id-55_date-01-08-2023-requests-455+amount-155000-USD.csv.
+        $file->name = sprintf('withdrawals_id-%d_date-%s_quantity-%d_amount-%s-usd.csv',
+            $file->id,
+            $file->created_at->format('Ymdhis'),
+            $rows->count(),
+            $total_amount,
+        );
+        $file->count = $rows->count();
+        $file->summa = $total_amount;
+        $file->payout_id = $response->id;
+        $file->payout_response = $response;
+        $file->save();
 
         $path = storage_path() . self::FOLDER_CSV_FILES;
         if (! File::exists($path)) {
             File::makeDirectory($path);
         }
 
-        $file = WithdrawalFile::create();
-
-        # Формування ім'я файлу по шаблону: номер файлу + дата з часом + кількості заявок + сума.
-        # Наприклад: id-55_date-01-08-2023-requests-455+amount-1550-USD.csv.
-        $file->name = sprintf('withdrawals_id-%d_date-%s_quantity-%d_amount-%s-usd.csv',
-            $file->id,
-            $file->created_at->format('Ymdhis'),
-            $rows->count(),
-            $rows->sum('amount'),
-        );
-        $file->save();
         $full_filename = $path . $file->name;
         $handle = fopen($full_filename, 'w');
         fputs($handle, chr(0xEF) . chr(0xBB) . chr(0xBF)); # add BOM to fix UTF-8 in Excel
