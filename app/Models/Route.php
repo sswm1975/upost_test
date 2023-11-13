@@ -18,8 +18,10 @@ use Illuminate\Support\Facades\DB;
  * @property int $id Код
  * @property int $user_id Код пользователя
  * @property string $from_country_id Код страны старта
+ * @property string|null $from_region Наименование региона старта
  * @property int|null $from_city_id Код города старта
  * @property string $to_country_id Код страны окончания
+ * @property string|null $to_region Наименование региона окончания
  * @property int|null $to_city_id Код города окончания
  * @property string|null $deadline Дата окончания маршрута
  * @property string $status Статус маршрута
@@ -30,6 +32,8 @@ use Illuminate\Support\Facades\DB;
  * @property-read \App\Models\Country $from_country
  * @property-read string $status_name
  * @property-read \App\Models\Order|null $order
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
+ * @property-read int|null $orders_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rate[] $rates
  * @property-read int|null $rates_count
  * @property-read \App\Models\Review|null $review
@@ -52,10 +56,12 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereDeadline($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereFromRegion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereToCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereToCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Route whereToRegion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Route whereViewedOrdersAt($value)

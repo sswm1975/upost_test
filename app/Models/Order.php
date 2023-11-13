@@ -30,8 +30,10 @@ use Illuminate\Support\Str;
  * @property string|null $description Описание заказа
  * @property array $images Фотографии заказа
  * @property string $from_country_id Код страны откуда доставить заказ
+ * @property string|null $from_region Наименование региона откуда доставить заказ
  * @property int|null $from_city_id Код города откуда доставить заказ
  * @property string $to_country_id Код страны куда доставить заказ
+ * @property string|null $to_region Наименование региона куда доставить заказ
  * @property int|null $to_city_id Код города куда доставить заказ
  * @property string $register_date Дата регистрации
  * @property string|null $deadline Дата окончания заказа
@@ -81,6 +83,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereFromRegion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereImages($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereIsUserActive($value)
@@ -99,6 +102,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereStripeProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereToCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereToCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereToRegion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserPriceUsd($value)

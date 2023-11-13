@@ -7,12 +7,13 @@ use GuzzleHttp\Client;
 
 class MapsGoogleApi
 {
-    public static function getCitiNameInLanguage(string $city_en = null, string $country = null, string $language = 'en')
+    public static function getCitiNameInLanguage(string $city_en = null, string $region, string $country = null, string $language = 'en')
     {
         if (empty($city_en) || empty($country)) return null;
 
-        $url = sprintf('https://maps.googleapis.com/maps/api/geocode/json?address=%s,%s&sensor=false&language=%s&key=%s',
+        $url = sprintf('https://maps.googleapis.com/maps/api/geocode/json?address=%s,%s,%s&sensor=false&language=%s&key=%s',
             $city_en,
+            $region,
             $country,
             $language,
             config('maps_google_api_key', '')
