@@ -162,12 +162,12 @@ return [
             'not_phone' => 'The description does not include contact information.',
             'censor' => 'The description contains obscene words.',
         ],
-	'from_city' => [
-	    'city_name' => 'The name of the city "From" is incorrect.',
-	],
-	'to_city' => [
-	    'city_name' => 'The name of the city "Where" is incorrect.',
-	],
+        'from_city' => [
+            'city_name' => 'The name of the city "From" is incorrect.',
+        ],
+        'to_city' => [
+            'city_name' => 'The name of the city "Where" is incorrect.',
+        ],
 
     ],
 
