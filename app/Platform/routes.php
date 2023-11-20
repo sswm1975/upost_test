@@ -106,6 +106,9 @@ Route::group([
 
         # Страны
         $router->resource('countries', 'CountryController')->except(['delete'])->names('countries');
+
+        # Податок з продажу в США
+        $router->resource('us_sales_tax', 'UsSalesTaxController')->names('us_sales_tax');
     });
 
     # Пункты меню "Настройки"

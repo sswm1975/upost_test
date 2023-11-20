@@ -125,3 +125,8 @@ Column::extend('price', function ($value, $decimals = 2, $decimal_separator = ".
     return number_format($value, $decimals, $decimal_separator, $thousands_separator);
 });
 
+Column::extend('showDateTime', function ($value, $field = 'created_at', $only_date = false) {
+    if (empty($value)) return '';
+
+    return $this->$field->format($only_date ? 'd.m.Y' : 'd.m.Y H:i:s');
+});
