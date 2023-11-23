@@ -16,6 +16,7 @@ use App\Models\Payment;
 use App\Models\Rate;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Modules\Calculations;
 use App\Payments\Stripe;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -255,7 +256,11 @@ class RateController extends Controller
         $order_amount = $rate->order->price_usd * $rate->order->products_count;
         $delivery_amount = $rate->amount_usd;
         $company_fee = round($order_amount * config('company_fee_percent') / 100, 2);
-        $export_tax = 0;
+        if ($rate->route->from_country_id == 'US') {
+            $export_tax = Calculations::calcUsSalesTax($rate->route->from_region, $order_amount, $rate->order_id);
+        } else {
+            $export_tax = 0;
+        }
         $payment_amount = $order_amount + $delivery_amount + $export_tax + $company_fee;
         $total_amount = $stripe->calculatePrice($payment_amount);
         $payment_service_fee = $total_amount - $payment_amount;

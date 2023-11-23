@@ -5,6 +5,7 @@ namespace App\Modules;
 use App\Models\Order;
 use App\Models\OrderDeduction;
 use App\Models\Tax;
+use App\Models\UsSalesTax;
 use Carbon\Carbon;
 use ParseError;
 
@@ -26,7 +27,11 @@ class Calculations
         $fees = static::calcFees($order->total_amount_usd, $order->id);
 
         # рассчитываем налоги по стране экспорта
-        $export = static::calcTaxes('export', $order->from_country_id, $order->total_amount_usd, $order->id);
+        if ($order->from_country_id != 'US') {
+            $export = static::calcTaxes('export', $order->from_country_id, $order->total_amount_usd, $order->id);
+        } else {
+            $export = [];
+        }
 
         # рассчитываем налоги по стране импорта
         $import = static::calcTaxes('import', $order->to_country_id, $order->total_amount_usd, $order->id);
@@ -75,6 +80,34 @@ class Calculations
         }
 
         return $calculations;
+    }
+
+    /**
+     * Рассчитать комиссию по экспорту заказа из США в зависимости от штата.
+     *
+     * @return float
+     */
+    public static function calcUsSalesTax(string $region, float $amount, int $order_id)
+    {
+        # ищем по штату % налога
+        $tax_rate = UsSalesTax::whereKey($region)->value('tax_rate') ?: 0;
+
+        # рассчитываем налог
+        $tax_amount = $amount * $tax_rate / 100;
+
+        # удаляем предыдущие расчеты
+        OrderDeduction::whereOrderId($order_id)->whereName('us_sales_tax')->delete();
+
+        # добавляем расчет
+        OrderDeduction::insert([
+            'order_id'   => $order_id,
+            'type'       => 'tax_export',
+            'name'       => 'us_sales_tax',
+            'amount'     => $tax_amount,
+            'created_at' => Carbon::now()->toDateTimeString(),
+        ]);
+
+        return $tax_amount;
     }
 
     /**
