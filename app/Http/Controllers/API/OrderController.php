@@ -109,6 +109,11 @@ class OrderController extends Controller
         if (isProfileNotFilled()) throw new ErrorException(__('message.not_filled_profile'));
 
         $data = validateOrExit(self::rules4saveOrder());
+        if (empty($data['from_region'])) $data['from_region'] = '';
+        if (empty($data['to_region'])) $data['to_region'] = '';
+        if (empty($data['to_region'])) $data['to_region'] = '';
+        if (empty($data['from_city'])) $data['from_city'] = '';
+        if (empty($data['to_city'])) $data['to_city'] = '';
 
         $data['from_city_id'] = City::getId($data['from_country_id'], $data['from_region'], $data['from_city']);
         $data['to_city_id'] = City::getId($data['to_country_id'], $data['to_region'], $data['to_city']);
@@ -159,6 +164,11 @@ class OrderController extends Controller
         }
 
         $data = validateOrExit(self::rules4saveOrder());
+        if (empty($data['from_region'])) $data['from_region'] = '';
+        if (empty($data['to_region'])) $data['to_region'] = '';
+        if (empty($data['to_region'])) $data['to_region'] = '';
+        if (empty($data['from_city'])) $data['from_city'] = '';
+        if (empty($data['to_city'])) $data['to_city'] = '';
 
         $data['from_city_id'] = City::getId($data['from_country_id'], $data['from_region'], $data['from_city']);
         $data['to_city_id'] = City::getId($data['to_country_id'], $data['to_region'], $data['to_city']);
