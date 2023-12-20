@@ -14,6 +14,6 @@ Route::group([
     'prefix'     => 'wise',
     'as'         => 'wise.',
 ], function (Router $router) {
-    $router->get('transfer_state_change', 'WiseEventsController@eventTransferStateChange')->name('transfer_state_change');
-    $router->get('transfer_payout_failure', 'WiseEventsController@eventTransferPayoutFailure')->name('transfer_payout_failure');
+    $router->match(['get', 'post'], 'transfer_state_change', 'WiseEventsController@eventTransferStateChange')->name('transfer_state_change');
+    $router->match(['get', 'post'], 'transfer_payout_failure', 'WiseEventsController@eventTransferPayoutFailure')->name('transfer_payout_failure');
 });
