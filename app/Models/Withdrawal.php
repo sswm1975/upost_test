@@ -106,4 +106,9 @@ class Withdrawal extends Model
             ->whereIn('status', [Withdrawal::STATUS_NEW, Withdrawal::STATUS_IN_PROGRESS])
             ->exists();
     }
+
+    public function scopeInProgress($query)
+    {
+        return $query->where('status', Withdrawal::STATUS_IN_PROGRESS);
+    }
 }

@@ -11,6 +11,7 @@ use App\Models\Review;
 use App\Models\Route;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\WiseEvent;
 use App\Observers\DisputeObserver;
 use App\Observers\MessageObserver;
 use App\Observers\OrderObserver;
@@ -20,6 +21,7 @@ use App\Observers\ReviewObserver;
 use App\Observers\RouteObserver;
 use App\Observers\TransactionObserver;
 use App\Observers\UserObserver;
+use App\Observers\WiseEventObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -55,6 +57,7 @@ class EventServiceProvider extends ServiceProvider
         Dispute::observe(DisputeObserver::class);
         Transaction::observe(TransactionObserver::class);
         Payment::observe(PaymentObserver::class);
+        WiseEvent::observe(WiseEventObserver::class);
     }
 
     /**
