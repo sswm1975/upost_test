@@ -7,10 +7,10 @@ use GuzzleHttp\Exception\ClientException;
 
 class Wise
 {
-    const URL = 'https://api.transferwise.tech';
-    const URL_TEST = 'https://api.sandbox.transferwise.tech';
+    const URL = 'https://api.transferwise.com';
     const TOKEN = '80dd145a-94f6-41da-8b56-82b0af0cf229';
-    const TOKEN_TEST = '68355c49-468e-4854-adc1-99d7968329c6';
+//    const URL_TEST = 'https://api.sandbox.transferwise.tech';
+//    const TOKEN_TEST = '68355c49-468e-4854-adc1-99d7968329c6';
 
     public static function getTransfer($id)
     {
