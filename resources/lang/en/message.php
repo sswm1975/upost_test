@@ -172,6 +172,7 @@ return [
             'approved'  => 'Approved',
             'canceled'  => 'Canceled',
             'failed'    => 'Failed',
+            'payed'     => 'Payed',
         ],
         'types' => [
             'payment' => 'Order payment',
