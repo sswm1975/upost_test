@@ -5,7 +5,7 @@
 		"description": "Всі запити можуть передавати опційний параметр <b>lang</b> – мова, на якій повертати помилки. Параметр <b>lang</b> може приймати одне із значень:\n<ul>\n<li>en – англійська <i>(за замовчуванням)</i></li>\n<li>ru – російська</li>\n<li>uk – українська</li>\n</ul>",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13123179",
-		"_collection_link": "https://www.postman.com/upost-team/workspace/upost-api/collection/13123179-f2e97f9f-13a8-4d1c-a88a-54607e27586b?action=share&creator=13123179&source=collection_link"
+		"_collection_link": "https://www.postman.com/upost-team/workspace/upost-api/collection/13123179-f2e97f9f-13a8-4d1c-a88a-54607e27586b?action=share&source=collection_link&creator=13123179"
 	},
 	"item": [
 		{
@@ -5135,31 +5135,43 @@
 									"formdata": [
 										{
 											"key": "from_country_id",
-											"value": "3",
+											"value": "US",
 											"description": "Код країни старту",
 											"type": "text"
 										},
 										{
-											"key": "from_city_id",
-											"value": "4",
-											"description": "Код міста старту",
+											"key": "from_region",
+											"value": "WA",
+											"description": "Штат, Область, Регіон старту",
+											"type": "text"
+										},
+										{
+											"key": "from_city",
+											"value": "Seattle",
+											"description": "Місто старту",
 											"type": "text"
 										},
 										{
 											"key": "to_country_id",
-											"value": "2",
+											"value": "PL",
 											"description": "Код країни закінчення",
 											"type": "text"
 										},
 										{
-											"key": "to_city_id",
-											"value": "2",
-											"description": "Код міста закінчення",
+											"key": "to_region",
+											"value": "Masovian Voivodeship",
+											"description": "Штат, Область, Регіон закінчення",
+											"type": "text"
+										},
+										{
+											"key": "to_city",
+											"value": "Warsaw",
+											"description": "Місто закінчення",
 											"type": "text"
 										},
 										{
 											"key": "deadline",
-											"value": "2022-01-22",
+											"value": "2023-11-22",
 											"description": "Дата закінчення маршруту",
 											"type": "text"
 										}
@@ -8813,7 +8825,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/{{endpoint}}/purses/show",
+									"raw": "{{host}}/{{endpoint}}/purses/show?sorting=asc&page-number=2&lang=uk&currency=₴&show=6",
 									"host": [
 										"{{host}}"
 									],
@@ -8826,20 +8838,27 @@
 										{
 											"key": "sorting",
 											"value": "asc",
-											"description": "Сортування (asc,desc)",
-											"disabled": true
+											"description": "Сортування (asc,desc)"
 										},
 										{
 											"key": "page-number",
 											"value": "2",
-											"description": "Номер сторінки",
-											"disabled": true
+											"description": "Номер сторінки"
 										},
 										{
 											"key": "lang",
 											"value": "uk",
-											"description": "Код мови (uk, ru, en) - опціонально",
-											"disabled": true
+											"description": "Код мови (uk, ru, en) - опціонально"
+										},
+										{
+											"key": "currency",
+											"value": "₴",
+											"description": "Валюта ($, ₴, €, ₽) - опціонально ($ за замовчуванням)"
+										},
+										{
+											"key": "show",
+											"value": "6",
+											"description": "Кількість записів на сторінку - опціонально (5 за замовчуванням)"
 										}
 									]
 								}
