@@ -21,16 +21,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $export_tax Налог на вывоз товара
  * @property string|null $description Описание
  * @property string|null $status Статус транзакции
- * @property array|null $purchase_params Параметры для PayPal purchase
- * @property array|null $purchase_response Ответ от PayPal purchase
- * @property string|null $purchase_redirect_url Ссылка для оплаты в PayPal
- * @property array|null $complete_response Ответ от сервиса PayPal
+ * @property array|null $purchase_params Параметры для оплаты заказа
+ * @property array|null $purchase_response Ответ при оплате
+ * @property string|null $purchase_redirect_url Ссылка для оплаты в платежной системе
+ * @property array|null $complete_response Ответ от сервиса в платежной системе
  * @property array|null $complete_error Ошибка при complete (статус not_successful)
  * @property \Illuminate\Support\Carbon|null $created_at Дата добавления
  * @property \Illuminate\Support\Carbon|null $updated_at Дата обновления
  * @property \Illuminate\Support\Carbon|null $payed_at Дата оплаты
  * @property string|null $stripe_checkout_session_id Идентификатор сеанса оплаты в платежной системе Stripe
  * @property string|null $stripe_payment_intent_id Идентификатор платежного намерения в платежной системе Stripe (используется при Refund)
+ * @property-read string $amount_selected_currency
+ * @property-read string $selected_currency
  * @property-read string $status_name
  * @property-read string $type_name
  * @property-read \App\Models\User $user
@@ -74,7 +76,7 @@ class Transaction extends Model
         'complete_error' => 'array',
     ];
     protected $dates = ['payed_at'];
-    protected $appends = ['status_name', 'type_name'];
+    protected $appends = ['status_name', 'type_name', 'selected_currency', 'amount_selected_currency'];
     protected $attributes = ['type' => self::TYPE_PAYMENT];
 
     public const TYPE_PAYMENT = 'payment';
@@ -89,6 +91,30 @@ class Transaction extends Model
     public function getTypeNameAttribute(): string
     {
         return __("message.transaction.types.$this->type");
+    }
+
+    /**
+     * Получить выбранную валюту.
+     *
+     * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function getSelectedCurrencyAttribute(): string
+    {
+        return config('currency');
+    }
+
+    /**
+     * Сумма транзакции в выбранной валюте.
+     *
+     * @return string
+     */
+    public function getAmountSelectedCurrencyAttribute(): string
+    {
+        if (config('currency') == '$') return $this->amount;
+
+        return sprintf('%.2f',$this->amount * getCurrencyRate(config('currency')));
     }
 
     ### LINKS ###

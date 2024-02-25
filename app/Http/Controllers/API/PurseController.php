@@ -41,6 +41,7 @@ class PurseController extends Controller
         $data = validateOrExit([
             'sorting'     => 'sometimes|required|in:asc,desc',
             'page-number' => 'sometimes|required|integer|min:1',
+            'show'        => 'sometimes|integer|min:1',
         ]);
 
         $payments = Payment::query()
@@ -55,7 +56,7 @@ class PurseController extends Controller
             ->where('transactions.user_id', $user_id)
             ->union($payments)
             ->orderBy(self::DEFAULT_SORT_BY, $data['sorting'] ?? self::DEFAULT_SORTING)
-            ->paginate(self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page-number'] ?? 1)
+            ->paginate($data['show'] ?? self::DEFAULT_PER_PAGE, ['*'], 'page', $data['page-number'] ?? 1)
             ->toArray();
 
         # вывод средств на карту - общая сумма всех транзакций со статусом "NEW" (см. https://app.asana.com/0/1202451331926444/1203863394246899/f)
@@ -64,6 +65,9 @@ class PurseController extends Controller
             ->where('status', Payment::STATUS_NEW)
             ->sum('amount');
 
+        # пересчитываем в выбранной валюте
+        $total_selected_currency = round($total * getCurrencyRate(config('currency')), 1);
+
         return response()->json([
             'status'       => true,
             'transactions' => null_to_blank($transactions['data']),
@@ -71,6 +75,8 @@ class PurseController extends Controller
             'page'         => $transactions['current_page'],
             'pages'        => $transactions['last_page'],
             'total'        => $total,
+            'total_selected_currency' => $total_selected_currency,
+            'selected_currency'       => config('currency'),
         ]);
     }
 }
