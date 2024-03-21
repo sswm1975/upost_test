@@ -75,7 +75,12 @@ class City extends Model
     {
         if (empty($country_id) || empty($name_en)) return null;
 
-        $city_id = static::whereCountryId($country_id)->whereRegion($region)->whereNameEn($name_en)->value('id');
+        $city_id = static::whereCountryId($country_id)
+            ->when(!is_null($region), function ($query) use ($region) {
+                $query->whereRegion($region);
+            })
+            ->whereNameEn($name_en)
+            ->value('id');
 
         if (empty($city_id)) {
             $name_uk = MapsGoogleApi::getCitiNameInLanguage($name_en, $region, $country_id, 'uk');
