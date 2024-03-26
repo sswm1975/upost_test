@@ -115,9 +115,7 @@ class ApiRequestLoggingController extends AdminController
                     $queries = [];
                     foreach ($grid->queries as $key => $query) {
                         $queries[$key]['action'] = $key+1;
-                        $sql = preg_replace('/ ([!]{0,1})(<)([=]{0,1}) /', '$1&lt;$3', $query['sql']);
-                        $sql = preg_replace('/ ([!]{0,1})(>)([=]{0,1}) /', '$1&gt;$3', $sql);
-                        $queries[$key]['sql'] = $sql;
+                        $queries[$key]['sql'] = str_replace(['<', '>'], ['&lt;', '&gt;'], $query['sql']);
                         unset($query['sql']);
                         $queries[$key] = array_merge($queries[$key], $query);
                     }
