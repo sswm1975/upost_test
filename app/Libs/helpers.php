@@ -366,6 +366,9 @@ function getSQLForFixDatabase(): array
 
     return array_map(
         function($log) {
+            foreach ($log['bindings'] as $key => $binding) {
+                if (is_string($binding)) $log['bindings'][$key] = "'$binding'";
+            }
             return [
                 'sql' => preg_replace_array('/\?/', $log['bindings'], $log['query']),
                 'time' => $log['time'],

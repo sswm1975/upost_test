@@ -112,10 +112,13 @@ class ApiRequestLoggingController extends AdminController
                 if (empty($this->queries)) return '';
 
                 return $column->modal('MySQL queries', function ($grid) {
-                    $template = '<a href="#" class="grid-column-copyable text-muted" data-content="%s" title="Copied!"><i class="fa fa-copy"></i></a>';
                     $queries = [];
                     foreach ($grid->queries as $key => $query) {
-                        $queries[$key]['action'] = $key+1; #sprintf($template, $query['sql']);
+                        $queries[$key]['action'] = $key+1;
+                        $sql = preg_replace('/ ([!]{0,1})(<)([=]{0,1}) /', '$1&lt;$3', $query['sql']);
+                        $sql = preg_replace('/ ([!]{0,1})(>)([=]{0,1}) /', '$1&gt;$3', $sql);
+                        $queries[$key]['sql'] = $sql;
+                        unset($query['sql']);
                         $queries[$key] = array_merge($queries[$key], $query);
                     }
                     return new Table(['', 'QUERY', 'ROWS', 'TIME'], $queries);
