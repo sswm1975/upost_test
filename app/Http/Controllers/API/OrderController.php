@@ -745,11 +745,11 @@ class OrderController extends Controller
                 return $query->where('orders.deadline', '<=', $filters['date_to']);
             })
             ->when(!empty($filters['city_from']), function ($query) use ($filters) {
-                $city_id = City::getId($filters['country_from'], $filters['region_from'], $filters['city_from']);
+                $city_id = City::getId($filters['country_from'], $filters['region_from'] ?? null, $filters['city_from']);
                 return $query->where('orders.from_city_id', $city_id);
             })
             ->when(!empty($filters['city_to']), function ($query) use ($filters) {
-                $city_id = City::getId($filters['country_to'], $filters['region_to'], $filters['city_to']);
+                $city_id = City::getId($filters['country_to'], $filters['region_to'] ?? null, $filters['city_to']);
                 return $query->where('orders.to_city_id', $city_id);
             })
             ->when(!empty($filters['country_from']), function ($query) use ($filters) {
