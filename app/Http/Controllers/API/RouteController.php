@@ -51,7 +51,6 @@ class RouteController extends Controller
         $data = validateOrExit(self::rules4saveRoute());
         if (empty($data['from_region'])) $data['from_region'] = '';
         if (empty($data['to_region'])) $data['to_region'] = '';
-        if (empty($data['to_region'])) $data['to_region'] = '';
         if (empty($data['from_city'])) $data['from_city'] = '';
         if (empty($data['to_city'])) $data['to_city'] = '';
 
@@ -92,7 +91,6 @@ class RouteController extends Controller
 
         $data = validateOrExit(self::rules4saveRoute());
         if (empty($data['from_region'])) $data['from_region'] = '';
-        if (empty($data['to_region'])) $data['to_region'] = '';
         if (empty($data['to_region'])) $data['to_region'] = '';
         if (empty($data['from_city'])) $data['from_city'] = '';
         if (empty($data['to_city'])) $data['to_city'] = '';
