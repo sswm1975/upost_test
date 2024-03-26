@@ -806,7 +806,7 @@ class OrderController extends Controller
         return response()->json([
             'status' => true,
             'count'  => count($routes),
-            'result' => null_to_blank($routes),
+            'routes' => null_to_blank($routes),
         ]);
     }
 
