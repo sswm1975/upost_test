@@ -636,6 +636,8 @@ class OrderController extends Controller
             'date_to'        => 'nullable|date|after_or_equal:date_from',
             'city_from'      => 'sometimes|nullable|city_name',
             'city_to'        => 'sometimes|nullable|city_name',
+            'region_from'    => 'sometimes|nullable|city_name',
+            'region_to'      => 'sometimes|nullable|city_name',
             'country_from'   => 'sometimes|nullable|size:2|exists:countries,id',
             'country_to'     => 'sometimes|nullable|size:2|exists:countries,id',
             'price_from'     => 'sometimes|required|numeric',
@@ -743,11 +745,11 @@ class OrderController extends Controller
                 return $query->where('orders.deadline', '<=', $filters['date_to']);
             })
             ->when(!empty($filters['city_from']), function ($query) use ($filters) {
-                $city_id = City::getId($filters['country_from'], null, $filters['city_from']);
+                $city_id = City::getId($filters['country_from'], $filters['region_from'], $filters['city_from']);
                 return $query->where('orders.from_city_id', $city_id);
             })
             ->when(!empty($filters['city_to']), function ($query) use ($filters) {
-                $city_id = City::getId($filters['country_to'], null, $filters['city_to']);
+                $city_id = City::getId($filters['country_to'], $filters['region_to'], $filters['city_to']);
                 return $query->where('orders.to_city_id', $city_id);
             })
             ->when(!empty($filters['country_from']), function ($query) use ($filters) {
