@@ -519,6 +519,7 @@ class Order extends Model
             ->whereBetweenColumns('routes.deadline', ['orders.register_date', 'orders.deadline'])
             ->whereColumn('orders.from_country_id', 'routes.from_country_id')
             ->whereColumn('orders.to_country_id', 'routes.to_country_id')
+/*
             ->where(function($query) {
                 return $query->whereRaw('IFNULL(orders.from_city_id, 0) = IFNULL(routes.from_city_id, 0)')
                     ->orWhere(function ($query) {
@@ -537,6 +538,7 @@ class Order extends Model
                         return $query->whereNull('routes.to_city_id')->where('orders.to_city_id', '>', 0);
                     });
             })
+*/
             ->when($only_new, function ($query) {
                 return $query->where('orders.created_at', '>', DB::Raw('IFNULL(routes.viewed_orders_at, "1900-01-01 00:00:00")'));
             });
