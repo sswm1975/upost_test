@@ -378,10 +378,11 @@ class OrderController extends Controller
         # пункт "Заказы": заказы в статусе active, по которому подходит маршрут и нет ставки владельца маршрута
         if ($filter_type == self::FILTER_TYPE_ORDERS) {
             $orders->join('routes', 'routes.id', DB::raw($route_id))
-                ->searchByRoutes(false, [Order::STATUS_ACTIVE])
-                ->whereDoesntHave('rates', function ($query) use ($route_id) {
-                    $query->whereRouteId($route_id);
-                });
+                ->searchByRoutes(false, [Order::STATUS_ACTIVE]);
+                #  и нет ставки владельца маршрута (02.04.2024 убрал по таске https://app.asana.com/0/1202451331926444/1206977795557513/f)
+                // ->whereDoesntHave('rates', function ($query) use ($route_id) {
+                //     $query->whereRouteId($route_id);
+                // });
 
         # пункт "Мои предложения": заказы в статусе active и по заказу есть ставка владельца маршрута
         } elseif ($filter_type == self::FILTER_TYPE_MY_OFFERS) {
