@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Exceptions\ValidatorException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -50,7 +51,10 @@ class ChatController extends Controller
         $page = $page ?? 1;
 
         # формируем запрос
+        # authuser_unread_count - кол-во непрочитанных сообщений аутентифицированного пользователем
+        $select = sprintf('chats.*, IF(performer_id = %d, performer_unread_count, 0) + IF(customer_id = %d, customer_unread_count, 0) AS authuser_unread_count', $user_id, $user_id);
         $rows = Chat::interlocutors()
+            ->addSelect(DB::raw($select))
             ->when($filter == 'customer', function ($query) use ($user_id) {
                 return $query->where('customer_id', $user_id);
             })
@@ -59,8 +63,7 @@ class ChatController extends Controller
             })
             ->when(empty($search), function ($query) {
                 return $query
-                    ->orderBy('chats.performer_unread_count', $sorting ?? self::DEFAULT_SORTING)
-                    ->orderBy('chats.customer_unread_count', $sorting ?? self::DEFAULT_SORTING)
+                    ->orderBy('authuser_unread_count', $sorting ?? self::DEFAULT_SORTING)
                     ->orderBy('chats.id', $sorting ?? self::DEFAULT_SORTING);
             })
             ->when(!empty($search), function ($query) use ($search, $user_id) {
