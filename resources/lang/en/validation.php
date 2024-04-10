@@ -142,7 +142,7 @@ return [
             'base64_image' => 'Image invalid format.',
         ],
         'phone' => [
-            'phone' => 'Phone is incorrect.',
+            'phone' => 'The phone number must be filled in international format: the "plus" symbol (+), country code, region code, subscriber number.',
         ],
         'card_number' => [
             'bankcard' => 'Card number is incorrect.',
