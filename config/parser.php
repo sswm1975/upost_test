@@ -31,6 +31,7 @@ return [
                 "//div[@class='display-price']",
                 "//span[@id='prcIsum']",
                 "//span[@id='priceblock_saleprice']",
+                "//div[@class='x-price-primary']/span",
             ],
             'image_selects' => [
                 "//img[@class='app-filmstrip__image cc-image']/@src",
