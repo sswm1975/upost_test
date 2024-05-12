@@ -22,6 +22,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
@@ -251,6 +252,23 @@ class RateController extends Controller
         $user = $request->user();
 
         $stripe = new Stripe;
+
+        if (empty($user->stripe_customer_id)) {
+            # регистрируем пользователя в Stripe
+            $customer = $stripe->createCustomer([
+                'name'  => $user->full_name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+            ]);
+
+            # сохраняем полученный из Stripe код пользователя
+            if (isset($customer['id'])) {
+                $user->stripe_customer_id = $customer['id'];
+                $user->save();
+            }  else {
+                throw new ValidatorException('Customer Stripe not created.');
+            }
+        }
 
         # Расчет суммы для оплаты
         $order_amount = $rate->order->price_usd * $rate->order->products_count;
