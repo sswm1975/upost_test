@@ -29,7 +29,7 @@ class RouteController extends Controller
     {
         return [
             'from_country_id' => 'required|string|size:2|exists:countries,id',
-            'from_region'     => 'required_if:from_country_id,US',
+            'from_region'     => 'sometimes|nullable|string',
             'from_city'       => 'sometimes|nullable|city_name',
             'to_country_id'   => 'required|string|size:2|exists:countries,id',
             'to_region'       => 'sometimes|nullable|string',
