@@ -18,6 +18,10 @@ class SetLanguage
      */
     public function handle(Request $request, Closure $next)
     {
+        $lang = config('app.default_language');
+/*
+! Тимчасово встановлюємо англійську мову, незалежно від параметру запиту чи налаштувань користувача !
+
         # Приоритеты определения языка:
         # - параметр запроса "lang";
         # - установленный язык в профиле пользователя;
@@ -29,6 +33,7 @@ class SetLanguage
         } else {
             $lang = config('app.default_language');
         }
+*/
 
         App::setLocale($lang);
 
