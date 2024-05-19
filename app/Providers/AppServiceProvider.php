@@ -58,9 +58,16 @@ class AppServiceProvider extends ServiceProvider
          * Route::get('reset/{token}', 'API\ResetPasswordController@showResetForm')->name('password.reset')
          */
         ResetPassword::createUrlUsing(function ($user, string $token) {
-            $domain = request()->header('referer') ?: config('app.wordpress_url');
+            # WordPress не надсилає HTTP_REFERER, для нього свої налаштування, REACT надсилає HTTP_REFERER - для нього свої налаштування
+            if (empty(request()->header('referer'))) {
+                $domain = config('app.wordpress_url');
+                $end_point = 'new-password';
+            } else {
+                $domain = request()->header('referer');
+                $end_point = 'forgot-password';
+            }
             $lang = request()->get('lang', config('app.default_language'));
-            return rtrim($domain, '/') . '/new-password/?token='.$token.'&lang='.$lang;
+            return rtrim($domain, '/') . "/{$end_point}/?token={$token}&lang={$lang}";
         });
 
         /**
