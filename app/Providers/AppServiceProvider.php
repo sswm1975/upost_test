@@ -60,14 +60,15 @@ class AppServiceProvider extends ServiceProvider
         ResetPassword::createUrlUsing(function ($user, string $token) {
             # WordPress не надсилає HTTP_REFERER, для нього свої налаштування, REACT надсилає HTTP_REFERER - для нього свої налаштування
             if (empty(request()->header('referer'))) {
-                $domain = config('app.wordpress_url');
-                $end_point = 'new-password';
+                $lang = request()->get('lang', config('app.default_language'));
+                $domain = rtrim(config('app.wordpress_url'), '/');
+                $end_point = "/new-password/?token={$token}&lang={$lang}";
             } else {
-                $domain = request()->header('referer');
-                $end_point = 'forgot-password';
+                $domain = rtrim(request()->header('referer'), '/');
+                $end_point = "/forgot-password/{$token}";
             }
-            $lang = request()->get('lang', config('app.default_language'));
-            return rtrim($domain, '/') . "/{$end_point}/?token={$token}&lang={$lang}";
+
+            return $domain . $end_point;
         });
 
         /**
