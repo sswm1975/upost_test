@@ -58,8 +58,9 @@ class AppServiceProvider extends ServiceProvider
          * Route::get('reset/{token}', 'API\ResetPasswordController@showResetForm')->name('password.reset')
          */
         ResetPassword::createUrlUsing(function ($user, string $token) {
+            $domain = request()->header('referer') ?: config('app.wordpress_url');
             $lang = request()->get('lang', config('app.default_language'));
-            return rtrim(config('app.wordpress_url'), '/') . '/new-password/?token='.$token.'&lang='.$lang;
+            return rtrim($domain, '/') . '/new-password/?token='.$token.'&lang='.$lang;
         });
 
         /**
