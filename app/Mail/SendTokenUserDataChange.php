@@ -36,10 +36,17 @@ class SendTokenUserDataChange extends Mailable
      */
     public function build(): SendTokenUserDataChange
     {
-        $url = rtrim(config('app.wordpress_url'), '/') . '?action=profile_update_verification&token='.$this->token.'&lang='.$this->lang;
+        # WordPress не надсилає HTTP_REFERER, для нього свої налаштування, REACT надсилає HTTP_REFERER - для нього свої налаштування
+        if (empty(request()->header('referer'))) {
+            $domain = rtrim(config('app.wordpress_url'), '/');
+            $end_point = "?action=profile_update_verification&token={$this->token}&lang={$this->lang}";
+        } else {
+            $domain = rtrim(request()->header('referer'), '/');
+            $end_point = "/contact-information/{$this->token}";
+        }
 
         return $this->subject(Lang::get('Profile data change confirmation code'))
             ->markdown("emails.{$this->lang}.send_token_user_data_change")
-            ->with(['url' => $url]);
+            ->with(['url' => $domain . $end_point]);
     }
 }
