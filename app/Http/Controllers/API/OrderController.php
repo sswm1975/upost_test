@@ -22,7 +22,7 @@ use Illuminate\Validation\ValidationException;
 class OrderController extends Controller
 {
     /** @var int Количество заказов на странице */
-    const DEFAULT_PER_PAGE = 5;
+    const DEFAULT_PER_PAGE = 6;
 
     /** @var array Поля для сортировки */
     const SORT_FIELDS = [

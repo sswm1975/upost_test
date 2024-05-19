@@ -18,7 +18,7 @@ use Illuminate\Validation\ValidationException;
 
 class RouteController extends Controller
 {
-    const DEFAULT_PER_PAGE = 5;
+    const DEFAULT_PER_PAGE = 6;
 
     /**
      * Правила проверки входных данных запроса при сохранении маршрута.
