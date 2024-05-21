@@ -42,7 +42,7 @@ class SendTokenUserDataChange extends Mailable
             $end_point = "?action=profile_update_verification&token={$this->token}&lang={$this->lang}";
         } else {
             $domain = rtrim(request()->header('referer'), '/');
-            $end_point = "/contact-information/{$this->token}";
+            $end_point = "/settings/contact-information/{$this->token}";
         }
 
         return $this->subject(Lang::get('Profile data change confirmation code'))
