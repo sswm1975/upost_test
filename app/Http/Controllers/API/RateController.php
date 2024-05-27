@@ -73,6 +73,7 @@ class RateController extends Controller
 
         return response()->json([
             'status'  => true,
+            'message' => __('message.rate_created'),
             'rate'    => null_to_blank($rate),
         ]);
     }
@@ -110,6 +111,7 @@ class RateController extends Controller
 
         return response()->json([
             'status'  => true,
+            'message' => __('message.rate_updated'),
             'rate'    => null_to_blank($rate),
             'changes' => null_to_blank($rate->getChanges()),
         ]);

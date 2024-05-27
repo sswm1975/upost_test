@@ -29,6 +29,7 @@ class WithdrawalsController extends Controller
 
         return response()->json([
             'status'     => true,
+            'message' => __('message.withdrawal_created'),
             'withdrawal' => $withdrawal,
         ]);
     }

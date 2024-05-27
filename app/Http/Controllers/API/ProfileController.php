@@ -125,7 +125,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'status'  => true,
-            'message' => __('message.updated_successful'),
+            'message' => __('message.profile_updated'),
             'result'  => null_to_blank($data),
         ]);
     }
@@ -146,7 +146,10 @@ class ProfileController extends Controller
 
         $request->user()->fill($data)->save();
 
-        return response()->json(['status' => true]);
+        return response()->json([
+            'status' => true,
+            'message' => __('message.language_updated'),
+        ]);
     }
 
     /**

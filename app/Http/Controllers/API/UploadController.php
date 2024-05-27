@@ -41,6 +41,7 @@ class UploadController extends Controller
 
         return response()->json([
             'status' => true,
+            'message' => __('message.file_uploaded'),
             'url' => $url,
         ]);
     }

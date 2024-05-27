@@ -38,6 +38,7 @@ class ImageLoaderController extends Controller
 
         return response()->json([
             'status' => true,
+            'message' => __('message.image_uploaded'),
             'image'  => call_user_func([self::class, $method], $data['image'], $request->user()->id),
         ]);
     }

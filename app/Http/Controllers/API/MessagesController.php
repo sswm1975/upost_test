@@ -59,6 +59,7 @@ class MessagesController extends Controller
 
         return response()->json([
             'status' => true,
+            'message' => __('message.message_created'),
             'lock_status' => $message->chat->lock_status,
         ]);
     }

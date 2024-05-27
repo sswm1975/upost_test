@@ -57,6 +57,7 @@ class StatementController extends Controller
 
         return response()->json([
             'status' => true,
+            'message' => __('message.statement_created'),
             'result' => null_to_blank($statement),
         ]);
     }
@@ -119,7 +120,10 @@ class StatementController extends Controller
 
         $statement->update(['status' => Statement::STATUS_REJECTED]);
 
-        return response()->json(['status' => true]);
+        return response()->json([
+            'status' => true,
+            'message' => __('message.statement_rejected'),
+        ]);
     }
 
     /**
@@ -145,6 +149,9 @@ class StatementController extends Controller
         $rate->update(['rate_deadline' => $prolongation_date]);
         $statement->update(['status' => Statement::STATUS_DONE]);
 
-        return response()->json(['status' => true]);
+        return response()->json([
+            'status' => true,
+            'message' => __('message.statement_accepted'),
+        ]);
     }
 }

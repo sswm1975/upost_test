@@ -51,6 +51,32 @@ return [
     'file_not_exists'         => 'The file does not exist: ',
     'start_and_end_points_match' => 'Start and end points match.',
 
+    # Повідомлення нижче добавлені тільки в цей файл, в файли для UK та RU не добавлено
+    'chat_closed' => 'Chat is closed.',
+    'dispute_created' => 'The dispute has been successfully created.',
+    'dispute_canceled' => 'The dispute has been successfully canceled.',
+    'image_uploaded' => 'The image has been successfully uploaded.',
+    'message_created' => 'The message has been successfully created.',
+    'notification_read' => 'The notification has been read.',
+    'order_created' => 'The order has been successfully created.',
+    'order_updated' => 'The order has been successfully updated.',
+    'order_closed' => 'The order is closed.',
+    'order_complaint_created' => 'An order complaint has been created.',
+    'profile_updated' => 'The profile has been successfully updated.',
+    'language_updated' => 'The language has been successfully updated.',
+    'rate_created' => 'The bet has been successfully created.',
+    'rate_updated' => 'The bet has been successfully updated.',
+    'review_created' => 'The review has been successfully created.',
+    'route_created' => 'The route has been successfully created.',
+    'route_updated' => 'The bet has been successfully updated.',
+    'route_closed' => 'The route is closed.',
+    'statement_created' => 'The statement has been successfully created.',
+    'statement_rejected' => 'The statement has been rejected.',
+    'statement_accepted' => 'The statement has been accepted.',
+    'file_uploaded' => 'The file has been uploaded.',
+    'withdrawal_created' => 'Request for withdrawal of money have been created.',
+    # Кінець нових повідомлень
+
     'wallet' => [
         'not_enough_funds' => 'There are not enough funds.',
         'exists_unfinished_withdrawals' => 'There is an unfinished withdrawal request.',

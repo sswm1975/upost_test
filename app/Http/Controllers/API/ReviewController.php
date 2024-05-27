@@ -67,6 +67,7 @@ class ReviewController extends Controller
 
         return response()->json([
             'status' => true,
+            'message' => __('message.review_created'),
             'review' => null_to_blank($review),
             'rate'   => null_to_blank($rate),
         ]);

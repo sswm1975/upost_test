@@ -70,6 +70,7 @@ class RouteController extends Controller
 
         return response()->json([
             'status'   => true,
+            'message' => __('message.route_created'),
             'route_id' => $route->id,
         ]);
     }
@@ -108,6 +109,7 @@ class RouteController extends Controller
 
         return response()->json([
             'status'   => $affected,
+            'message' => __('message.route_updated'),
             'route_id' => $route_id,
         ]);
     }
@@ -131,7 +133,10 @@ class RouteController extends Controller
             ->each
             ->update(['status' => Order::STATUS_CLOSED]);
 
-        return response()->json(['status' => true]);
+        return response()->json([
+            'status' => true,
+            'message' => __('message.route_closed'),
+        ]);
     }
 
     /**

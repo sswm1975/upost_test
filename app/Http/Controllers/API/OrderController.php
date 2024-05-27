@@ -139,6 +139,7 @@ class OrderController extends Controller
 
         return response()->json([
             'status'   => true,
+            'message' => __('message.order_created'),
             'order_id' => $order->id,
             'slug'     => $order->slug,
         ]);
@@ -188,6 +189,7 @@ class OrderController extends Controller
 
         return response()->json([
             'status'   => $affected,
+            'message' => __('message.order_updated'),
             'order_id' => $order->id,
             'slug'     => $order->slug,
         ]);
@@ -203,7 +205,10 @@ class OrderController extends Controller
     {
         Order::isOwnerByKey($id)->get()->each->update(['status' => Order::STATUS_CLOSED]);
 
-        return response()->json(['status' => true]);
+        return response()->json([
+            'status' => true,
+            'message' => __('message.order_closed'),
+        ]);
     }
 
     /**
@@ -847,7 +852,8 @@ class OrderController extends Controller
         $order->save();
 
         return response()->json([
-            'status' => true
+            'status' => true,
+            'message' => __('message.order_complaint_created'),
         ]);
     }
 

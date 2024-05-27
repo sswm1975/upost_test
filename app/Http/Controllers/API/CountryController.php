@@ -32,7 +32,7 @@ class CountryController extends Controller
     }
 
     /**
-     * Получить наименование страниы по её коду.
+     * Получить наименование страны по её коду.
      *
      * @param int $country_id
      * @return JsonResponse

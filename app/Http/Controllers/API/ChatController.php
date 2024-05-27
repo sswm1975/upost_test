@@ -124,6 +124,7 @@ class ChatController extends Controller
 
         return response()->json([
             'status'        => $affected_rows > 0,
+            'message'       => __('message.chat_closed'),
             'affected_rows' => $affected_rows,
         ]);
     }

@@ -7,7 +7,6 @@ use App\Models\Currency;
 use App\Models\Shop;
 use App\Models\WaitRange;
 use App\Models\Complaint;
-use App\Models\Country;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,7 +15,7 @@ class HandbooksController extends Controller
 {
     /**
      * Получить список справочников для фильтра.
-     * (Страны; Страны с городами; Минимальная и максимальная цены; Категории товаров; Типы нарушений/жалоб)
+     * (Минимальная и максимальная цены; Диапазоны ожидания; Типы нарушений/жалоб; Магазины; Валюты; Курсы валют)
      *
      * @param Request $request
      * @return JsonResponse

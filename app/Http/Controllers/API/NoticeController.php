@@ -90,6 +90,7 @@ class NoticeController extends Controller
 
         return response()->json([
             'status'        => true,
+            'message' => __('message.notification_read'),
             'affected_rows' => $affected_rows,
         ]);
     }

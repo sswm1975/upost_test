@@ -78,6 +78,7 @@ class DisputeController extends Controller
 
         return response()->json([
             'status'  => true,
+            'message' => __('message.dispute_created'),
             'dispute' => null_to_blank($dispute),
         ]);
     }
@@ -186,6 +187,7 @@ class DisputeController extends Controller
 
         return response()->json([
             'status' => true,
+            'message' => __('message.dispute_canceled'),
         ]);
     }
 
