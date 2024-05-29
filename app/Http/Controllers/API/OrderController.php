@@ -365,6 +365,7 @@ class OrderController extends Controller
             'pages'    => $orders['last_page'],
             'prices'   => $prices,
             'shops'    => $shops,
+            'user'     => null_to_blank($request->user()),
         ]);
     }
 
@@ -503,6 +504,7 @@ class OrderController extends Controller
         return response()->json([
             'status' => true,
             'order'  => null_to_blank($order->toArray()),
+            'user'   => null_to_blank($request->user()),
         ]);
     }
 
@@ -616,6 +618,7 @@ class OrderController extends Controller
             'page'   => $orders['current_page'],
             'pages'  => $orders['last_page'],
             'orders' => null_to_blank($orders['data']),
+            'user'   => null_to_blank($request->user()),
         ]);
     }
 
@@ -671,6 +674,7 @@ class OrderController extends Controller
             'orders' => null_to_blank($orders['data']),
             'prices' => $prices,
             'shops'  => $shops,
+            'user'   => null_to_blank($request->user()),
         ]);
     }
 

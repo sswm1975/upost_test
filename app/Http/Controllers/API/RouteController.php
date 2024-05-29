@@ -183,6 +183,7 @@ class RouteController extends Controller
         return response()->json([
             'status' => true,
             'route'  => null_to_blank($route),
+            'user'   => null_to_blank($request->user()),
         ]);
     }
 
@@ -216,6 +217,7 @@ class RouteController extends Controller
             'pages'    => $routes['last_page'],
             'routes'   => null_to_blank($routes['data']),
             'counters' => $counters,
+            'user'     => null_to_blank($request->user()),
         ]);
     }
 
@@ -247,7 +249,9 @@ class RouteController extends Controller
             'page-number'       => 'sometimes|required|integer|min:1',
         ]);
 
-        $routes = $this->getRoutesByFilter($request->user(), $filters);
+        $user = $request->user();
+
+        $routes = $this->getRoutesByFilter($user, $filters);
 
         return response()->json([
             'status' => true,
@@ -255,6 +259,7 @@ class RouteController extends Controller
             'page'   => $routes['current_page'],
             'pages'  => $routes['last_page'],
             'routes' => null_to_blank($routes['data']),
+            'user'   => null_to_blank($user),
         ]);
     }
 
