@@ -122,7 +122,13 @@ class User extends Authenticatable
         'status',               # статус
         'country_id',           # країна проживання
         'city_id',              # місто проживання
+        'password',             # пароль
+        'api_token',            # токен
     ];
+
+    # з користувачем завжди відаємо кількість активних ставок
+    protected $withCount = ['ratesActive'];
+
     protected $appends = [
         'short_name',
         'full_name',
@@ -331,6 +337,16 @@ class User extends Authenticatable
     public function ratesDeadlineToday()
     {
         return $this->rates()->deadlineToday();
+    }
+
+    /**
+     * Активные ставки.
+     *
+     * @return mixed
+     */
+    public function ratesActive()
+    {
+        return $this->rates()->active();
     }
 
     /**
