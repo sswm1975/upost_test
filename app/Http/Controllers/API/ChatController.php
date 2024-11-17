@@ -76,7 +76,7 @@ class ChatController extends Controller
             'interlocutor:id,name,surname,photo,scores_count,reviews_count',
             'order:id,name,price,currency,price_usd,user_price_usd,images,status',
             'last_message',
-            'last_message.user:id,name',
+            'last_message.user:id,name,surname',
         ]);
 
         # узнаем, доставлен ли заказ
@@ -92,6 +92,7 @@ class ChatController extends Controller
                 $chat->interlocutor->makeHidden('status_name', 'gender_name', 'validation_name', 'register_date_human', 'last_active_human', 'age');
                 $chat->last_message->short_text = Str::limit($chat->last_message->text, self::LAST_MESSAGE_TEXT_LIMIT);
                 $chat->last_message->user_full_name = $chat->last_message->user->full_name;
+                $chat->last_message->short_name = $chat->last_message->user->short_name;
                 $chat->last_message->makeHidden('user');
             }
         });
