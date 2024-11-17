@@ -326,4 +326,26 @@ class ProfileController extends Controller
     {
         return strip_tags(strip_unsafe($content), ['p', 'span', 'b', 'i', 's', 'u', 'strong', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
     }
+
+    /**
+     * Профілю встановити ознаку Знищено.
+     *
+     * @param int $user_id
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function remove(): JsonResponse
+    {
+        request()->user()
+            ->forceFill([
+                'status'    => User::STATUS_REMOVED,
+                'api_token' => null
+            ])
+            ->save();
+
+        return response()->json([
+            'status'  => true,
+            'message' => __('message.profile_removed'),
+        ]);
+    }
 }

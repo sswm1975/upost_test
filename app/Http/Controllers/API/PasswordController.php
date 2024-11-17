@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\ErrorException;
 use App\Http\Controllers\Controller;
 use App\Exceptions\ValidatorException;
+use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,6 +24,10 @@ class PasswordController extends Controller
     public function sendResetLinkEmail(Request $request): JsonResponse
     {
         $credentials = validateOrExit(['email' => 'required|email']);
+
+        if (!User::withoutRemoved()->whereEmail($request->get('email'))->exists()) {
+            throw new ValidatorException("We can't find a user with that email address.");
+        }
 
         try {
             $status = Password::sendResetLink($credentials);

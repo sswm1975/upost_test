@@ -63,6 +63,9 @@ Route::namespace('API')->group(function ($route) {
 
         # Перевірка заповнення профілю (ім'я, прізвище, дата народження) у авторизованого користувача.
         $route->get('profile/is_filled', 'ProfileController@isProfileFilled')->middleware(MIDDLEWARE_AUTH_BASIC);
+
+        # Знищення профіля (встановлення профілю статусу removed).
+        $route->delete('profile', 'ProfileController@remove')->middleware(MIDDLEWARE_AUTH_BASIC);
     });
 
     # Замовлення

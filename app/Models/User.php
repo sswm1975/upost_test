@@ -108,6 +108,7 @@ use App\Models\Traits\TimestampSerializable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereValidation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereWallet($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User withoutAppends(array $appends = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|User withoutRemoved()
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -385,5 +386,9 @@ class User extends Authenticatable
         if (empty($token)) return false;
 
         return (bool) $query->where('api_token', $token)->count();
+    }
+
+    public function scopeWithoutRemoved($query) {
+        return $query->where('status', '<>', self::STATUS_REMOVED);
     }
 }

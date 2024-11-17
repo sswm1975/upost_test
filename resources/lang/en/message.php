@@ -63,6 +63,7 @@ return [
     'order_closed' => 'The order is closed.',
     'order_complaint_created' => 'An order complaint has been created.',
     'profile_updated' => 'The profile has been successfully updated.',
+    'profile_removed' => 'The profile has been successfully removed.',
     'language_updated' => 'The language has been successfully updated.',
     'rate_created' => 'The bet has been successfully created.',
     'rate_updated' => 'The bet has been successfully updated.',

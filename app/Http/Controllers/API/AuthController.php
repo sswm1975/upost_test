@@ -84,9 +84,9 @@ class AuthController extends Controller
         $field_id = $data['provider'] . '_id';
 
         # ищем пользователя по идентификатору соц.сети в зависимости от провайдера
-        if (! $user = User::where($field_id, $data['identifier'])->first()) {
+        if (! $user = User::withoutRemoved()->where($field_id, $data['identifier'])->first()) {
             # ищем пользователя по емейлу, который привязан к соц.сети
-            if ($user = User::whereEmail($data['email'])->first()) {
+            if ($user = User::withoutRemoved()->whereEmail($data['email'])->first()) {
                 if (empty($user->$field_id)) {
                     $user->$field_id = $data['identifier'];
                     $user->save();
@@ -217,6 +217,7 @@ class AuthController extends Controller
 
         return User::query()
             ->withoutAppends()
+            ->withoutRemoved()
             ->wherePassword($credentials['password'])
             ->when($is_email, function ($query) use ($login) {
                 return $query->whereEmail($login);
