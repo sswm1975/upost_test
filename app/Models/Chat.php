@@ -247,8 +247,7 @@ class Chat extends Model
     public function last_message(): HasOne
     {
         return $this->hasOne(Message::class)
-            ->latest('id')
-            ->limit(1);
+            ->latest('id');
     }
 
     ### SCOPES ###
