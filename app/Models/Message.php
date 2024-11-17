@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Traits\TimestampSerializable;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\Message
@@ -50,7 +51,10 @@ class Message extends Model
     protected $appends = [
         'images_thumb',
         'images_original',
+        'short_text',
     ];
+
+    const SHORT_TEXT_LIMIT = 50;
 
     ### BOOT ###
 
@@ -131,6 +135,11 @@ class Message extends Model
         }
 
         return $images;
+    }
+
+    public function getShortTextAttribute()
+    {
+        return Str::limit($this->text, self::SHORT_TEXT_LIMIT);
     }
 
     ### SETTERS ###

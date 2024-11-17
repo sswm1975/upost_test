@@ -78,6 +78,10 @@ class MessageObserver
      */
     private function addAction(Message $message, int $auth_user_id, int $recipient_id)
     {
+        $message->user_full_name = $message->user->full_name;
+        $message->short_name = $message->user->short_name;
+        $message->makeHidden('user');
+
         Action::create([
             'user_id'  => $recipient_id,
             'is_owner' => $auth_user_id == $message->user_id,
