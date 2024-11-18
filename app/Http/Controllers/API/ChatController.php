@@ -103,6 +103,7 @@ class ChatController extends Controller
             'count'  => $rows->total(),
             'page'   => $rows->currentPage(),
             'pages'  => $rows->lastPage(),
+            'unread_messages' => $rows->sum('authuser_unread_count'),
             'chats'  => null_to_blank($rows->toArray()['data']),
         ]);
     }

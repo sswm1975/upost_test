@@ -131,11 +131,20 @@ class MessagesController extends Controller
             'dispute.problem',
         ]);
 
+        $user_id = request()->user()->id;
+
         # обнуляем счетчик "Кол-во непрочитанных сообщений по чату"
-        $field = request()->user()->id == $chat->performer_id ? 'performer_unread_count' : 'customer_unread_count';
+        $field = $user_id == $chat->performer_id ? 'performer_unread_count' : 'customer_unread_count';
         if ($chat->$field) {
             DB::table('chats')->where('id', $chat->id)->update([$field => 0]);
         }
+
+        # узнаем общее кол-во непрочитанных сообщений текущем пользователем по всем чатам и как заказчик и как исполнитель.
+        $unread_messages = (int) DB::selectOne("
+          SELECT SUM(IF(performer_id = {$user_id}, performer_unread_count, 0) + IF(customer_id = {$user_id}, customer_unread_count, 0)) AS unread_messages
+          FROM chats
+          WHERE performer_id = {$user_id} OR customer_id = {$user_id}
+        ")->unread_messages ?? 0;
 
         # если чат просматривает владелец ставки, то устанавливаем "Да" для "Подтвержденная ставка просмотрена исполнителем?"
         if (!empty($chat->rate) && $chat->rate->user_id == request()->user()->id) {
@@ -155,6 +164,7 @@ class MessagesController extends Controller
 
             return response()->json([
                 'status'   => true,
+                'unread_messages' => $unread_messages,
                 'chat'     => null_to_blank($chat),
                 'messages' => null_to_blank($messages),
             ]);
