@@ -102,7 +102,7 @@ class MessagesController extends Controller
         # связываем чат со ставкой
         if (empty($chat->rate)) {
             Rate::whereRouteId($route_id)->whereOrderId($order_id)->update(['chat_id' => $chat->id]);
-        };
+        }
 
         return static::getMessages($chat, $data);
     }
@@ -126,9 +126,23 @@ class MessagesController extends Controller
             'route.to_country',
             'route.to_city',
             'order',
+            'order.rate_confirmed',
             'rate',
             'dispute',
             'dispute.problem',
+        ]);
+
+        $auth_user = request()->user();
+        $chat->order->loadCount([
+            'rates as has_rate' => function ($query) use ($auth_user) {
+                $query->where('rates.user_id', $auth_user->id ?? -1)
+                    ->whereIn('rates.status', Rate::STATUSES_OK);
+            },
+            'rates as my_rate_id' => function($query) use ($auth_user) {
+                $query->where('rates.user_id', $auth_user->id ?? -1)
+                    ->whereIn('rates.status', Rate::STATUSES_OK)
+                    ->select(DB::raw('MAX(id)'));
+            },
         ]);
 
         $user_id = request()->user()->id;
