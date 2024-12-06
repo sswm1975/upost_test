@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Rate;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Exceptions\ValidatorException;
@@ -53,6 +54,8 @@ class ChatController extends Controller
         # формируем запрос
         # authuser_unread_count - кол-во непрочитанных сообщений аутентифицированного пользователем
         $select = sprintf('chats.*, IF(performer_id = %d, performer_unread_count, 0) + IF(customer_id = %d, customer_unread_count, 0) AS authuser_unread_count', $user_id, $user_id);
+
+        /** @var Collection $rows */
         $rows = Chat::interlocutors()
             ->addSelect(DB::raw($select))
             ->when($filter == 'customer', function ($query) use ($user_id) {
@@ -61,11 +64,13 @@ class ChatController extends Controller
             ->when($filter == 'performer', function ($query) use ($user_id) {
                 return $query->where('performer_id', $user_id);
             })
-            ->when(empty($search), function ($query) {
-                return $query
-                    ->orderBy('authuser_unread_count', $sorting ?? self::DEFAULT_SORTING)
-                    ->orderBy('chats.id', $sorting ?? self::DEFAULT_SORTING);
-            })
+# по таске https://app.asana.com/0/1202451331926444/1208755359488573/f захотели сортировать по дате последнего сообщения
+# соответственно сортировку ниже отключаем
+//            ->when(empty($search), function ($query) {
+//                return $query
+//                    ->orderBy('authuser_unread_count', $sorting ?? self::DEFAULT_SORTING)
+//                    ->orderBy('chats.id', $sorting ?? self::DEFAULT_SORTING);
+//            })
             ->when(!empty($search), function ($query) use ($search, $user_id) {
                 return $query->bySearch($search, $user_id);
             })
@@ -78,6 +83,15 @@ class ChatController extends Controller
             'last_message',
             'last_message.user:id,name,surname',
         ]);
+
+        # по таске https://app.asana.com/0/1202451331926444/1208755359488573/f захотели сортировать по дате последнего сообщения
+        if (empty($search)) {
+            if ($sorting ?? self::DEFAULT_SORTING == self::DEFAULT_SORTING) {
+                $rows->sortByDesc('last_message.id');
+            } else {
+                $rows->sortBy('last_message.id');
+            }
+        }
 
         # узнаем, доставлен ли заказ
         $rows->loadCount([
