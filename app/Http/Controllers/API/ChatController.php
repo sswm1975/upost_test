@@ -51,11 +51,16 @@ class ChatController extends Controller
         $count = $count ?? self::DEFAULT_PER_PAGE;
         $page = $page ?? 1;
 
-        # формируем запрос
+        # к запросу добавляяем поля:
         # authuser_unread_count - кол-во непрочитанных сообщений аутентифицированного пользователем
-        $select = sprintf('chats.*, IF(performer_id = %d, performer_unread_count, 0) + IF(customer_id = %d, customer_unread_count, 0) AS authuser_unread_count', $user_id, $user_id);
+        # max_message_id - последнее сообщение по чату (для сортировки)
+        $select = "
+            chats.*,
+            IF(performer_id = {$user_id}, performer_unread_count, 0) + IF(customer_id = {$user_id}, customer_unread_count, 0) AS authuser_unread_count,
+            (SELECT MAX(id) FROM messages m WHERE m.chat_id = chats.id) AS max_message_id
+        ";
 
-        /** @var Collection $rows */
+        /** @var \Illuminate\Contracts\Pagination\LengthAwarePaginator $rows */
         $rows = Chat::interlocutors()
             ->addSelect(DB::raw($select))
             ->when($filter == 'customer', function ($query) use ($user_id) {
@@ -64,13 +69,14 @@ class ChatController extends Controller
             ->when($filter == 'performer', function ($query) use ($user_id) {
                 return $query->where('performer_id', $user_id);
             })
-# по таске https://app.asana.com/0/1202451331926444/1208755359488573/f захотели сортировать по дате последнего сообщения
-# соответственно сортировку ниже отключаем
-//            ->when(empty($search), function ($query) {
+            ->when(empty($search), function ($query) {
+                return $query->orderBy('max_message_id', $sorting ?? self::DEFAULT_SORTING);
+                # по таске https://app.asana.com/0/1202451331926444/1208755359488573/f захотели сортировать по дате последнего сообщения
+                # соответственно сортировку ниже отключаем
 //                return $query
 //                    ->orderBy('authuser_unread_count', $sorting ?? self::DEFAULT_SORTING)
 //                    ->orderBy('chats.id', $sorting ?? self::DEFAULT_SORTING);
-//            })
+            })
             ->when(!empty($search), function ($query) use ($search, $user_id) {
                 return $query->bySearch($search, $user_id);
             })
@@ -83,15 +89,6 @@ class ChatController extends Controller
             'last_message',
             'last_message.user:id,name,surname',
         ]);
-
-        # по таске https://app.asana.com/0/1202451331926444/1208755359488573/f захотели сортировать по дате последнего сообщения
-        if (empty($search)) {
-            if ($sorting ?? self::DEFAULT_SORTING == self::DEFAULT_SORTING) {
-                $rows->sortByDesc('last_message.id');
-            } else {
-                $rows->sortBy('last_message.id');
-            }
-        }
 
         # узнаем, доставлен ли заказ
         $rows->loadCount([
@@ -109,6 +106,7 @@ class ChatController extends Controller
                 $chat->last_message->short_name = $chat->last_message->user->short_name;
                 $chat->last_message->makeHidden('user');
             }
+            unset($chat->max_message_id);
         });
 
         # формируем ответ
