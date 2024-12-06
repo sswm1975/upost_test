@@ -64,9 +64,18 @@ class NoticeController extends Controller
             ->makeHidden('arcdate')
             ->all();
 
+        # узнаем общее кол-во непрочитанных сообщений текущем пользователем по всем чатам и как заказчик и как исполнитель.
+        $user_id = request()->user()->id;
+        $unread_messages = (int) DB::selectOne("
+          SELECT SUM(IF(performer_id = {$user_id}, performer_unread_count, 0) + IF(customer_id = {$user_id}, customer_unread_count, 0)) AS unread_messages
+          FROM chats
+          WHERE performer_id = {$user_id} OR customer_id = {$user_id}
+        ")->unread_messages ?? 0;
+
         return response()->json([
             'status'  => true,
             'notices' => null_to_blank($notices),
+            'unread_messages' => $unread_messages,
         ]);
     }
 
