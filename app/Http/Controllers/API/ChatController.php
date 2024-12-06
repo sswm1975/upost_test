@@ -182,4 +182,35 @@ class ChatController extends Controller
             'count'  => Chat::getCountUnreadMessages($user_id),
         ]);
     }
+
+    /**
+     * Обнулити кількість непрочитаних повідомлень по вибраному чату.
+     *
+     * @param int $chat_id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ErrorException
+     */
+    public function clearUnreadCount(int $chat_id, Request $request): JsonResponse
+    {
+        $user_id = $request->user()->id;
+
+        if (! $chat = Chat::find($chat_id)) {
+            throw new ErrorException(__('message.chat_not_found'));
+        }
+
+        # авторизированный пользователь должен быть владельцем заказа или маршрута
+        if (! in_array($user_id, [$chat->performer_id, $chat->customer_id])) {
+            throw new ErrorException(__('message.not_have_permission'));
+        }
+
+        if ($user_id == $chat->performer_id) {
+            $chat->performer_unread_count = 0;
+        } else {
+            $chat->customer_unread_count = 0;
+        }
+        $chat->save();
+
+        return response()->json(['status' => true]);
+    }
 }

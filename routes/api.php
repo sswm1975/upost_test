@@ -206,6 +206,9 @@ Route::namespace('API')->group(function ($route) {
 
         # Получить количество непрочитанных сообщений
         $route->get('get_count_unread_messages', 'ChatController@getCountUnreadMessages');
+
+        # Обнулити кількість непрочитаних повідомлень по вибраному чату
+        $route->get('{chat_id}/clear_unread_count', 'ChatController@clearUnreadCount');
     });
 
     # Сообщения
