@@ -50,6 +50,7 @@ class ChatController extends Controller
         $search = $search ?? '';
         $count = $count ?? self::DEFAULT_PER_PAGE;
         $page = $page ?? 1;
+        $sorting = $sorting ?? self::DEFAULT_SORTING;
 
         # к запросу добавляяем поля:
         # authuser_unread_count - кол-во непрочитанных сообщений аутентифицированного пользователем
@@ -69,8 +70,8 @@ class ChatController extends Controller
             ->when($filter == 'performer', function ($query) use ($user_id) {
                 return $query->where('performer_id', $user_id);
             })
-            ->when(empty($search), function ($query) {
-                return $query->orderBy('max_message_id', $sorting ?? self::DEFAULT_SORTING);
+            ->when(empty($search), function ($query) use ($sorting) {
+                return $query->orderBy('max_message_id', $sorting);
                 # по таске https://app.asana.com/0/1202451331926444/1208755359488573/f захотели сортировать по дате последнего сообщения
                 # соответственно сортировку ниже отключаем
 //                return $query
