@@ -86,7 +86,15 @@ class ChatController extends Controller
         # подгружаем связи
         $rows->load([
             'interlocutor:id,name,surname,photo,scores_count,reviews_count',
-            'order:id,name,price,currency,price_usd,user_price_usd,images,status',
+            'order',
+            'order.from_country',
+            'order.from_city',
+            'order.to_country',
+            'order.to_city',
+            'order.rate_confirmed',
+            'order.rates' => function ($query) {
+                $query->latest('id');
+            },
             'last_message',
             'last_message.user:id,name,surname',
         ]);
@@ -98,8 +106,10 @@ class ChatController extends Controller
             }
         ]);
 
-        # убираем лишнее
-        $rows->each(function ($chat) {
+        $auth_user = request()->user();
+
+        # убираем лишнее и добавляем новое
+        $rows->each(function ($chat) use ($auth_user) {
             if (isset($chat->last_message->user->full_name)) {
                 $chat->interlocutor->makeHidden('status_name', 'gender_name', 'validation_name', 'register_date_human', 'last_active_human', 'age');
                 $chat->last_message->short_text = Str::limit($chat->last_message->text, self::LAST_MESSAGE_TEXT_LIMIT);
@@ -108,6 +118,18 @@ class ChatController extends Controller
                 $chat->last_message->makeHidden('user');
             }
             unset($chat->max_message_id);
+
+            $chat->order->loadCount([
+                'rates as has_rate' => function ($query) use ($auth_user) {
+                    $query->where('rates.user_id', $auth_user->id ?? -1)
+                        ->whereIn('rates.status', Rate::STATUSES_OK);
+                },
+                'rates as my_rate_id' => function($query) use ($auth_user) {
+                    $query->where('rates.user_id', $auth_user->id ?? -1)
+                        ->whereIn('rates.status', Rate::STATUSES_OK)
+                        ->select(DB::raw('MAX(id)'));
+                },
+            ]);
         });
 
         # формируем ответ

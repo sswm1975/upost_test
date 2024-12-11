@@ -126,6 +126,13 @@ class MessagesController extends Controller
             'route.to_country',
             'route.to_city',
             'order',
+            'order.from_country',
+            'order.from_city',
+            'order.to_country',
+            'order.to_city',
+            'order.rates' => function ($query) {
+                $query->latest('id');
+            },
             'order.rate_confirmed',
             'rate',
             'dispute',
