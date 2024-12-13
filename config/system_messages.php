@@ -32,7 +32,7 @@ return [
         'uk' => 'Замовник оплатив замовлення.',
     ],
     'performer_buyed_product' => [
-        'en' => 'The traveler buyed product.',
+        'en' => 'The traveler has bought a product.',
         'ru' => 'Путешественник купил товар.',
         'uk' => 'Мандрівник купив товар.',
     ],
