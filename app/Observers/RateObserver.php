@@ -24,8 +24,17 @@ class RateObserver
             },
         ]);
 
+        # добавляем действие "Создана ставка"
+        $this->addAction($rate, Action::RATE_CREATED);
+
         # если активно уведомление "Появилась новая ставка", то создаем уведомление
         if (active_notice_type($notice_type = NoticeType::NEW_RATE)) {
+
+            # если ранее была создана ставка владельцем маршрута, то уведомление владельцу заказа больше не отправляем
+            # см. https://app.asana.com/0/1202451331926444/1209345276647372
+            $rates_cnt = Rate::where(['user_id' => $rate->user_id, 'order_id' => $rate->order->id])->count('id');
+            if ($rates_cnt > 1) return;
+
             Notice::create([
                 'user_id'     => $rate->order->user_id,
                 'notice_type' => $notice_type,
@@ -33,9 +42,6 @@ class RateObserver
                 'data'        => ['order_name' => $rate->order->name, 'rate_id' => $rate->id],
             ]);
         }
-
-        # добавляем действие "Создана ставка"
-        $this->addAction($rate, Action::RATE_CREATED);
     }
 
     /**
