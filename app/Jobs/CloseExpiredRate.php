@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Log;
  * Реализовано более оптимизировано: у которых дата дедлайна меньше текущей даты уменьшенной
  * на X дней отсрочки (deadline < DATE_SUB(CURDATE(), INTERVAL X DAY)).
  *
- * Результат: Найденные ставки переводится в статус successful, а чаты меняют статус на closed.
+ * Результат: Найденные ставки переводится в статус failed, а чаты меняют статус на closed.
  */
 class CloseExpiredRate implements ShouldQueue
 {
@@ -59,7 +59,7 @@ class CloseExpiredRate implements ShouldQueue
         }
 
         # закрываем все просроченные заказы и связанные чаты
-        Rate::whereKey(array_keys($ids))->update(['status' => Rate::STATUS_SUCCESSFUL]);
+        Rate::whereKey(array_keys($ids))->update(['status' => Rate::STATUS_FAILED]);
         Chat::whereKey(array_filter(array_values($ids)))->update(['status' => Chat::STATUS_CLOSED]);
 
         # логируем
